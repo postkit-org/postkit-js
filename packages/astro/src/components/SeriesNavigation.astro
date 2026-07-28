@@ -1,0 +1,7 @@
+---
+import type { PostkitSeriesNavigationProps } from '@postkit/react';
+import { PostkitAstroSeriesNavigation } from '../lib/react-bridges';
+type Props = PostkitSeriesNavigationProps;
+const props = Astro.props;
+---
+<PostkitAstroSeriesNavigation {...props} />

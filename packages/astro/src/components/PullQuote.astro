@@ -1,0 +1,7 @@
+---
+import type { PostkitPullQuoteProps } from '@postkit/react';
+import { PostkitAstroPullQuote } from '../lib/react-bridges';
+type Props = PostkitPullQuoteProps;
+const props = Astro.props;
+---
+<PostkitAstroPullQuote {...props} />

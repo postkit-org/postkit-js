@@ -1,0 +1,7 @@
+---
+import type { PostkitSponsorBlockProps } from '@postkit/react';
+import { PostkitAstroSponsorBlock } from '../lib/react-bridges';
+type Props = PostkitSponsorBlockProps;
+const props = Astro.props;
+---
+<PostkitAstroSponsorBlock {...props} />

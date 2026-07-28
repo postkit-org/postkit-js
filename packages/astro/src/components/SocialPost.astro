@@ -1,0 +1,9 @@
+---
+import type { PostkitSocialPostProps } from '@postkit/react';
+import { PostkitAstroSocialPost } from '../lib/react-bridges';
+
+type Props = PostkitSocialPostProps;
+const props = Astro.props;
+---
+
+<PostkitAstroSocialPost {...props} client:visible />

@@ -1,0 +1,9 @@
+---
+import type { PostkitNewsletterSignupProps } from '@postkit/react';
+import { PostkitAstroNewsletterSignup } from '../lib/react-bridges';
+
+type Props = PostkitNewsletterSignupProps;
+const props = Astro.props;
+---
+
+<PostkitAstroNewsletterSignup {...props} client:visible />

@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "emitDeclarationOnly": false,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["astro/client"],
+    "jsx": "react-jsx",
+    "lib": ["es2022", "dom"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.astro"],
+  "references": [
+    {
+      "path": "../react/tsconfig.lib.json"
+    }
+  ],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]
+}

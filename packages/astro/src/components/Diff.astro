@@ -1,0 +1,7 @@
+---
+import type { PostkitDiffProps } from '@postkit/react';
+import { PostkitAstroDiff } from '../lib/react-bridges';
+type Props = PostkitDiffProps;
+const props = Astro.props;
+---
+<PostkitAstroDiff {...props} />

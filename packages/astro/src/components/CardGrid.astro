@@ -1,0 +1,7 @@
+---
+import type { PostkitCardGridProps } from '@postkit/react';
+import { PostkitAstroCardGrid } from '../lib/react-bridges';
+type Props = PostkitCardGridProps;
+const props = Astro.props;
+---
+<PostkitAstroCardGrid {...props} />

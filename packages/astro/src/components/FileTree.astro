@@ -1,0 +1,7 @@
+---
+import type { PostkitFileTreeProps } from '@postkit/react';
+import { PostkitAstroFileTree } from '../lib/react-bridges';
+type Props = PostkitFileTreeProps;
+const props = Astro.props;
+---
+<PostkitAstroFileTree {...props} />

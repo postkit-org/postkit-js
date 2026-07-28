@@ -1,0 +1,7 @@
+---
+import type { PostkitPollProps } from '@postkit/react';
+import { PostkitAstroPoll } from '../lib/react-bridges';
+type Props = PostkitPollProps;
+const props = Astro.props;
+---
+<PostkitAstroPoll {...props} />

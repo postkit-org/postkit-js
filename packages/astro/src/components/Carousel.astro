@@ -1,0 +1,11 @@
+---
+import type { PostkitCarouselProps } from '@postkit/react';
+import { PostkitAstroCarousel } from '../lib/react-bridges';
+
+type Props = PostkitCarouselProps;
+const props = Astro.props;
+---
+
+<PostkitAstroCarousel {...props} client:visible>
+  <slot />
+</PostkitAstroCarousel>

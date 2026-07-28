@@ -1,0 +1,9 @@
+---
+import type { PostkitAuthorCardProps } from '@postkit/react';
+import { PostkitAstroAuthorCard } from '../lib/react-bridges';
+
+type Props = PostkitAuthorCardProps;
+const props = Astro.props;
+---
+
+<PostkitAstroAuthorCard {...props} />

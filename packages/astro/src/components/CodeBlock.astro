@@ -1,0 +1,7 @@
+---
+import type { PostkitCodeBlockProps } from '@postkit/react';
+import { PostkitAstroCodeBlock } from '../lib/react-bridges';
+type Props = PostkitCodeBlockProps;
+const props = Astro.props;
+---
+<PostkitAstroCodeBlock {...props} />

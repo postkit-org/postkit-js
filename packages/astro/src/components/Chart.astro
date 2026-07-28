@@ -1,0 +1,9 @@
+---
+import type { PostkitChartProps } from '@postkit/react';
+import { PostkitAstroChart } from '../lib/react-bridges';
+
+type Props = PostkitChartProps;
+const props = Astro.props;
+---
+
+<PostkitAstroChart {...props} />

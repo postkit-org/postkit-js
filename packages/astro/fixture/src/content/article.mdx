@@ -1,0 +1,87 @@
+# Postkit Astro fixture
+
+<AuthorCard
+  name="Ada Lovelace"
+  role="Contributing editor"
+  bio="Writes about durable publishing."
+/>
+
+<CallToAction
+  title="Read the field guide"
+  primaryLabel="Open guide"
+  primaryHref="/guide"
+/>
+
+<NewsletterSignup
+  title="Get field notes"
+  list="weekly"
+  privacy="Unsubscribe at any time."
+/>
+
+<Audio
+  src="/episode.mp3"
+  title="Fixture episode"
+  caption="Native audio controls."
+/>
+
+<Carousel
+  label="Fixture slides"
+  items={[
+    {
+      title: 'First slide',
+      description: 'Visible immediately.',
+    },
+    {
+      title: 'Second slide',
+      description: 'Hydrated on visibility.',
+    },
+  ]}
+/>
+
+<LinkPreview
+  href="https://example.com/posts/fixture"
+  title="Fixture link preview"
+  description="Hydrated for runtime resolution and embeds."
+/>
+
+<ShareActions
+  url="https://example.com/posts/fixture"
+  title="Fixture article"
+  services={['copy', 'bluesky']}
+/>
+
+<SocialPost
+  href="https://bsky.app/profile/ada.example/post/fixture"
+  service="bluesky"
+  authorName="Ada"
+  authorHandle="@ada.example"
+  text="Fixture social post."
+/>
+
+<AppearsOn
+  label="Also published on"
+  items={[
+    {
+      service: 'linegraph',
+      label: 'Linegraph',
+      url: 'https://linegraph.example/posts/fixture',
+      status: 'published',
+    },
+  ]}
+/>
+
+<Chart
+  title="Fixture readers"
+  data={[
+    { label: 'Jan', readers: 12 },
+    { label: 'Feb', readers: 24 },
+  ]}
+  series={[{ key: 'readers', label: 'Readers' }]}
+  showTable
+/>
+
+<Video
+  src="/interview.mp4"
+  title="Fixture interview"
+  caption="Native video controls."
+/>

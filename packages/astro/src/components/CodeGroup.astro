@@ -1,0 +1,7 @@
+---
+import type { PostkitCodeGroupProps } from '@postkit/react';
+import { PostkitAstroCodeGroup } from '../lib/react-bridges';
+type Props = PostkitCodeGroupProps;
+const props = Astro.props;
+---
+<PostkitAstroCodeGroup {...props} />

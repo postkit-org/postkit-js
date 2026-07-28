@@ -1,0 +1,9 @@
+---
+import type { PostkitCallToActionProps } from '@postkit/react';
+import { PostkitAstroCallToAction } from '../lib/react-bridges';
+
+type Props = PostkitCallToActionProps;
+const props = Astro.props;
+---
+
+<PostkitAstroCallToAction {...props} />

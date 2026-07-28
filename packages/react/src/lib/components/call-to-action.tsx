@@ -1,0 +1,133 @@
+'use client';
+
+import {
+  Box,
+  Heading,
+  Link,
+  Text,
+  type BoxProps,
+  type RecipeVariantProps,
+  type UnstyledProp,
+} from '@chakra-ui/react';
+import type { ReactNode } from 'react';
+
+import {
+  postkitCallToActionRecipe,
+  type PostkitCallToActionSlot,
+} from '../recipes/call-to-action.recipe.js';
+import {
+  postkitSlotClassName,
+  type PostkitSlotStyles,
+  usePostkitSlotRecipe,
+} from '../recipes/types.js';
+import { postkitRecipeKeys } from '../theme.js';
+
+export type PostkitCallToActionProps = {
+  readonly title: string;
+  readonly eyebrow?: string;
+  readonly description?: string;
+  readonly primaryLabel?: string;
+  readonly primaryHref?: string;
+  readonly secondaryLabel?: string;
+  readonly secondaryHref?: string;
+  readonly children?: ReactNode;
+  readonly rootProps?: BoxProps;
+  readonly slotStyles?: PostkitSlotStyles<PostkitCallToActionSlot>;
+} & RecipeVariantProps<typeof postkitCallToActionRecipe> &
+  UnstyledProp;
+
+export function PostkitCallToAction({
+  title,
+  eyebrow,
+  description,
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+  children,
+  rootProps,
+  slotStyles,
+  alignment,
+  size,
+  variant,
+  unstyled,
+}: PostkitCallToActionProps) {
+  const recipe = usePostkitSlotRecipe(
+    postkitRecipeKeys.callToAction,
+    postkitCallToActionRecipe,
+  );
+  const styles: PostkitSlotStyles<PostkitCallToActionSlot> = unstyled
+    ? {}
+    : recipe({ alignment, size, variant });
+  const {
+    css: rootCss,
+    className: rootClassName,
+    ...restRootProps
+  } = rootProps ?? {};
+  const hasActions =
+    (primaryLabel && primaryHref) || (secondaryLabel && secondaryHref);
+
+  return (
+    <Box
+      as="aside"
+      data-postkit-component="CallToAction"
+      {...restRootProps}
+      className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
+      css={[styles.root, slotStyles?.root, rootCss]}
+    >
+      <Box
+        className={recipe.classNameMap.content}
+        css={[styles.content, slotStyles?.content]}
+      >
+        {eyebrow ? (
+          <Text
+            className={recipe.classNameMap.eyebrow}
+            css={[styles.eyebrow, slotStyles?.eyebrow]}
+          >
+            {eyebrow}
+          </Text>
+        ) : null}
+        <Heading
+          as="h2"
+          className={recipe.classNameMap.title}
+          css={[styles.title, slotStyles?.title]}
+        >
+          {title}
+        </Heading>
+        {description || children ? (
+          <Box
+            className={recipe.classNameMap.body}
+            css={[styles.body, slotStyles?.body]}
+          >
+            {children ?? description}
+          </Box>
+        ) : null}
+      </Box>
+      {hasActions ? (
+        <Box
+          className={recipe.classNameMap.actions}
+          css={[styles.actions, slotStyles?.actions]}
+        >
+          {primaryLabel && primaryHref ? (
+            <Link
+              href={primaryHref}
+              className={recipe.classNameMap.primaryAction}
+              css={[styles.primaryAction, slotStyles?.primaryAction]}
+            >
+              {primaryLabel}
+            </Link>
+          ) : null}
+          {secondaryLabel && secondaryHref ? (
+            <Link
+              href={secondaryHref}
+              className={recipe.classNameMap.secondaryAction}
+              css={[styles.secondaryAction, slotStyles?.secondaryAction]}
+            >
+              {secondaryLabel}
+            </Link>
+          ) : null}
+        </Box>
+      ) : null}
+    </Box>
+  );
+}

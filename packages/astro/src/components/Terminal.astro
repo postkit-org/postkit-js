@@ -1,0 +1,7 @@
+---
+import type { PostkitTerminalProps } from '@postkit/react';
+import { PostkitAstroTerminal } from '../lib/react-bridges';
+type Props = PostkitTerminalProps;
+const props = Astro.props;
+---
+<PostkitAstroTerminal {...props} />

@@ -1,0 +1,7 @@
+---
+import type { PostkitRelatedContentProps } from '@postkit/react';
+import { PostkitAstroRelatedContent } from '../lib/react-bridges';
+type Props = PostkitRelatedContentProps;
+const props = Astro.props;
+---
+<PostkitAstroRelatedContent {...props} />

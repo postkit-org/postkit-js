@@ -1,0 +1,7 @@
+---
+import type { PostkitComparisonProps } from '@postkit/react';
+import { PostkitAstroComparison } from '../lib/react-bridges';
+type Props = PostkitComparisonProps;
+const props = Astro.props;
+---
+<PostkitAstroComparison {...props} />

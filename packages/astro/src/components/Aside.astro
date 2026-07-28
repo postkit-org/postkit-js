@@ -1,0 +1,7 @@
+---
+import type { PostkitAsideProps } from '@postkit/react';
+import { PostkitAstroAside } from '../lib/react-bridges';
+type Props = PostkitAsideProps;
+const props = Astro.props;
+---
+<PostkitAstroAside {...props}><slot /></PostkitAstroAside>

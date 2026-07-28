@@ -1,0 +1,57 @@
+{
+  "name": "@postkit/tanstack-router",
+  "version": "0.1.0",
+  "description": "Postkit MDX components and link routing for TanStack Router",
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/org-postkit/postkit-js.git",
+    "directory": "packages/tanstack-router"
+  },
+  "homepage": "https://github.com/org-postkit/postkit-js#readme",
+  "bugs": {
+    "url": "https://github.com/org-postkit/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "@types/mdx": "^2.0.14",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@postkit/react": "0.1.0",
+    "@tanstack/react-router": ">=1.120 <2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tanstack/react-router": "^1.170.18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:adapter"
+    ]
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "name": "@postkit/astro",
+  "version": "0.1.0",
+  "description": "Postkit components and Markdown integration for Astro",
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/org-postkit/postkit-js.git",
+    "directory": "packages/astro"
+  },
+  "homepage": "https://github.com/org-postkit/postkit-js#readme",
+  "bugs": {
+    "url": "https://github.com/org-postkit/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./components": {
+      "@postkit/source": "./src/components.ts",
+      "types": "./dist/components.d.ts",
+      "import": "./dist/components.js",
+      "default": "./dist/components.js"
+    },
+    "./react": {
+      "@postkit/source": "./src/react.ts",
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./components/*": "./dist/components/*.astro"
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@astrojs/markdown-remark": ">=6 <8",
+    "@astrojs/mdx": ">=6 <8",
+    "@astrojs/react": ">=4 <7",
+    "@chakra-ui/react": "^3.36.0",
+    "@postkit/react": "0.1.0",
+    "astro": ">=6.4 <8",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/markdown-remark": "^7.2.1",
+    "@astrojs/mdx": "^7.0.3",
+    "@astrojs/react": "^6.0.1",
+    "astro": "^7.1.3",
+    "cookie": "^2.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:adapter"
+    ],
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ],
+        "options": {
+          "cwd": "packages/astro",
+          "commands": [
+            "tsc --build tsconfig.lib.json",
+            "node scripts/copy-astro-components.mjs"
+          ],
+          "parallel": false
+        }
+      },
+      "build-fixture": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "cwd": "packages/astro",
+          "commands": [
+            "astro build --root fixture",
+            "node scripts/verify-fixture.mjs"
+          ],
+          "parallel": false
+        }
+      }
+    }
+  }
+}

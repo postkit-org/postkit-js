@@ -8,6 +8,7 @@ export default [
     ignores: [
       '**/dist',
       '**/build',
+      '**/.astro',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
     ],
@@ -36,6 +37,10 @@ export default [
             {
               sourceTag: 'scope:strings',
               onlyDependOnLibsWithTags: ['scope:shared', 'scope:strings'],
+            },
+            {
+              sourceTag: 'scope:postkit',
+              onlyDependOnLibsWithTags: ['scope:postkit'],
             },
           ],
         },

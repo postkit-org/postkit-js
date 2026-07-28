@@ -1,0 +1,7 @@
+---
+import type { PostkitStepsProps } from '@postkit/react';
+import { PostkitAstroSteps } from '../lib/react-bridges';
+type Props = PostkitStepsProps;
+const props = Astro.props;
+---
+<PostkitAstroSteps {...props} />

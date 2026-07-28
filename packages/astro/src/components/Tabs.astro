@@ -1,0 +1,7 @@
+---
+import type { PostkitTabsProps } from '@postkit/react';
+import { PostkitAstroTabs } from '../lib/react-bridges';
+type Props = PostkitTabsProps;
+const props = Astro.props;
+---
+<PostkitAstroTabs {...props} />
