@@ -9,6 +9,7 @@
     "typecheck": "nx run-many -t typecheck --projects=tag:npm:public",
     "check": "nx run-many -t build lint test typecheck --projects=tag:npm:public",
     "package:check": "node tools/check-public-packages.mjs",
+    "consumer:check": "node tools/check-tarball-consumer.mjs",
     "verify:release": "node tools/verify-release.mjs"
   },
   "private": true,

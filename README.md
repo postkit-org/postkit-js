@@ -50,6 +50,8 @@ workspace, builds, lints, tests, and typechecks the public-package allowlist,
 builds the Astro production fixture, and inspects every npm tarball. The
 tarball check also enforces the internal dependency publication order:
 `@postkit/unfurl`, `@postkit/react`, and then the framework adapters.
+It then installs those tarballs into a fresh temporary consumer and verifies
+their runtime and TypeScript entry points without workspace source conditions.
 
 ## Publishing
 
