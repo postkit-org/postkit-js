@@ -50,3 +50,29 @@ workspace, builds, lints, tests, and typechecks the public-package allowlist,
 builds the Astro production fixture, and inspects every npm tarball. The
 tarball check also enforces the internal dependency publication order:
 `@postkit/unfurl`, `@postkit/react`, and then the framework adapters.
+
+## Publishing
+
+Publishing is performed only by
+[`publish.yml`](.github/workflows/publish.yml). The workflow requires the
+`npm-production` GitHub environment, verifies that every public package uses
+the requested version, requires release tags in the form `v<version>`, and
+rejects release commits that are not contained in `main`. Configure the
+environment with a required reviewer, prevent self-review and administrator
+bypass, and restrict deployments to the `main` branch and tags matching `v*`.
+
+For the first publication, add a short-lived granular npm token with publish
+access to the `@postkit` scope as the `NPM_TOKEN` environment secret. After
+each package exists on npm, configure its trusted publisher with:
+
+- Provider: GitHub Actions
+- Organization: `org-postkit`
+- Repository: `postkit-js`
+- Workflow: `publish.yml`
+- Environment: `npm-production`
+- Allowed action: `npm publish`
+
+Then remove `NPM_TOKEN` and revoke the bootstrap token. The workflow uses npm
+OIDC publishing and provenance, checks the registry before any mutation, and
+can safely resume a partial run only when an already-published tarball has the
+same integrity as the local release.

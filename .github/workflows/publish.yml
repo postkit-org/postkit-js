@@ -1,0 +1,75 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact package version already committed on main
+        required: true
+        type: string
+      confirmation:
+        description: Type PUBLISH to confirm an npm publication
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: >-
+      github.event_name == 'release' ||
+      (github.ref == 'refs/heads/main' && inputs.confirmation == 'PUBLISH')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - name: Verify release version and source ref
+        run: node tools/verify-release-version.mjs
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+      - run: npm run verify:release
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Verify registry publication plan
+        run: node tools/publish-public-packages.mjs --dry-run
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: npm-production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - run: npm ci
+      - run: npm run verify:release
+      - name: Publish public packages
+        run: node tools/publish-public-packages.mjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
