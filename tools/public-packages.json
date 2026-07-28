@@ -1,0 +1,8 @@
+[
+  "@postkit/unfurl",
+  "@postkit/react",
+  "@postkit/next",
+  "@postkit/react-router",
+  "@postkit/tanstack-router",
+  "@postkit/astro"
+]

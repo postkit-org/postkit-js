@@ -29,6 +29,7 @@ npm run build
 npm test
 npm run lint
 npm run typecheck
+npm run verify:release
 ```
 
 The Astro adapter also includes a production fixture:
@@ -43,3 +44,9 @@ The standalone packages live under `packages/`. Nx infers their build,
 typecheck, lint, and Vitest targets from each package's TypeScript and Vite
 configuration. Package exports use the `@postkit/source` condition while
 developing in the workspace and compiled `dist` entry points when published.
+
+`npm run verify:release` is the local release gate. It formats-checks the
+workspace, builds, lints, tests, and typechecks the public-package allowlist,
+builds the Astro production fixture, and inspects every npm tarball. The
+tarball check also enforces the internal dependency publication order:
+`@postkit/unfurl`, `@postkit/react`, and then the framework adapters.
