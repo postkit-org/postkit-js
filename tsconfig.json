@@ -32,6 +32,9 @@
     },
     {
       "path": "./packages/utils"
+    },
+    {
+      "path": "./apps/site"
     }
   ],
   "compilerOptions": {}

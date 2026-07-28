@@ -1,0 +1,17 @@
+{
+  "name": "site",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/site/src",
+  "projectType": "application",
+  "tags": ["npm:private", "scope:postkit", "type:app"],
+  "// targets": "to see all targets run: nx show project site --web",
+  "targets": {
+    "build": {
+      "options": {
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    }
+  }
+}

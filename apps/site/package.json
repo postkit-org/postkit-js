@@ -1,0 +1,16 @@
+{
+  "name": "@postkit/site",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@chakra-ui/react": "^3.36.0",
+    "@emotion/react": "^11.14.0",
+    "@postkit/next": "0.1.0",
+    "@postkit/react": "0.1.0",
+    "gray-matter": "^4.0.3",
+    "next": "^16.1.6",
+    "next-mdx-remote": "^6.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
+}
