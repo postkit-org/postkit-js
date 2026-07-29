@@ -10,6 +10,8 @@
     "check": "nx run-many -t build lint test typecheck --projects=tag:npm:public",
     "package:check": "node tools/check-public-packages.mjs",
     "consumer:check": "node tools/check-tarball-consumer.mjs",
+    "yalc:publish": "npm run build && node tools/yalc-public-packages.mjs publish",
+    "yalc:push": "npm run build && node tools/yalc-public-packages.mjs push",
     "site:dev": "nx dev site",
     "site:build": "nx build site",
     "site:check": "nx run-many -t lint build --projects=site",
@@ -62,7 +64,8 @@
     "typescript-eslint": "^8.63.0",
     "verdaccio": "6.4.0",
     "vite": "^8.1.4",
-    "vitest": "~4.1.10"
+    "vitest": "~4.1.10",
+    "yalc": "1.0.0-pre.53"
   },
   "workspaces": [
     "packages/*",

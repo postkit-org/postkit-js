@@ -38,6 +38,48 @@ The Astro adapter also includes a production fixture:
 npm exec nx run @postkit/astro:build-fixture
 ```
 
+### Local package testing with yalc
+
+Build and publish every public PostKit package to the local yalc store:
+
+```sh
+npm run yalc:publish
+```
+
+Packages are published in dependency order from the same allowlist used by the
+npm release workflow. In a consuming project, add the packages you want to
+exercise along with their local PostKit dependencies. To install the complete
+set:
+
+```sh
+npx yalc add \
+  @postkit/unfurl \
+  @postkit/react \
+  @postkit/next \
+  @postkit/react-router \
+  @postkit/tanstack-router \
+  @postkit/astro
+npm install
+```
+
+After making changes in this repository, rebuild and propagate every package to
+consuming projects that previously added it:
+
+```sh
+npm run yalc:push
+```
+
+Both root commands accept additional yalc options after `--`, such as a custom
+store directory:
+
+```sh
+npm run yalc:publish -- --store-folder /tmp/postkit-yalc
+```
+
+When local testing is complete, run `npx yalc remove --all` followed by
+`npm install` in the consumer. If the yalc installation is temporary, keep the
+consumer's `.yalc/` directory and `yalc.lock` out of version control.
+
 ## Workspace layout
 
 The standalone packages live under `packages/`. Nx infers their build,
