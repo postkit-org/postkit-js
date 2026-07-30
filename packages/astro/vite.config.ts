@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
+import { publicPackageCoverage } from '../../vitest.coverage';
 
 export default defineConfig({
   root: __dirname,
@@ -23,9 +24,6 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.spec.{ts,tsx}'],
     reporters: ['default'],
-    coverage: {
-      reportsDirectory: './test-output/vitest/coverage',
-      provider: 'v8',
-    },
+    coverage: publicPackageCoverage,
   },
 });
