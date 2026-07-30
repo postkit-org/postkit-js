@@ -1,5 +1,7 @@
 # Postkit
 
+[![codecov](https://codecov.io/gh/postkit-org/postkit-js/graph/badge.svg)](https://codecov.io/gh/postkit-org/postkit-js)
+
 Postkit is a portable publishing toolkit for rendering structured articles
 across React, Next.js, React Router, TanStack Router, and Astro. It combines an
 article component system, Markdown and MDX tooling, framework-aware links, and
