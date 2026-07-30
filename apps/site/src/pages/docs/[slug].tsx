@@ -16,10 +16,14 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { MDXRemote } from 'next-mdx-remote';
 
+import { ComponentCatalog } from '../../components/component-catalog';
 import type { DocsEntry, DocsEntrySummary } from '../../lib/docs';
 import { getDocsEntries, getDocsEntry } from '../../lib/docs.server';
 
 const postkitComponents = createPostkitNextComponents({
+  components: {
+    ComponentCatalog,
+  },
   link: {
     linkProps: { prefetch: false },
   },

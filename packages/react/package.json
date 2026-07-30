@@ -33,6 +33,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
+    "./component-manifest.json": "./component-manifest.json",
     ".": {
       "@postkit/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
@@ -42,6 +43,7 @@
   },
   "files": [
     "dist",
+    "component-manifest.json",
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {

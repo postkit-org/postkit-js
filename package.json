@@ -35,6 +35,8 @@
     "test": "nx run-many -t test --projects=tag:npm:public",
     "typecheck": "nx run-many -t typecheck --projects=tag:npm:public",
     "check": "nx run-many -t build lint test typecheck --projects=tag:npm:public",
+    "catalog:generate": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs",
+    "catalog:check": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs --check",
     "package:check": "node tools/check-public-packages.mjs",
     "consumer:check": "node tools/check-tarball-consumer.mjs",
     "yalc:publish": "npm run build && node tools/yalc-public-packages.mjs publish",

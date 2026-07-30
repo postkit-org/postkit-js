@@ -36,5 +36,7 @@ each component, its plain-Markdown directive, child mode, and prop schema.
 Editors and other authoring tools can use this manifest without importing the
 React renderer.
 
-The generated catalog will expand this page with searchable examples and
-preview illustrations while retaining declarations as its source of truth.
+The catalog below is generated from the same declaration source consumed by
+renderers and editor integrations.
+
+<ComponentCatalog />

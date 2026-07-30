@@ -145,6 +145,12 @@ for (const packageName of publicPackages) {
       fail(`${packageName} tarball is missing ${required}.`);
     }
   }
+  if (
+    packageName === '@postkit/react' &&
+    !paths.includes('component-manifest.json')
+  ) {
+    fail('@postkit/react tarball is missing component-manifest.json.');
+  }
   if (!paths.some((path) => path.endsWith('.js'))) {
     fail(`${packageName} tarball has no compiled JavaScript.`);
   }

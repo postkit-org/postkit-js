@@ -197,6 +197,17 @@ export {
   type PostkitVideoTrack,
 } from './lib/components/video.js';
 export {
+  POSTKIT_COMPONENT_CATALOG_VERSION,
+  postkitComponentCatalog,
+  type PostkitComponentCatalog,
+  type PostkitComponentCatalogEntry,
+  type PostkitComponentCategory,
+  type PostkitComponentExample,
+  type PostkitComponentPreview,
+  type PostkitComponentRuntime,
+  type PostkitComponentSupport,
+} from './lib/component-catalog.js';
+export {
   POSTKIT_DECLARATION_VERSION,
   postkitDeclarationFor,
   postkitDeclarationManifest,

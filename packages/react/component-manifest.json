@@ -1,0 +1,3159 @@
+{
+  "id": "postkit.component-catalog",
+  "version": 1,
+  "declarationVersion": 6,
+  "components": {
+    "Aside": {
+      "name": "Aside",
+      "directive": "postkit-aside",
+      "description": "A semantic article aside with optional emphasis.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "description": "An optional heading for the aside."
+        },
+        "tone": {
+          "kind": "enum",
+          "values": [
+            "note",
+            "tip",
+            "important",
+            "warning",
+            "caution"
+          ],
+          "description": "The semantic emphasis of the aside."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "aside",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "title",
+        "tone"
+      ],
+      "example": {
+        "props": {},
+        "jsx": "<Aside>\n  Example content.\n</Aside>",
+        "directive": ":::postkit-aside\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Aside component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Callout": {
+      "name": "Callout",
+      "directive": "postkit-callout",
+      "description": "A highlighted note, tip, warning, or caution.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "description": "An optional heading for the aside."
+        },
+        "tone": {
+          "kind": "enum",
+          "values": [
+            "note",
+            "tip",
+            "important",
+            "warning",
+            "caution"
+          ],
+          "description": "The semantic emphasis of the aside."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "callout",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "title",
+        "tone"
+      ],
+      "example": {
+        "props": {},
+        "jsx": "<Callout>\n  Example content.\n</Callout>",
+        "directive": ":::postkit-callout\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Callout component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "CardGrid": {
+      "name": "CardGrid",
+      "directive": "postkit-card-grid",
+      "description": "A deterministic grid of related navigation cards.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of titled cards."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The grid heading."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting copy for the grid."
+        },
+        "columns": {
+          "kind": "enum",
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "description": "The preferred desktop column count."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "card",
+        "grid",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "items",
+        "title",
+        "description",
+        "columns"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<CardGrid items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-card-grid{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "CardGrid component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Disclosure": {
+      "name": "Disclosure",
+      "directive": "postkit-disclosure",
+      "description": "Native expandable content for details and FAQs.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "summary": {
+          "kind": "string",
+          "required": true,
+          "description": "The always-visible disclosure label."
+        },
+        "open": {
+          "kind": "boolean",
+          "description": "Whether the disclosure starts expanded."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "disclosure",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "summary",
+        "open"
+      ],
+      "example": {
+        "props": {
+          "summary": "Example"
+        },
+        "jsx": "<Disclosure summary=\"Example\">\n  Example content.\n</Disclosure>",
+        "directive": ":::postkit-disclosure{summary=\"Example\"}\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Disclosure component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Gallery": {
+      "name": "Gallery",
+      "directive": "postkit-gallery",
+      "description": "A responsive image gallery with captions and links.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of image, alt, caption, and link data."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The gallery heading."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting copy for the gallery."
+        },
+        "columns": {
+          "kind": "enum",
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "description": "The preferred desktop column count."
+        }
+      },
+      "category": "Media",
+      "keywords": [
+        "gallery",
+        "media",
+        "size",
+        "variant",
+        "items",
+        "title",
+        "description",
+        "columns"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<Gallery items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-gallery{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Gallery component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Steps": {
+      "name": "Steps",
+      "directive": "postkit-steps",
+      "description": "An ordered sequence of titled instructions.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of step titles and descriptions."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "steps",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "items"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "First step",
+              "description": "Start here."
+            }
+          ]
+        },
+        "jsx": "<Steps items={[{\"title\":\"First step\",\"description\":\"Start here.\"}]} />",
+        "directive": "::postkit-steps{items=\"[{\\\"title\\\":\\\"First step\\\",\\\"description\\\":\\\"Start here.\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Steps component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Tabs": {
+      "name": "Tabs",
+      "directive": "postkit-tabs",
+      "description": "Keyboard-operable switchable article panels.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of tab labels and content."
+        },
+        "label": {
+          "kind": "string",
+          "description": "An accessible label for the tab list."
+        },
+        "initialIndex": {
+          "kind": "number",
+          "description": "The initially selected tab index."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "tabs",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "items",
+        "label",
+        "initial",
+        "index"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<Tabs items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-tabs{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Tabs component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "CodeBlock": {
+      "name": "CodeBlock",
+      "directive": "postkit-code-block",
+      "description": "Source code with filenames, line numbers, highlights, copying, and wrapping.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "code": {
+          "kind": "string",
+          "required": true,
+          "description": "The literal source code."
+        },
+        "language": {
+          "kind": "string",
+          "description": "The syntax-language identifier."
+        },
+        "filename": {
+          "kind": "string",
+          "description": "The displayed filename."
+        },
+        "highlightLines": {
+          "kind": "string",
+          "description": "Comma-separated line numbers or ranges."
+        },
+        "lineNumbers": {
+          "kind": "boolean",
+          "description": "Whether line numbers are displayed."
+        },
+        "copy": {
+          "kind": "boolean",
+          "description": "Whether the copy action is displayed."
+        },
+        "wrap": {
+          "kind": "boolean",
+          "description": "Whether long lines wrap."
+        },
+        "maxHeight": {
+          "kind": "string",
+          "description": "An optional maximum scrolling height."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "code",
+        "block",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "language",
+        "filename",
+        "highlight",
+        "lines",
+        "line",
+        "numbers",
+        "copy",
+        "wrap",
+        "max",
+        "height"
+      ],
+      "example": {
+        "props": {
+          "code": "console.log('Hello, PostKit')"
+        },
+        "jsx": "<CodeBlock code=\"console.log('Hello, PostKit')\" />",
+        "directive": "::postkit-code-block{code=\"console.log('Hello, PostKit')\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "CodeBlock component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "CodeGroup": {
+      "name": "CodeGroup",
+      "directive": "postkit-code-group",
+      "description": "A tabbed set of alternative code examples.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of labeled code examples."
+        },
+        "label": {
+          "kind": "string",
+          "description": "An accessible label for the code tabs."
+        },
+        "initialIndex": {
+          "kind": "number",
+          "description": "The initially selected code example."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "code",
+        "group",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "items",
+        "label",
+        "initial",
+        "index"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<CodeGroup items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-code-group{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "CodeGroup component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Diff": {
+      "name": "Diff",
+      "directive": "postkit-diff",
+      "description": "A semantic unified diff with additions and deletions.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "diff": {
+          "kind": "string",
+          "required": true,
+          "description": "Unified diff text."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The displayed diff filename."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "diff",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "title"
+      ],
+      "example": {
+        "props": {
+          "diff": "- before\n+ after"
+        },
+        "jsx": "<Diff diff=\"- before\\n+ after\" />",
+        "directive": "::postkit-diff{diff=\"- before\\n+ after\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Diff component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "FileCard": {
+      "name": "FileCard",
+      "directive": "postkit-file-card",
+      "description": "A descriptive file link or download.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "href": {
+          "kind": "string",
+          "required": true,
+          "description": "The file URL."
+        },
+        "name": {
+          "kind": "string",
+          "required": true,
+          "description": "The displayed filename."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting file description."
+        },
+        "fileType": {
+          "kind": "string",
+          "description": "The file format label."
+        },
+        "fileSize": {
+          "kind": "string",
+          "description": "The human-readable size."
+        },
+        "download": {
+          "kind": "boolean",
+          "description": "Whether the link requests a download."
+        },
+        "actionLabel": {
+          "kind": "string",
+          "description": "The visible action text."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "file",
+        "card",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "href",
+        "name",
+        "description",
+        "type",
+        "download",
+        "action",
+        "label"
+      ],
+      "example": {
+        "props": {
+          "href": "https://example.com/article",
+          "name": "Ada Example"
+        },
+        "jsx": "<FileCard href=\"https://example.com/article\" name=\"Ada Example\" />",
+        "directive": "::postkit-file-card{href=\"https://example.com/article\" name=\"Ada Example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "FileCard component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "FileTree": {
+      "name": "FileTree",
+      "directive": "postkit-file-tree",
+      "description": "A compact, semantic repository or project tree.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of paths, types, and optional metadata."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The tree heading."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "file",
+        "tree",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "items",
+        "title"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<FileTree items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-file-tree{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "FileTree component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Terminal": {
+      "name": "Terminal",
+      "directive": "postkit-terminal",
+      "description": "A terminal command and its optional output.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "command": {
+          "kind": "string",
+          "required": true,
+          "description": "The command text."
+        },
+        "output": {
+          "kind": "string",
+          "description": "The command output."
+        },
+        "prompt": {
+          "kind": "string",
+          "description": "The shell prompt marker."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The terminal window label."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "terminal",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "command",
+        "output",
+        "prompt",
+        "title"
+      ],
+      "example": {
+        "props": {
+          "command": "npm install @postkit/react"
+        },
+        "jsx": "<Terminal command=\"npm install @postkit/react\" />",
+        "directive": "::postkit-terminal{command=\"npm install @postkit/react\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Terminal component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "AudienceBoundary": {
+      "name": "AudienceBoundary",
+      "directive": "postkit-audience-boundary",
+      "description": "An authored audience marker with a host-controlled visibility boundary.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "audience": {
+          "kind": "string",
+          "required": true,
+          "description": "The host-defined audience identifier."
+        },
+        "fallback": {
+          "kind": "string",
+          "description": "Fallback copy for an unauthorized viewer."
+        },
+        "showLabel": {
+          "kind": "boolean",
+          "description": "Whether the audience label is visible."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "audience",
+        "boundary",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "fallback",
+        "show",
+        "label"
+      ],
+      "example": {
+        "props": {
+          "audience": "members"
+        },
+        "jsx": "<AudienceBoundary audience=\"members\">\n  Example content.\n</AudienceBoundary>",
+        "directive": ":::postkit-audience-boundary{audience=\"members\"}\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "AudienceBoundary component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Comparison": {
+      "name": "Comparison",
+      "directive": "postkit-comparison",
+      "description": "An accessible feature and option comparison table.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "columns": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of compared option labels."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of feature rows and values."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The comparison heading."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting comparison copy."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "comparison",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "columns",
+        "items",
+        "title",
+        "description"
+      ],
+      "example": {
+        "props": {
+          "columns": [
+            "Starter",
+            "Pro"
+          ],
+          "items": [
+            {
+              "label": "Portable content",
+              "values": [
+                true,
+                true
+              ]
+            }
+          ]
+        },
+        "jsx": "<Comparison columns={[\"Starter\",\"Pro\"]} items={[{\"label\":\"Portable content\",\"values\":[true,true]}]} />",
+        "directive": "::postkit-comparison{columns=\"[\\\"Starter\\\",\\\"Pro\\\"]\" items=\"[{\\\"label\\\":\\\"Portable content\\\",\\\"values\\\":[true,true]}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Comparison component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "KeyTakeaway": {
+      "name": "KeyTakeaway",
+      "directive": "postkit-key-takeaway",
+      "description": "A highlighted summary or list of essential points.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The takeaway heading."
+        },
+        "eyebrow": {
+          "kind": "string",
+          "description": "A short label above the heading."
+        },
+        "items": {
+          "kind": "json",
+          "description": "A JSON array of takeaway bullets."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "key",
+        "takeaway",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "title",
+        "eyebrow",
+        "items"
+      ],
+      "example": {
+        "props": {},
+        "jsx": "<KeyTakeaway>\n  Example content.\n</KeyTakeaway>",
+        "directive": ":::postkit-key-takeaway\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "KeyTakeaway component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Poll": {
+      "name": "Poll",
+      "directive": "postkit-poll",
+      "description": "An interactive reader poll whose submission handler is host-owned.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "question": {
+          "kind": "string",
+          "required": true,
+          "description": "The poll question."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting poll copy."
+        },
+        "options": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of stable option IDs and labels."
+        },
+        "totalVotes": {
+          "kind": "number",
+          "description": "An optional total vote count."
+        },
+        "selectedId": {
+          "kind": "string",
+          "description": "An optional initially selected option."
+        }
+      },
+      "category": "Engagement",
+      "keywords": [
+        "poll",
+        "engagement",
+        "size",
+        "variant",
+        "question",
+        "description",
+        "options",
+        "total",
+        "votes",
+        "selected",
+        "id"
+      ],
+      "example": {
+        "props": {
+          "question": "What do you think?",
+          "options": [
+            {
+              "id": "yes",
+              "label": "Yes"
+            }
+          ]
+        },
+        "jsx": "<Poll question=\"What do you think?\" options={[{\"id\":\"yes\",\"label\":\"Yes\"}]} />",
+        "directive": "::postkit-poll{question=\"What do you think?\" options=\"[{\\\"id\\\":\\\"yes\\\",\\\"label\\\":\\\"Yes\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Poll component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "ProductCard": {
+      "name": "ProductCard",
+      "directive": "postkit-product-card",
+      "description": "A product or recommendation card with explicit commercial linking.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "The product name."
+        },
+        "href": {
+          "kind": "string",
+          "required": true,
+          "description": "The product destination."
+        },
+        "description": {
+          "kind": "string",
+          "description": "The product summary."
+        },
+        "actionLabel": {
+          "kind": "string",
+          "description": "The product action label."
+        },
+        "imageSrc": {
+          "kind": "string",
+          "description": "The product image URL."
+        },
+        "imageAlt": {
+          "kind": "string",
+          "description": "Alternative text for the product image."
+        },
+        "price": {
+          "kind": "string",
+          "description": "The displayed price."
+        },
+        "rating": {
+          "kind": "number",
+          "description": "A five-point rating."
+        },
+        "badge": {
+          "kind": "string",
+          "description": "A short product badge."
+        },
+        "rel": {
+          "kind": "string",
+          "description": "The link relationship, normally sponsored."
+        }
+      },
+      "category": "Publishing",
+      "keywords": [
+        "product",
+        "card",
+        "publishing",
+        "size",
+        "variant",
+        "title",
+        "href",
+        "description",
+        "action",
+        "label",
+        "image",
+        "src",
+        "alt",
+        "price",
+        "rating",
+        "badge",
+        "rel"
+      ],
+      "example": {
+        "props": {
+          "title": "product card example",
+          "href": "https://example.com/article"
+        },
+        "jsx": "<ProductCard title=\"product card example\" href=\"https://example.com/article\" />",
+        "directive": "::postkit-product-card{title=\"product card example\" href=\"https://example.com/article\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "ProductCard component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "PullQuote": {
+      "name": "PullQuote",
+      "directive": "postkit-pull-quote",
+      "description": "A prominent quotation with optional attribution and citation.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "quote": {
+          "kind": "string",
+          "required": true,
+          "description": "The quoted text."
+        },
+        "attribution": {
+          "kind": "string",
+          "description": "The quoted speaker or source."
+        },
+        "cite": {
+          "kind": "string",
+          "description": "The cited work."
+        }
+      },
+      "category": "Article structure",
+      "keywords": [
+        "pull",
+        "quote",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "attribution",
+        "cite"
+      ],
+      "example": {
+        "props": {
+          "quote": "Portable content keeps its meaning."
+        },
+        "jsx": "<PullQuote quote=\"Portable content keeps its meaning.\" />",
+        "directive": "::postkit-pull-quote{quote=\"Portable content keeps its meaning.\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "PullQuote component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "RelatedContent": {
+      "name": "RelatedContent",
+      "directive": "postkit-related-content",
+      "description": "A semantic list of related articles or resources.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of related content links."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The related-content heading."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "related",
+        "content",
+        "discovery",
+        "size",
+        "variant",
+        "items",
+        "title"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "title": "Example item"
+            }
+          ]
+        },
+        "jsx": "<RelatedContent items={[{\"title\":\"Example item\"}]} />",
+        "directive": "::postkit-related-content{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "RelatedContent component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "SeriesNavigation": {
+      "name": "SeriesNavigation",
+      "directive": "postkit-series-navigation",
+      "description": "Previous and next navigation for a named article series.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "The series title."
+        },
+        "current": {
+          "kind": "number",
+          "description": "The current article position."
+        },
+        "total": {
+          "kind": "number",
+          "description": "The number of articles in the series."
+        },
+        "previous": {
+          "kind": "json",
+          "description": "The previous article title and URL."
+        },
+        "next": {
+          "kind": "json",
+          "description": "The next article title and URL."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "series",
+        "navigation",
+        "discovery",
+        "size",
+        "variant",
+        "title",
+        "current",
+        "total",
+        "previous",
+        "next"
+      ],
+      "example": {
+        "props": {
+          "title": "series navigation example"
+        },
+        "jsx": "<SeriesNavigation title=\"series navigation example\" />",
+        "directive": "::postkit-series-navigation{title=\"series navigation example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "SeriesNavigation component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "SponsorBlock": {
+      "name": "SponsorBlock",
+      "directive": "postkit-sponsor-block",
+      "description": "A clearly disclosed sponsor message and destination.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "name": {
+          "kind": "string",
+          "required": true,
+          "description": "The sponsor name."
+        },
+        "message": {
+          "kind": "string",
+          "description": "The sponsor message."
+        },
+        "href": {
+          "kind": "string",
+          "description": "The sponsor destination."
+        },
+        "actionLabel": {
+          "kind": "string",
+          "description": "The sponsor action label."
+        },
+        "logoSrc": {
+          "kind": "string",
+          "description": "The sponsor logo URL."
+        },
+        "logoAlt": {
+          "kind": "string",
+          "description": "Alternative text for the sponsor logo."
+        },
+        "disclosure": {
+          "kind": "string",
+          "description": "The commercial disclosure label."
+        }
+      },
+      "category": "Publishing",
+      "keywords": [
+        "sponsor",
+        "block",
+        "publishing",
+        "size",
+        "variant",
+        "name",
+        "message",
+        "href",
+        "action",
+        "label",
+        "logo",
+        "src",
+        "alt",
+        "disclosure"
+      ],
+      "example": {
+        "props": {
+          "name": "Ada Example"
+        },
+        "jsx": "<SponsorBlock name=\"Ada Example\" />",
+        "directive": "::postkit-sponsor-block{name=\"Ada Example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "SponsorBlock component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Stat": {
+      "name": "Stat",
+      "directive": "postkit-stat",
+      "description": "A prominent metric with context and trend.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "value": {
+          "kind": "string",
+          "required": true,
+          "description": "The displayed metric value."
+        },
+        "label": {
+          "kind": "string",
+          "required": true,
+          "description": "The metric label."
+        },
+        "trend": {
+          "kind": "string",
+          "description": "The metric trend."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Supporting metric context."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "stat",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "value",
+        "label",
+        "trend",
+        "description"
+      ],
+      "example": {
+        "props": {
+          "value": "42%",
+          "label": "Example"
+        },
+        "jsx": "<Stat value=\"42%\" label=\"Example\" />",
+        "directive": "::postkit-stat{value=\"42%\" label=\"Example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Stat component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "AppearsOn": {
+      "name": "AppearsOn",
+      "directive": "postkit-appears-on",
+      "description": "A provenance-aware list of destinations where the post was syndicated.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of syndicated publication references."
+        },
+        "label": {
+          "kind": "string",
+          "description": "The accessible heading for the destination list."
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": [
+            "inline",
+            "list",
+            "badges",
+            "card"
+          ],
+          "description": "How syndicated destinations are arranged."
+        },
+        "showDates": {
+          "kind": "boolean",
+          "description": "Whether publication dates are shown."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "appears",
+        "on",
+        "discovery",
+        "size",
+        "variant",
+        "items",
+        "label",
+        "presentation",
+        "show",
+        "dates"
+      ],
+      "example": {
+        "props": {
+          "items": [
+            {
+              "name": "Example publication",
+              "href": "https://example.com"
+            }
+          ]
+        },
+        "jsx": "<AppearsOn items={[{\"name\":\"Example publication\",\"href\":\"https://example.com\"}]} />",
+        "directive": "::postkit-appears-on{items=\"[{\\\"name\\\":\\\"Example publication\\\",\\\"href\\\":\\\"https://example.com\\\"}]\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "AppearsOn component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Audio": {
+      "name": "Audio",
+      "directive": "postkit-audio",
+      "description": "An accessible audio player with an optional caption.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "src": {
+          "kind": "string",
+          "required": true,
+          "description": "The audio file URL."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "An accessible title for the recording."
+        },
+        "caption": {
+          "kind": "string",
+          "description": "Visible supporting text below the player."
+        },
+        "preload": {
+          "kind": "enum",
+          "values": [
+            "none",
+            "metadata",
+            "auto"
+          ],
+          "description": "Browser preload behavior."
+        }
+      },
+      "category": "Media",
+      "keywords": [
+        "audio",
+        "media",
+        "size",
+        "variant",
+        "src",
+        "title",
+        "caption",
+        "preload"
+      ],
+      "example": {
+        "props": {
+          "src": "/media/episode.mp3",
+          "title": "audio example"
+        },
+        "jsx": "<Audio src=\"/media/episode.mp3\" title=\"audio example\" />",
+        "directive": "::postkit-audio{src=\"/media/episode.mp3\" title=\"audio example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Audio component preview"
+      },
+      "runtime": "native-controls",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "AuthorCard": {
+      "name": "AuthorCard",
+      "directive": "postkit-author-card",
+      "description": "A semantic author biography with portrait and profile links.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "name": {
+          "kind": "string",
+          "required": true,
+          "description": "The author display name."
+        },
+        "role": {
+          "kind": "string",
+          "description": "The author role, title, or affiliation."
+        },
+        "avatarSrc": {
+          "kind": "string",
+          "description": "The author portrait URL."
+        },
+        "avatarAlt": {
+          "kind": "string",
+          "description": "Alternative text for the author portrait."
+        },
+        "href": {
+          "kind": "string",
+          "description": "The author profile URL."
+        },
+        "bio": {
+          "kind": "string",
+          "description": "A plain-text author biography."
+        },
+        "links": {
+          "kind": "json",
+          "description": "A JSON array of author links with label, href, and optional rel fields."
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": [
+            "card",
+            "compact",
+            "inline"
+          ],
+          "description": "How much author detail is displayed."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "author",
+        "card",
+        "discovery",
+        "size",
+        "variant",
+        "name",
+        "role",
+        "avatar",
+        "src",
+        "alt",
+        "href",
+        "bio",
+        "links",
+        "presentation"
+      ],
+      "example": {
+        "props": {
+          "name": "Ada Example"
+        },
+        "jsx": "<AuthorCard name=\"Ada Example\">\n  Example content.\n</AuthorCard>",
+        "directive": ":::postkit-author-card{name=\"Ada Example\"}\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "AuthorCard component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "CallToAction": {
+      "name": "CallToAction",
+      "directive": "postkit-call-to-action",
+      "description": "A focused article callout with primary and secondary actions.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "The call-to-action heading."
+        },
+        "eyebrow": {
+          "kind": "string",
+          "description": "A short label displayed above the heading."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Plain-text supporting copy."
+        },
+        "primaryLabel": {
+          "kind": "string",
+          "description": "The primary action label."
+        },
+        "primaryHref": {
+          "kind": "string",
+          "description": "The primary action destination."
+        },
+        "secondaryLabel": {
+          "kind": "string",
+          "description": "The secondary action label."
+        },
+        "secondaryHref": {
+          "kind": "string",
+          "description": "The secondary action destination."
+        },
+        "alignment": {
+          "kind": "enum",
+          "values": [
+            "start",
+            "center"
+          ],
+          "description": "The content and action alignment."
+        }
+      },
+      "category": "Engagement",
+      "keywords": [
+        "call",
+        "to",
+        "action",
+        "engagement",
+        "size",
+        "variant",
+        "title",
+        "eyebrow",
+        "description",
+        "primary",
+        "label",
+        "href",
+        "secondary",
+        "alignment"
+      ],
+      "example": {
+        "props": {
+          "title": "call to action example"
+        },
+        "jsx": "<CallToAction title=\"call to action example\">\n  Example content.\n</CallToAction>",
+        "directive": ":::postkit-call-to-action{title=\"call to action example\"}\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "CallToAction component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Carousel": {
+      "name": "Carousel",
+      "directive": "postkit-carousel",
+      "description": "A keyboard-operable image and content carousel.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "items": {
+          "kind": "json",
+          "description": "A JSON array of carousel items."
+        },
+        "label": {
+          "kind": "string",
+          "description": "The accessible name for the carousel."
+        },
+        "initialIndex": {
+          "kind": "number",
+          "description": "The initially visible zero-based item index."
+        }
+      },
+      "category": "Media",
+      "keywords": [
+        "carousel",
+        "media",
+        "size",
+        "variant",
+        "items",
+        "label",
+        "initial",
+        "index"
+      ],
+      "example": {
+        "props": {},
+        "jsx": "<Carousel>\n  Example content.\n</Carousel>",
+        "directive": ":::postkit-carousel\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Carousel component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "hydrated",
+        "email": "not-defined"
+      }
+    },
+    "Chart": {
+      "name": "Chart",
+      "directive": "postkit-chart",
+      "description": "An accessible bar or line chart with optional data table.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "data": {
+          "kind": "json",
+          "required": true,
+          "description": "A JSON array of labeled data records."
+        },
+        "series": {
+          "kind": "json",
+          "description": "A JSON array describing the values to graph."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "The visible and accessible chart title."
+        },
+        "description": {
+          "kind": "string",
+          "description": "A concise explanation of the chart."
+        },
+        "type": {
+          "kind": "enum",
+          "values": [
+            "bar",
+            "line"
+          ],
+          "description": "The chart presentation."
+        },
+        "showTable": {
+          "kind": "boolean",
+          "description": "Whether to show an accessible source-data table."
+        }
+      },
+      "category": "Technical content",
+      "keywords": [
+        "chart",
+        "technical",
+        "content",
+        "size",
+        "variant",
+        "data",
+        "series",
+        "title",
+        "description",
+        "type",
+        "show",
+        "table"
+      ],
+      "example": {
+        "props": {
+          "data": [
+            {
+              "label": "January",
+              "value": 12
+            }
+          ],
+          "title": "chart example"
+        },
+        "jsx": "<Chart data={[{\"label\":\"January\",\"value\":12}]} title=\"chart example\" />",
+        "directive": "::postkit-chart{data=\"[{\\\"label\\\":\\\"January\\\",\\\"value\\\":12}]\" title=\"chart example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Chart component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Figure": {
+      "name": "Figure",
+      "directive": "postkit-figure",
+      "description": "A responsive image with an optional caption and attribution.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "src": {
+          "kind": "string",
+          "required": true,
+          "description": "The image URL."
+        },
+        "alt": {
+          "kind": "string",
+          "required": true,
+          "description": "Alternative text, or an explicitly empty value for a decorative image."
+        },
+        "caption": {
+          "kind": "string",
+          "description": "Visible supporting text below the image."
+        },
+        "credit": {
+          "kind": "string",
+          "description": "The image attribution or credit."
+        },
+        "creditHref": {
+          "kind": "string",
+          "description": "A URL for the image attribution."
+        },
+        "href": {
+          "kind": "string",
+          "description": "An optional destination when the image is activated."
+        },
+        "width": {
+          "kind": "number",
+          "description": "The intrinsic image width in pixels."
+        },
+        "height": {
+          "kind": "number",
+          "description": "The intrinsic image height in pixels."
+        },
+        "aspectRatio": {
+          "kind": "string",
+          "description": "A CSS aspect ratio such as 16 / 9."
+        },
+        "objectFit": {
+          "kind": "enum",
+          "values": [
+            "contain",
+            "cover"
+          ],
+          "description": "How the image fits its media frame."
+        },
+        "objectPosition": {
+          "kind": "string",
+          "description": "The focal position within the media frame."
+        },
+        "loading": {
+          "kind": "enum",
+          "values": [
+            "eager",
+            "lazy"
+          ],
+          "description": "Browser image loading behavior."
+        },
+        "sizes": {
+          "kind": "string",
+          "description": "Responsive image display-size hints."
+        },
+        "srcSet": {
+          "kind": "string",
+          "description": "Responsive image source candidates."
+        },
+        "layout": {
+          "kind": "enum",
+          "values": [
+            "inline",
+            "wide",
+            "bleed"
+          ],
+          "description": "The figure width relative to article content."
+        }
+      },
+      "category": "Media",
+      "keywords": [
+        "figure",
+        "media",
+        "size",
+        "variant",
+        "src",
+        "alt",
+        "caption",
+        "credit",
+        "href",
+        "width",
+        "height",
+        "aspect",
+        "ratio",
+        "object",
+        "fit",
+        "position",
+        "loading",
+        "sizes",
+        "set",
+        "layout"
+      ],
+      "example": {
+        "props": {
+          "src": "/media/example.jpg",
+          "alt": "A descriptive example"
+        },
+        "jsx": "<Figure src=\"/media/example.jpg\" alt=\"A descriptive example\" />",
+        "directive": "::postkit-figure{src=\"/media/example.jpg\" alt=\"A descriptive example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Figure component preview"
+      },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "LinkPreview": {
+      "name": "LinkPreview",
+      "directive": "postkit-link-preview",
+      "description": "A portable inline link, metadata card, native media player, or isolated rich embed.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "href": {
+          "kind": "string",
+          "required": true,
+          "description": "The destination URL."
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": [
+            "inline",
+            "card",
+            "embed",
+            "media",
+            "auto"
+          ],
+          "description": "The requested link treatment. Auto chooses from resolved metadata."
+        },
+        "images": {
+          "kind": "enum",
+          "values": [
+            "none",
+            "first",
+            "carousel"
+          ],
+          "description": "How resolved preview images are displayed."
+        },
+        "media": {
+          "kind": "enum",
+          "values": [
+            "auto",
+            "audio",
+            "video"
+          ],
+          "description": "The preferred native media type."
+        },
+        "activation": {
+          "kind": "enum",
+          "values": [
+            "click",
+            "immediate"
+          ],
+          "description": "Whether an external interactive embed waits for reader consent."
+        },
+        "provider": {
+          "kind": "string",
+          "description": "A provider override for PostkitProvider, an editor, or a build-time resolver integration."
+        },
+        "metadata": {
+          "kind": "json",
+          "description": "A normalized @postkit/unfurl result serialized as JSON."
+        },
+        "title": {
+          "kind": "string",
+          "description": "An author-supplied title override."
+        },
+        "description": {
+          "kind": "string",
+          "description": "An author-supplied description override."
+        },
+        "siteName": {
+          "kind": "string",
+          "description": "An author-supplied site-name override."
+        },
+        "image": {
+          "kind": "string",
+          "description": "An author-supplied primary image override."
+        },
+        "imageAlt": {
+          "kind": "string",
+          "description": "Alternative text for the primary image override."
+        },
+        "favicon": {
+          "kind": "string",
+          "description": "An author-supplied site icon override."
+        },
+        "iframeTitle": {
+          "kind": "string",
+          "description": "An accessible title for a resolved iframe embed."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "link",
+        "preview",
+        "discovery",
+        "size",
+        "variant",
+        "href",
+        "presentation",
+        "images",
+        "media",
+        "activation",
+        "provider",
+        "metadata",
+        "title",
+        "description",
+        "site",
+        "name",
+        "image",
+        "alt",
+        "favicon",
+        "iframe"
+      ],
+      "example": {
+        "props": {
+          "href": "https://example.com/article"
+        },
+        "jsx": "<LinkPreview href=\"https://example.com/article\" />",
+        "directive": "::postkit-link-preview{href=\"https://example.com/article\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "LinkPreview component preview"
+      },
+      "runtime": "resolver",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "hydrated",
+        "email": "not-defined"
+      }
+    },
+    "NewsletterSignup": {
+      "name": "NewsletterSignup",
+      "directive": "postkit-newsletter-signup",
+      "description": "A provider-agnostic newsletter form connected by PostkitProvider.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "The newsletter signup heading."
+        },
+        "description": {
+          "kind": "string",
+          "description": "Plain-text supporting copy."
+        },
+        "list": {
+          "kind": "string",
+          "description": "A host-defined newsletter or audience identifier."
+        },
+        "emailLabel": {
+          "kind": "string",
+          "description": "The accessible email field label."
+        },
+        "emailPlaceholder": {
+          "kind": "string",
+          "description": "The email field placeholder."
+        },
+        "buttonLabel": {
+          "kind": "string",
+          "description": "The submit button label."
+        },
+        "privacy": {
+          "kind": "string",
+          "description": "A short privacy or consent note."
+        },
+        "successMessage": {
+          "kind": "string",
+          "description": "The default successful-submission message."
+        },
+        "errorMessage": {
+          "kind": "string",
+          "description": "The default failed-submission message."
+        },
+        "alignment": {
+          "kind": "enum",
+          "values": [
+            "start",
+            "center"
+          ],
+          "description": "The content and form alignment."
+        }
+      },
+      "category": "Engagement",
+      "keywords": [
+        "newsletter",
+        "signup",
+        "engagement",
+        "size",
+        "variant",
+        "title",
+        "description",
+        "list",
+        "email",
+        "label",
+        "placeholder",
+        "button",
+        "privacy",
+        "success",
+        "message",
+        "error",
+        "alignment"
+      ],
+      "example": {
+        "props": {
+          "title": "newsletter signup example"
+        },
+        "jsx": "<NewsletterSignup title=\"newsletter signup example\">\n  Example content.\n</NewsletterSignup>",
+        "directive": ":::postkit-newsletter-signup{title=\"newsletter signup example\"}\nExample content.\n:::"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "NewsletterSignup component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "hydrated",
+        "email": "not-defined"
+      }
+    },
+    "ShareActions": {
+      "name": "ShareActions",
+      "directive": "postkit-share-actions",
+      "description": "Reader-initiated native, copy, email, and configured social sharing actions.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "url": {
+          "kind": "string",
+          "required": true,
+          "description": "The canonical URL to share."
+        },
+        "title": {
+          "kind": "string",
+          "description": "The title included with the share."
+        },
+        "text": {
+          "kind": "string",
+          "description": "Supporting text included with the share."
+        },
+        "services": {
+          "kind": "json",
+          "description": "A JSON array of configured service identifiers."
+        },
+        "label": {
+          "kind": "string",
+          "description": "The accessible heading for the actions."
+        },
+        "layout": {
+          "kind": "enum",
+          "values": [
+            "inline",
+            "buttons"
+          ],
+          "description": "How share actions are arranged."
+        }
+      },
+      "category": "Engagement",
+      "keywords": [
+        "share",
+        "actions",
+        "engagement",
+        "size",
+        "variant",
+        "url",
+        "title",
+        "text",
+        "services",
+        "label",
+        "layout"
+      ],
+      "example": {
+        "props": {
+          "url": "https://example.com/article"
+        },
+        "jsx": "<ShareActions url=\"https://example.com/article\" />",
+        "directive": "::postkit-share-actions{url=\"https://example.com/article\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "ShareActions component preview"
+      },
+      "runtime": "client",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "hydrated",
+        "email": "not-defined"
+      }
+    },
+    "SocialPost": {
+      "name": "SocialPost",
+      "directive": "postkit-social-post",
+      "description": "A consistently styled social post card or consent-gated provider embed.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "href": {
+          "kind": "string",
+          "required": true,
+          "description": "The original social post URL."
+        },
+        "provider": {
+          "kind": "string",
+          "description": "The metadata resolver override."
+        },
+        "resolution": {
+          "kind": "enum",
+          "values": [
+            "live",
+            "snapshot",
+            "snapshot-fallback"
+          ],
+          "description": "Whether Postkit resolves the current post, renders frozen metadata, or falls back to live resolution when no snapshot exists."
+        },
+        "snapshotInfo": {
+          "kind": "enum",
+          "values": [
+            "auto",
+            "visible",
+            "hidden"
+          ],
+          "description": "Whether snapshot capture provenance is displayed in the rendered card."
+        },
+        "service": {
+          "kind": "string",
+          "description": "The social service branding identifier."
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": [
+            "card",
+            "embed",
+            "auto"
+          ],
+          "description": "The native-card or provider-embed treatment."
+        },
+        "branding": {
+          "kind": "enum",
+          "values": [
+            "none",
+            "subtle",
+            "full"
+          ],
+          "description": "How strongly the service identity is displayed."
+        },
+        "activation": {
+          "kind": "enum",
+          "values": [
+            "click",
+            "immediate"
+          ],
+          "description": "Whether an interactive embed waits for consent."
+        },
+        "metadata": {
+          "kind": "json",
+          "description": "A normalized social post, unfurl result, or versioned Postkit snapshot envelope."
+        },
+        "authorName": {
+          "kind": "string",
+          "description": "An author-supplied display-name override."
+        },
+        "authorHandle": {
+          "kind": "string",
+          "description": "An author-supplied social handle override."
+        },
+        "authorAvatar": {
+          "kind": "string",
+          "description": "An author-supplied avatar URL override."
+        },
+        "text": {
+          "kind": "string",
+          "description": "An author-supplied post-text override."
+        },
+        "publishedAt": {
+          "kind": "string",
+          "description": "An ISO publication timestamp override."
+        },
+        "showMetrics": {
+          "kind": "boolean",
+          "description": "Whether available engagement counts are shown."
+        },
+        "iframeTitle": {
+          "kind": "string",
+          "description": "An accessible title for a provider iframe."
+        }
+      },
+      "category": "Discovery",
+      "keywords": [
+        "social",
+        "post",
+        "discovery",
+        "size",
+        "variant",
+        "href",
+        "provider",
+        "resolution",
+        "snapshot",
+        "info",
+        "service",
+        "presentation",
+        "branding",
+        "activation",
+        "metadata",
+        "author",
+        "name",
+        "handle",
+        "avatar",
+        "text",
+        "published",
+        "at",
+        "show",
+        "metrics",
+        "iframe",
+        "title"
+      ],
+      "example": {
+        "props": {
+          "href": "https://example.com/article"
+        },
+        "jsx": "<SocialPost href=\"https://example.com/article\" />",
+        "directive": "::postkit-social-post{href=\"https://example.com/article\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "SocialPost component preview"
+      },
+      "runtime": "resolver",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "hydrated",
+        "email": "not-defined"
+      }
+    },
+    "Video": {
+      "name": "Video",
+      "directive": "postkit-video",
+      "description": "A responsive HTML video player with caption support.",
+      "childMode": "none",
+      "directiveRemarkPlugins": [
+        "directives",
+        "postkit"
+      ],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "description": "The component density and type scale."
+        },
+        "variant": {
+          "kind": "enum",
+          "values": [
+            "outline",
+            "subtle",
+            "plain"
+          ],
+          "description": "The component visual treatment."
+        },
+        "src": {
+          "kind": "string",
+          "required": true,
+          "description": "The video file URL."
+        },
+        "title": {
+          "kind": "string",
+          "required": true,
+          "description": "An accessible title for the video."
+        },
+        "poster": {
+          "kind": "string",
+          "description": "The preview image URL."
+        },
+        "caption": {
+          "kind": "string",
+          "description": "Visible supporting text below the player."
+        },
+        "aspectRatio": {
+          "kind": "string",
+          "description": "A CSS aspect ratio such as 16 / 9."
+        },
+        "preload": {
+          "kind": "enum",
+          "values": [
+            "none",
+            "metadata",
+            "auto"
+          ],
+          "description": "Browser preload behavior."
+        }
+      },
+      "category": "Media",
+      "keywords": [
+        "video",
+        "media",
+        "size",
+        "variant",
+        "src",
+        "title",
+        "poster",
+        "caption",
+        "aspect",
+        "ratio",
+        "preload"
+      ],
+      "example": {
+        "props": {
+          "src": "/media/video.mp4",
+          "title": "video example"
+        },
+        "jsx": "<Video src=\"/media/video.mp4\" title=\"video example\" />",
+        "directive": "::postkit-video{src=\"/media/video.mp4\" title=\"video example\"}"
+      },
+      "preview": {
+        "kind": "live",
+        "label": "Video component preview"
+      },
+      "runtime": "native-controls",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    }
+  }
+}
