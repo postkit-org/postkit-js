@@ -1,122 +1,110 @@
 # Postkit
 
-Postkit is a set of portable article components, Markdown tooling, link
-metadata resolvers, and framework adapters.
+Postkit is a portable publishing toolkit for rendering structured articles
+across React, Next.js, React Router, TanStack Router, and Astro. It combines an
+article component system, Markdown and MDX tooling, framework-aware links, and
+provider-neutral URL metadata resolution.
 
-This repository is the standalone home for packages that were originally
-developed in the Prismark monorepo.
+Use Postkit when content should keep its meaning while the application, router,
+or rendering environment changes.
 
-## Packages
+## Choose a package
 
-| Package                    | Purpose                                              |
-| -------------------------- | ---------------------------------------------------- |
-| `@postkit/unfurl`          | Provider-neutral link and social metadata resolution |
-| `@postkit/react`           | Chakra-based React components and Markdown tooling   |
-| `@postkit/next`            | Next.js MDX and link adapter                         |
-| `@postkit/react-router`    | React Router MDX and link adapter                    |
-| `@postkit/tanstack-router` | TanStack Router MDX and link adapter                 |
-| `@postkit/astro`           | Astro MDX integration and component bridges          |
+| Package                                                | Use it when                                                                                               |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| [`@postkit/react`](packages/react)                     | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
+| [`@postkit/next`](packages/next)                       | A Next.js application needs the React component map with `next/link` routing.                             |
+| [`@postkit/react-router`](packages/react-router)       | A React Router application needs Postkit components and router-native internal links.                     |
+| [`@postkit/tanstack-router`](packages/tanstack-router) | A TanStack Router application needs Postkit components and typed route resolution.                        |
+| [`@postkit/astro`](packages/astro)                     | An Astro site needs Markdown/MDX integration with selective React hydration.                              |
+| [`@postkit/unfurl`](packages/unfurl)                   | A server or build process needs normalized Open Graph, oEmbed, link-preview, or social-post metadata.     |
+
+Framework adapters depend on `@postkit/react`; install the adapter that matches
+the application rather than assembling its routing integration by hand.
+
+## Start in React
+
+Install Postkit and its peer dependencies:
+
+```sh
+npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+```
+
+Mount `PostkitProvider`, then use individual components or the supplied MDX
+component map:
+
+```tsx
+import {
+  createPostkitMdxComponents,
+  PostkitCallout,
+  PostkitProvider,
+} from '@postkit/react';
+
+export const mdxComponents = createPostkitMdxComponents();
+
+export function Article() {
+  return (
+    <PostkitProvider>
+      <main>
+        <h1>Portable publishing</h1>
+        <PostkitCallout title="Keep the content" tone="tip">
+          Change the renderer without changing the article.
+        </PostkitCallout>
+      </main>
+    </PostkitProvider>
+  );
+}
+```
+
+For a framework application, continue with its package guide:
+
+- [Next.js](packages/next)
+- [React Router](packages/react-router)
+- [TanStack Router](packages/tanstack-router)
+- [Astro](packages/astro)
+
+## How the pieces fit together
+
+```text
+Markdown, MDX, or structured declarations
+                    |
+        Postkit component contract
+                    |
+       Framework component adapter
+                    |
+     Site theme, router, and resolvers
+                    |
+          Rendered article output
+```
+
+Postkit owns the portable content contract and default presentation. The
+application still owns its outer layout, Chakra system, routing policy, asset
+pipeline, secrets, and server-side unfurling service.
+
+`@postkit/unfurl` is deliberately separate from rendering. It normalizes remote
+metadata behind a server or build-time boundary; components consume the
+normalized result without receiving provider credentials.
+
+## Documentation
+
+- [Component and theming guide](packages/react)
+- [Unfurling and oEmbed guide](packages/unfurl)
+- [Astro integration and hydration policy](packages/astro)
+- [Contributing](CONTRIBUTING.md)
+- [Release process](RELEASING.md)
+- [Changelog](apps/site/content/changelog)
+
+The documentation site and generated component catalog live in `apps/site`.
+Package READMEs remain self-contained because npm renders the README from each
+published package.
+
+## Project status
+
+Postkit is in its initial public release series. Public APIs are typed and
+release artifacts are tested in a clean consumer, but additions and refinements
+should be expected before `1.0`.
 
 `@postkit/prismark` remains in the Prismark workspace until
-`@prismark/component-protocol@0.1.0` is published from
-[`org-prismark/prismark-js`](https://github.com/org-prismark/prismark-js).
+`@prismark/component-protocol` is published independently.
 
-## Development
-
-```sh
-npm install
-npm run build
-npm test
-npm run lint
-npm run typecheck
-npm run verify:release
-```
-
-The Astro adapter also includes a production fixture:
-
-```sh
-npm exec nx run @postkit/astro:build-fixture
-```
-
-### Local package testing with yalc
-
-Build and publish every public PostKit package to the local yalc store:
-
-```sh
-npm run yalc:publish
-```
-
-Packages are published in dependency order from the same allowlist used by the
-npm release workflow. In a consuming project, add the packages you want to
-exercise along with their local PostKit dependencies. To install the complete
-set:
-
-```sh
-npx yalc add \
-  @postkit/unfurl \
-  @postkit/react \
-  @postkit/next \
-  @postkit/react-router \
-  @postkit/tanstack-router \
-  @postkit/astro
-npm install
-```
-
-After making changes in this repository, rebuild and propagate every package to
-consuming projects that previously added it:
-
-```sh
-npm run yalc:push
-```
-
-Both root commands accept additional yalc options after `--`, such as a custom
-store directory:
-
-```sh
-npm run yalc:publish -- --store-folder /tmp/postkit-yalc
-```
-
-When local testing is complete, run `npx yalc remove --all` followed by
-`npm install` in the consumer. If the yalc installation is temporary, keep the
-consumer's `.yalc/` directory and `yalc.lock` out of version control.
-
-## Workspace layout
-
-The standalone packages live under `packages/`. Nx infers their build,
-typecheck, lint, and Vitest targets from each package's TypeScript and Vite
-configuration. Package exports use the `@postkit/source` condition while
-developing in the workspace and compiled `dist` entry points when published.
-
-`npm run verify:release` is the local release gate. It formats-checks the
-workspace, builds, lints, tests, and typechecks the public-package allowlist,
-builds the Astro production fixture, and inspects every npm tarball. The
-tarball check also enforces the internal dependency publication order:
-`@postkit/unfurl`, `@postkit/react`, and then the framework adapters.
-It then installs those tarballs into a fresh temporary consumer and verifies
-their runtime and TypeScript entry points without workspace source conditions.
-
-## Publishing
-
-Publishing is performed only by
-[`publish.yml`](.github/workflows/publish.yml). The workflow requires the
-`npm-production` GitHub environment, verifies that every public package uses
-the requested version, requires release tags in the form `v<version>`, and
-rejects release commits that are not contained in `main`. Configure the
-environment with a required reviewer, prevent self-review and administrator
-bypass, and restrict deployments to the `main` branch and tags matching `v*`.
-
-For the first publication, add a short-lived granular npm token with publish
-access to the `@postkit` scope as the `NPM_TOKEN` environment secret. After
-each package exists on npm, configure its trusted publisher with:
-
-- Provider: GitHub Actions
-- Organization: `postkit-org`
-- Repository: `postkit-js`
-- Workflow: `publish.yml`
-- Environment: `npm-production`
-- Allowed action: `npm publish`
-
-Then remove `NPM_TOKEN` and revoke the bootstrap token. The workflow uses npm
-OIDC publishing and provenance, checks the registry before any mutation, and
-can safely resume a partial run only when an already-published tarball has the
-same integrity as the local release.
+Postkit is available under the [MIT License](LICENSE).
