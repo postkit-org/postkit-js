@@ -30,6 +30,8 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 ## Reference
 
 - [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
+- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating PostKit.
+- [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
 
 ## Help
 

@@ -2,6 +2,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { format } from 'prettier';
+
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const outputPath = join(
   workspaceRoot,
@@ -12,7 +14,10 @@ const outputPath = join(
 const catalogModule = await import(
   new URL('../packages/react/dist/index.js', import.meta.url)
 );
-const output = `${JSON.stringify(catalogModule.postkitComponentCatalog, null, 2)}\n`;
+const output = await format(
+  JSON.stringify(catalogModule.postkitComponentCatalog),
+  { parser: 'json' },
+);
 
 if (process.argv.includes('--check')) {
   let existing;

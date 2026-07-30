@@ -8,27 +8,16 @@
       "directive": "postkit-aside",
       "description": "A semantic article aside with optional emphasis.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -37,13 +26,7 @@
         },
         "tone": {
           "kind": "enum",
-          "values": [
-            "note",
-            "tip",
-            "important",
-            "warning",
-            "caution"
-          ],
+          "values": ["note", "tip", "important", "warning", "caution"],
           "description": "The semantic emphasis of the aside."
         }
       },
@@ -62,10 +45,7 @@
         "jsx": "<Aside>\n  Example content.\n</Aside>",
         "directive": ":::postkit-aside\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Aside component preview"
-      },
+      "preview": { "kind": "live", "label": "Aside component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -79,27 +59,16 @@
       "directive": "postkit-callout",
       "description": "A highlighted note, tip, warning, or caution.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -108,13 +77,7 @@
         },
         "tone": {
           "kind": "enum",
-          "values": [
-            "note",
-            "tip",
-            "important",
-            "warning",
-            "caution"
-          ],
+          "values": ["note", "tip", "important", "warning", "caution"],
           "description": "The semantic emphasis of the aside."
         }
       },
@@ -133,10 +96,7 @@
         "jsx": "<Callout>\n  Example content.\n</Callout>",
         "directive": ":::postkit-callout\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Callout component preview"
-      },
+      "preview": { "kind": "live", "label": "Callout component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -150,27 +110,16 @@
       "directive": "postkit-card-grid",
       "description": "A deterministic grid of related navigation cards.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -178,22 +127,14 @@
           "required": true,
           "description": "A JSON array of titled cards."
         },
-        "title": {
-          "kind": "string",
-          "description": "The grid heading."
-        },
+        "title": { "kind": "string", "description": "The grid heading." },
         "description": {
           "kind": "string",
           "description": "Supporting copy for the grid."
         },
         "columns": {
           "kind": "enum",
-          "values": [
-            "1",
-            "2",
-            "3",
-            "4"
-          ],
+          "values": ["1", "2", "3", "4"],
           "description": "The preferred desktop column count."
         }
       },
@@ -211,20 +152,11 @@
         "columns"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<CardGrid items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-card-grid{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "CardGrid component preview"
-      },
+      "preview": { "kind": "live", "label": "CardGrid component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -238,27 +170,16 @@
       "directive": "postkit-disclosure",
       "description": "Native expandable content for details and FAQs.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "summary": {
@@ -282,16 +203,11 @@
         "open"
       ],
       "example": {
-        "props": {
-          "summary": "Example"
-        },
+        "props": { "summary": "Example" },
         "jsx": "<Disclosure summary=\"Example\">\n  Example content.\n</Disclosure>",
         "directive": ":::postkit-disclosure{summary=\"Example\"}\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Disclosure component preview"
-      },
+      "preview": { "kind": "live", "label": "Disclosure component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -305,27 +221,16 @@
       "directive": "postkit-gallery",
       "description": "A responsive image gallery with captions and links.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -333,22 +238,14 @@
           "required": true,
           "description": "A JSON array of image, alt, caption, and link data."
         },
-        "title": {
-          "kind": "string",
-          "description": "The gallery heading."
-        },
+        "title": { "kind": "string", "description": "The gallery heading." },
         "description": {
           "kind": "string",
           "description": "Supporting copy for the gallery."
         },
         "columns": {
           "kind": "enum",
-          "values": [
-            "1",
-            "2",
-            "3",
-            "4"
-          ],
+          "values": ["1", "2", "3", "4"],
           "description": "The preferred desktop column count."
         }
       },
@@ -364,20 +261,11 @@
         "columns"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<Gallery items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-gallery{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Gallery component preview"
-      },
+      "preview": { "kind": "live", "label": "Gallery component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -391,27 +279,16 @@
       "directive": "postkit-steps",
       "description": "An ordered sequence of titled instructions.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -421,30 +298,15 @@
         }
       },
       "category": "Article structure",
-      "keywords": [
-        "steps",
-        "article",
-        "structure",
-        "size",
-        "variant",
-        "items"
-      ],
+      "keywords": ["steps", "article", "structure", "size", "variant", "items"],
       "example": {
         "props": {
-          "items": [
-            {
-              "title": "First step",
-              "description": "Start here."
-            }
-          ]
+          "items": [{ "title": "First step", "description": "Start here." }]
         },
         "jsx": "<Steps items={[{\"title\":\"First step\",\"description\":\"Start here.\"}]} />",
         "directive": "::postkit-steps{items=\"[{\\\"title\\\":\\\"First step\\\",\\\"description\\\":\\\"Start here.\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Steps component preview"
-      },
+      "preview": { "kind": "live", "label": "Steps component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -458,27 +320,16 @@
       "directive": "postkit-tabs",
       "description": "Keyboard-operable switchable article panels.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -508,20 +359,11 @@
         "index"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<Tabs items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-tabs{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Tabs component preview"
-      },
+      "preview": { "kind": "live", "label": "Tabs component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -535,27 +377,16 @@
       "directive": "postkit-code-block",
       "description": "Source code with filenames, line numbers, highlights, copying, and wrapping.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "code": {
@@ -612,16 +443,11 @@
         "height"
       ],
       "example": {
-        "props": {
-          "code": "console.log('Hello, PostKit')"
-        },
+        "props": { "code": "console.log('Hello, PostKit')" },
         "jsx": "<CodeBlock code=\"console.log('Hello, PostKit')\" />",
         "directive": "::postkit-code-block{code=\"console.log('Hello, PostKit')\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "CodeBlock component preview"
-      },
+      "preview": { "kind": "live", "label": "CodeBlock component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -635,27 +461,16 @@
       "directive": "postkit-code-group",
       "description": "A tabbed set of alternative code examples.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -686,20 +501,11 @@
         "index"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<CodeGroup items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-code-group{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "CodeGroup component preview"
-      },
+      "preview": { "kind": "live", "label": "CodeGroup component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -713,27 +519,16 @@
       "directive": "postkit-diff",
       "description": "A semantic unified diff with additions and deletions.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "diff": {
@@ -747,25 +542,13 @@
         }
       },
       "category": "Technical content",
-      "keywords": [
-        "diff",
-        "technical",
-        "content",
-        "size",
-        "variant",
-        "title"
-      ],
+      "keywords": ["diff", "technical", "content", "size", "variant", "title"],
       "example": {
-        "props": {
-          "diff": "- before\n+ after"
-        },
+        "props": { "diff": "- before\n+ after" },
         "jsx": "<Diff diff=\"- before\\n+ after\" />",
         "directive": "::postkit-diff{diff=\"- before\\n+ after\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Diff component preview"
-      },
+      "preview": { "kind": "live", "label": "Diff component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -779,27 +562,16 @@
       "directive": "postkit-file-card",
       "description": "A descriptive file link or download.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "href": {
@@ -857,10 +629,7 @@
         "jsx": "<FileCard href=\"https://example.com/article\" name=\"Ada Example\" />",
         "directive": "::postkit-file-card{href=\"https://example.com/article\" name=\"Ada Example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "FileCard component preview"
-      },
+      "preview": { "kind": "live", "label": "FileCard component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -874,27 +643,16 @@
       "directive": "postkit-file-tree",
       "description": "A compact, semantic repository or project tree.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -902,10 +660,7 @@
           "required": true,
           "description": "A JSON array of paths, types, and optional metadata."
         },
-        "title": {
-          "kind": "string",
-          "description": "The tree heading."
-        }
+        "title": { "kind": "string", "description": "The tree heading." }
       },
       "category": "Technical content",
       "keywords": [
@@ -919,20 +674,11 @@
         "title"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<FileTree items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-file-tree{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "FileTree component preview"
-      },
+      "preview": { "kind": "live", "label": "FileTree component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -946,27 +692,16 @@
       "directive": "postkit-terminal",
       "description": "A terminal command and its optional output.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "command": {
@@ -974,10 +709,7 @@
           "required": true,
           "description": "The command text."
         },
-        "output": {
-          "kind": "string",
-          "description": "The command output."
-        },
+        "output": { "kind": "string", "description": "The command output." },
         "prompt": {
           "kind": "string",
           "description": "The shell prompt marker."
@@ -1000,16 +732,11 @@
         "title"
       ],
       "example": {
-        "props": {
-          "command": "npm install @postkit/react"
-        },
+        "props": { "command": "npm install @postkit/react" },
         "jsx": "<Terminal command=\"npm install @postkit/react\" />",
         "directive": "::postkit-terminal{command=\"npm install @postkit/react\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Terminal component preview"
-      },
+      "preview": { "kind": "live", "label": "Terminal component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1023,27 +750,16 @@
       "directive": "postkit-audience-boundary",
       "description": "An authored audience marker with a host-controlled visibility boundary.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "audience": {
@@ -1073,9 +789,7 @@
         "label"
       ],
       "example": {
-        "props": {
-          "audience": "members"
-        },
+        "props": { "audience": "members" },
         "jsx": "<AudienceBoundary audience=\"members\">\n  Example content.\n</AudienceBoundary>",
         "directive": ":::postkit-audience-boundary{audience=\"members\"}\nExample content.\n:::"
       },
@@ -1096,27 +810,16 @@
       "directive": "postkit-comparison",
       "description": "An accessible feature and option comparison table.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "columns": {
@@ -1129,10 +832,7 @@
           "required": true,
           "description": "A JSON array of feature rows and values."
         },
-        "title": {
-          "kind": "string",
-          "description": "The comparison heading."
-        },
+        "title": { "kind": "string", "description": "The comparison heading." },
         "description": {
           "kind": "string",
           "description": "Supporting comparison copy."
@@ -1152,27 +852,13 @@
       ],
       "example": {
         "props": {
-          "columns": [
-            "Starter",
-            "Pro"
-          ],
-          "items": [
-            {
-              "label": "Portable content",
-              "values": [
-                true,
-                true
-              ]
-            }
-          ]
+          "columns": ["Starter", "Pro"],
+          "items": [{ "label": "Portable content", "values": [true, true] }]
         },
         "jsx": "<Comparison columns={[\"Starter\",\"Pro\"]} items={[{\"label\":\"Portable content\",\"values\":[true,true]}]} />",
         "directive": "::postkit-comparison{columns=\"[\\\"Starter\\\",\\\"Pro\\\"]\" items=\"[{\\\"label\\\":\\\"Portable content\\\",\\\"values\\\":[true,true]}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Comparison component preview"
-      },
+      "preview": { "kind": "live", "label": "Comparison component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1186,33 +872,19 @@
       "directive": "postkit-key-takeaway",
       "description": "A highlighted summary or list of essential points.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
-        "title": {
-          "kind": "string",
-          "description": "The takeaway heading."
-        },
+        "title": { "kind": "string", "description": "The takeaway heading." },
         "eyebrow": {
           "kind": "string",
           "description": "A short label above the heading."
@@ -1239,10 +911,7 @@
         "jsx": "<KeyTakeaway>\n  Example content.\n</KeyTakeaway>",
         "directive": ":::postkit-key-takeaway\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "KeyTakeaway component preview"
-      },
+      "preview": { "kind": "live", "label": "KeyTakeaway component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1256,27 +925,16 @@
       "directive": "postkit-poll",
       "description": "An interactive reader poll whose submission handler is host-owned.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "question": {
@@ -1319,20 +977,12 @@
       "example": {
         "props": {
           "question": "What do you think?",
-          "options": [
-            {
-              "id": "yes",
-              "label": "Yes"
-            }
-          ]
+          "options": [{ "id": "yes", "label": "Yes" }]
         },
         "jsx": "<Poll question=\"What do you think?\" options={[{\"id\":\"yes\",\"label\":\"Yes\"}]} />",
         "directive": "::postkit-poll{question=\"What do you think?\" options=\"[{\\\"id\\\":\\\"yes\\\",\\\"label\\\":\\\"Yes\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Poll component preview"
-      },
+      "preview": { "kind": "live", "label": "Poll component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -1346,27 +996,16 @@
       "directive": "postkit-product-card",
       "description": "A product or recommendation card with explicit commercial linking.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -1395,18 +1034,9 @@
           "kind": "string",
           "description": "Alternative text for the product image."
         },
-        "price": {
-          "kind": "string",
-          "description": "The displayed price."
-        },
-        "rating": {
-          "kind": "number",
-          "description": "A five-point rating."
-        },
-        "badge": {
-          "kind": "string",
-          "description": "A short product badge."
-        },
+        "price": { "kind": "string", "description": "The displayed price." },
+        "rating": { "kind": "number", "description": "A five-point rating." },
+        "badge": { "kind": "string", "description": "A short product badge." },
         "rel": {
           "kind": "string",
           "description": "The link relationship, normally sponsored."
@@ -1440,10 +1070,7 @@
         "jsx": "<ProductCard title=\"product card example\" href=\"https://example.com/article\" />",
         "directive": "::postkit-product-card{title=\"product card example\" href=\"https://example.com/article\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "ProductCard component preview"
-      },
+      "preview": { "kind": "live", "label": "ProductCard component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1457,27 +1084,16 @@
       "directive": "postkit-pull-quote",
       "description": "A prominent quotation with optional attribution and citation.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "quote": {
@@ -1489,10 +1105,7 @@
           "kind": "string",
           "description": "The quoted speaker or source."
         },
-        "cite": {
-          "kind": "string",
-          "description": "The cited work."
-        }
+        "cite": { "kind": "string", "description": "The cited work." }
       },
       "category": "Article structure",
       "keywords": [
@@ -1506,16 +1119,11 @@
         "cite"
       ],
       "example": {
-        "props": {
-          "quote": "Portable content keeps its meaning."
-        },
+        "props": { "quote": "Portable content keeps its meaning." },
         "jsx": "<PullQuote quote=\"Portable content keeps its meaning.\" />",
         "directive": "::postkit-pull-quote{quote=\"Portable content keeps its meaning.\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "PullQuote component preview"
-      },
+      "preview": { "kind": "live", "label": "PullQuote component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1529,27 +1137,16 @@
       "directive": "postkit-related-content",
       "description": "A semantic list of related articles or resources.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -1573,13 +1170,7 @@
         "title"
       ],
       "example": {
-        "props": {
-          "items": [
-            {
-              "title": "Example item"
-            }
-          ]
-        },
+        "props": { "items": [{ "title": "Example item" }] },
         "jsx": "<RelatedContent items={[{\"title\":\"Example item\"}]} />",
         "directive": "::postkit-related-content{items=\"[{\\\"title\\\":\\\"Example item\\\"}]\"}"
       },
@@ -1600,27 +1191,16 @@
       "directive": "postkit-series-navigation",
       "description": "Previous and next navigation for a named article series.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -1659,9 +1239,7 @@
         "next"
       ],
       "example": {
-        "props": {
-          "title": "series navigation example"
-        },
+        "props": { "title": "series navigation example" },
         "jsx": "<SeriesNavigation title=\"series navigation example\" />",
         "directive": "::postkit-series-navigation{title=\"series navigation example\"}"
       },
@@ -1682,27 +1260,16 @@
       "directive": "postkit-sponsor-block",
       "description": "A clearly disclosed sponsor message and destination.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "name": {
@@ -1710,22 +1277,13 @@
           "required": true,
           "description": "The sponsor name."
         },
-        "message": {
-          "kind": "string",
-          "description": "The sponsor message."
-        },
-        "href": {
-          "kind": "string",
-          "description": "The sponsor destination."
-        },
+        "message": { "kind": "string", "description": "The sponsor message." },
+        "href": { "kind": "string", "description": "The sponsor destination." },
         "actionLabel": {
           "kind": "string",
           "description": "The sponsor action label."
         },
-        "logoSrc": {
-          "kind": "string",
-          "description": "The sponsor logo URL."
-        },
+        "logoSrc": { "kind": "string", "description": "The sponsor logo URL." },
         "logoAlt": {
           "kind": "string",
           "description": "Alternative text for the sponsor logo."
@@ -1753,16 +1311,11 @@
         "disclosure"
       ],
       "example": {
-        "props": {
-          "name": "Ada Example"
-        },
+        "props": { "name": "Ada Example" },
         "jsx": "<SponsorBlock name=\"Ada Example\" />",
         "directive": "::postkit-sponsor-block{name=\"Ada Example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "SponsorBlock component preview"
-      },
+      "preview": { "kind": "live", "label": "SponsorBlock component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1776,27 +1329,16 @@
       "directive": "postkit-stat",
       "description": "A prominent metric with context and trend.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "value": {
@@ -1809,10 +1351,7 @@
           "required": true,
           "description": "The metric label."
         },
-        "trend": {
-          "kind": "string",
-          "description": "The metric trend."
-        },
+        "trend": { "kind": "string", "description": "The metric trend." },
         "description": {
           "kind": "string",
           "description": "Supporting metric context."
@@ -1831,17 +1370,11 @@
         "description"
       ],
       "example": {
-        "props": {
-          "value": "42%",
-          "label": "Example"
-        },
+        "props": { "value": "42%", "label": "Example" },
         "jsx": "<Stat value=\"42%\" label=\"Example\" />",
         "directive": "::postkit-stat{value=\"42%\" label=\"Example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Stat component preview"
-      },
+      "preview": { "kind": "live", "label": "Stat component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1855,27 +1388,16 @@
       "directive": "postkit-appears-on",
       "description": "A provenance-aware list of destinations where the post was syndicated.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -1889,12 +1411,7 @@
         },
         "presentation": {
           "kind": "enum",
-          "values": [
-            "inline",
-            "list",
-            "badges",
-            "card"
-          ],
+          "values": ["inline", "list", "badges", "card"],
           "description": "How syndicated destinations are arranged."
         },
         "showDates": {
@@ -1918,19 +1435,13 @@
       "example": {
         "props": {
           "items": [
-            {
-              "name": "Example publication",
-              "href": "https://example.com"
-            }
+            { "name": "Example publication", "href": "https://example.com" }
           ]
         },
         "jsx": "<AppearsOn items={[{\"name\":\"Example publication\",\"href\":\"https://example.com\"}]} />",
         "directive": "::postkit-appears-on{items=\"[{\\\"name\\\":\\\"Example publication\\\",\\\"href\\\":\\\"https://example.com\\\"}]\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "AppearsOn component preview"
-      },
+      "preview": { "kind": "live", "label": "AppearsOn component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -1944,27 +1455,16 @@
       "directive": "postkit-audio",
       "description": "An accessible audio player with an optional caption.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "src": {
@@ -1983,11 +1483,7 @@
         },
         "preload": {
           "kind": "enum",
-          "values": [
-            "none",
-            "metadata",
-            "auto"
-          ],
+          "values": ["none", "metadata", "auto"],
           "description": "Browser preload behavior."
         }
       },
@@ -2003,17 +1499,11 @@
         "preload"
       ],
       "example": {
-        "props": {
-          "src": "/media/episode.mp3",
-          "title": "audio example"
-        },
+        "props": { "src": "/media/episode.mp3", "title": "audio example" },
         "jsx": "<Audio src=\"/media/episode.mp3\" title=\"audio example\" />",
         "directive": "::postkit-audio{src=\"/media/episode.mp3\" title=\"audio example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Audio component preview"
-      },
+      "preview": { "kind": "live", "label": "Audio component preview" },
       "runtime": "native-controls",
       "stability": "initial",
       "support": {
@@ -2027,27 +1517,16 @@
       "directive": "postkit-author-card",
       "description": "A semantic author biography with portrait and profile links.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "name": {
@@ -2067,10 +1546,7 @@
           "kind": "string",
           "description": "Alternative text for the author portrait."
         },
-        "href": {
-          "kind": "string",
-          "description": "The author profile URL."
-        },
+        "href": { "kind": "string", "description": "The author profile URL." },
         "bio": {
           "kind": "string",
           "description": "A plain-text author biography."
@@ -2081,11 +1557,7 @@
         },
         "presentation": {
           "kind": "enum",
-          "values": [
-            "card",
-            "compact",
-            "inline"
-          ],
+          "values": ["card", "compact", "inline"],
           "description": "How much author detail is displayed."
         }
       },
@@ -2107,16 +1579,11 @@
         "presentation"
       ],
       "example": {
-        "props": {
-          "name": "Ada Example"
-        },
+        "props": { "name": "Ada Example" },
         "jsx": "<AuthorCard name=\"Ada Example\">\n  Example content.\n</AuthorCard>",
         "directive": ":::postkit-author-card{name=\"Ada Example\"}\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "AuthorCard component preview"
-      },
+      "preview": { "kind": "live", "label": "AuthorCard component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -2130,27 +1597,16 @@
       "directive": "postkit-call-to-action",
       "description": "A focused article callout with primary and secondary actions.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -2184,10 +1640,7 @@
         },
         "alignment": {
           "kind": "enum",
-          "values": [
-            "start",
-            "center"
-          ],
+          "values": ["start", "center"],
           "description": "The content and action alignment."
         }
       },
@@ -2209,16 +1662,11 @@
         "alignment"
       ],
       "example": {
-        "props": {
-          "title": "call to action example"
-        },
+        "props": { "title": "call to action example" },
         "jsx": "<CallToAction title=\"call to action example\">\n  Example content.\n</CallToAction>",
         "directive": ":::postkit-call-to-action{title=\"call to action example\"}\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "CallToAction component preview"
-      },
+      "preview": { "kind": "live", "label": "CallToAction component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -2232,27 +1680,16 @@
       "directive": "postkit-carousel",
       "description": "A keyboard-operable image and content carousel.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "items": {
@@ -2284,10 +1721,7 @@
         "jsx": "<Carousel>\n  Example content.\n</Carousel>",
         "directive": ":::postkit-carousel\nExample content.\n:::"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Carousel component preview"
-      },
+      "preview": { "kind": "live", "label": "Carousel component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -2301,27 +1735,16 @@
       "directive": "postkit-chart",
       "description": "An accessible bar or line chart with optional data table.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "data": {
@@ -2344,10 +1767,7 @@
         },
         "type": {
           "kind": "enum",
-          "values": [
-            "bar",
-            "line"
-          ],
+          "values": ["bar", "line"],
           "description": "The chart presentation."
         },
         "showTable": {
@@ -2372,21 +1792,13 @@
       ],
       "example": {
         "props": {
-          "data": [
-            {
-              "label": "January",
-              "value": 12
-            }
-          ],
+          "data": [{ "label": "January", "value": 12 }],
           "title": "chart example"
         },
         "jsx": "<Chart data={[{\"label\":\"January\",\"value\":12}]} title=\"chart example\" />",
         "directive": "::postkit-chart{data=\"[{\\\"label\\\":\\\"January\\\",\\\"value\\\":12}]\" title=\"chart example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Chart component preview"
-      },
+      "preview": { "kind": "live", "label": "Chart component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -2400,27 +1812,16 @@
       "directive": "postkit-figure",
       "description": "A responsive image with an optional caption and attribution.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "src": {
@@ -2463,10 +1864,7 @@
         },
         "objectFit": {
           "kind": "enum",
-          "values": [
-            "contain",
-            "cover"
-          ],
+          "values": ["contain", "cover"],
           "description": "How the image fits its media frame."
         },
         "objectPosition": {
@@ -2475,10 +1873,7 @@
         },
         "loading": {
           "kind": "enum",
-          "values": [
-            "eager",
-            "lazy"
-          ],
+          "values": ["eager", "lazy"],
           "description": "Browser image loading behavior."
         },
         "sizes": {
@@ -2491,11 +1886,7 @@
         },
         "layout": {
           "kind": "enum",
-          "values": [
-            "inline",
-            "wide",
-            "bleed"
-          ],
+          "values": ["inline", "wide", "bleed"],
           "description": "The figure width relative to article content."
         }
       },
@@ -2530,10 +1921,7 @@
         "jsx": "<Figure src=\"/media/example.jpg\" alt=\"A descriptive example\" />",
         "directive": "::postkit-figure{src=\"/media/example.jpg\" alt=\"A descriptive example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Figure component preview"
-      },
+      "preview": { "kind": "live", "label": "Figure component preview" },
       "runtime": "static",
       "stability": "initial",
       "support": {
@@ -2547,27 +1935,16 @@
       "directive": "postkit-link-preview",
       "description": "A portable inline link, metadata card, native media player, or isolated rich embed.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "href": {
@@ -2577,39 +1954,22 @@
         },
         "presentation": {
           "kind": "enum",
-          "values": [
-            "inline",
-            "card",
-            "embed",
-            "media",
-            "auto"
-          ],
+          "values": ["inline", "card", "embed", "media", "auto"],
           "description": "The requested link treatment. Auto chooses from resolved metadata."
         },
         "images": {
           "kind": "enum",
-          "values": [
-            "none",
-            "first",
-            "carousel"
-          ],
+          "values": ["none", "first", "carousel"],
           "description": "How resolved preview images are displayed."
         },
         "media": {
           "kind": "enum",
-          "values": [
-            "auto",
-            "audio",
-            "video"
-          ],
+          "values": ["auto", "audio", "video"],
           "description": "The preferred native media type."
         },
         "activation": {
           "kind": "enum",
-          "values": [
-            "click",
-            "immediate"
-          ],
+          "values": ["click", "immediate"],
           "description": "Whether an external interactive embed waits for reader consent."
         },
         "provider": {
@@ -2673,16 +2033,11 @@
         "iframe"
       ],
       "example": {
-        "props": {
-          "href": "https://example.com/article"
-        },
+        "props": { "href": "https://example.com/article" },
         "jsx": "<LinkPreview href=\"https://example.com/article\" />",
         "directive": "::postkit-link-preview{href=\"https://example.com/article\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "LinkPreview component preview"
-      },
+      "preview": { "kind": "live", "label": "LinkPreview component preview" },
       "runtime": "resolver",
       "stability": "initial",
       "support": {
@@ -2696,27 +2051,16 @@
       "directive": "postkit-newsletter-signup",
       "description": "A provider-agnostic newsletter form connected by PostkitProvider.",
       "childMode": "mdx",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "title": {
@@ -2758,10 +2102,7 @@
         },
         "alignment": {
           "kind": "enum",
-          "values": [
-            "start",
-            "center"
-          ],
+          "values": ["start", "center"],
           "description": "The content and form alignment."
         }
       },
@@ -2786,9 +2127,7 @@
         "alignment"
       ],
       "example": {
-        "props": {
-          "title": "newsletter signup example"
-        },
+        "props": { "title": "newsletter signup example" },
         "jsx": "<NewsletterSignup title=\"newsletter signup example\">\n  Example content.\n</NewsletterSignup>",
         "directive": ":::postkit-newsletter-signup{title=\"newsletter signup example\"}\nExample content.\n:::"
       },
@@ -2809,27 +2148,16 @@
       "directive": "postkit-share-actions",
       "description": "Reader-initiated native, copy, email, and configured social sharing actions.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "url": {
@@ -2855,10 +2183,7 @@
         },
         "layout": {
           "kind": "enum",
-          "values": [
-            "inline",
-            "buttons"
-          ],
+          "values": ["inline", "buttons"],
           "description": "How share actions are arranged."
         }
       },
@@ -2877,16 +2202,11 @@
         "layout"
       ],
       "example": {
-        "props": {
-          "url": "https://example.com/article"
-        },
+        "props": { "url": "https://example.com/article" },
         "jsx": "<ShareActions url=\"https://example.com/article\" />",
         "directive": "::postkit-share-actions{url=\"https://example.com/article\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "ShareActions component preview"
-      },
+      "preview": { "kind": "live", "label": "ShareActions component preview" },
       "runtime": "client",
       "stability": "initial",
       "support": {
@@ -2900,27 +2220,16 @@
       "directive": "postkit-social-post",
       "description": "A consistently styled social post card or consent-gated provider embed.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "href": {
@@ -2934,20 +2243,12 @@
         },
         "resolution": {
           "kind": "enum",
-          "values": [
-            "live",
-            "snapshot",
-            "snapshot-fallback"
-          ],
+          "values": ["live", "snapshot", "snapshot-fallback"],
           "description": "Whether Postkit resolves the current post, renders frozen metadata, or falls back to live resolution when no snapshot exists."
         },
         "snapshotInfo": {
           "kind": "enum",
-          "values": [
-            "auto",
-            "visible",
-            "hidden"
-          ],
+          "values": ["auto", "visible", "hidden"],
           "description": "Whether snapshot capture provenance is displayed in the rendered card."
         },
         "service": {
@@ -2956,28 +2257,17 @@
         },
         "presentation": {
           "kind": "enum",
-          "values": [
-            "card",
-            "embed",
-            "auto"
-          ],
+          "values": ["card", "embed", "auto"],
           "description": "The native-card or provider-embed treatment."
         },
         "branding": {
           "kind": "enum",
-          "values": [
-            "none",
-            "subtle",
-            "full"
-          ],
+          "values": ["none", "subtle", "full"],
           "description": "How strongly the service identity is displayed."
         },
         "activation": {
           "kind": "enum",
-          "values": [
-            "click",
-            "immediate"
-          ],
+          "values": ["click", "immediate"],
           "description": "Whether an interactive embed waits for consent."
         },
         "metadata": {
@@ -3043,16 +2333,11 @@
         "title"
       ],
       "example": {
-        "props": {
-          "href": "https://example.com/article"
-        },
+        "props": { "href": "https://example.com/article" },
         "jsx": "<SocialPost href=\"https://example.com/article\" />",
         "directive": "::postkit-social-post{href=\"https://example.com/article\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "SocialPost component preview"
-      },
+      "preview": { "kind": "live", "label": "SocialPost component preview" },
       "runtime": "resolver",
       "stability": "initial",
       "support": {
@@ -3066,27 +2351,16 @@
       "directive": "postkit-video",
       "description": "A responsive HTML video player with caption support.",
       "childMode": "none",
-      "directiveRemarkPlugins": [
-        "directives",
-        "postkit"
-      ],
+      "directiveRemarkPlugins": ["directives", "postkit"],
       "props": {
         "size": {
           "kind": "enum",
-          "values": [
-            "sm",
-            "md",
-            "lg"
-          ],
+          "values": ["sm", "md", "lg"],
           "description": "The component density and type scale."
         },
         "variant": {
           "kind": "enum",
-          "values": [
-            "outline",
-            "subtle",
-            "plain"
-          ],
+          "values": ["outline", "subtle", "plain"],
           "description": "The component visual treatment."
         },
         "src": {
@@ -3099,10 +2373,7 @@
           "required": true,
           "description": "An accessible title for the video."
         },
-        "poster": {
-          "kind": "string",
-          "description": "The preview image URL."
-        },
+        "poster": { "kind": "string", "description": "The preview image URL." },
         "caption": {
           "kind": "string",
           "description": "Visible supporting text below the player."
@@ -3113,11 +2384,7 @@
         },
         "preload": {
           "kind": "enum",
-          "values": [
-            "none",
-            "metadata",
-            "auto"
-          ],
+          "values": ["none", "metadata", "auto"],
           "description": "Browser preload behavior."
         }
       },
@@ -3136,17 +2403,11 @@
         "preload"
       ],
       "example": {
-        "props": {
-          "src": "/media/video.mp4",
-          "title": "video example"
-        },
+        "props": { "src": "/media/video.mp4", "title": "video example" },
         "jsx": "<Video src=\"/media/video.mp4\" title=\"video example\" />",
         "directive": "::postkit-video{src=\"/media/video.mp4\" title=\"video example\"}"
       },
-      "preview": {
-        "kind": "live",
-        "label": "Video component preview"
-      },
+      "preview": { "kind": "live", "label": "Video component preview" },
       "runtime": "native-controls",
       "stability": "initial",
       "support": {

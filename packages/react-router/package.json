@@ -21,7 +21,7 @@
     "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/react-router"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/react-router#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },

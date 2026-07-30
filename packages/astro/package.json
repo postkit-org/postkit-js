@@ -20,7 +20,7 @@
     "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/astro"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/astro#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },

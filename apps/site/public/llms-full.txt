@@ -363,6 +363,111 @@ signatures, return types, and exported interfaces. The component manifest is
 the smaller authoring contract for editors and component browsers; the TypeDoc
 model describes the complete TypeScript library surface.
 
+## Compatibility and environments
+
+Source: /docs/compatibility
+
+# Compatibility and environments
+
+PostKit packages are ESM-only, publish TypeScript declarations, and emit
+ES2022 JavaScript. The host application's framework and build tool must support
+those package conventions.
+
+## Framework matrix
+
+| Integration     | Supported range | Rendering notes                                                            |
+| --------------- | --------------- | -------------------------------------------------------------------------- |
+| React           | React 19        | Chakra-backed components render on the server and client                   |
+| Chakra UI       | `^3.36.0`       | The host may provide a `SystemContext`; PostKit layers its recipes over it |
+| Next.js         | `>=15 <17`      | Uses the native MDX component map and `next/link`                          |
+| React Router    | `>=7 <8`        | The article must render beneath a router provider                          |
+| TanStack Router | `>=1.120 <2`    | Portable URLs can be mapped into generated route types                     |
+| Astro           | `>=6.4 <8`      | Uses matching React, MDX, and Markdown integrations                        |
+
+The package manifests are authoritative for exact peer dependency ranges.
+
+## Runtime matrix
+
+| Capability                   | Environment                                                  |
+| ---------------------------- | ------------------------------------------------------------ |
+| React rendering              | Server rendering or a browser-capable React application      |
+| Static Astro components      | Build/server render with no component hydration              |
+| Interactive Astro components | `client:visible` islands                                     |
+| Native audio and video       | Browser-native controls; no PostKit client runtime           |
+| Unfurling                    | Server, build process, or trusted editor with Web Fetch APIs |
+| Plain Markdown transforms    | Node/build tooling using Unified and Remark                  |
+| Email rendering              | Not defined in the current component contract                |
+
+Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
+visible Astro islands. Other current Astro bridges render statically; Audio and
+Video retain native browser controls.
+
+## Repository tooling
+
+The repository's CI and release workflow use Node.js 24 and npm. Consumers do
+not need Node.js 24 merely to render browser components, but their selected
+framework, build tool, and server runtime must satisfy their own requirements
+and support PostKit's ES2022 ESM output.
+
+## Stability
+
+PostKit is pre-1.0. Public APIs are typed and clean-consumer tested, but minor
+releases may refine the component contract. Pin related `@postkit/*` packages
+to the same release version and review the changelog before upgrading.
+
+## Security and trust boundaries
+
+Source: /docs/security
+
+# Security and trust boundaries
+
+PostKit separates portable authored content from trusted application
+infrastructure. Treat every URL, metadata response, saved snapshot, and
+Markdown document as untrusted input.
+
+## Remote resolution
+
+Run `@postkit/unfurl` in a server, build process, or trusted editor. Provider
+credentials must never enter the rendered document or browser bundle.
+
+Provider adapters send the authored URL to a configured metadata service.
+Custom resolvers that fetch origins directly must protect against server-side
+request forgery:
+
+- Accept only intended protocols
+- Block private, loopback, link-local, and cloud metadata destinations
+- Revalidate every redirect
+- Enforce timeouts and response-size limits
+- Restrict content types and parse depth
+- Cache normalized results under an application-owned policy
+
+## Embeds
+
+Resolvers may retain provider markup as `embed.rawHtml`. PostKit's React
+renderer never injects that field. A host that chooses to render it owns HTML
+sanitization, iframe isolation, content security policy, consent, and provider
+allowlisting.
+
+Validated iframe and media URLs are still third-party resources. Apply the
+host's `sandbox`, `allow`, referrer, privacy, and consent policies.
+
+## Authored content
+
+Plain Markdown directives accept allowlisted literal values and do not execute
+authored JavaScript. MDX is executable JavaScript and should only be compiled
+from authors trusted at that level, or processed inside an appropriately
+isolated publishing pipeline.
+
+React escapes text values, but host-supplied components and callbacks remain
+host code. Validate URLs and structured JSON before passing them into custom
+renderers.
+
+## Reporting
+
+Report suspected vulnerabilities privately through the repository's
+[GitHub security page](https://github.com/postkit-org/postkit-js/security).
+Do not include secrets or publish a proof of concept in a public issue.
+
 ## Troubleshooting
 
 Source: /docs/troubleshooting
@@ -1891,10 +1996,10 @@ export const articleComponents = createPostkitAstroComponents({
 
 Audio and Video use native browser controls, while AppearsOn, Figure, and the
 current Chart renderer are static, so Astro emits them without a client
-runtime. Carousel, LinkPreview, ShareActions, and SocialPost use
-`client:visible` and hydrate only when they approach the viewport. This keeps
-sharing, runtime link resolution, and consent-gated embeds interactive without
-shipping a page-wide React root.
+runtime. Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost
+use `client:visible` and hydrate only when they approach the viewport. This
+keeps forms, sharing, runtime link resolution, and consent-gated embeds
+interactive without shipping a page-wide React root.
 
 Prefer the `items` declaration for carousels in portable Markdown. Rich MDX
 children cross an Astro-to-React slot boundary and should be reserved for

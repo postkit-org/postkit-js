@@ -111,3 +111,19 @@ should be expected before `1.0`.
 `@prismark/component-protocol` is published independently.
 
 Postkit is available under the [MIT License](LICENSE).
+
+## Compatibility and support
+
+| Integration     | Supported range |
+| --------------- | --------------- |
+| React           | 19              |
+| Chakra UI       | `^3.36.0`       |
+| Next.js         | `>=15 <17`      |
+| React Router    | `>=7 <8`        |
+| TanStack Router | `>=1.120 <2`    |
+| Astro           | `>=6.4 <8`      |
+
+See [compatibility and environments](apps/site/content/docs/compatibility.md)
+for rendering details, [support](SUPPORT.md) for issue guidance, and the
+[security policy](SECURITY.md) for private vulnerability reporting and trust
+boundaries.

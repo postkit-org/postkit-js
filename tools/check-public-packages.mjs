@@ -9,7 +9,6 @@ const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const packagesRoot = join(workspaceRoot, 'packages');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
-const expectedHomepage = 'https://github.com/postkit-org/postkit-js#readme';
 const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
 const requiredKeywords = ['postkit', 'publishing', 'typescript'];
 const publishIndex = new Map(
@@ -72,7 +71,8 @@ for (const packageName of publicPackages) {
   if (
     manifest.repository?.url !== expectedRepository ||
     manifest.repository?.directory !== `packages/${directory}` ||
-    manifest.homepage !== expectedHomepage ||
+    manifest.homepage !==
+      `https://github.com/postkit-org/postkit-js/tree/main/packages/${directory}#readme` ||
     manifest.bugs?.url !== expectedBugs
   ) {
     fail(`${packageName} has incomplete repository or support metadata.`);
