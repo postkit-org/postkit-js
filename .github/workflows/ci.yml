@@ -13,6 +13,9 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
@@ -23,5 +26,14 @@ jobs:
 
       - run: npm ci
       - run: npm run verify:release
+      - name: Collect package coverage
+        run: npm run coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
+        with:
+          use_oidc: true
+          fail_ci_if_error: true
+          disable_search: true
+          files: ./packages/unfurl/test-output/vitest/coverage/lcov.info,./packages/react/test-output/vitest/coverage/lcov.info,./packages/next/test-output/vitest/coverage/lcov.info,./packages/react-router/test-output/vitest/coverage/lcov.info,./packages/tanstack-router/test-output/vitest/coverage/lcov.info,./packages/astro/test-output/vitest/coverage/lcov.info
       - run: npm run site:check
       - run: npm audit --omit=dev --audit-level=high
