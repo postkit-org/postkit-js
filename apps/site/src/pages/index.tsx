@@ -114,7 +114,7 @@ export default function IndexPage({
                 </Button>
                 <Button asChild size="lg" variant="outline">
                   <a
-                    href="https://github.com/org-postkit/postkit-js"
+                    href="https://github.com/postkit-org/postkit-js"
                     rel="noreferrer"
                     target="_blank"
                   >

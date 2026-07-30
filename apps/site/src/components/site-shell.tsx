@@ -73,7 +73,7 @@ export function SiteShell({ children }: SiteShellProps) {
                 fontFamily="mono"
                 fontSize="xs"
                 fontWeight="700"
-                href="https://github.com/org-postkit/postkit-js"
+                href="https://github.com/postkit-org/postkit-js"
                 rel="noreferrer"
                 target="_blank"
                 textDecoration="none"

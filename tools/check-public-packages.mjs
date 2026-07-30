@@ -8,9 +8,9 @@ import { runNpm } from './release-commands.mjs';
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const packagesRoot = join(workspaceRoot, 'packages');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-const expectedRepository = 'git+https://github.com/org-postkit/postkit-js.git';
-const expectedHomepage = 'https://github.com/org-postkit/postkit-js#readme';
-const expectedBugs = 'https://github.com/org-postkit/postkit-js/issues';
+const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
+const expectedHomepage = 'https://github.com/postkit-org/postkit-js#readme';
+const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
 const publishIndex = new Map(
   publicPackages.map((packageName, index) => [packageName, index]),
 );

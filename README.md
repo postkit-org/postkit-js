@@ -110,7 +110,7 @@ access to the `@postkit` scope as the `NPM_TOKEN` environment secret. After
 each package exists on npm, configure its trusted publisher with:
 
 - Provider: GitHub Actions
-- Organization: `org-postkit`
+- Organization: `postkit-org`
 - Repository: `postkit-js`
 - Workflow: `publish.yml`
 - Environment: `npm-production`

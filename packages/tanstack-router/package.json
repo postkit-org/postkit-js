@@ -6,12 +6,12 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org-postkit/postkit-js.git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/tanstack-router"
   },
-  "homepage": "https://github.com/org-postkit/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js#readme",
   "bugs": {
-    "url": "https://github.com/org-postkit/postkit-js/issues"
+    "url": "https://github.com/postkit-org/postkit-js/issues"
   },
   "type": "module",
   "main": "./dist/index.js",
