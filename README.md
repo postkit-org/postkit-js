@@ -91,6 +91,8 @@ normalized result without receiving provider credentials.
 - [Unfurling and oEmbed guide](packages/unfurl)
 - [Astro integration and hydration policy](packages/astro)
 - [Executable framework and service examples](examples)
+- [Generated TypeScript API reference](apps/site/content/docs/api-reference.md)
+- [Agent documentation index](apps/site/public/llms.txt)
 - [Contributing](CONTRIBUTING.md)
 - [Release process](RELEASING.md)
 - [Changelog](apps/site/content/changelog)

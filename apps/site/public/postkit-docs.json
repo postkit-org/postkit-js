@@ -1,0 +1,134 @@
+{
+  "id": "postkit.documentation",
+  "version": 1,
+  "repository": "https://github.com/postkit-org/postkit-js",
+  "documents": [
+    {
+      "slug": "getting-started",
+      "url": "/docs/getting-started",
+      "title": "Getting started",
+      "summary": "Install PostKit, mount its provider, and render a first portable article component.",
+      "category": "Start here",
+      "order": 10,
+      "content": "# Getting started\n\nPostKit gives articles a portable component vocabulary while leaving the host\napplication in control of routing, layout, assets, and remote services.\n\n## Install the React package\n\n```sh\nnpm install @postkit/react @chakra-ui/react @emotion/react react react-dom\n```\n\nMount the provider near the article:\n\n```tsx\nimport { PostkitCallout, PostkitProvider } from '@postkit/react';\n\nexport function Article() {\n  return (\n    <PostkitProvider>\n      <article>\n        <h1>My first PostKit article</h1>\n        <PostkitCallout title=\"Portable by default\" tone=\"tip\">\n          Keep the content. Change the renderer.\n        </PostkitCallout>\n      </article>\n    </PostkitProvider>\n  );\n}\n```\n\n`PostkitProvider` supplies PostKit's Chakra system. An application that already\nhas a Chakra system can pass it through the `system` prop and layer PostKit's\ncomponent recipes over its existing tokens.\n\n## Add Markdown or MDX\n\nUse the supplied component map with the application's Markdown or MDX runtime:\n\n```tsx\nimport { createPostkitMdxComponents } from '@postkit/react';\n\nexport const mdxComponents = createPostkitMdxComponents();\n```\n\nFramework packages add native routing and framework-specific behavior around\nthis same map. Continue with [choosing a package](/docs/choosing-a-package) to\nselect one.\n\n## Keep sensitive work on the server\n\nLink previews and social metadata can require network access or provider\ncredentials. Resolve them with `@postkit/unfurl` in a server or build-time\nboundary, then pass normalized data to the renderer."
+    },
+    {
+      "slug": "choosing-a-package",
+      "url": "/docs/choosing-a-package",
+      "title": "Choosing a package",
+      "summary": "Match each PostKit package to the rendering environment and integration boundary it owns.",
+      "category": "Start here",
+      "order": 20,
+      "content": "# Choosing a package\n\nInstall the package closest to the application boundary. Framework adapters\nalready depend on the React component system and add their native routing\nbehavior.\n\n| Package                    | Choose it for                                                                         |\n| -------------------------- | ------------------------------------------------------------------------------------- |\n| `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |\n| `@postkit/next`            | Next.js MDX and `next/link`                                                           |\n| `@postkit/react-router`    | React Router and router-native internal links                                         |\n| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |\n| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |\n| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |\n\n## Common combinations\n\nA Next.js publishing site commonly uses:\n\n```sh\nnpm install @postkit/next @postkit/react\n```\n\nAdd `@postkit/unfurl` to the server or build pipeline when the site renders link\npreviews:\n\n```sh\nnpm install @postkit/unfurl\n```\n\nAn Astro site should start with `@postkit/astro`, which documents the matching\nAstro integrations and component bridge.\n\n## What adapters do not own\n\nAdapters do not configure the application's content loader, authentication,\nasset storage, secrets, deployment platform, or outer page layout. Those remain\napplication concerns connected through explicit component props and resolver\nfunctions."
+    },
+    {
+      "slug": "core-concepts",
+      "url": "/docs/core-concepts",
+      "title": "Core concepts",
+      "summary": "Understand the content contract, renderers, host responsibilities, and resolver boundaries.",
+      "category": "Concepts",
+      "order": 30,
+      "content": "# Core concepts\n\nPostKit separates authored meaning from application infrastructure.\n\n## The content contract\n\nComponents such as `Callout`, `Figure`, `Audio`, and `LinkPreview` describe\narticle intent. Their declarations define names, directive syntax, accepted\nprops, and whether they contain Markdown children.\n\nThe contract can be authored as JSX in MDX or as literal-only directives in\nplain Markdown.\n\n## The renderer\n\nEach environment maps the portable declaration to a real component. React uses\nChakra-backed components. Astro bridges the same declarations into Astro\ncomponents and hydrates only the interactive parts.\n\n## The host application\n\nThe application owns:\n\n- Page layout and navigation\n- Routing policy\n- Chakra tokens and site theme\n- Media storage and URL generation\n- Secrets and remote provider credentials\n- Caching and persistence\n\nPostKit provides explicit extension points for these responsibilities instead\nof assuming one deployment architecture.\n\n## Resolver boundaries\n\nRemote content is normalized before rendering. `@postkit/unfurl` returns a\nprovider-neutral snapshot; `LinkPreview` and `SocialPost` render that snapshot.\nThis keeps remote requests, credentials, and provider-specific response formats\nout of presentation components."
+    },
+    {
+      "slug": "components",
+      "url": "/docs/components",
+      "title": "Components",
+      "summary": "Learn how PostKit components, declarations, props, and presentation variants work together.",
+      "category": "Authoring",
+      "order": 40,
+      "content": "# Components\n\nPostKit includes article structure, technical content, media, discovery,\nsharing, and conversion components.\n\nCommon components include:\n\n- `Callout`, `Aside`, `KeyTakeaway`, and `PullQuote`\n- `CodeBlock`, `CodeGroup`, `Diff`, `FileTree`, and `Terminal`\n- `Audio`, `Video`, `Figure`, `Gallery`, and `Carousel`\n- `LinkPreview`, `RelatedContent`, and `SeriesNavigation`\n- `ShareActions`, `SocialPost`, and `AppearsOn`\n- `AuthorCard`, `NewsletterSignup`, and `CallToAction`\n\n## Presentation props\n\nPortable components share compact presentation controls:\n\n- `size`: `sm`, `md`, or `lg`\n- `variant`: `outline`, `subtle`, or `plain`\n\nSite-wide visual decisions belong in the Chakra system or PostKit theme rather\nthan repeated content props.\n\n## Declarations\n\nThe declaration manifest is the machine-readable content contract. It describes\neach component, its plain-Markdown directive, child mode, and prop schema.\nEditors and other authoring tools can use this manifest without importing the\nReact renderer.\n\nThe catalog below is generated from the same declaration source consumed by\nrenderers and editor integrations.\n\n<ComponentCatalog />"
+    },
+    {
+      "slug": "markdown-and-mdx",
+      "url": "/docs/markdown-and-mdx",
+      "title": "Markdown and MDX",
+      "summary": "Author PostKit declarations in MDX or literal-only plain Markdown directives.",
+      "category": "Authoring",
+      "order": 50,
+      "content": "# Markdown and MDX\n\nUse JSX declarations in MDX:\n\n```mdx\n<Callout title=\"Release status\" tone=\"tip\">\n  The content remains regular **Markdown**.\n</Callout>\n\n<Audio src=\"/media/episode.mp3\" title=\"Episode 12\" />\n```\n\nRegister PostKit's component map with the framework's MDX runtime. Framework\nadapters supply the same components with native internal-link behavior.\n\n## Plain Markdown directives\n\nPlain Markdown pipelines can use literal-only directives:\n\n```md\n:::postkit-callout{title=\"Release status\" tone=\"tip\"}\nThe content remains regular **Markdown**.\n:::\n```\n\nEnable PostKit's Remark preset in the Markdown pipeline. Directive props are\nliteral values rather than arbitrary JavaScript, which keeps the format\nportable and suitable for untrusted authoring environments.\n\n## Choose one syntax per file\n\nMDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and\nreserve `::postkit-*{...}` declarations for plain Markdown pipelines."
+    },
+    {
+      "slug": "theming",
+      "url": "/docs/theming",
+      "title": "Theming",
+      "summary": "Layer PostKit recipes over a Chakra system while preserving the host application's design tokens.",
+      "category": "Integration",
+      "order": 60,
+      "content": "# Theming\n\nPostKit components use Chakra UI tokens and slot recipes. The default system is\nusable immediately, while an existing application can retain its own tokens,\nconditions, utilities, and global styles.\n\n```tsx\nimport { createSystem, defaultConfig } from '@chakra-ui/react';\nimport {\n  createPostkitSystem,\n  createPostkitTheme,\n  PostkitProvider,\n} from '@postkit/react';\n\nconst siteSystem = createSystem(defaultConfig, {\n  theme: {\n    tokens: {\n      fonts: {\n        body: { value: '\"Inter\", sans-serif' },\n        heading: { value: '\"Newsreader\", serif' },\n        mono: { value: '\"JetBrains Mono\", monospace' },\n      },\n    },\n  },\n});\n\nconst system = createPostkitSystem(\n  siteSystem,\n  createPostkitTheme({\n    prose: { base: { p: { fontSize: 'lg' } } },\n  }),\n);\n\n<PostkitProvider system={system}>{article}</PostkitProvider>;\n```\n\nThe layering order is:\n\n1. PostKit defaults\n2. The site-wide Chakra system\n3. The theme supplied to the nearest `PostkitProvider`\n\nUse content props for semantic variation and theme recipes for persistent visual\npolicy."
+    },
+    {
+      "slug": "framework-guides",
+      "url": "/docs/framework-guides",
+      "title": "Framework guides",
+      "summary": "Connect the portable component map to Next.js, React Router, TanStack Router, or Astro.",
+      "category": "Integration",
+      "order": 70,
+      "content": "# Framework guides\n\nFramework adapters keep internal links native to the host router while\npreserving normal anchors for external URLs, protocol links, hashes, downloads,\nand explicit non-default targets.\n\n## Next.js\n\nCreate the native MDX component map in `mdx-components.tsx`:\n\n```tsx\nimport { createPostkitNextComponents } from '@postkit/next';\n\nexport function useMDXComponents() {\n  return createPostkitNextComponents();\n}\n```\n\n## React Router and TanStack Router\n\nCreate the adapter's component map and render the article beneath the\napplication router provider. Both adapters accept a link-prop mapper for\napplication-specific route behavior.\n\nTanStack Router applications can translate portable string URLs into a typed\nroute, params, search, mask, or preload configuration at this boundary.\n\n## Astro\n\nInstall the Astro React and MDX integrations, add `postkitAstro()` to the Astro\nconfiguration, and render imported MDX with `postkitAstroComponents`. Static\ncomponents remain server-rendered while interactive components hydrate at an\nappropriate boundary.\n\nEach npm package README contains the exact peer dependencies and complete\nadapter API."
+    },
+    {
+      "slug": "unfurling",
+      "url": "/docs/unfurling",
+      "title": "Unfurling and oEmbed",
+      "summary": "Resolve URLs behind a server boundary and render normalized link or social metadata.",
+      "category": "Services",
+      "order": 80,
+      "content": "# Unfurling and oEmbed\n\n`@postkit/unfurl` normalizes metadata from Open Graph, oEmbed, OpenGraphs, and\ncustom resolvers. It is designed for a server or build process, not direct use\nin a browser component.\n\n## Resolution flow\n\n1. The application receives or loads a URL.\n2. A trusted server validates it against the application's URL policy.\n3. `@postkit/unfurl` calls the configured provider.\n4. The application caches the normalized result.\n5. A PostKit component renders the normalized snapshot.\n\nProvider credentials remain at the resolver boundary.\n\n## Rendering\n\n`LinkPreview` can consume a normalized link result. `SocialPost` can render a\ncaptured social snapshot or use an application callback to resolve one at\nruntime.\n\nLive embeds should remain an explicit application choice because they can add\nthird-party scripts, tracking, consent requirements, and layout instability."
+    },
+    {
+      "slug": "api-reference",
+      "url": "/docs/api-reference",
+      "title": "API reference",
+      "summary": "Browse generated TypeScript exports or consume the same API model as structured JSON.",
+      "category": "Reference",
+      "order": 85,
+      "content": "# API reference\n\nPostKit generates its API reference from the public exports of every published\npackage.\n\n- [Browse the TypeScript API reference](/api/)\n- [Download the TypeDoc JSON model](/api/postkit-api.json)\n- [Download the component manifest](https://unpkg.com/@postkit/react/component-manifest.json)\n\nUse the guides for task-oriented setup and the API reference for exact\nsignatures, return types, and exported interfaces. The component manifest is\nthe smaller authoring contract for editors and component browsers; the TypeDoc\nmodel describes the complete TypeScript library surface."
+    },
+    {
+      "slug": "troubleshooting",
+      "url": "/docs/troubleshooting",
+      "title": "Troubleshooting",
+      "summary": "Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.",
+      "category": "Help",
+      "order": 90,
+      "content": "# Troubleshooting\n\n## Components render without PostKit styling\n\nEnsure the article is beneath `PostkitProvider`. If the application supplies a\ncustom Chakra system, pass it through PostKit's system helpers so the component\nrecipes are registered.\n\n## Internal links reload the page\n\nUse the framework adapter rather than the base React MDX map. Render the article\nbeneath the router provider and verify that the destination is considered an\ninternal URL by the adapter.\n\n## A plain Markdown directive is ignored\n\nEnable PostKit's Remark plugins and use the `postkit-` directive name. Use JSX\ninstead of directive brace syntax inside MDX files.\n\n## Astro hydration fails\n\nConfirm that the React and MDX integrations are enabled and that a custom Chakra\nsystem is exported from a module addressable by both server rendering and\nhydrated islands.\n\n## Link previews do not resolve\n\nRun the resolver on a server or at build time. Check the provider configuration,\nURL policy, response contract, and cache independently from the rendering\ncomponent.\n\nWhen reporting an issue, include the PostKit package version, framework and\nruntime versions, a minimal content sample, and whether the failure occurs at\nbuild time, server rendering, hydration, or client interaction."
+    }
+  ],
+  "packages": [
+    {
+      "name": "@postkit/unfurl",
+      "description": "Provider-neutral link metadata resolution for Postkit",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/unfurl"
+    },
+    {
+      "name": "@postkit/react",
+      "description": "Chakra-based React components and Markdown tooling for articles",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/react"
+    },
+    {
+      "name": "@postkit/next",
+      "description": "Postkit MDX components and link routing for Next.js",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/next"
+    },
+    {
+      "name": "@postkit/react-router",
+      "description": "Postkit MDX components and link routing for React Router",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/react-router"
+    },
+    {
+      "name": "@postkit/tanstack-router",
+      "description": "Postkit MDX components and link routing for TanStack Router",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/tanstack-router"
+    },
+    {
+      "name": "@postkit/astro",
+      "description": "Postkit components and Markdown integration for Astro",
+      "url": "https://github.com/postkit-org/postkit-js/tree/main/packages/astro"
+    }
+  ],
+  "references": {
+    "api": "/api/postkit-api.json",
+    "componentManifest": "https://unpkg.com/@postkit/react/component-manifest.json",
+    "fullText": "/llms-full.txt"
+  }
+}

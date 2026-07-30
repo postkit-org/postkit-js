@@ -1,0 +1,43 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "PostKit API",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/unfurl",
+    "packages/react",
+    "packages/next",
+    "packages/react-router",
+    "packages/tanstack-router",
+    "packages/astro"
+  ],
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "tsconfig": "tsconfig.lib.json",
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "skipErrorChecking": true,
+    "readme": "none",
+    "validation": {
+      "notExported": false
+    }
+  },
+  "outputs": [
+    {
+      "name": "html",
+      "path": "apps/site/public/api"
+    },
+    {
+      "name": "json",
+      "path": "apps/site/public/api/postkit-api.json"
+    }
+  ],
+  "readme": "none",
+  "includeVersion": true,
+  "githubPages": false,
+  "cleanOutputDir": true,
+  "searchInComments": true,
+  "navigationLinks": {
+    "Guides": "/docs",
+    "GitHub": "https://github.com/postkit-org/postkit-js"
+  }
+}

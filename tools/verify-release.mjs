@@ -4,5 +4,6 @@ runNpm(['exec', '--', 'nx', 'format:check', '--all']);
 runNpm(['run', 'check']);
 runNpm(['run', 'catalog:check']);
 runNpm(['run', 'examples:check']);
+runNpm(['run', 'docs:check']);
 runNpm(['run', 'package:check']);
 runNpm(['run', 'consumer:check']);
