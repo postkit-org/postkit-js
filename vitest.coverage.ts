@@ -11,4 +11,10 @@ export const publicPackageCoverage = {
   ],
   reporter: ['text-summary', 'json-summary', 'lcov'],
   reportsDirectory: './test-output/vitest/coverage',
+  thresholds: {
+    statements: 80,
+    branches: 60,
+    functions: 80,
+    lines: 80,
+  },
 } satisfies CoverageOptions;
