@@ -4,6 +4,24 @@ Provider-neutral link metadata resolution for Postkit renderers and publishing
 pipelines. The package runs in a server, build, or trusted editor process; it
 does not ship API keys or origin-fetching logic to article readers.
 
+## When to use it
+
+Use `@postkit/unfurl` when a server or build process needs to turn an arbitrary
+URL into a stable `ResolvedLinkPreview` for link cards, media, oEmbed, or social
+post rendering. Applications that already produce this normalized contract can
+use PostKit renderers without this package.
+
+## Install
+
+```sh
+npm install @postkit/unfurl
+```
+
+The package is ESM-only, has no browser runtime requirement, and includes
+TypeScript declarations.
+
+## Quick start
+
 OpenGraphs is the default provider when a resolver registry is created:
 
 ```ts
@@ -45,6 +63,19 @@ iframe source URLs.
 
 Fallback providers are opt-in. This prevents an outage or malformed response
 from unexpectedly consuming credits with another service.
+
+## Public API
+
+The package exports:
+
+- Provider adapters for OpenGraphs, Iframely, Embedly, and Microlink
+- `createLinkResolverRegistry`
+- `createCallbackResolver`
+- Normalized link, media, embed, and social metadata types
+- Versioned social-post snapshot helpers and guards
+
+Resolvers accept an abort signal, provider selection, preferred embed
+dimensions, and a force-refresh option.
 
 ## OpenGraphs response contract
 
@@ -269,3 +300,17 @@ const resolver = createCallbackResolver('site-unfurl', async (url, options) => {
 The callback must return a normalized `ResolvedLinkPreview`. Postkit forwards
 the selected provider, abort signal, preferred dimensions, and force-refresh
 option.
+
+## Troubleshooting
+
+- Authentication failures: keep the provider API key in the server process and
+  confirm the adapter receives it.
+- Empty media: inspect the normalized response rather than relying on the
+  provider's original field names.
+- Unexpected fallback costs: fallback providers are disabled unless listed in
+  `fallbackProviders`.
+- Unsafe embed markup: `embed.rawHtml` is retained for a host-owned
+  sanitization boundary but is never injected by PostKit's React renderer.
+
+Use the result with `PostkitLinkPreview` or `PostkitSocialPost` from
+[`@postkit/react`](../react).

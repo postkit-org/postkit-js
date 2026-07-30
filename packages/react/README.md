@@ -1,4 +1,4 @@
-# Postkit
+# `@postkit/react`
 
 Postkit is a Chakra-based React component library for articles and blog posts.
 It includes accessible carousels, video and audio players, author cards, calls
@@ -6,7 +6,38 @@ to action, newsletter signups, link and social-post previews, syndication
 references, share actions, bar and line charts, an MDX component map, a
 composable Remark preset, and a literal-only Markdown directive transformer.
 
-## Site setup
+## When to use it
+
+Use this package directly for a React application or a framework-neutral
+Markdown/MDX pipeline. Next.js, React Router, TanStack Router, and Astro
+applications should begin with their PostKit adapter, which depends on this
+component system and adds native framework behavior.
+
+## Install
+
+```sh
+npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+```
+
+Supported peer versions:
+
+- Chakra UI 3.36 or newer within the 3.x line
+- React 19
+
+The package is ESM-only and includes TypeScript declarations.
+
+## What it exports
+
+- Chakra-backed article and publishing components
+- `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
+- `createPostkitMdxComponents`
+- `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
+- `postkitDeclarationManifest` for editor integrations
+- `postkitComponentCatalog` and `component-manifest.json` for component
+  discovery
+- Slot recipes, recipe keys, and typed style overrides
+
+## Quick start
 
 Mount `PostkitProvider` near the application root. It owns the Chakra provider,
 layers Postkit's default component theme over Chakra's default system, and
@@ -670,3 +701,17 @@ The bundled `@postkit/prismark` adapter exposes these declarations to
 Prismark's property inspector and inert desktop preview. That preview remains
 fail-closed and limited to packages bundled and integrity-pinned by the app;
 published sites use the interactive React renderers.
+
+## Troubleshooting
+
+- Missing styles: render the article beneath `PostkitProvider`, or merge the
+  site's Chakra system with `createPostkitSystem`.
+- Unknown MDX components: pass `createPostkitMdxComponents()` to the active MDX
+  runtime.
+- Ignored plain Markdown directives: enable `createPostkitRemarkPlugins()` and
+  use directive syntax only in plain Markdown.
+- Unresolved previews: configure a server/build-time resolver through
+  `PostkitProvider`; do not place provider credentials in a browser bundle.
+
+Framework-specific routing belongs in `@postkit/next`,
+`@postkit/react-router`, `@postkit/tanstack-router`, or `@postkit/astro`.

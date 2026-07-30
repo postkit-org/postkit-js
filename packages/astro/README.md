@@ -4,7 +4,18 @@
 provides Chakra context for every isolated React rendering boundary, and
 hydrates only components that require a React runtime.
 
+## When to use it
+
+Use this adapter when an Astro site needs the PostKit component contract in
+imported MDX or content collections. It owns the Astro-to-React bridge and
+selective hydration policy while leaving content loading, layouts, and asset
+handling to the site.
+
 ## Install
+
+```sh
+npm install @postkit/astro @postkit/react
+```
 
 Enable Astro's React and MDX integrations:
 
@@ -128,3 +139,26 @@ shipping a page-wide React root.
 Prefer the `items` declaration for carousels in portable Markdown. Rich MDX
 children cross an Astro-to-React slot boundary and should be reserved for
 site-owned wrappers that control their hydration behavior.
+
+## Public API
+
+- `postkitAstro(options?)`
+- `createPostkitAstroMdxOptions(options?)`
+- `postkitAstroComponents`
+- `createPostkitAstroComponents(overrides?)`
+- Individual Astro components from `@postkit/astro/components/*`
+- React bridges from `@postkit/astro/react`
+
+## Troubleshooting
+
+- Missing components: pass `postkitAstroComponents` to the rendered MDX or
+  content collection.
+- Missing directive transforms: create MDX options with
+  `createPostkitAstroMdxOptions()`.
+- Chakra context errors in islands: configure `chakraSystem` with a module that
+  default-exports the site's `SystemContext`.
+- Unexpected client JavaScript: check the hydration policy before wrapping
+  static components in a site-owned client island.
+
+See the [`@postkit/react`](../react) guide for the shared component,
+declaration, and theming APIs.
