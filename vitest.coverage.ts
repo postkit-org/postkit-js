@@ -9,7 +9,11 @@ export const publicPackageCoverage = {
     'src/**/*.d.ts',
     'src/**/testing/**',
   ],
-  reporter: ['text-summary', 'json-summary', 'lcov'],
+  reporter: [
+    'text-summary',
+    'json-summary',
+    ['lcov', { projectRoot: '../..' }],
+  ],
   reportsDirectory: './test-output/vitest/coverage',
   thresholds: {
     statements: 80,
