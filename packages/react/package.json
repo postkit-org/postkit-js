@@ -1,7 +1,21 @@
 {
   "name": "@postkit/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chakra-based React components and Markdown tooling for articles",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "markdown",
+    "mdx",
+    "content-components",
+    "article-components",
+    "chakra-ui",
+    "unified",
+    "remark"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -31,7 +45,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/unfurl": "0.1.0",
+    "@postkit/unfurl": "0.1.1",
     "remark-directive": "^4.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",

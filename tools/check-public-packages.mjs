@@ -11,6 +11,7 @@ const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
 const expectedHomepage = 'https://github.com/postkit-org/postkit-js#readme';
 const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
+const requiredKeywords = ['postkit', 'publishing', 'typescript'];
 const publishIndex = new Map(
   publicPackages.map((packageName, index) => [packageName, index]),
 );
@@ -51,6 +52,17 @@ for (const packageName of publicPackages) {
     fail(`${packageName} is unexpectedly private.`);
   if (manifest.license !== 'MIT')
     fail(`${packageName} must use the MIT license.`);
+  if (
+    !Array.isArray(manifest.keywords) ||
+    requiredKeywords.some((keyword) => !manifest.keywords.includes(keyword)) ||
+    new Set(manifest.keywords).size !== manifest.keywords.length
+  ) {
+    fail(
+      `${packageName} must provide unique npm keywords including ${requiredKeywords.join(
+        ', ',
+      )}.`,
+    );
+  }
   if (manifest.publishConfig?.access !== 'public') {
     fail(`${packageName} must publish with public access.`);
   }

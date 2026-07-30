@@ -1,7 +1,19 @@
 {
   "name": "@postkit/tanstack-router",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Postkit MDX components and link routing for TanStack Router",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "tanstack-router",
+    "markdown",
+    "mdx",
+    "routing",
+    "content-components"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -35,7 +47,7 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@postkit/react": "0.1.0",
+    "@postkit/react": "0.1.1",
     "@tanstack/react-router": ">=1.120 <2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

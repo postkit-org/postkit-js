@@ -5,8 +5,8 @@
   "dependencies": {
     "@chakra-ui/react": "^3.36.0",
     "@emotion/react": "^11.14.0",
-    "@postkit/next": "0.1.0",
-    "@postkit/react": "0.1.0",
+    "@postkit/next": "0.1.1",
+    "@postkit/react": "0.1.1",
     "gray-matter": "^4.0.3",
     "next": "^16.1.6",
     "next-mdx-remote": "^6.0.0",

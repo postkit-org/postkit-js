@@ -1,7 +1,34 @@
 {
   "name": "postkit-js",
   "version": "0.0.0",
+  "description": "Portable article components, Markdown tooling, link metadata resolvers, and framework adapters",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "content-components",
+    "article-components",
+    "markdown",
+    "mdx",
+    "react",
+    "typescript",
+    "nextjs",
+    "astro",
+    "react-router",
+    "tanstack-router",
+    "link-preview",
+    "open-graph",
+    "unfurl"
+  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
   "scripts": {
     "build": "nx run-many -t build --projects=tag:npm:public",
     "lint": "nx run-many -t lint --projects=tag:npm:public",

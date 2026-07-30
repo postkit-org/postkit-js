@@ -1,7 +1,18 @@
 {
   "name": "@postkit/astro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Postkit components and Markdown integration for Astro",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "astro",
+    "markdown",
+    "mdx",
+    "react",
+    "content-components"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -51,7 +62,7 @@
     "@astrojs/mdx": ">=6 <8",
     "@astrojs/react": ">=4 <7",
     "@chakra-ui/react": "^3.36.0",
-    "@postkit/react": "0.1.0",
+    "@postkit/react": "0.1.1",
     "astro": ">=6.4 <8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

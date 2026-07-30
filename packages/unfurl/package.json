@@ -1,7 +1,22 @@
 {
   "name": "@postkit/unfurl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Provider-neutral link metadata resolution for Postkit",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "unfurl",
+    "url-metadata",
+    "link-preview",
+    "open-graph",
+    "opengraph",
+    "oembed",
+    "social-media",
+    "metadata",
+    "resolver"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
