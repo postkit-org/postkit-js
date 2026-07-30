@@ -49,7 +49,7 @@ const sleep = (ms: number): Promise<void> =>
  */
 export async function retry<T>(
   fn: (attempt: number) => Promise<T>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T> {
   const {
     retries = 3,
@@ -96,7 +96,7 @@ export async function retry<T>(
 export function createRetry(defaultOptions: RetryOptions = {}) {
   return <T>(
     fn: (attempt: number) => Promise<T>,
-    overrides: RetryOptions = {}
+    overrides: RetryOptions = {},
   ): Promise<T> => {
     return retry(fn, { ...defaultOptions, ...overrides });
   };
@@ -107,7 +107,7 @@ export function createRetry(defaultOptions: RetryOptions = {}) {
  */
 export function withRetry<T extends (...args: never[]) => Promise<unknown>>(
   fn: T,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): T {
   return (async (...args: Parameters<T>) => {
     return retry(() => fn(...args), options);
@@ -119,7 +119,7 @@ export function withRetry<T extends (...args: never[]) => Promise<unknown>>(
  */
 export async function retryAll<T>(
   fns: Array<(attempt: number) => Promise<T>>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T[]> {
   return Promise.all(fns.map((fn) => retry(fn, options)));
 }
@@ -129,7 +129,7 @@ export async function retryAll<T>(
  */
 export async function retryRace<T>(
   fns: Array<(attempt: number) => Promise<T>>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T> {
   return Promise.race(fns.map((fn) => retry(fn, options)));
 }
@@ -139,7 +139,7 @@ export async function retryRace<T>(
  */
 export async function retryAllSettled<T>(
   fns: Array<(attempt: number) => Promise<T>>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<PromiseSettledResult<T>[]> {
   return Promise.allSettled(fns.map((fn) => retry(fn, options)));
 }

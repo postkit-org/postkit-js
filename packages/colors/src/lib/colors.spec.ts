@@ -74,7 +74,7 @@ describe('colors', () => {
       expect(() => rgbToHex(0, 0, 256)).toThrow('Invalid RGB values');
       expect(() => rgbToHex(1.5, 0, 0)).toThrow('Invalid RGB values');
       expect(() => rgbToHex({ r: 256, g: 0, b: 0 })).toThrow(
-        'Invalid RGB values'
+        'Invalid RGB values',
       );
     });
   });
@@ -103,10 +103,10 @@ describe('colors', () => {
 
     it('should throw error for invalid percentage', () => {
       expect(() => darken('#FF0000', -1)).toThrow(
-        'Percent must be between 0 and 100'
+        'Percent must be between 0 and 100',
       );
       expect(() => darken('#FF0000', 101)).toThrow(
-        'Percent must be between 0 and 100'
+        'Percent must be between 0 and 100',
       );
     });
 
@@ -139,10 +139,10 @@ describe('colors', () => {
 
     it('should throw error for invalid percentage', () => {
       expect(() => lighten('#000000', -1)).toThrow(
-        'Percent must be between 0 and 100'
+        'Percent must be between 0 and 100',
       );
       expect(() => lighten('#000000', 101)).toThrow(
-        'Percent must be between 0 and 100'
+        'Percent must be between 0 and 100',
       );
     });
 

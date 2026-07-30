@@ -22,11 +22,11 @@ This package provides essential string manipulation utilities:
 import { capitalize, slugify } from '@org/strings';
 
 // Capitalize strings
-capitalize('hello world');  // 'Hello world'
-capitalize('typescript');   // 'Typescript'
+capitalize('hello world'); // 'Hello world'
+capitalize('typescript'); // 'Typescript'
 
 // Create URL-friendly slugs
-slugify('Hello World!');           // 'hello-world'
+slugify('Hello World!'); // 'hello-world'
 slugify('TypeScript & JavaScript'); // 'typescript-javascript'
 ```
 
@@ -72,6 +72,7 @@ nx run strings:build-base  # Run custom build command
 ## 🔒 Module Boundaries
 
 This package has the tag `scope:strings` and can only import from:
+
 - `@org/utils` (tagged with `scope:shared`)
 
 Attempting to import from `@org/colors` or `@org/async` will result in a linting error due to module boundary constraints.
