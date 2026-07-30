@@ -99,4 +99,5 @@ The returned value is an MDX component map. Components supplied through
   supplied to the renderer.
 
 See the [`@postkit/react`](../react) guide for components, declarations,
-Markdown directives, and theming.
+Markdown directives, and theming. A checked
+[Next.js adapter example](../../examples/next) is included in the repository.

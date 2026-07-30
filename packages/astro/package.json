@@ -110,7 +110,7 @@
         "options": {
           "cwd": "packages/astro",
           "commands": [
-            "astro build --root fixture",
+            "astro build --root ../../examples/astro",
             "node scripts/verify-fixture.mjs"
           ],
           "parallel": false

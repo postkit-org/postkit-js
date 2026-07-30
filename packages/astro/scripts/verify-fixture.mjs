@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(
-  new URL('../fixture/dist/index.html', import.meta.url),
+  new URL('../../../examples/astro/dist/index.html', import.meta.url),
   'utf8',
 );
 
@@ -37,4 +37,4 @@ if (visibleIslands.length !== 5) {
   );
 }
 
-process.stdout.write('Postkit Astro fixture verified.\n');
+process.stdout.write('PostKit Astro example verified.\n');

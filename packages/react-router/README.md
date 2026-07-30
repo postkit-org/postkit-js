@@ -93,4 +93,6 @@ export const mdxComponents = createPostkitReactRouterComponents({
   passed to the MDX runtime.
 
 See the [`@postkit/react`](../react) guide for components, declarations,
-Markdown directives, and theming.
+Markdown directives, and theming. A checked
+[React Router example](../../examples/react-router) is included in the
+repository.

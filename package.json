@@ -39,6 +39,7 @@
     "catalog:check": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs --check",
     "package:check": "node tools/check-public-packages.mjs",
     "consumer:check": "node tools/check-tarball-consumer.mjs",
+    "examples:check": "npm exec nx run @postkit/astro:build-fixture && tsc --project examples/tsconfig.json --noEmit && node examples/unfurl-server/smoke.mjs",
     "yalc:publish": "npm run build && node tools/yalc-public-packages.mjs publish",
     "yalc:push": "npm run build && node tools/yalc-public-packages.mjs push",
     "site:dev": "nx dev site",

@@ -87,4 +87,6 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If components are unstyled, render the article beneath `PostkitProvider`.
 
 See the [`@postkit/react`](../react) guide for components, declarations,
-Markdown directives, and theming.
+Markdown directives, and theming. A checked
+[TanStack Router example](../../examples/tanstack-router) is included in the
+repository.

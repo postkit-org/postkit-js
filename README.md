@@ -90,6 +90,7 @@ normalized result without receiving provider credentials.
 - [Component and theming guide](packages/react)
 - [Unfurling and oEmbed guide](packages/unfurl)
 - [Astro integration and hydration policy](packages/astro)
+- [Executable framework and service examples](examples)
 - [Contributing](CONTRIBUTING.md)
 - [Release process](RELEASING.md)
 - [Changelog](apps/site/content/changelog)

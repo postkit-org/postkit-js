@@ -25,10 +25,11 @@ npm exec nx lint @postkit/unfurl
 npm exec nx build @postkit/astro
 ```
 
-The Astro adapter also has a production fixture:
+The executable framework and service examples have a combined validation
+target:
 
 ```sh
-npm exec nx run @postkit/astro:build-fixture
+npm run examples:check
 ```
 
 ## Making a change

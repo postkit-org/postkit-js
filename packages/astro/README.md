@@ -161,4 +161,5 @@ site-owned wrappers that control their hydration behavior.
   static components in a site-owned client island.
 
 See the [`@postkit/react`](../react) guide for the shared component,
-declaration, and theming APIs.
+declaration, and theming APIs. The complete
+[Astro example](../../examples/astro) is built and inspected in CI.

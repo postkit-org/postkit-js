@@ -313,4 +313,5 @@ option.
   sanitization boundary but is never injected by PostKit's React renderer.
 
 Use the result with `PostkitLinkPreview` or `PostkitSocialPost` from
-[`@postkit/react`](../react).
+[`@postkit/react`](../react). The repository includes a checked
+[server resolver example](../../examples/unfurl-server).
