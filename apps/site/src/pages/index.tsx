@@ -110,7 +110,7 @@ export default function IndexPage({
               </Text>
               <Flex gap="3" flexWrap="wrap">
                 <Button asChild colorPalette="green" size="lg">
-                  <NextLink href="/changelog">Read the changelog</NextLink>
+                  <NextLink href="/docs/getting-started">Get started</NextLink>
                 </Button>
                 <Button asChild size="lg" variant="outline">
                   <a
@@ -185,10 +185,10 @@ export default function IndexPage({
             ))}
           </SimpleGrid>
 
-          <PostkitCallout title="Documentation is coming next" tone="note">
-            The site foundation is ready. The documentation area is being held
-            for the publishing toolchain that will join PostKit in a later
-            release.
+          <PostkitCallout title="Documentation" tone="tip">
+            Follow the guided setup, choose a framework adapter, or browse the
+            component and Markdown concepts in the{' '}
+            <NextLink href="/docs">PostKit documentation</NextLink>.
           </PostkitCallout>
 
           {latestEntry ? (

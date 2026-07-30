@@ -14,6 +14,7 @@ export interface SiteShellProps {
 
 const navigation = [
   { href: '/', label: 'Home' },
+  { href: '/docs', label: 'Docs' },
   { href: '/changelog', label: 'Changelog' },
 ] as const;
 
