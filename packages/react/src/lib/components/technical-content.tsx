@@ -2,6 +2,7 @@
 
 import {
   Box,
+  CodeBlock,
   Link,
   Text,
   chakra,
@@ -53,7 +54,7 @@ function rootParts(rootProps?: BoxProps) {
   return { rootCss: css, rootClassName: className, restRootProps: rest };
 }
 
-function highlightedLines(value?: string): Set<number> {
+function highlightedLines(value?: string): number[] {
   const lines = new Set<number>();
   for (const part of value?.split(',') ?? []) {
     const [startValue, endValue] = part.trim().split('-');
@@ -68,7 +69,7 @@ function highlightedLines(value?: string): Set<number> {
       lines.add(line);
     }
   }
-  return lines;
+  return [...lines];
 }
 
 export type PostkitCodeBlockProps = {
@@ -102,9 +103,7 @@ export function PostkitCodeBlock({
   unstyled,
 }: PostkitCodeBlockProps) {
   const source = code ?? (typeof children === 'string' ? children : '');
-  const lines = source.replace(/\n$/, '').split('\n');
   const highlights = highlightedLines(highlightsValue);
-  const [copied, setCopied] = useState(false);
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeBlock,
     postkitCodeBlockRecipe,
@@ -113,66 +112,68 @@ export function PostkitCodeBlock({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const codeBlockRootProps = restRootProps as Omit<
+    CodeBlock.RootProps,
+    'children' | 'code' | 'language' | 'meta' | 'size' | 'unstyled'
+  >;
   const shouldNumber = enabled(lineNumbers, true);
   const shouldWrap = enabled(wrap);
 
-  const copyCode = async () => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(source);
-      setCopied(true);
-      globalThis.setTimeout(() => setCopied(false), 1600);
-    }
-  };
-
   return (
-    <Box
+    <CodeBlock.Root
       data-postkit-component="CodeBlock"
-      {...restRootProps}
+      {...codeBlockRootProps}
+      code={source}
+      language={language}
+      meta={{
+        highlightLines: highlights,
+        showLineNumbers: shouldNumber,
+        wordWrap: shouldWrap,
+      }}
+      size={size}
+      unstyled={unstyled}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {filename || language || enabled(copy, true) ? (
-        <Box
+        <CodeBlock.Header
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          {filename ? (
-            <Text
-              className={recipe.classNameMap.filename}
-              css={[styles.filename, slotStyles?.filename]}
-            >
-              {filename}
-            </Text>
-          ) : (
-            <span />
-          )}
-          {language ? (
-            <Text
-              className={recipe.classNameMap.language}
-              css={[styles.language, slotStyles?.language]}
-            >
-              {language}
-            </Text>
-          ) : null}
-          <Box
+          <CodeBlock.Title
+            className={recipe.classNameMap.filename}
+            css={[styles.filename, slotStyles?.filename]}
+          >
+            {filename}
+          </CodeBlock.Title>
+          <CodeBlock.Control
             className={recipe.classNameMap.actions}
             css={[styles.actions, slotStyles?.actions]}
           >
+            {language ? (
+              <Text
+                className={recipe.classNameMap.language}
+                css={[styles.language, slotStyles?.language]}
+              >
+                {language}
+              </Text>
+            ) : null}
             {enabled(copy, true) ? (
-              <ActionButton
+              <CodeBlock.CopyTrigger
                 type="button"
                 aria-label="Copy code"
-                onClick={() => void copyCode()}
                 className={recipe.classNameMap.button}
                 css={[styles.button, slotStyles?.button]}
               >
-                {copied ? 'Copied' : 'Copy'}
-              </ActionButton>
+                <CodeBlock.CopyIndicator copied="Copied">
+                  Copy
+                </CodeBlock.CopyIndicator>
+              </CodeBlock.CopyTrigger>
             ) : null}
-          </Box>
-        </Box>
+          </CodeBlock.Control>
+        </CodeBlock.Header>
       ) : null}
-      <Box
+      <CodeBlock.Content
         className={recipe.classNameMap.scroller}
         css={[
           styles.scroller,
@@ -180,8 +181,7 @@ export function PostkitCodeBlock({
           slotStyles?.scroller,
         ]}
       >
-        <Box
-          as="pre"
+        <CodeBlock.Code
           className={recipe.classNameMap.code}
           css={[
             styles.code,
@@ -189,51 +189,26 @@ export function PostkitCodeBlock({
             slotStyles?.code,
           ]}
         >
-          <Box as="code">
-            {lines.map((line, index) => (
-              <Box
-                as="span"
-                data-highlighted={highlights.has(index + 1) || undefined}
-                className={recipe.classNameMap.line}
-                css={[
-                  styles.line,
-                  highlights.has(index + 1)
-                    ? { background: 'whiteAlpha.100' }
-                    : undefined,
-                  shouldNumber ? undefined : { gridTemplateColumns: '1fr' },
-                  slotStyles?.line,
-                ]}
-                key={index}
-              >
-                {shouldNumber ? (
-                  <Box
-                    as="span"
-                    aria-hidden="true"
-                    className={recipe.classNameMap.lineNumber}
-                    css={[styles.lineNumber, slotStyles?.lineNumber]}
-                  >
-                    {index + 1}
-                  </Box>
-                ) : null}
-                <Box
-                  as="span"
-                  className={recipe.classNameMap.lineContent}
-                  css={[
-                    styles.lineContent,
-                    shouldWrap
-                      ? { overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }
-                      : undefined,
-                    slotStyles?.lineContent,
-                  ]}
-                >
-                  {line || ' '}
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          <CodeBlock.CodeText
+            className={recipe.classNameMap.lineContent}
+            css={[
+              styles.lineContent,
+              {
+                '& [data-line]': {
+                  ...styles.line,
+                  ...slotStyles?.line,
+                },
+                '& [data-line]::before': {
+                  ...styles.lineNumber,
+                  ...slotStyles?.lineNumber,
+                },
+              },
+              slotStyles?.lineContent,
+            ]}
+          />
+        </CodeBlock.Code>
+      </CodeBlock.Content>
+    </CodeBlock.Root>
   );
 }
 

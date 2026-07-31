@@ -57,21 +57,19 @@ export const postkitCodeBlockRecipe = defineSlotRecipe({
       fontFamily: 'mono',
       margin: '0',
       minWidth: 'max-content',
-      paddingBlock: '3',
     },
-    line: {
-      display: 'grid',
-      gridTemplateColumns: 'auto 1fr',
-      minHeight: '1.5em',
-      paddingInlineEnd: '4',
-    },
+    line: { minHeight: '1.5em' },
     lineNumber: {
       color: 'gray.600',
-      paddingInline: '3',
       textAlign: 'end',
       userSelect: 'none',
     },
-    lineContent: { whiteSpace: 'pre' },
+    lineContent: {
+      display: 'block',
+      paddingBlock: '3',
+      paddingInline: '4',
+      whiteSpace: 'pre',
+    },
   },
   variants: {
     size: {

@@ -223,7 +223,7 @@ const technicalDeclarations = {
     name: 'CodeBlock',
     directive: 'postkit-code-block',
     description:
-      'Source code with filenames, line numbers, highlights, copying, and wrapping.',
+      'Source code rendered with Chakra CodeBlock, with adapter-driven syntax highlighting, filenames, line numbers, copying, and wrapping.',
     childMode: 'none',
     directiveRemarkPlugins: ['directives', 'postkit'],
     props: {

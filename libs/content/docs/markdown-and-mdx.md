@@ -20,6 +20,43 @@ Use JSX declarations in MDX:
 Register PostKit's component map with the framework's MDX runtime. Framework
 adapters supply the same components with native internal-link behavior.
 
+## Code blocks
+
+Fenced code blocks are automatically rendered with PostKit's Chakra CodeBlock
+component. They have plain-text output, copying, wrapping, and line-number
+support without requiring a syntax-highlighting dependency.
+
+Hosts that want syntax highlighting can install Shiki, create Chakra's Shiki
+adapter, and pass it to `PostkitProvider`:
+
+```tsx
+import { createShikiAdapter } from '@chakra-ui/react';
+import { PostkitProvider } from '@postkit/react';
+import type { Highlighter } from 'shiki';
+
+const codeBlockAdapter = createShikiAdapter<Highlighter>({
+  async load() {
+    const { createHighlighter } = await import('shiki');
+    return createHighlighter({
+      langs: ['bash', 'json', 'markdown', 'tsx', 'typescript'],
+      themes: ['github-dark', 'github-light'],
+    });
+  },
+  theme: {
+    dark: 'github-dark',
+    light: 'github-light',
+  },
+});
+
+<PostkitProvider codeBlockAdapter={codeBlockAdapter}>
+  {article}
+</PostkitProvider>;
+```
+
+The host chooses the language and theme bundle, so PostKit does not make every
+consumer download Shiki. Chakra loads the adapter once and reuses it for nested
+code blocks.
+
 ## Plain Markdown directives
 
 Plain Markdown pipelines can use literal-only directives:

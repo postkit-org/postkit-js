@@ -1,3 +1,4 @@
+export { postkitPlainTextCodeBlockAdapter } from './lib/code-block-adapter.js';
 export {
   PostkitAppearsOn,
   type PostkitAppearsOnProps,
@@ -177,6 +178,7 @@ export {
 export {
   createPostkitProseLink,
   PostkitProse,
+  PostkitProsePre,
   postkitProseComponents,
   type PostkitProseComponents,
   type PostkitProseProps,

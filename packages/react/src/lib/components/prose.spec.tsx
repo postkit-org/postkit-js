@@ -93,6 +93,26 @@ describe('Postkit prose', () => {
     );
   });
 
+  it('renders fenced Markdown code with PostkitCodeBlock', () => {
+    const components = createPostkitMdxComponents();
+    const Pre = components.pre;
+    const { container } = render(
+      <PostkitProvider>
+        <Pre>
+          <code className="language-tsx">{'const answer = 42;\n'}</code>
+        </Pre>
+      </PostkitProvider>,
+    );
+
+    const codeBlock = container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    expect(codeBlock).toBeTruthy();
+    expect(codeBlock?.className).toContain('code-block__root');
+    expect(screen.getByText('tsx')).toBeTruthy();
+    expect(screen.getByText('const answer = 42;')).toBeTruthy();
+  });
+
   it('keeps framework links styled when adapting internal navigation', () => {
     function RouterLink({
       to,

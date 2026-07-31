@@ -11,13 +11,16 @@ import {
 } from '@postkit/unfurl';
 import {
   ChakraProvider,
+  CodeBlock,
   defaultSystem,
+  type CodeBlockAdapter,
   type SystemConfig,
   type SystemContext,
 } from '@chakra-ui/react';
 import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
 import { createPostkitSystem } from './theme.js';
+import { postkitPlainTextCodeBlockAdapter } from './code-block-adapter.js';
 import type { PostkitNewsletterConfig } from './newsletter.js';
 import {
   mergePostkitSocialServices,
@@ -50,6 +53,12 @@ export interface PostkitProviderProps {
    * Postkit context without changing site-wide component defaults.
    */
   readonly theme?: SystemConfig;
+  /**
+   * Optional syntax-highlighting adapter used by Chakra CodeBlock. Hosts can
+   * supply createShikiAdapter or createHighlightJsAdapter while Postkit keeps
+   * plain-text rendering as the dependency-free fallback.
+   */
+  readonly codeBlockAdapter?: CodeBlockAdapter;
   /**
    * A configured resolver or a custom callback. A callback is assigned the
    * `defaultResolver` id, or `custom` when no id is supplied.
@@ -143,6 +152,7 @@ export function PostkitProvider({
   children,
   system,
   theme,
+  codeBlockAdapter,
   resolver,
   resolvers,
   defaultResolver,
@@ -218,7 +228,13 @@ export function PostkitProvider({
 
   return (
     <PostkitContext.Provider value={context}>
-      <ChakraProvider value={chakraSystem}>{children}</ChakraProvider>
+      <ChakraProvider value={chakraSystem}>
+        <CodeBlock.AdapterProvider
+          value={codeBlockAdapter ?? postkitPlainTextCodeBlockAdapter}
+        >
+          {children}
+        </CodeBlock.AdapterProvider>
+      </ChakraProvider>
     </PostkitContext.Provider>
   );
 }

@@ -8,6 +8,7 @@ import type {
   ResolvedLinkPreview,
 } from '@postkit/unfurl';
 import {
+  type CodeBlockAdapter,
   createSystem,
   defaultConfig,
   useChakraContext,
@@ -18,6 +19,7 @@ import { PostkitLinkPreview } from './components/link-preview.js';
 import { PostkitNewsletterSignup } from './components/newsletter-signup.js';
 import { PostkitShareActions } from './components/share-actions.js';
 import { PostkitSocialPost } from './components/social-post.js';
+import { PostkitCodeBlock } from './components/technical-content.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
 import { createPostkitTheme, postkitRecipeKeys } from './theme.js';
@@ -88,6 +90,41 @@ function ServiceProbe() {
 }
 
 describe('PostkitProvider', () => {
+  it('supplies a host syntax-highlighting adapter to code blocks', () => {
+    const adapter: CodeBlockAdapter = {
+      loadContextSync: () => true,
+      getHighlighter:
+        () =>
+        ({ code, meta }) => ({
+          highlighted: true,
+          code: code
+            .split('\n')
+            .map((line, index) => {
+              const lineNumber = index + 1;
+              const highlighted = meta?.highlightLines?.includes(lineNumber)
+                ? ' data-highlight'
+                : '';
+              return `<span data-line="${lineNumber}"${highlighted}>${line}</span>`;
+            })
+            .join('\n'),
+        }),
+    };
+
+    const { container } = render(
+      <PostkitProvider codeBlockAdapter={adapter}>
+        <PostkitCodeBlock
+          code={'const answer = 42;\nconsole.log(answer);'}
+          language="typescript"
+          highlightLines="2"
+        />
+      </PostkitProvider>,
+    );
+
+    expect(container.querySelector('[data-highlight]')?.textContent).toBe(
+      'console.log(answer);',
+    );
+  });
+
   it('resolves missing LinkPreview metadata with a custom callback', async () => {
     const callback = vi.fn(async () => result('site-callback'));
 

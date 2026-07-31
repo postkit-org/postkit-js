@@ -2,11 +2,19 @@
 
 import {
   chakra,
+  type BoxProps,
   type ChakraComponent,
   type HTMLChakraProps,
 } from '@chakra-ui/react';
-import { createElement, type ComponentType, type ElementType } from 'react';
+import {
+  createElement,
+  isValidElement,
+  type ComponentType,
+  type ElementType,
+  type ReactNode,
+} from 'react';
 
+import { PostkitCodeBlock } from './technical-content.js';
 import {
   postkitProseRecipe,
   type PostkitProseSlot,
@@ -97,6 +105,38 @@ export function createPostkitProseLink(
   return PostkitProseLink;
 }
 
+const PostkitProsePreElement = createPostkitProseElement('pre', 'pre');
+const fencedCodeLanguagePattern = /(?:^|\s)language-([^\s]+)/;
+
+interface FencedCodeElementProps {
+  readonly children?: ReactNode;
+  readonly className?: string;
+}
+
+export function PostkitProsePre({
+  children,
+  ...props
+}: HTMLChakraProps<'pre'>) {
+  if (isValidElement<FencedCodeElementProps>(children)) {
+    const source = children.props.children;
+    if (typeof source === 'string') {
+      const language = children.props.className?.match(
+        fencedCodeLanguagePattern,
+      )?.[1];
+
+      return (
+        <PostkitCodeBlock
+          code={source}
+          language={language}
+          rootProps={props as BoxProps}
+        />
+      );
+    }
+  }
+
+  return <PostkitProsePreElement {...props}>{children}</PostkitProsePreElement>;
+}
+
 export const postkitProseComponents = Object.freeze({
   wrapper: PostkitProse,
   h1: createPostkitProseElement('h1', 'h1'),
@@ -112,7 +152,7 @@ export const postkitProseComponents = Object.freeze({
   ol: createPostkitProseElement('ol', 'ol'),
   li: createPostkitProseElement('li', 'li'),
   hr: createPostkitProseElement('hr', 'hr'),
-  pre: createPostkitProseElement('pre', 'pre'),
+  pre: PostkitProsePre,
   code: createPostkitProseElement('code', 'code'),
   strong: createPostkitProseElement('strong', 'strong'),
   em: createPostkitProseElement('em', 'em'),

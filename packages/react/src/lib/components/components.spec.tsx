@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { defaultSystem } from '@chakra-ui/react';
 import { createPostkitSocialPostSnapshot } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -49,7 +49,7 @@ import {
 
 function render(component: React.ReactNode): string {
   return renderToStaticMarkup(
-    <ChakraProvider value={defaultSystem}>{component}</ChakraProvider>,
+    <PostkitProvider system={defaultSystem}>{component}</PostkitProvider>,
   );
 }
 
@@ -189,7 +189,9 @@ describe('Postkit article components', () => {
     );
 
     expect(code).toContain('data-postkit-component="CodeBlock"');
-    expect(code).toContain('data-highlighted="true"');
+    expect(code).toContain('code-block__root');
+    expect(code).toContain('data-highlight=""');
+    expect(code).toContain('data-has-line-numbers=""');
     expect(code).toContain('aria-label="Copy code"');
     expect(group).toContain('data-postkit-component="CodeGroup"');
     expect(group).toContain('role="tablist"');
