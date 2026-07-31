@@ -26,8 +26,8 @@ control; update them through `npm run docs:agents:generate`.
 
 ## Changelog entries
 
-Add release notes to `content/changelog` as `.md` files with lowercase,
-URL-safe filenames. Every entry requires this frontmatter:
+Add release notes to the shared `libs/content/changelog` library as `.md` files
+with lowercase, URL-safe filenames. Every entry requires this frontmatter:
 
 ```yaml
 ---
@@ -49,5 +49,6 @@ This content is rendered by PostKit.
 :::
 ```
 
-Unknown component props fail the build so changelog content cannot drift from
-the PostKit component contract.
+Content Collections validates the entry metadata and generates the typed
+collection consumed by the site. Unknown component props fail the build so
+changelog content cannot drift from the PostKit component contract.

@@ -45,5 +45,5 @@ low risk, but consumers should plan to upgrade.
 - Host-supplied MDX components, resolver callbacks, iframe policies, and media
   pipelines are outside PostKit's trust boundary.
 
-See the [security guide](apps/site/content/docs/security.md) for integration
+See the [security guide](libs/content/docs/security.md) for integration
 guidance.

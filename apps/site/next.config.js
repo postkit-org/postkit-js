@@ -1,5 +1,7 @@
 //@ts-check
 
+const { withContentCollections } = require('@content-collections/next');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
@@ -7,4 +9,4 @@ const nextConfig = {
   transpilePackages: ['@postkit/next', '@postkit/react', '@postkit/unfurl'],
 };
 
-module.exports = nextConfig;
+module.exports = withContentCollections(nextConfig);

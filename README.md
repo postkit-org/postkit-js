@@ -93,7 +93,7 @@ normalized result without receiving provider credentials.
 - [Unfurling and oEmbed guide](packages/unfurl)
 - [Astro integration and hydration policy](packages/astro)
 - [Executable framework and service examples](examples)
-- [Generated TypeScript API reference](apps/site/content/docs/api-reference.md)
+- [Generated TypeScript API reference](libs/content/docs/api-reference.md)
 - [Agent documentation index](apps/site/public/llms.txt)
 - [Contributing](CONTRIBUTING.md)
 - [Release process](RELEASING.md)
@@ -125,7 +125,7 @@ Postkit is available under the [MIT License](LICENSE).
 | TanStack Router | `>=1.120 <2`    |
 | Astro           | `>=6.4 <8`      |
 
-See [compatibility and environments](apps/site/content/docs/compatibility.md)
+See [compatibility and environments](libs/content/docs/compatibility.md)
 for rendering details, [support](SUPPORT.md) for issue guidance, and the
 [security policy](SECURITY.md) for private vulnerability reporting and trust
 boundaries.

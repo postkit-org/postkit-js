@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
-const docsDirectory = join(workspaceRoot, 'apps', 'site', 'content', 'docs');
+const docsDirectory = join(workspaceRoot, 'libs', 'content', 'docs');
 const publicDirectory = join(workspaceRoot, 'apps', 'site', 'public');
 const repositoryUrl = 'https://github.com/postkit-org/postkit-js';
 const packageDirectories = [

@@ -54,5 +54,6 @@ vitest.config.*.timestamp*
 
 # Next.js
 .next
+.content-collections
 out
 /apps/site/public/api/

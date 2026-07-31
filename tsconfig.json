@@ -35,6 +35,9 @@
     },
     {
       "path": "./apps/site"
+    },
+    {
+      "path": "./libs/content"
     }
   ],
   "compilerOptions": {}
