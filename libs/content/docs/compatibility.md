@@ -17,6 +17,7 @@ those package conventions.
 | --------------- | --------------- | -------------------------------------------------------------------------- |
 | React           | React 19        | Chakra-backed components render on the server and client                   |
 | Chakra UI       | `^3.36.0`       | The host may provide a `SystemContext`; PostKit layers its recipes over it |
+| Shiki           | `^4.3.1`        | Optional lazy highlighting through `@postkit/shiki`                        |
 | Next.js         | `>=15 <17`      | Uses the native MDX component map and `next/link`                          |
 | React Router    | `>=7 <8`        | The article must render beneath a router provider                          |
 | TanStack Router | `>=1.120 <2`    | Portable URLs can be mapped into generated route types                     |
@@ -34,6 +35,7 @@ The package manifests are authoritative for exact peer dependency ranges.
 | Native audio and video       | Browser-native controls; no PostKit client runtime           |
 | Unfurling                    | Server, build process, or trusted editor with Web Fetch APIs |
 | Plain Markdown transforms    | Node/build tooling using Unified and Remark                  |
+| Shiki syntax highlighting    | Lazy client runtime beneath `PostkitProvider`                |
 | Email rendering              | Not defined in the current component contract                |
 
 Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as

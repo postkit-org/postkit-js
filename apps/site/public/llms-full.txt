@@ -73,6 +73,7 @@ behavior.
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
 | `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
 | `@postkit/next`            | Next.js MDX and `next/link`                                                           |
 | `@postkit/react-router`    | React Router and router-native internal links                                         |
 | `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
@@ -92,6 +93,12 @@ previews:
 
 ```sh
 npm install @postkit/unfurl
+```
+
+Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
+
+```sh
+npm install @postkit/shiki
 ```
 
 An Astro site should start with `@postkit/astro`, which documents the matching
@@ -213,36 +220,23 @@ Fenced code blocks are automatically rendered with PostKit's Chakra CodeBlock
 component. They have plain-text output, copying, wrapping, and line-number
 support without requiring a syntax-highlighting dependency.
 
-Hosts that want syntax highlighting can install Shiki, create Chakra's Shiki
-adapter, and pass it to `PostkitProvider`:
+Hosts that want syntax highlighting can install `@postkit/shiki`, create its
+lazy adapter once at module scope, and pass it to `PostkitProvider`:
 
 ```tsx
-import { createShikiAdapter } from '@chakra-ui/react';
 import { PostkitProvider } from '@postkit/react';
-import type { Highlighter } from 'shiki';
+import { createPostkitShikiAdapter } from '@postkit/shiki';
 
-const codeBlockAdapter = createShikiAdapter<Highlighter>({
-  async load() {
-    const { createHighlighter } = await import('shiki');
-    return createHighlighter({
-      langs: ['bash', 'json', 'markdown', 'tsx', 'typescript'],
-      themes: ['github-dark', 'github-light'],
-    });
-  },
-  theme: {
-    dark: 'github-dark',
-    light: 'github-light',
-  },
-});
+const codeBlockAdapter = createPostkitShikiAdapter();
 
 <PostkitProvider codeBlockAdapter={codeBlockAdapter}>
   {article}
 </PostkitProvider>;
 ```
 
-The host chooses the language and theme bundle, so PostKit does not make every
-consumer download Shiki. Chakra loads the adapter once and reuses it for nested
-code blocks.
+`@postkit/shiki` provides practical language and light/dark theme defaults.
+Pass `languages` and `themes` when an application wants a smaller or customized
+bundle. Chakra loads the adapter once and reuses it for nested code blocks.
 
 ## Plain Markdown directives
 
@@ -416,6 +410,7 @@ those package conventions.
 | --------------- | --------------- | -------------------------------------------------------------------------- |
 | React           | React 19        | Chakra-backed components render on the server and client                   |
 | Chakra UI       | `^3.36.0`       | The host may provide a `SystemContext`; PostKit layers its recipes over it |
+| Shiki           | `^4.3.1`        | Optional lazy highlighting through `@postkit/shiki`                        |
 | Next.js         | `>=15 <17`      | Uses the native MDX component map and `next/link`                          |
 | React Router    | `>=7 <8`        | The article must render beneath a router provider                          |
 | TanStack Router | `>=1.120 <2`    | Portable URLs can be mapped into generated route types                     |
@@ -433,6 +428,7 @@ The package manifests are authoritative for exact peer dependency ranges.
 | Native audio and video       | Browser-native controls; no PostKit client runtime           |
 | Unfurling                    | Server, build process, or trusted editor with Web Fetch APIs |
 | Plain Markdown transforms    | Node/build tooling using Unified and Remark                  |
+| Shiki syntax highlighting    | Lazy client runtime beneath `PostkitProvider`                |
 | Email rendering              | Not defined in the current component contract                |
 
 Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
@@ -1105,27 +1101,13 @@ hatch in addition to the typed recipe APIs.
 Fenced Markdown code is automatically promoted from `pre > code` into
 `PostkitCodeBlock`, which composes Chakra's CodeBlock primitive. Plain-text
 rendering works without another dependency. To add syntax highlighting, install
-Shiki in the host application and supply Chakra's adapter through
-`PostkitProvider`:
+`@postkit/shiki` and supply its lazy adapter through `PostkitProvider`:
 
 ```tsx
-import { createShikiAdapter } from '@chakra-ui/react';
 import { PostkitProvider } from '@postkit/react';
-import type { Highlighter } from 'shiki';
+import { createPostkitShikiAdapter } from '@postkit/shiki';
 
-const codeBlockAdapter = createShikiAdapter<Highlighter>({
-  async load() {
-    const { createHighlighter } = await import('shiki');
-    return createHighlighter({
-      langs: ['bash', 'json', 'markdown', 'tsx', 'typescript'],
-      themes: ['github-dark', 'github-light'],
-    });
-  },
-  theme: {
-    dark: 'github-dark',
-    light: 'github-light',
-  },
-});
+const codeBlockAdapter = createPostkitShikiAdapter();
 
 <PostkitProvider codeBlockAdapter={codeBlockAdapter}>
   {article}
@@ -1133,8 +1115,9 @@ const codeBlockAdapter = createShikiAdapter<Highlighter>({
 ```
 
 Keeping the adapter host-owned lets each application select only the languages
-and themes it needs. The highlighter is loaded once by Chakra and reused by
-every Postkit code block beneath that provider.
+and themes it needs through the `languages` and `themes` options. The
+highlighter is loaded once by Chakra and reused by every Postkit code block
+beneath that provider.
 
 Article authors can then use typed MDX declarations:
 
@@ -1621,6 +1604,81 @@ published sites use the interactive React renderers.
 
 Framework-specific routing belongs in `@postkit/next`,
 `@postkit/react-router`, `@postkit/tanstack-router`, or `@postkit/astro`.
+
+## Package: @postkit/shiki
+
+Source: https://github.com/postkit-org/postkit-js/tree/main/packages/shiki
+
+# `@postkit/shiki`
+
+`@postkit/shiki` creates a lazy Shiki syntax-highlighting adapter for Postkit's
+Chakra CodeBlock renderer. It includes a practical language and theme preset
+without adding Shiki to `@postkit/react` itself.
+
+## Install
+
+```sh
+npm install @postkit/shiki @chakra-ui/react
+```
+
+`shiki` is installed by the package. `@chakra-ui/react` is a peer dependency.
+
+## Configure Postkit
+
+Create the adapter once at module scope and pass it through `PostkitProvider`:
+
+```tsx
+import { PostkitProvider } from '@postkit/react';
+import { createPostkitShikiAdapter } from '@postkit/shiki';
+
+const codeBlockAdapter = createPostkitShikiAdapter();
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <PostkitProvider codeBlockAdapter={codeBlockAdapter}>
+      {children}
+    </PostkitProvider>
+  );
+}
+```
+
+The default preset loads `astro`, `bash`, `json`, `markdown`, `mdx`, `tsx`, and
+`typescript`, plus GitHub light and dark themes. Shiki aliases such as `sh`,
+`md`, and `ts` work through their canonical grammars.
+
+## Customize the bundle
+
+Only load the languages and themes the application needs:
+
+```ts
+import { createPostkitShikiAdapter } from '@postkit/shiki';
+
+export const codeBlockAdapter = createPostkitShikiAdapter({
+  languages: ['bash', 'json', 'tsx'],
+  themes: {
+    dark: 'nord',
+    light: 'min-light',
+  },
+});
+```
+
+The adapter loads Shiki on demand, and Chakra reuses the loaded highlighter for
+all code blocks below the provider. Use Chakra's lower-level
+`createShikiAdapter` directly when an application needs custom Shiki grammars or
+non-bundled themes.
+
+## Exports
+
+- `createPostkitShikiAdapter(options?)`
+- `postkitShikiLanguages`
+- `postkitShikiThemes`
+- `CreatePostkitShikiAdapterOptions`
+- `PostkitShikiHighlightOptions`
+- `PostkitShikiThemes`
+
+## License
+
+MIT
 
 ## Package: @postkit/next
 

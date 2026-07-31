@@ -34,6 +34,6 @@ jobs:
           use_oidc: true
           fail_ci_if_error: true
           disable_search: true
-          files: ./packages/unfurl/test-output/vitest/coverage/lcov.info,./packages/react/test-output/vitest/coverage/lcov.info,./packages/next/test-output/vitest/coverage/lcov.info,./packages/react-router/test-output/vitest/coverage/lcov.info,./packages/tanstack-router/test-output/vitest/coverage/lcov.info,./packages/astro/test-output/vitest/coverage/lcov.info
+          files: ./packages/unfurl/test-output/vitest/coverage/lcov.info,./packages/react/test-output/vitest/coverage/lcov.info,./packages/shiki/test-output/vitest/coverage/lcov.info,./packages/next/test-output/vitest/coverage/lcov.info,./packages/react-router/test-output/vitest/coverage/lcov.info,./packages/tanstack-router/test-output/vitest/coverage/lcov.info,./packages/astro/test-output/vitest/coverage/lcov.info
       - run: npm run site:check
       - run: npm audit --omit=dev --audit-level=high

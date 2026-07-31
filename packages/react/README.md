@@ -233,27 +233,13 @@ hatch in addition to the typed recipe APIs.
 Fenced Markdown code is automatically promoted from `pre > code` into
 `PostkitCodeBlock`, which composes Chakra's CodeBlock primitive. Plain-text
 rendering works without another dependency. To add syntax highlighting, install
-Shiki in the host application and supply Chakra's adapter through
-`PostkitProvider`:
+`@postkit/shiki` and supply its lazy adapter through `PostkitProvider`:
 
 ```tsx
-import { createShikiAdapter } from '@chakra-ui/react';
 import { PostkitProvider } from '@postkit/react';
-import type { Highlighter } from 'shiki';
+import { createPostkitShikiAdapter } from '@postkit/shiki';
 
-const codeBlockAdapter = createShikiAdapter<Highlighter>({
-  async load() {
-    const { createHighlighter } = await import('shiki');
-    return createHighlighter({
-      langs: ['bash', 'json', 'markdown', 'tsx', 'typescript'],
-      themes: ['github-dark', 'github-light'],
-    });
-  },
-  theme: {
-    dark: 'github-dark',
-    light: 'github-light',
-  },
-});
+const codeBlockAdapter = createPostkitShikiAdapter();
 
 <PostkitProvider codeBlockAdapter={codeBlockAdapter}>
   {article}
@@ -261,8 +247,9 @@ const codeBlockAdapter = createShikiAdapter<Highlighter>({
 ```
 
 Keeping the adapter host-owned lets each application select only the languages
-and themes it needs. The highlighter is loaded once by Chakra and reused by
-every Postkit code block beneath that provider.
+and themes it needs through the `languages` and `themes` options. The
+highlighter is loaded once by Chakra and reused by every Postkit code block
+beneath that provider.
 
 Article authors can then use typed MDX declarations:
 

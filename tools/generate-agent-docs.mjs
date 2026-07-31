@@ -11,6 +11,7 @@ const repositoryUrl = 'https://github.com/postkit-org/postkit-js';
 const packageDirectories = [
   'unfurl',
   'react',
+  'shiki',
   'next',
   'react-router',
   'tanstack-router',

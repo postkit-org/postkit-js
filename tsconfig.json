@@ -38,6 +38,9 @@
     },
     {
       "path": "./libs/content"
+    },
+    {
+      "path": "./packages/shiki"
     }
   ],
   "compilerOptions": {}

@@ -60,6 +60,7 @@ complete set:
 npx yalc add \
   @postkit/unfurl \
   @postkit/react \
+  @postkit/shiki \
   @postkit/next \
   @postkit/react-router \
   @postkit/tanstack-router \

@@ -14,6 +14,7 @@ behavior.
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
 | `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
 | `@postkit/next`            | Next.js MDX and `next/link`                                                           |
 | `@postkit/react-router`    | React Router and router-native internal links                                         |
 | `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
@@ -33,6 +34,12 @@ previews:
 
 ```sh
 npm install @postkit/unfurl
+```
+
+Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
+
+```sh
+npm install @postkit/shiki
 ```
 
 An Astro site should start with `@postkit/astro`, which documents the matching

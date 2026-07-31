@@ -15,6 +15,7 @@ or rendering environment changes.
 | Package                                                | Use it when                                                                                               |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | [`@postkit/react`](packages/react)                     | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
+| [`@postkit/shiki`](packages/shiki)                     | A Postkit application needs lazy Shiki syntax highlighting for Chakra code blocks.                        |
 | [`@postkit/next`](packages/next)                       | A Next.js application needs the React component map with `next/link` routing.                             |
 | [`@postkit/react-router`](packages/react-router)       | A React Router application needs Postkit components and router-native internal links.                     |
 | [`@postkit/tanstack-router`](packages/tanstack-router) | A TanStack Router application needs Postkit components and typed route resolution.                        |
@@ -90,6 +91,7 @@ normalized result without receiving provider credentials.
 ## Documentation
 
 - [Component and theming guide](packages/react)
+- [Shiki code-block adapter](packages/shiki)
 - [Unfurling and oEmbed guide](packages/unfurl)
 - [Astro integration and hydration policy](packages/astro)
 - [Executable framework and service examples](examples)
@@ -120,6 +122,7 @@ Postkit is available under the [MIT License](LICENSE).
 | --------------- | --------------- |
 | React           | 19              |
 | Chakra UI       | `^3.36.0`       |
+| Shiki           | `^4.3.1`        |
 | Next.js         | `>=15 <17`      |
 | React Router    | `>=7 <8`        |
 | TanStack Router | `>=1.120 <2`    |

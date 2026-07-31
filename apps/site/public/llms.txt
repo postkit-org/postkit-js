@@ -41,6 +41,7 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 
 - [@postkit/unfurl](https://github.com/postkit-org/postkit-js/tree/main/packages/unfurl): Provider-neutral link metadata resolution for Postkit
 - [@postkit/react](https://github.com/postkit-org/postkit-js/tree/main/packages/react): Chakra-based React components and Markdown tooling for articles
+- [@postkit/shiki](https://github.com/postkit-org/postkit-js/tree/main/packages/shiki): A lazy Shiki syntax-highlighting adapter for Postkit and Chakra CodeBlock
 - [@postkit/next](https://github.com/postkit-org/postkit-js/tree/main/packages/next): Postkit MDX components and link routing for Next.js
 - [@postkit/react-router](https://github.com/postkit-org/postkit-js/tree/main/packages/react-router): Postkit MDX components and link routing for React Router
 - [@postkit/tanstack-router](https://github.com/postkit-org/postkit-js/tree/main/packages/tanstack-router): Postkit MDX components and link routing for TanStack Router
