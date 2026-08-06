@@ -3,9 +3,9 @@
 [![codecov](https://codecov.io/gh/postkit-org/postkit-js/graph/badge.svg)](https://codecov.io/gh/postkit-org/postkit-js)
 
 Postkit is a portable publishing toolkit for rendering structured articles
-across React, Next.js, React Router, TanStack Router, and Astro. It combines an
-article component system, Markdown and MDX tooling, framework-aware links, and
-provider-neutral URL metadata resolution.
+across React, email, Next.js, React Router, TanStack Router, and Astro. It
+combines an article component system, Markdown and MDX tooling, framework-aware
+links, and provider-neutral URL metadata resolution.
 
 Use Postkit when content should keep its meaning while the application, router,
 or rendering environment changes.
@@ -15,6 +15,7 @@ or rendering environment changes.
 | Package                                                | Use it when                                                                                               |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | [`@postkit/react`](packages/react)                     | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
+| [`@postkit/email`](packages/email)                     | An email build needs Postkit content rendered with Chakra Email primitives and email-safe fallbacks.      |
 | [`@postkit/shiki`](packages/shiki)                     | A Postkit application needs lazy Shiki syntax highlighting for Chakra code blocks.                        |
 | [`@postkit/next`](packages/next)                       | A Next.js application needs the React component map with `next/link` routing.                             |
 | [`@postkit/react-router`](packages/react-router)       | A React Router application needs Postkit components and router-native internal links.                     |
@@ -91,6 +92,7 @@ normalized result without receiving provider credentials.
 ## Documentation
 
 - [Component and theming guide](packages/react)
+- [Email rendering guide](packages/email)
 - [Shiki code-block adapter](packages/shiki)
 - [Unfurling and oEmbed guide](packages/unfurl)
 - [Astro integration and hydration policy](packages/astro)

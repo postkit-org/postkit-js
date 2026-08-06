@@ -1,7 +1,7 @@
 {
   "name": "postkit-js",
   "version": "0.0.0",
-  "description": "Portable article components, Markdown tooling, link metadata resolvers, and framework adapters",
+  "description": "Portable web and email components, Markdown tooling, link metadata resolvers, and framework adapters",
   "keywords": [
     "postkit",
     "publishing",
@@ -11,6 +11,8 @@
     "markdown",
     "mdx",
     "react",
+    "email",
+    "email-components",
     "typescript",
     "nextjs",
     "astro",

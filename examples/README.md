@@ -7,6 +7,7 @@ silently invalidate the documented integrations.
 | Example                              | What it demonstrates                                                            | Validation                                    |
 | ------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------- |
 | [`astro`](astro)                     | A complete Astro MDX site, custom Chakra system module, and selective hydration | Production build and rendered HTML assertions |
+| [`email`](email)                     | Chakra Email rendering with Postkit's email-safe component fallbacks            | TypeScript                                    |
 | [`next`](next)                       | Next.js's native `mdx-components.tsx` entry point                               | TypeScript                                    |
 | [`react-router`](react-router)       | An MDX component map beneath React Router                                       | TypeScript                                    |
 | [`tanstack-router`](tanstack-router) | Portable URLs mapped into a typed route                                         | TypeScript                                    |

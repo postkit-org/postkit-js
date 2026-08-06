@@ -12,6 +12,8 @@
     "types": ["node"]
   },
   "include": [
+    "email/**/*.ts",
+    "email/**/*.tsx",
     "next/**/*.ts",
     "next/**/*.tsx",
     "react-router/**/*.ts",

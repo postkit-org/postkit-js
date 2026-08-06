@@ -41,6 +41,9 @@
     },
     {
       "path": "./packages/shiki"
+    },
+    {
+      "path": "./packages/email"
     }
   ],
   "compilerOptions": {}

@@ -11,13 +11,15 @@ examples live in `examples/`, and validation and release programs live in
 | -------------------------- | -------------------------------------------------------------------------------- |
 | `@postkit/unfurl`          | Provider-neutral server/build-time metadata resolution                           |
 | `@postkit/react`           | Portable declarations, React renderers, Markdown/MDX tooling, and Chakra recipes |
+| `@postkit/email`           | Email-safe renderers and fallbacks built on Chakra Email primitives              |
 | `@postkit/shiki`           | Lazy Shiki adapter and curated syntax-highlighting defaults                      |
 | `@postkit/next`            | Next.js link and MDX adapter                                                     |
 | `@postkit/react-router`    | React Router link and MDX adapter                                                |
 | `@postkit/tanstack-router` | TanStack Router link and MDX adapter                                             |
 | `@postkit/astro`           | Astro integration, components, React bridges, and hydration policy               |
 
-Dependency order is `unfurl` → `react` → framework adapters. Keep application
+Dependency order is `unfurl` → renderers (`react`, `email`) → framework
+adapters. Keep application
 layout, route definitions, credentials, asset storage, and persistence outside
 the portable component layer. `@postkit/shiki` is an optional companion adapter
 passed into the React provider and does not change the core dependency chain.

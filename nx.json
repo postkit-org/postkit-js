@@ -67,6 +67,7 @@
     "projects": [
       "@postkit/unfurl",
       "@postkit/react",
+      "@postkit/email",
       "@postkit/shiki",
       "@postkit/next",
       "@postkit/react-router",

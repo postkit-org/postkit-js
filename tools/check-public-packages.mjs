@@ -11,6 +11,7 @@ const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
 const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
 const requiredKeywords = ['postkit', 'publishing', 'typescript'];
+const nxConfiguration = readJson(join(workspaceRoot, 'nx.json'));
 const publishIndex = new Map(
   publicPackages.map((packageName, index) => [packageName, index]),
 );
@@ -21,6 +22,18 @@ function readJson(path) {
 
 function fail(message) {
   throw new Error(message);
+}
+
+if (nxConfiguration.release?.projectsRelationship !== 'fixed') {
+  fail('Public PostKit packages must use a fixed Nx release relationship.');
+}
+if (
+  JSON.stringify(nxConfiguration.release?.projects) !==
+  JSON.stringify(publicPackages)
+) {
+  fail(
+    'The Nx release project order must exactly match tools/public-packages.json.',
+  );
 }
 
 const manifests = new Map();

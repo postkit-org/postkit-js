@@ -5,6 +5,7 @@
   "entryPoints": [
     "packages/unfurl",
     "packages/react",
+    "packages/email",
     "packages/shiki",
     "packages/next",
     "packages/react-router",

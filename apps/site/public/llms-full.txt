@@ -73,6 +73,7 @@ behavior.
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
 | `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
 | `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
 | `@postkit/next`            | Next.js MDX and `next/link`                                                           |
 | `@postkit/react-router`    | React Router and router-native internal links                                         |
@@ -103,6 +104,11 @@ npm install @postkit/shiki
 
 An Astro site should start with `@postkit/astro`, which documents the matching
 Astro integrations and component bridge.
+
+An HTML email build should use `@postkit/email` rather than aliasing Chakra UI
+to an email primitive package. It shares portable Postkit props where the
+meaning carries over and deliberately changes the output for interactions that
+email clients do not support.
 
 ## What adapters do not own
 
