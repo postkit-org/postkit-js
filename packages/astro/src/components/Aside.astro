@@ -1,7 +1,7 @@
 ---
 import type { AsideProps } from '@postkit/react';
-import { PostkitAstroAside } from '../lib/react-bridges';
+import { Aside } from '../lib/react-bridges';
 type Props = AsideProps;
 const props = Astro.props;
 ---
-<PostkitAstroAside {...props}><slot /></PostkitAstroAside>
+<Aside {...props}><slot /></Aside>

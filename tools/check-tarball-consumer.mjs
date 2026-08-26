@@ -116,7 +116,7 @@ import { createPostkitReactRouterComponents } from '@postkit/react-router';
 import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router';
 import { postkitAstro } from '@postkit/astro';
 import type { PostkitAstroComponents } from '@postkit/astro/components';
-import type { PostkitAstroAudio } from '@postkit/astro/react';
+import type { Audio } from '@postkit/astro/react';
 
 void createLinkResolverRegistry;
 void PostkitProvider;
@@ -127,7 +127,7 @@ void createPostkitReactRouterComponents;
 void createPostkitTanStackRouterComponents;
 void postkitAstro;
 type _AstroComponents = PostkitAstroComponents;
-type _AstroReactBridge = typeof PostkitAstroAudio;
+type _AstroReactBridge = typeof Audio;
 `,
   );
   writeFileSync(

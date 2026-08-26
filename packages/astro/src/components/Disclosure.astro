@@ -1,7 +1,7 @@
 ---
 import type { DisclosureProps } from '@postkit/react';
-import { PostkitAstroDisclosure } from '../lib/react-bridges';
+import { Disclosure } from '../lib/react-bridges';
 type Props = DisclosureProps;
 const props = Astro.props;
 ---
-<PostkitAstroDisclosure {...props}><slot /></PostkitAstroDisclosure>
+<Disclosure {...props}><slot /></Disclosure>

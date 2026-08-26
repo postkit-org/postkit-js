@@ -1,9 +1,9 @@
 ---
 import type { AudioProps } from '@postkit/react';
-import { PostkitAstroAudio } from '../lib/react-bridges';
+import { Audio } from '../lib/react-bridges';
 
 type Props = AudioProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroAudio {...props} />
+<Audio {...props} />

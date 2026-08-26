@@ -1,7 +1,7 @@
 ---
 import type { ProductCardProps } from '@postkit/react';
-import { PostkitAstroProductCard } from '../lib/react-bridges';
+import { ProductCard } from '../lib/react-bridges';
 type Props = ProductCardProps;
 const props = Astro.props;
 ---
-<PostkitAstroProductCard {...props} />
+<ProductCard {...props} />

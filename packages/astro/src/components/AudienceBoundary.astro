@@ -1,7 +1,7 @@
 ---
 import type { AudienceBoundaryProps } from '@postkit/react';
-import { PostkitAstroAudienceBoundary } from '../lib/react-bridges';
+import { AudienceBoundary } from '../lib/react-bridges';
 type Props = AudienceBoundaryProps;
 const props = Astro.props;
 ---
-<PostkitAstroAudienceBoundary {...props}><slot /></PostkitAstroAudienceBoundary>
+<AudienceBoundary {...props}><slot /></AudienceBoundary>

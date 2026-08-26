@@ -1,9 +1,9 @@
 ---
 import type { SocialPostProps } from '@postkit/react';
-import { PostkitAstroSocialPost } from '../lib/react-bridges';
+import { SocialPost } from '../lib/react-bridges';
 
 type Props = SocialPostProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroSocialPost {...props} client:visible />
+<SocialPost {...props} client:visible />

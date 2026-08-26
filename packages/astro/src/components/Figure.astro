@@ -1,9 +1,9 @@
 ---
 import type { FigureProps } from '@postkit/react';
-import { PostkitAstroFigure } from '../lib/react-bridges';
+import { Figure } from '../lib/react-bridges';
 
 type Props = FigureProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroFigure {...props} />
+<Figure {...props} />

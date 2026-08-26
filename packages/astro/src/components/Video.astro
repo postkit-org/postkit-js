@@ -1,9 +1,9 @@
 ---
 import type { VideoProps } from '@postkit/react';
-import { PostkitAstroVideo } from '../lib/react-bridges';
+import { Video } from '../lib/react-bridges';
 
 type Props = VideoProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroVideo {...props} />
+<Video {...props} />

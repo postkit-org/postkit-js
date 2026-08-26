@@ -1,9 +1,9 @@
 ---
 import type { LinkPreviewProps } from '@postkit/react';
-import { PostkitAstroLinkPreview } from '../lib/react-bridges';
+import { LinkPreview } from '../lib/react-bridges';
 
 type Props = LinkPreviewProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroLinkPreview {...props} client:visible />
+<LinkPreview {...props} client:visible />
