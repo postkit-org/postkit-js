@@ -1,28 +1,28 @@
 import {
-  PostkitEmailAside,
-  PostkitEmailAudio,
-  PostkitEmailCallout,
-  PostkitEmailCallToAction,
-  PostkitEmailFigure,
-  PostkitEmailVideo,
+  Aside,
+  Audio,
+  Callout,
+  CallToAction,
+  Figure,
+  Video,
 } from './components.js';
 
 export interface PostkitEmailMdxComponents {
-  readonly Aside: typeof PostkitEmailAside;
-  readonly Audio: typeof PostkitEmailAudio;
-  readonly Callout: typeof PostkitEmailCallout;
-  readonly CallToAction: typeof PostkitEmailCallToAction;
-  readonly Figure: typeof PostkitEmailFigure;
-  readonly Video: typeof PostkitEmailVideo;
+  readonly Aside: typeof Aside;
+  readonly Audio: typeof Audio;
+  readonly Callout: typeof Callout;
+  readonly CallToAction: typeof CallToAction;
+  readonly Figure: typeof Figure;
+  readonly Video: typeof Video;
 }
 
 const defaults = Object.freeze({
-  Aside: PostkitEmailAside,
-  Audio: PostkitEmailAudio,
-  Callout: PostkitEmailCallout,
-  CallToAction: PostkitEmailCallToAction,
-  Figure: PostkitEmailFigure,
-  Video: PostkitEmailVideo,
+  Aside: Aside,
+  Audio: Audio,
+  Callout: Callout,
+  CallToAction: CallToAction,
+  Figure: Figure,
+  Video: Video,
 });
 
 export function createPostkitEmailMdxComponents(): PostkitEmailMdxComponents {

@@ -2,12 +2,12 @@ import { render } from '@chakra-email/core';
 import { describe, expect, it } from 'vitest';
 
 import {
-  PostkitEmailAside,
-  PostkitEmailAudio,
-  PostkitEmailCallout,
-  PostkitEmailCallToAction,
-  PostkitEmailFigure,
-  PostkitEmailVideo,
+  Aside,
+  Audio,
+  Callout,
+  CallToAction,
+  Figure,
+  Video,
 } from './components.js';
 import { createPostkitEmailMdxComponents } from './mdx-components.js';
 import { PostkitEmailProvider } from './provider.js';
@@ -15,9 +15,9 @@ import { PostkitEmailProvider } from './provider.js';
 describe('@postkit/email components', () => {
   it('renders callouts with email-safe table layout and tone styles', async () => {
     const html = await render(
-      <PostkitEmailCallout title="Heads up" tone="warning">
+      <Callout title="Heads up" tone="warning">
         Review the publishing destination.
-      </PostkitEmailCallout>,
+      </Callout>,
     );
 
     expect(html).toContain('data-postkit-component="Callout"');
@@ -29,9 +29,9 @@ describe('@postkit/email components', () => {
 
   it('renders an untitled Aside through the shared expanded callout profile', async () => {
     const html = await render(
-      <PostkitEmailAside tone="tip">
+      <Aside tone="tip">
         A portable supporting note.
-      </PostkitEmailAside>,
+      </Aside>,
     );
 
     expect(html).toContain('data-postkit-component="Aside"');
@@ -41,7 +41,7 @@ describe('@postkit/email components', () => {
 
   it('renders calls to action as bulletproof links without client behavior', async () => {
     const html = await render(
-      <PostkitEmailCallToAction
+      <CallToAction
         title="Read the field guide"
         description="A practical introduction."
         primaryLabel="Read now"
@@ -60,12 +60,12 @@ describe('@postkit/email components', () => {
   it('degrades audio and video into linked email fallbacks', async () => {
     const html = await render(
       <>
-        <PostkitEmailAudio
+        <Audio
           src="https://media.example/episode.mp3"
           title="Episode one"
           caption="Thirty minutes"
         />
-        <PostkitEmailVideo
+        <Video
           src="https://media.example/demo.mp4"
           poster="https://media.example/demo.jpg"
           title="Product demo"
@@ -82,7 +82,7 @@ describe('@postkit/email components', () => {
 
   it('inherits Chakra Email URL sanitation for authored destinations', async () => {
     const html = await render(
-      <PostkitEmailAudio
+      <Audio
         src="javascript:alert(1)"
         title="Unsafe destination"
       />,
@@ -95,7 +95,7 @@ describe('@postkit/email components', () => {
 
   it('renders responsive-width figures with numeric legacy dimensions', async () => {
     const html = await render(
-      <PostkitEmailFigure
+      <Figure
         src="https://images.example/chart.png"
         alt="Quarterly results"
         caption="Revenue increased."
@@ -112,7 +112,7 @@ describe('@postkit/email components', () => {
   it('accepts email theme overrides without depending on Chakra UI', async () => {
     const html = await render(
       <PostkitEmailProvider theme={{ colors: { brand: { 500: '#b91c1c' } } }}>
-        <PostkitEmailAudio
+        <Audio
           src="https://media.example/episode.mp3"
           title="Themed episode"
         />

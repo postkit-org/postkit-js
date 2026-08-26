@@ -16,7 +16,7 @@ import {
   numericEmailDimension,
 } from './models.js';
 
-export type PostkitEmailTone =
+export type Tone =
   | 'note'
   | 'tip'
   | 'important'
@@ -24,7 +24,7 @@ export type PostkitEmailTone =
   | 'caution';
 
 const toneStyles: Record<
-  PostkitEmailTone,
+  Tone,
   Pick<ChakraEmailStyleProps, 'bg' | 'borderColor' | 'color'>
 > = {
   note: { bg: 'blue.50', borderColor: 'blue.500', color: 'blue.900' },
@@ -42,21 +42,21 @@ const toneStyles: Record<
   caution: { bg: 'red.50', borderColor: 'red.500', color: 'red.900' },
 };
 
-export interface PostkitEmailCalloutProps {
+export interface CalloutProps {
   readonly title?: string;
   readonly children?: ReactNode;
-  readonly tone?: PostkitEmailTone;
+  readonly tone?: Tone;
   readonly rootStyles?: ChakraEmailStyleProps;
   readonly componentName?: 'Aside' | 'Callout';
 }
 
-export function PostkitEmailCallout({
+export function Callout({
   title,
   children,
   tone = 'note',
   rootStyles,
   componentName = 'Callout',
-}: PostkitEmailCalloutProps) {
+}: CalloutProps) {
   return (
     <Section
       aria-label={title || tone}
@@ -80,16 +80,16 @@ export function PostkitEmailCallout({
   );
 }
 
-export type PostkitEmailAsideProps = Omit<
-  PostkitEmailCalloutProps,
+export type AsideProps = Omit<
+  CalloutProps,
   'componentName'
 >;
 
-export function PostkitEmailAside(props: PostkitEmailAsideProps) {
-  return <PostkitEmailCallout {...props} componentName="Aside" />;
+export function Aside(props: AsideProps) {
+  return <Callout {...props} componentName="Aside" />;
 }
 
-export interface PostkitEmailCallToActionProps {
+export interface CallToActionProps {
   readonly title: string;
   readonly eyebrow?: string;
   readonly description?: string;
@@ -101,7 +101,7 @@ export interface PostkitEmailCallToActionProps {
   readonly rootStyles?: ChakraEmailStyleProps;
 }
 
-export function PostkitEmailCallToAction({
+export function CallToAction({
   title,
   eyebrow,
   description,
@@ -111,7 +111,7 @@ export function PostkitEmailCallToAction({
   secondaryHref,
   children,
   rootStyles,
-}: PostkitEmailCallToActionProps) {
+}: CallToActionProps) {
   const primary = createPostkitEmailAction(primaryLabel, primaryHref);
   const secondary = createPostkitEmailAction(secondaryLabel, secondaryHref);
   return (
@@ -160,7 +160,7 @@ export function PostkitEmailCallToAction({
   );
 }
 
-export interface PostkitEmailFigureProps {
+export interface FigureProps {
   readonly src: string;
   readonly alt: string;
   readonly caption?: string;
@@ -172,7 +172,7 @@ export interface PostkitEmailFigureProps {
   readonly rootStyles?: ChakraEmailStyleProps;
 }
 
-export function PostkitEmailFigure({
+export function Figure({
   src,
   alt,
   caption,
@@ -182,7 +182,7 @@ export function PostkitEmailFigure({
   width,
   height,
   rootStyles,
-}: PostkitEmailFigureProps) {
+}: FigureProps) {
   const image = (
     <Img
       src={src}
@@ -213,7 +213,7 @@ export function PostkitEmailFigure({
   );
 }
 
-export interface PostkitEmailAudioProps {
+export interface AudioProps {
   readonly src: string;
   readonly title: string;
   readonly caption?: string;
@@ -221,13 +221,13 @@ export interface PostkitEmailAudioProps {
   readonly rootStyles?: ChakraEmailStyleProps;
 }
 
-export function PostkitEmailAudio({
+export function Audio({
   src,
   title,
   caption,
   actionLabel = 'Listen to audio',
   rootStyles,
-}: PostkitEmailAudioProps) {
+}: AudioProps) {
   const model = createPostkitEmailMediaModel({
     src,
     title,
@@ -257,18 +257,18 @@ export function PostkitEmailAudio({
   );
 }
 
-export interface PostkitEmailVideoProps extends PostkitEmailAudioProps {
+export interface VideoProps extends AudioProps {
   readonly poster?: string;
 }
 
-export function PostkitEmailVideo({
+export function Video({
   src,
   title,
   caption,
   poster,
   actionLabel = 'Watch video',
   rootStyles,
-}: PostkitEmailVideoProps) {
+}: VideoProps) {
   const model = createPostkitEmailMediaModel({
     src,
     title,

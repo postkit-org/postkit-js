@@ -1,17 +1,17 @@
 import { render } from '@chakra-email/core';
 import {
-  PostkitEmailCallout,
-  PostkitEmailCallToAction,
+  Callout,
+  CallToAction,
   PostkitEmailProvider,
 } from '@postkit/email';
 
 export function renderPostkitNewsletter(): Promise<string> {
   return render(
     <PostkitEmailProvider>
-      <PostkitEmailCallout title="Before you publish" tone="warning">
+      <Callout title="Before you publish" tone="warning">
         Review the destination and audience for this newsletter.
-      </PostkitEmailCallout>
-      <PostkitEmailCallToAction
+      </Callout>
+      <CallToAction
         title="Read the field guide"
         description="A practical guide to portable publishing workflows."
         primaryLabel="Read now"
