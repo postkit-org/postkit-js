@@ -59,10 +59,7 @@ export function AuthorCard({
   variant,
   unstyled,
 }: AuthorCardProps) {
-  const links = parseJsonProp<AuthorLink>(
-    linksValue,
-    'AuthorCard links',
-  );
+  const links = parseJsonProp<AuthorLink>(linksValue, 'AuthorCard links');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.authorCard,
     postkitAuthorCardRecipe,

@@ -14,11 +14,7 @@ npm install @postkit/email @chakra-email/core react react-dom
 
 ```tsx
 import { render } from '@chakra-email/core';
-import {
-  Callout,
-  CallToAction,
-  PostkitEmailProvider,
-} from '@postkit/email';
+import { Callout, CallToAction, PostkitEmailProvider } from '@postkit/email';
 
 const html = await render(
   <PostkitEmailProvider>

@@ -29,9 +29,7 @@ describe('@postkit/email components', () => {
 
   it('renders an untitled Aside through the shared expanded callout profile', async () => {
     const html = await render(
-      <Aside tone="tip">
-        A portable supporting note.
-      </Aside>,
+      <Aside tone="tip">A portable supporting note.</Aside>,
     );
 
     expect(html).toContain('data-postkit-component="Aside"');
@@ -82,10 +80,7 @@ describe('@postkit/email components', () => {
 
   it('inherits Chakra Email URL sanitation for authored destinations', async () => {
     const html = await render(
-      <Audio
-        src="javascript:alert(1)"
-        title="Unsafe destination"
-      />,
+      <Audio src="javascript:alert(1)" title="Unsafe destination" />,
     );
 
     expect(html).toContain('Unsafe destination');
@@ -112,10 +107,7 @@ describe('@postkit/email components', () => {
   it('accepts email theme overrides without depending on Chakra UI', async () => {
     const html = await render(
       <PostkitEmailProvider theme={{ colors: { brand: { 500: '#b91c1c' } } }}>
-        <Audio
-          src="https://media.example/episode.mp3"
-          title="Themed episode"
-        />
+        <Audio src="https://media.example/episode.mp3" title="Themed episode" />
       </PostkitEmailProvider>,
     );
 

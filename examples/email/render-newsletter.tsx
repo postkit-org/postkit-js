@@ -1,9 +1,5 @@
 import { render } from '@chakra-email/core';
-import {
-  Callout,
-  CallToAction,
-  PostkitEmailProvider,
-} from '@postkit/email';
+import { Callout, CallToAction, PostkitEmailProvider } from '@postkit/email';
 
 export function renderPostkitNewsletter(): Promise<string> {
   return render(

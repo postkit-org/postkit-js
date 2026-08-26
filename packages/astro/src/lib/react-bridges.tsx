@@ -90,56 +90,42 @@ function withPostkitAstroProvider<TProps extends object>(
   return AstroBridge;
 }
 
-export const Audio =
-  withPostkitAstroProvider<AudioProps>(ReactAudio);
-export const AudienceBoundary =
-  withPostkitAstroProvider<AudienceBoundaryProps>(
-    ReactAudienceBoundary,
-  );
-export const Aside =
-  withPostkitAstroProvider<AsideProps>(ReactAside);
+export const Audio = withPostkitAstroProvider<AudioProps>(ReactAudio);
+export const AudienceBoundary = withPostkitAstroProvider<AudienceBoundaryProps>(
+  ReactAudienceBoundary,
+);
+export const Aside = withPostkitAstroProvider<AsideProps>(ReactAside);
 export const AuthorCard =
   withPostkitAstroProvider<AuthorCardProps>(ReactAuthorCard);
 export const CallToAction =
   withPostkitAstroProvider<CallToActionProps>(ReactCallToAction);
-export const Callout =
-  withPostkitAstroProvider<CalloutProps>(ReactCallout);
-export const CardGrid =
-  withPostkitAstroProvider<CardGridProps>(ReactCardGrid);
+export const Callout = withPostkitAstroProvider<CalloutProps>(ReactCallout);
+export const CardGrid = withPostkitAstroProvider<CardGridProps>(ReactCardGrid);
 export const AppearsOn =
   withPostkitAstroProvider<AppearsOnProps>(ReactAppearsOn);
-export const Carousel =
-  withPostkitAstroProvider<CarouselProps>(ReactCarousel);
-export const Chart =
-  withPostkitAstroProvider<ChartProps>(ReactChart);
+export const Carousel = withPostkitAstroProvider<CarouselProps>(ReactCarousel);
+export const Chart = withPostkitAstroProvider<ChartProps>(ReactChart);
 export const CodeBlock =
   withPostkitAstroProvider<CodeBlockProps>(ReactCodeBlock);
 export const CodeGroup =
   withPostkitAstroProvider<CodeGroupProps>(ReactCodeGroup);
 export const Comparison =
   withPostkitAstroProvider<ComparisonProps>(ReactComparison);
-export const Diff =
-  withPostkitAstroProvider<DiffProps>(ReactDiff);
-export const Figure =
-  withPostkitAstroProvider<FigureProps>(ReactFigure);
-export const FileCard =
-  withPostkitAstroProvider<FileCardProps>(ReactFileCard);
-export const FileTree =
-  withPostkitAstroProvider<FileTreeProps>(ReactFileTree);
+export const Diff = withPostkitAstroProvider<DiffProps>(ReactDiff);
+export const Figure = withPostkitAstroProvider<FigureProps>(ReactFigure);
+export const FileCard = withPostkitAstroProvider<FileCardProps>(ReactFileCard);
+export const FileTree = withPostkitAstroProvider<FileTreeProps>(ReactFileTree);
 export const Disclosure =
   withPostkitAstroProvider<DisclosureProps>(ReactDisclosure);
-export const Gallery =
-  withPostkitAstroProvider<GalleryProps>(ReactGallery);
+export const Gallery = withPostkitAstroProvider<GalleryProps>(ReactGallery);
 export const KeyTakeaway =
   withPostkitAstroProvider<KeyTakeawayProps>(ReactKeyTakeaway);
 export const LinkPreview =
   withPostkitAstroProvider<LinkPreviewProps>(ReactLinkPreview);
-export const NewsletterSignup =
-  withPostkitAstroProvider<NewsletterSignupProps>(
-    ReactNewsletterSignup,
-  );
-export const Poll =
-  withPostkitAstroProvider<PollProps>(ReactPoll);
+export const NewsletterSignup = withPostkitAstroProvider<NewsletterSignupProps>(
+  ReactNewsletterSignup,
+);
+export const Poll = withPostkitAstroProvider<PollProps>(ReactPoll);
 export const ProductCard =
   withPostkitAstroProvider<ProductCardProps>(ReactProductCard);
 export const PullQuote =
@@ -148,21 +134,15 @@ export const RelatedContent =
   withPostkitAstroProvider<RelatedContentProps>(ReactRelatedContent);
 export const ShareActions =
   withPostkitAstroProvider<ShareActionsProps>(ReactShareActions);
-export const SeriesNavigation =
-  withPostkitAstroProvider<SeriesNavigationProps>(
-    ReactSeriesNavigation,
-  );
+export const SeriesNavigation = withPostkitAstroProvider<SeriesNavigationProps>(
+  ReactSeriesNavigation,
+);
 export const SocialPost =
   withPostkitAstroProvider<SocialPostProps>(ReactSocialPost);
-export const Steps =
-  withPostkitAstroProvider<StepsProps>(ReactSteps);
+export const Steps = withPostkitAstroProvider<StepsProps>(ReactSteps);
 export const SponsorBlock =
   withPostkitAstroProvider<SponsorBlockProps>(ReactSponsorBlock);
-export const Stat =
-  withPostkitAstroProvider<StatProps>(ReactStat);
-export const Tabs =
-  withPostkitAstroProvider<TabsProps>(ReactTabs);
-export const Terminal =
-  withPostkitAstroProvider<TerminalProps>(ReactTerminal);
-export const Video =
-  withPostkitAstroProvider<VideoProps>(ReactVideo);
+export const Stat = withPostkitAstroProvider<StatProps>(ReactStat);
+export const Tabs = withPostkitAstroProvider<TabsProps>(ReactTabs);
+export const Terminal = withPostkitAstroProvider<TerminalProps>(ReactTerminal);
+export const Video = withPostkitAstroProvider<VideoProps>(ReactVideo);

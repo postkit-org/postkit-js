@@ -293,10 +293,7 @@ export function Comparison({
   unstyled,
 }: ComparisonProps) {
   const columns = parseJsonProp<string>(columnsValue, 'Comparison columns');
-  const items = parseJsonProp<ComparisonItem>(
-    itemsValue,
-    'Comparison items',
-  );
+  const items = parseJsonProp<ComparisonItem>(itemsValue, 'Comparison items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.comparison,
     postkitComparisonRecipe,
@@ -753,9 +750,7 @@ export type SeriesNavigationProps = {
 } & SharedRootProps<PostkitSeriesNavigationSlot> &
   RecipeVariantProps<typeof postkitSeriesNavigationRecipe> &
   UnstyledProp;
-function parseSeriesLink(
-  value?: SeriesLink | string,
-): SeriesLink | undefined {
+function parseSeriesLink(value?: SeriesLink | string): SeriesLink | undefined {
   if (value === undefined) return undefined;
   if (typeof value !== 'string') return value;
   if (!value) return undefined;

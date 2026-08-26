@@ -16,12 +16,7 @@ import {
   numericEmailDimension,
 } from './models.js';
 
-export type Tone =
-  | 'note'
-  | 'tip'
-  | 'important'
-  | 'warning'
-  | 'caution';
+export type Tone = 'note' | 'tip' | 'important' | 'warning' | 'caution';
 
 const toneStyles: Record<
   Tone,
@@ -80,10 +75,7 @@ export function Callout({
   );
 }
 
-export type AsideProps = Omit<
-  CalloutProps,
-  'componentName'
->;
+export type AsideProps = Omit<CalloutProps, 'componentName'>;
 
 export function Aside(props: AsideProps) {
   return <Callout {...props} componentName="Aside" />;
@@ -193,11 +185,7 @@ export function Figure({
     />
   );
   return (
-    <Section
-      data-postkit-component="Figure"
-      mb={4}
-      {...rootStyles}
-    >
+    <Section data-postkit-component="Figure" mb={4} {...rootStyles}>
       {href ? <Link href={href}>{image}</Link> : image}
       {caption ? (
         <Text color="gray.700" fontSize="sm" mt={2} mb={0}>

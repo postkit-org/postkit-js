@@ -5,12 +5,7 @@ import {
 } from './components.js';
 import { POSTKIT_ASTRO_SYSTEM_ID, postkitAstro } from './integration.js';
 import { createPostkitAstroMdxOptions } from './mdx-options.js';
-import {
-  Audio,
-  CallToAction,
-  Figure,
-  SocialPost,
-} from './react-bridges.js';
+import { Audio, CallToAction, Figure, SocialPost } from './react-bridges.js';
 
 describe('Postkit Astro adapter', () => {
   it('provides Postkit components while preserving site overrides', () => {
@@ -54,11 +49,7 @@ describe('Postkit Astro adapter', () => {
 
   it('renders React bridges beneath the themed Postkit provider', () => {
     const markup = renderToStaticMarkup(
-      <Audio
-        src="/episode.mp3"
-        title="Episode"
-        caption="Recorded live."
-      />,
+      <Audio src="/episode.mp3" title="Episode" caption="Recorded live." />,
     );
 
     expect(markup).toContain('data-postkit-component="Audio"');

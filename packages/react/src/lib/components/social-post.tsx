@@ -36,8 +36,7 @@ const SocialPostIframe = chakra('iframe');
 const SocialPostQuote = chakra('blockquote');
 const SocialPostTime = chakra('time');
 
-export type SocialPostResolution =
-  'live' | 'snapshot' | 'snapshot-fallback';
+export type SocialPostResolution = 'live' | 'snapshot' | 'snapshot-fallback';
 
 export type SocialPostSnapshotInfo = 'auto' | 'visible' | 'hidden';
 

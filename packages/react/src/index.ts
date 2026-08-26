@@ -4,10 +4,7 @@ export {
   type AppearsOnProps,
   type SyndicationReference,
 } from './lib/components/appears-on.js';
-export {
-  Audio,
-  type AudioProps,
-} from './lib/components/audio.js';
+export { Audio, type AudioProps } from './lib/components/audio.js';
 export {
   Aside,
   Callout,
@@ -162,10 +159,7 @@ export {
   type ChartProps,
   type ChartSeries,
 } from './lib/components/chart.js';
-export {
-  Figure,
-  type FigureProps,
-} from './lib/components/figure.js';
+export { Figure, type FigureProps } from './lib/components/figure.js';
 export {
   LinkPreview,
   type LinkPreviewPresentation,

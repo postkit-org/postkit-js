@@ -211,9 +211,7 @@ describe('Postkit article components', () => {
         Back up the vault before continuing.
       </Callout>,
     );
-    const aside = render(
-      <Aside title="Context">Related history.</Aside>,
-    );
+    const aside = render(<Aside title="Context">Related history.</Aside>);
     const gallery = render(
       <Gallery
         title="Field work"
@@ -710,9 +708,9 @@ describe('Postkit article components', () => {
   });
 
   it('rejects malformed JSON authoring props', () => {
-    expect(() =>
-      render(<Chart title="Broken" data="not-json" />),
-    ).toThrow('Postkit Chart data must contain valid JSON.');
+    expect(() => render(<Chart title="Broken" data="not-json" />)).toThrow(
+      'Postkit Chart data must contain valid JSON.',
+    );
   });
 
   it('accepts recipe variants, an unstyled mode, and per-slot styles', () => {

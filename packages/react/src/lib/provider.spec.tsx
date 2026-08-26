@@ -160,10 +160,7 @@ describe('PostkitProvider', () => {
         defaultResolver="alternate"
       >
         <LinkPreview href="https://example.com/article" />
-        <LinkPreview
-          href="https://example.com/other"
-          provider="primary"
-        />
+        <LinkPreview href="https://example.com/other" provider="primary" />
       </PostkitProvider>,
     );
 

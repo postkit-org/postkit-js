@@ -113,10 +113,7 @@ interface FencedCodeElementProps {
   readonly className?: string;
 }
 
-export function ProsePre({
-  children,
-  ...props
-}: HTMLChakraProps<'pre'>) {
+export function ProsePre({ children, ...props }: HTMLChakraProps<'pre'>) {
   if (isValidElement<FencedCodeElementProps>(children)) {
     const source = children.props.children;
     if (typeof source === 'string') {

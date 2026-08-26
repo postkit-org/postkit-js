@@ -58,9 +58,7 @@ function numericValue(datum: ChartDatum, key: string): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }
 
-function inferredSeries(
-  data: readonly ChartDatum[],
-): ChartSeries[] {
+function inferredSeries(data: readonly ChartDatum[]): ChartSeries[] {
   const first = data[0];
   if (!first) {
     return [];

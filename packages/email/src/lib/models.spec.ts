@@ -12,7 +12,9 @@ describe('email render models', () => {
       { label: 'Read', href: 'https://example.com' },
     );
     expect(createPostkitEmailAction('Read', undefined)).toBeUndefined();
-    expect(createPostkitEmailAction(' ', 'https://example.com')).toBeUndefined();
+    expect(
+      createPostkitEmailAction(' ', 'https://example.com'),
+    ).toBeUndefined();
   });
 
   it('normalizes media copy independently from its renderer', () => {
