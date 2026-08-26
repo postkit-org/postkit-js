@@ -4,6 +4,7 @@ const { withContentCollections } = require('@content-collections/next');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  allowedDevOrigins: ['postkit.test'],
   poweredByHeader: false,
   reactStrictMode: true,
   transpilePackages: ['@postkit/next', '@postkit/react', '@postkit/unfurl'],
