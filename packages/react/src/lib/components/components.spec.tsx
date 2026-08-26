@@ -4,47 +4,47 @@ import { defaultSystem } from '@chakra-ui/react';
 import { createPostkitSocialPostSnapshot } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitAppearsOn } from './appears-on.js';
-import { PostkitAudio } from './audio.js';
+import { AppearsOn } from './appears-on.js';
+import { Audio } from './audio.js';
 import {
-  PostkitAside,
-  PostkitCallout,
-  PostkitCardGrid,
-  PostkitDisclosure,
-  PostkitGallery,
-  PostkitSteps,
-  PostkitTabs,
+  Aside,
+  Callout,
+  CardGrid,
+  Disclosure,
+  Gallery,
+  Steps,
+  Tabs,
 } from './article-structure.js';
-import { PostkitAuthorCard } from './author-card.js';
-import { PostkitCallToAction } from './call-to-action.js';
-import { PostkitCarousel } from './carousel.js';
-import { PostkitChart } from './chart.js';
-import { PostkitFigure } from './figure.js';
-import { PostkitLinkPreview } from './link-preview.js';
-import { PostkitNewsletterSignup } from './newsletter-signup.js';
+import { AuthorCard } from './author-card.js';
+import { CallToAction } from './call-to-action.js';
+import { Carousel } from './carousel.js';
+import { Chart } from './chart.js';
+import { Figure } from './figure.js';
+import { LinkPreview } from './link-preview.js';
+import { NewsletterSignup } from './newsletter-signup.js';
 import { PostkitProvider } from '../provider.js';
-import { PostkitShareActions } from './share-actions.js';
-import { PostkitSocialPost } from './social-post.js';
-import { PostkitVideo } from './video.js';
+import { ShareActions } from './share-actions.js';
+import { SocialPost } from './social-post.js';
+import { Video } from './video.js';
 import {
-  PostkitCodeBlock,
-  PostkitCodeGroup,
-  PostkitDiff,
-  PostkitFileCard,
-  PostkitFileTree,
-  PostkitTerminal,
+  CodeBlock,
+  CodeGroup,
+  Diff,
+  FileCard,
+  FileTree,
+  Terminal,
 } from './technical-content.js';
 import {
-  PostkitAudienceBoundary,
-  PostkitComparison,
-  PostkitKeyTakeaway,
-  PostkitPoll,
-  PostkitProductCard,
-  PostkitPullQuote,
-  PostkitRelatedContent,
-  PostkitSeriesNavigation,
-  PostkitSponsorBlock,
-  PostkitStat,
+  AudienceBoundary,
+  Comparison,
+  KeyTakeaway,
+  Poll,
+  ProductCard,
+  PullQuote,
+  RelatedContent,
+  SeriesNavigation,
+  SponsorBlock,
+  Stat,
 } from './publication.js';
 
 function render(component: React.ReactNode): string {
@@ -56,28 +56,28 @@ function render(component: React.ReactNode): string {
 describe('Postkit article components', () => {
   it('server-renders publication and audience components', () => {
     const pullQuote = render(
-      <PostkitPullQuote
+      <PullQuote
         quote="Publishing is a process."
         attribution="Ada"
         cite="Field Notes"
       />,
     );
     const takeaway = render(
-      <PostkitKeyTakeaway
+      <KeyTakeaway
         items={['Keep source portable.', 'Preview the destination.']}
       />,
     );
     const stat = render(
-      <PostkitStat value="98%" label="Reader completion" trend="+4%" />,
+      <Stat value="98%" label="Reader completion" trend="+4%" />,
     );
     const comparison = render(
-      <PostkitComparison
+      <Comparison
         columns={['Free', 'Pro']}
         items={[{ label: 'Previews', values: [true, true] }]}
       />,
     );
     const poll = render(
-      <PostkitPoll
+      <Poll
         question="Which format?"
         options={[
           { id: 'md', label: 'Markdown', votes: 8 },
@@ -86,7 +86,7 @@ describe('Postkit article components', () => {
       />,
     );
     const product = render(
-      <PostkitProductCard
+      <ProductCard
         title="Field guide"
         href="/shop/guide"
         price="$20"
@@ -94,12 +94,12 @@ describe('Postkit article components', () => {
       />,
     );
     const related = render(
-      <PostkitRelatedContent
+      <RelatedContent
         items={[{ title: 'Rendering guide', href: '/rendering' }]}
       />,
     );
     const series = render(
-      <PostkitSeriesNavigation
+      <SeriesNavigation
         title="Portable publishing"
         current={2}
         total={4}
@@ -108,21 +108,21 @@ describe('Postkit article components', () => {
       />,
     );
     const sponsor = render(
-      <PostkitSponsorBlock
+      <SponsorBlock
         name="Example"
         message="Supports independent publishing."
         href="https://example.com"
       />,
     );
     const boundary = render(
-      <PostkitAudienceBoundary
+      <AudienceBoundary
         audience="members"
         authorized={false}
         fallback="Members only."
         showLabel
       >
         Protected content.
-      </PostkitAudienceBoundary>,
+      </AudienceBoundary>,
     );
 
     expect(pullQuote).toContain('<blockquote');
@@ -146,7 +146,7 @@ describe('Postkit article components', () => {
 
   it('server-renders technical content and file components', () => {
     const code = render(
-      <PostkitCodeBlock
+      <CodeBlock
         code={'const answer = 42;\nconsole.log(answer);'}
         language="typescript"
         filename="answer.ts"
@@ -154,7 +154,7 @@ describe('Postkit article components', () => {
       />,
     );
     const group = render(
-      <PostkitCodeGroup
+      <CodeGroup
         items={[
           { label: 'npm', code: 'npm install @postkit/react' },
           { label: 'pnpm', code: 'pnpm add @postkit/react' },
@@ -162,16 +162,16 @@ describe('Postkit article components', () => {
       />,
     );
     const terminal = render(
-      <PostkitTerminal command="npm test" output="65 tests passed" />,
+      <Terminal command="npm test" output="65 tests passed" />,
     );
     const diff = render(
-      <PostkitDiff
+      <Diff
         diff={'-const old = true\n+const current = true'}
         title="config.ts"
       />,
     );
     const tree = render(
-      <PostkitFileTree
+      <FileTree
         title="Project"
         items={[
           { path: 'src', type: 'folder' },
@@ -180,7 +180,7 @@ describe('Postkit article components', () => {
       />,
     );
     const file = render(
-      <PostkitFileCard
+      <FileCard
         href="/guide.pdf"
         name="guide.pdf"
         description="The printable field guide."
@@ -207,15 +207,15 @@ describe('Postkit article components', () => {
 
   it('server-renders foundational article structure components', () => {
     const callout = render(
-      <PostkitCallout title="Heads up" tone="warning">
+      <Callout title="Heads up" tone="warning">
         Back up the vault before continuing.
-      </PostkitCallout>,
+      </Callout>,
     );
     const aside = render(
-      <PostkitAside title="Context">Related history.</PostkitAside>,
+      <Aside title="Context">Related history.</Aside>,
     );
     const gallery = render(
-      <PostkitGallery
+      <Gallery
         title="Field work"
         columns={3}
         items={[
@@ -225,12 +225,12 @@ describe('Postkit article components', () => {
       />,
     );
     const disclosure = render(
-      <PostkitDisclosure summary="What is PostKit?" open>
+      <Disclosure summary="What is PostKit?" open>
         Article components for Markdown and MDX.
-      </PostkitDisclosure>,
+      </Disclosure>,
     );
     const tabs = render(
-      <PostkitTabs
+      <Tabs
         label="Install commands"
         items={[
           { label: 'npm', content: 'npm install @postkit/react' },
@@ -239,7 +239,7 @@ describe('Postkit article components', () => {
       />,
     );
     const steps = render(
-      <PostkitSteps
+      <Steps
         items={[
           { title: 'Install', description: 'Add the package.' },
           { title: 'Render', description: 'Map the components.' },
@@ -247,7 +247,7 @@ describe('Postkit article components', () => {
       />,
     );
     const cards = render(
-      <PostkitCardGrid
+      <CardGrid
         columns={2}
         items={[
           {
@@ -276,7 +276,7 @@ describe('Postkit article components', () => {
 
   it('server-renders standard article conversion and identity blocks', () => {
     const author = render(
-      <PostkitAuthorCard
+      <AuthorCard
         name="Ada Lovelace"
         role="Contributing editor"
         avatarSrc="/ada.jpg"
@@ -286,7 +286,7 @@ describe('Postkit article components', () => {
       />,
     );
     const cta = render(
-      <PostkitCallToAction
+      <CallToAction
         eyebrow="Continue reading"
         title="Explore the field guide"
         description="A durable reference for the full workflow."
@@ -303,7 +303,7 @@ describe('Postkit article components', () => {
           hiddenFields: { source: 'postkit' },
         }}
       >
-        <PostkitNewsletterSignup
+        <NewsletterSignup
           title="Get the field notes"
           list="weekly"
           privacy="Unsubscribe at any time."
@@ -328,7 +328,7 @@ describe('Postkit article components', () => {
 
   it('server-renders a labeled carousel from literal JSON', () => {
     const markup = render(
-      <PostkitCarousel
+      <Carousel
         label="Field notes"
         items={JSON.stringify([
           {
@@ -357,7 +357,7 @@ describe('Postkit article components', () => {
 
   it('server-renders native video and audio controls with fallbacks', () => {
     const video = render(
-      <PostkitVideo
+      <Video
         src="/interview.mp4"
         title="Interview"
         caption="Recorded in New York."
@@ -372,7 +372,7 @@ describe('Postkit article components', () => {
       />,
     );
     const audio = render(
-      <PostkitAudio
+      <Audio
         src="/episode.mp3"
         title="Episode 12"
         caption="A conversation about durable publishing."
@@ -393,7 +393,7 @@ describe('Postkit article components', () => {
 
   it('server-renders an accessible SVG chart and source table', () => {
     const markup = render(
-      <PostkitChart
+      <Chart
         title="Quarterly revenue"
         description="Revenue increased in the second quarter."
         type="line"
@@ -416,7 +416,7 @@ describe('Postkit article components', () => {
 
   it('server-renders a semantic responsive figure with caption and credit', () => {
     const markup = render(
-      <PostkitFigure
+      <Figure
         src="/studio.jpg"
         alt="A recording studio overlooking Manhattan"
         caption="The studio during the final recording session."
@@ -469,14 +469,14 @@ describe('Postkit article components', () => {
       provider: { id: 'opengraphs' },
     } as const;
     const small = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/article"
         metadata={metadata}
         size="sm"
       />,
     );
     const large = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/article"
         metadata={metadata}
         size="lg"
@@ -495,7 +495,7 @@ describe('Postkit article components', () => {
 
   it('renders native media and click-to-load isolated embeds without injecting provider HTML', () => {
     const media = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/watch"
         presentation="auto"
         metadata={{
@@ -517,7 +517,7 @@ describe('Postkit article components', () => {
       />,
     );
     const embed = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://video.example.com/watch"
         presentation="embed"
         activation="click"
@@ -555,7 +555,7 @@ describe('Postkit article components', () => {
 
   it('can immediately render a validated iframe source', () => {
     const markup = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://video.example.com/watch"
         presentation="embed"
         activation="immediate"
@@ -583,14 +583,14 @@ describe('Postkit article components', () => {
 
   it('renders syndicated destinations and share actions from literal JSON', () => {
     const appearances = render(
-      <PostkitAppearsOn
+      <AppearsOn
         label="Also published on"
         presentation="badges"
         items='[{"service":"bluesky","url":"https://bsky.app/post/1","status":"published"},{"service":"medium","url":"https://medium.com/post/1"}]'
       />,
     );
     const actions = render(
-      <PostkitShareActions
+      <ShareActions
         url="https://example.com/article"
         services='["native","copy","email"]'
       />,
@@ -634,7 +634,7 @@ describe('Postkit article components', () => {
       },
     } as const;
     const social = render(
-      <PostkitSocialPost
+      <SocialPost
         href="https://social.example/post/1"
         metadata={metadata}
         branding="full"
@@ -642,7 +642,7 @@ describe('Postkit article components', () => {
       />,
     );
     const delegated = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://social.example/post/1"
         metadata={metadata}
         presentation="auto"
@@ -681,14 +681,14 @@ describe('Postkit article components', () => {
       cacheResult: 'hit',
     });
     const visible = render(
-      <PostkitSocialPost
+      <SocialPost
         href={metadata.url}
         metadata={snapshot}
         resolution="snapshot"
       />,
     );
     const hidden = render(
-      <PostkitSocialPost
+      <SocialPost
         href={metadata.url}
         metadata={JSON.stringify(snapshot)}
         resolution="snapshot"
@@ -711,13 +711,13 @@ describe('Postkit article components', () => {
 
   it('rejects malformed JSON authoring props', () => {
     expect(() =>
-      render(<PostkitChart title="Broken" data="not-json" />),
+      render(<Chart title="Broken" data="not-json" />),
     ).toThrow('Postkit Chart data must contain valid JSON.');
   });
 
   it('accepts recipe variants, an unstyled mode, and per-slot styles', () => {
     const markup = render(
-      <PostkitAudio
+      <Audio
         src="/episode.mp3"
         title="Custom player"
         size="lg"
@@ -727,7 +727,7 @@ describe('Postkit article components', () => {
       />,
     );
     const unstyledMarkup = render(
-      <PostkitAudio src="/episode.mp3" title="Unstyled player" unstyled />,
+      <Audio src="/episode.mp3" title="Unstyled player" unstyled />,
     );
 
     expect(markup).toContain('postkit-audio__root site-audio');

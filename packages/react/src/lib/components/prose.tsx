@@ -14,7 +14,7 @@ import {
   type ReactNode,
 } from 'react';
 
-import { PostkitCodeBlock } from './technical-content.js';
+import { CodeBlock } from './technical-content.js';
 import {
   postkitProseRecipe,
   type PostkitProseSlot,
@@ -55,13 +55,13 @@ function createPostkitProseElement<Element extends ElementType>(
     });
   }
 
-  PostkitProseElement.displayName = `PostkitProse.${slot}`;
+  PostkitProseElement.displayName = `Prose.${slot}`;
   return PostkitProseElement as ChakraComponent<Element>;
 }
 
-export type PostkitProseProps = HTMLChakraProps<'div'>;
+export type ProseProps = HTMLChakraProps<'div'>;
 
-export function PostkitProse({ className, css, ...props }: PostkitProseProps) {
+export function Prose({ className, css, ...props }: ProseProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.prose,
     postkitProseRecipe,
@@ -84,7 +84,7 @@ export function createPostkitProseLink(
 ): PostkitLinkComponent {
   const StyledLink = chakra(Link);
 
-  function PostkitProseLink({ className, ...props }: PostkitLinkProps) {
+  function ProseLink({ className, ...props }: PostkitLinkProps) {
     const recipe = usePostkitSlotRecipe(
       postkitRecipeKeys.prose,
       postkitProseRecipe,
@@ -101,8 +101,8 @@ export function createPostkitProseLink(
     );
   }
 
-  PostkitProseLink.displayName = 'PostkitProse.a';
-  return PostkitProseLink;
+  ProseLink.displayName = 'Prose.a';
+  return ProseLink;
 }
 
 const PostkitProsePreElement = createPostkitProseElement('pre', 'pre');
@@ -113,7 +113,7 @@ interface FencedCodeElementProps {
   readonly className?: string;
 }
 
-export function PostkitProsePre({
+export function ProsePre({
   children,
   ...props
 }: HTMLChakraProps<'pre'>) {
@@ -125,7 +125,7 @@ export function PostkitProsePre({
       )?.[1];
 
       return (
-        <PostkitCodeBlock
+        <CodeBlock
           code={source}
           language={language}
           rootProps={props as BoxProps}
@@ -138,7 +138,7 @@ export function PostkitProsePre({
 }
 
 export const postkitProseComponents = Object.freeze({
-  wrapper: PostkitProse,
+  wrapper: Prose,
   h1: createPostkitProseElement('h1', 'h1'),
   h2: createPostkitProseElement('h2', 'h2'),
   h3: createPostkitProseElement('h3', 'h3'),
@@ -152,7 +152,7 @@ export const postkitProseComponents = Object.freeze({
   ol: createPostkitProseElement('ol', 'ol'),
   li: createPostkitProseElement('li', 'li'),
   hr: createPostkitProseElement('hr', 'hr'),
-  pre: PostkitProsePre,
+  pre: ProsePre,
   code: createPostkitProseElement('code', 'code'),
   strong: createPostkitProseElement('strong', 'strong'),
   em: createPostkitProseElement('em', 'em'),
@@ -181,4 +181,4 @@ export const postkitProseComponents = Object.freeze({
   br: createPostkitProseElement('br', 'br'),
 });
 
-export type PostkitProseComponents = typeof postkitProseComponents;
+export type ProseComponents = typeof postkitProseComponents;

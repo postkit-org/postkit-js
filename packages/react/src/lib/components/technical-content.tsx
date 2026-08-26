@@ -2,7 +2,7 @@
 
 import {
   Box,
-  CodeBlock,
+  CodeBlock as ChakraCodeBlock,
   Link,
   Text,
   chakra,
@@ -72,7 +72,7 @@ function highlightedLines(value?: string): number[] {
   return [...lines];
 }
 
-export type PostkitCodeBlockProps = {
+export type CodeBlockProps = {
   readonly code?: string;
   readonly children?: ReactNode;
   readonly language?: string;
@@ -86,7 +86,7 @@ export type PostkitCodeBlockProps = {
   RecipeVariantProps<typeof postkitCodeBlockRecipe> &
   UnstyledProp;
 
-export function PostkitCodeBlock({
+export function CodeBlock({
   code,
   children,
   language,
@@ -101,7 +101,7 @@ export function PostkitCodeBlock({
   size,
   variant,
   unstyled,
-}: PostkitCodeBlockProps) {
+}: CodeBlockProps) {
   const source = code ?? (typeof children === 'string' ? children : '');
   const highlights = highlightedLines(highlightsValue);
   const recipe = usePostkitSlotRecipe(
@@ -113,14 +113,14 @@ export function PostkitCodeBlock({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const codeBlockRootProps = restRootProps as Omit<
-    CodeBlock.RootProps,
+    ChakraCodeBlock.RootProps,
     'children' | 'code' | 'language' | 'meta' | 'size' | 'unstyled'
   >;
   const shouldNumber = enabled(lineNumbers, true);
   const shouldWrap = enabled(wrap);
 
   return (
-    <CodeBlock.Root
+    <ChakraCodeBlock.Root
       data-postkit-component="CodeBlock"
       {...codeBlockRootProps}
       code={source}
@@ -136,17 +136,17 @@ export function PostkitCodeBlock({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {filename || language || enabled(copy, true) ? (
-        <CodeBlock.Header
+        <ChakraCodeBlock.Header
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          <CodeBlock.Title
+          <ChakraCodeBlock.Title
             className={recipe.classNameMap.filename}
             css={[styles.filename, slotStyles?.filename]}
           >
             {filename}
-          </CodeBlock.Title>
-          <CodeBlock.Control
+          </ChakraCodeBlock.Title>
+          <ChakraCodeBlock.Control
             className={recipe.classNameMap.actions}
             css={[styles.actions, slotStyles?.actions]}
           >
@@ -159,21 +159,21 @@ export function PostkitCodeBlock({
               </Text>
             ) : null}
             {enabled(copy, true) ? (
-              <CodeBlock.CopyTrigger
+              <ChakraCodeBlock.CopyTrigger
                 type="button"
                 aria-label="Copy code"
                 className={recipe.classNameMap.button}
                 css={[styles.button, slotStyles?.button]}
               >
-                <CodeBlock.CopyIndicator copied="Copied">
+                <ChakraCodeBlock.CopyIndicator copied="Copied">
                   Copy
-                </CodeBlock.CopyIndicator>
-              </CodeBlock.CopyTrigger>
+                </ChakraCodeBlock.CopyIndicator>
+              </ChakraCodeBlock.CopyTrigger>
             ) : null}
-          </CodeBlock.Control>
-        </CodeBlock.Header>
+          </ChakraCodeBlock.Control>
+        </ChakraCodeBlock.Header>
       ) : null}
-      <CodeBlock.Content
+      <ChakraCodeBlock.Content
         className={recipe.classNameMap.scroller}
         css={[
           styles.scroller,
@@ -181,7 +181,7 @@ export function PostkitCodeBlock({
           slotStyles?.scroller,
         ]}
       >
-        <CodeBlock.Code
+        <ChakraCodeBlock.Code
           className={recipe.classNameMap.code}
           css={[
             styles.code,
@@ -189,7 +189,7 @@ export function PostkitCodeBlock({
             slotStyles?.code,
           ]}
         >
-          <CodeBlock.CodeText
+          <ChakraCodeBlock.CodeText
             className={recipe.classNameMap.lineContent}
             css={[
               styles.lineContent,
@@ -206,27 +206,27 @@ export function PostkitCodeBlock({
               slotStyles?.lineContent,
             ]}
           />
-        </CodeBlock.Code>
-      </CodeBlock.Content>
-    </CodeBlock.Root>
+        </ChakraCodeBlock.Code>
+      </ChakraCodeBlock.Content>
+    </ChakraCodeBlock.Root>
   );
 }
 
-export interface PostkitCodeGroupItem {
+export interface CodeGroupItem {
   readonly label: string;
   readonly code: string;
   readonly language?: string;
   readonly filename?: string;
 }
-export type PostkitCodeGroupProps = {
-  readonly items: string | readonly PostkitCodeGroupItem[];
+export type CodeGroupProps = {
+  readonly items: string | readonly CodeGroupItem[];
   readonly label?: string;
   readonly initialIndex?: number | string;
 } & SharedRootProps<PostkitCodeGroupSlot> &
   RecipeVariantProps<typeof postkitCodeGroupRecipe> &
   UnstyledProp;
 
-export function PostkitCodeGroup({
+export function CodeGroup({
   items: value,
   label = 'Code examples',
   initialIndex = 0,
@@ -235,8 +235,8 @@ export function PostkitCodeGroup({
   size,
   variant,
   unstyled,
-}: PostkitCodeGroupProps) {
-  const items = parseJsonProp<PostkitCodeGroupItem>(value, 'CodeGroup items');
+}: CodeGroupProps) {
+  const items = parseJsonProp<CodeGroupItem>(value, 'CodeGroup items');
   const requested = Number(initialIndex);
   const [selected, setSelected] = useState(
     Number.isFinite(requested)
@@ -291,7 +291,7 @@ export function PostkitCodeGroup({
           css={[styles.panel, slotStyles?.panel]}
           key={`${item.label}-${index}`}
         >
-          <PostkitCodeBlock
+          <CodeBlock
             code={item.code}
             language={item.language}
             filename={item.filename}
@@ -304,7 +304,7 @@ export function PostkitCodeGroup({
   );
 }
 
-export type PostkitTerminalProps = {
+export type TerminalProps = {
   readonly command: string;
   readonly output?: string;
   readonly prompt?: string;
@@ -313,7 +313,7 @@ export type PostkitTerminalProps = {
   RecipeVariantProps<typeof postkitTerminalRecipe> &
   UnstyledProp;
 
-export function PostkitTerminal({
+export function Terminal({
   command,
   output,
   prompt = '$',
@@ -323,7 +323,7 @@ export function PostkitTerminal({
   size,
   variant,
   unstyled,
-}: PostkitTerminalProps) {
+}: TerminalProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.terminal,
     postkitTerminalRecipe,
@@ -391,14 +391,14 @@ export function PostkitTerminal({
   );
 }
 
-export type PostkitDiffProps = {
+export type DiffProps = {
   readonly diff: string;
   readonly title?: string;
 } & SharedRootProps<PostkitDiffSlot> &
   RecipeVariantProps<typeof postkitDiffRecipe> &
   UnstyledProp;
 
-export function PostkitDiff({
+export function Diff({
   diff,
   title,
   rootProps,
@@ -406,7 +406,7 @@ export function PostkitDiff({
   size,
   variant,
   unstyled,
-}: PostkitDiffProps) {
+}: DiffProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.diff,
     postkitDiffRecipe,
@@ -494,19 +494,19 @@ export function PostkitDiff({
   );
 }
 
-export interface PostkitFileTreeItem {
+export interface FileTreeItem {
   readonly path: string;
   readonly type?: 'file' | 'folder';
   readonly meta?: string;
 }
-export type PostkitFileTreeProps = {
-  readonly items: string | readonly PostkitFileTreeItem[];
+export type FileTreeProps = {
+  readonly items: string | readonly FileTreeItem[];
   readonly title?: string;
 } & SharedRootProps<PostkitFileTreeSlot> &
   RecipeVariantProps<typeof postkitFileTreeRecipe> &
   UnstyledProp;
 
-export function PostkitFileTree({
+export function FileTree({
   items: value,
   title,
   rootProps,
@@ -514,8 +514,8 @@ export function PostkitFileTree({
   size,
   variant,
   unstyled,
-}: PostkitFileTreeProps) {
-  const items = parseJsonProp<PostkitFileTreeItem>(value, 'FileTree items');
+}: FileTreeProps) {
+  const items = parseJsonProp<FileTreeItem>(value, 'FileTree items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.fileTree,
     postkitFileTreeRecipe,
@@ -588,7 +588,7 @@ export function PostkitFileTree({
   );
 }
 
-export type PostkitFileCardProps = {
+export type FileCardProps = {
   readonly href: string;
   readonly name: string;
   readonly description?: string;
@@ -600,7 +600,7 @@ export type PostkitFileCardProps = {
   RecipeVariantProps<typeof postkitFileCardRecipe> &
   UnstyledProp;
 
-export function PostkitFileCard({
+export function FileCard({
   href,
   name,
   description,
@@ -613,7 +613,7 @@ export function PostkitFileCard({
   size,
   variant,
   unstyled,
-}: PostkitFileCardProps) {
+}: FileCardProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.fileCard,
     postkitFileCardRecipe,

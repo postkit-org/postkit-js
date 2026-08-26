@@ -56,7 +56,7 @@ const calloutMarks = {
   caution: '×',
 } as const;
 
-export type PostkitCalloutProps = {
+export type CalloutProps = {
   readonly title?: string;
   readonly children?: ReactNode;
   readonly icon?: ReactNode;
@@ -65,7 +65,7 @@ export type PostkitCalloutProps = {
   RecipeVariantProps<typeof postkitCalloutRecipe> &
   UnstyledProp;
 
-export function PostkitCallout({
+export function Callout({
   title,
   children,
   icon,
@@ -76,7 +76,7 @@ export function PostkitCallout({
   variant,
   tone = 'note',
   unstyled,
-}: PostkitCalloutProps) {
+}: CalloutProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.callout,
     postkitCalloutRecipe,
@@ -126,12 +126,12 @@ export function PostkitCallout({
   );
 }
 
-export type PostkitAsideProps = PostkitCalloutProps;
-export function PostkitAside(props: PostkitAsideProps) {
-  return <PostkitCallout {...props} componentName="Aside" />;
+export type AsideProps = CalloutProps;
+export function Aside(props: AsideProps) {
+  return <Callout {...props} componentName="Aside" />;
 }
 
-export interface PostkitGalleryItem {
+export interface GalleryItem {
   readonly src: string;
   readonly alt: string;
   readonly caption?: string;
@@ -139,8 +139,8 @@ export interface PostkitGalleryItem {
   readonly width?: number;
   readonly height?: number;
 }
-export type PostkitGalleryProps = {
-  readonly items: string | readonly PostkitGalleryItem[];
+export type GalleryProps = {
+  readonly items: string | readonly GalleryItem[];
   readonly title?: string;
   readonly description?: string;
   readonly columns?: 1 | 2 | 3 | 4;
@@ -148,7 +148,7 @@ export type PostkitGalleryProps = {
   RecipeVariantProps<typeof postkitGalleryRecipe> &
   UnstyledProp;
 
-export function PostkitGallery({
+export function Gallery({
   items: value,
   title,
   description,
@@ -158,8 +158,8 @@ export function PostkitGallery({
   size,
   variant,
   unstyled,
-}: PostkitGalleryProps) {
-  const items = parseJsonProp<PostkitGalleryItem>(value, 'Gallery items');
+}: GalleryProps) {
+  const items = parseJsonProp<GalleryItem>(value, 'Gallery items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.gallery,
     postkitGalleryRecipe,
@@ -255,7 +255,7 @@ export function PostkitGallery({
   );
 }
 
-export type PostkitDisclosureProps = {
+export type DisclosureProps = {
   readonly summary: string;
   readonly children?: ReactNode;
   readonly open?: boolean;
@@ -263,7 +263,7 @@ export type PostkitDisclosureProps = {
   RecipeVariantProps<typeof postkitDisclosureRecipe> &
   UnstyledProp;
 
-export function PostkitDisclosure({
+export function Disclosure({
   summary,
   children,
   open,
@@ -272,7 +272,7 @@ export function PostkitDisclosure({
   size,
   variant,
   unstyled,
-}: PostkitDisclosureProps) {
+}: DisclosureProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.disclosure,
     postkitDisclosureRecipe,
@@ -317,20 +317,20 @@ export function PostkitDisclosure({
   );
 }
 
-export interface PostkitTabItem {
+export interface TabItem {
   readonly id?: string;
   readonly label: string;
   readonly content: ReactNode;
 }
-export type PostkitTabsProps = {
-  readonly items: string | readonly PostkitTabItem[];
+export type TabsProps = {
+  readonly items: string | readonly TabItem[];
   readonly label?: string;
   readonly initialIndex?: number | string;
 } & SharedRootProps<PostkitTabsSlot> &
   RecipeVariantProps<typeof postkitTabsRecipe> &
   UnstyledProp;
 
-export function PostkitTabs({
+export function Tabs({
   items: value,
   label = 'Tabbed content',
   initialIndex = 0,
@@ -339,8 +339,8 @@ export function PostkitTabs({
   size,
   variant,
   unstyled,
-}: PostkitTabsProps) {
-  const items = parseJsonProp<PostkitTabItem>(value, 'Tabs items');
+}: TabsProps) {
+  const items = parseJsonProp<TabItem>(value, 'Tabs items');
   const requested =
     typeof initialIndex === 'string' ? Number(initialIndex) : initialIndex;
   const [selected, setSelected] = useState(
@@ -410,25 +410,25 @@ export function PostkitTabs({
   );
 }
 
-export interface PostkitStepItem {
+export interface StepItem {
   readonly title: string;
   readonly description?: ReactNode;
 }
-export type PostkitStepsProps = {
-  readonly items: string | readonly PostkitStepItem[];
+export type StepsProps = {
+  readonly items: string | readonly StepItem[];
 } & SharedRootProps<PostkitStepsSlot> &
   RecipeVariantProps<typeof postkitStepsRecipe> &
   UnstyledProp;
 
-export function PostkitSteps({
+export function Steps({
   items: value,
   rootProps,
   slotStyles,
   size,
   variant,
   unstyled,
-}: PostkitStepsProps) {
-  const items = parseJsonProp<PostkitStepItem>(value, 'Steps items');
+}: StepsProps) {
+  const items = parseJsonProp<StepItem>(value, 'Steps items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.steps,
     postkitStepsRecipe,
@@ -484,7 +484,7 @@ export function PostkitSteps({
   );
 }
 
-export interface PostkitCardItem {
+export interface CardItem {
   readonly title: string;
   readonly description?: string;
   readonly href?: string;
@@ -492,8 +492,8 @@ export interface PostkitCardItem {
   readonly image?: { readonly src: string; readonly alt: string };
   readonly meta?: string;
 }
-export type PostkitCardGridProps = {
-  readonly items: string | readonly PostkitCardItem[];
+export type CardGridProps = {
+  readonly items: string | readonly CardItem[];
   readonly title?: string;
   readonly description?: string;
   readonly columns?: 1 | 2 | 3 | 4;
@@ -501,7 +501,7 @@ export type PostkitCardGridProps = {
   RecipeVariantProps<typeof postkitCardGridRecipe> &
   UnstyledProp;
 
-export function PostkitCardGrid({
+export function CardGrid({
   items: value,
   title,
   description,
@@ -511,8 +511,8 @@ export function PostkitCardGrid({
   size,
   variant,
   unstyled,
-}: PostkitCardGridProps) {
-  const items = parseJsonProp<PostkitCardItem>(value, 'CardGrid items');
+}: CardGridProps) {
+  const items = parseJsonProp<CardItem>(value, 'CardGrid items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.cardGrid,
     postkitCardGridRecipe,

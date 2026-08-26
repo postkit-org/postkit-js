@@ -19,16 +19,16 @@ npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
 Mount the provider near the article:
 
 ```tsx
-import { PostkitCallout, PostkitProvider } from '@postkit/react';
+import { Callout, PostkitProvider } from '@postkit/react';
 
 export function Article() {
   return (
     <PostkitProvider>
       <article>
         <h1>My first PostKit article</h1>
-        <PostkitCallout title="Portable by default" tone="tip">
+        <Callout title="Portable by default" tone="tip">
           Keep the content. Change the renderer.
-        </PostkitCallout>
+        </Callout>
       </article>
     </PostkitProvider>
   );

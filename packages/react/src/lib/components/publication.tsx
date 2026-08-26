@@ -54,14 +54,14 @@ function rootParts(rootProps?: BoxProps) {
   return { rootCss: css, rootClassName: className, restRootProps: rest };
 }
 
-export type PostkitPullQuoteProps = {
+export type PullQuoteProps = {
   readonly quote: string;
   readonly attribution?: string;
   readonly cite?: string;
 } & SharedRootProps<PostkitPullQuoteSlot> &
   RecipeVariantProps<typeof postkitPullQuoteRecipe> &
   UnstyledProp;
-export function PostkitPullQuote({
+export function PullQuote({
   quote,
   attribution,
   cite,
@@ -70,7 +70,7 @@ export function PostkitPullQuote({
   size,
   variant,
   unstyled,
-}: PostkitPullQuoteProps) {
+}: PullQuoteProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.pullQuote,
     postkitPullQuoteRecipe,
@@ -123,7 +123,7 @@ export function PostkitPullQuote({
   );
 }
 
-export type PostkitKeyTakeawayProps = {
+export type KeyTakeawayProps = {
   readonly title?: string;
   readonly eyebrow?: string;
   readonly items?: string | readonly string[];
@@ -131,7 +131,7 @@ export type PostkitKeyTakeawayProps = {
 } & SharedRootProps<PostkitKeyTakeawaySlot> &
   RecipeVariantProps<typeof postkitKeyTakeawayRecipe> &
   UnstyledProp;
-export function PostkitKeyTakeaway({
+export function KeyTakeaway({
   title = 'Key takeaway',
   eyebrow,
   items: value = [],
@@ -141,7 +141,7 @@ export function PostkitKeyTakeaway({
   size,
   variant,
   unstyled,
-}: PostkitKeyTakeawayProps) {
+}: KeyTakeawayProps) {
   const items = parseJsonProp<string>(value, 'KeyTakeaway items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.keyTakeaway,
@@ -203,7 +203,7 @@ export function PostkitKeyTakeaway({
   );
 }
 
-export type PostkitStatProps = {
+export type StatProps = {
   readonly value: string | number;
   readonly label: string;
   readonly trend?: string;
@@ -211,7 +211,7 @@ export type PostkitStatProps = {
 } & SharedRootProps<PostkitStatSlot> &
   RecipeVariantProps<typeof postkitStatRecipe> &
   UnstyledProp;
-export function PostkitStat({
+export function Stat({
   value,
   label,
   trend,
@@ -221,7 +221,7 @@ export function PostkitStat({
   size,
   variant,
   unstyled,
-}: PostkitStatProps) {
+}: StatProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.stat,
     postkitStatRecipe,
@@ -269,19 +269,19 @@ export function PostkitStat({
   );
 }
 
-export interface PostkitComparisonItem {
+export interface ComparisonItem {
   readonly label: string;
   readonly values: readonly (string | number | boolean | null)[];
 }
-export type PostkitComparisonProps = {
+export type ComparisonProps = {
   readonly columns: string | readonly string[];
-  readonly items: string | readonly PostkitComparisonItem[];
+  readonly items: string | readonly ComparisonItem[];
   readonly title?: string;
   readonly description?: string;
 } & SharedRootProps<PostkitComparisonSlot> &
   RecipeVariantProps<typeof postkitComparisonRecipe> &
   UnstyledProp;
-export function PostkitComparison({
+export function Comparison({
   columns: columnsValue,
   items: itemsValue,
   title,
@@ -291,9 +291,9 @@ export function PostkitComparison({
   size,
   variant,
   unstyled,
-}: PostkitComparisonProps) {
+}: ComparisonProps) {
   const columns = parseJsonProp<string>(columnsValue, 'Comparison columns');
-  const items = parseJsonProp<PostkitComparisonItem>(
+  const items = parseJsonProp<ComparisonItem>(
     itemsValue,
     'Comparison items',
   );
@@ -398,22 +398,22 @@ export function PostkitComparison({
   );
 }
 
-export interface PostkitPollOption {
+export interface PollOption {
   readonly id: string;
   readonly label: string;
   readonly votes?: number;
 }
-export type PostkitPollProps = {
+export type PollProps = {
   readonly question: string;
   readonly description?: string;
-  readonly options: string | readonly PostkitPollOption[];
+  readonly options: string | readonly PollOption[];
   readonly totalVotes?: number | string;
   readonly selectedId?: string;
-  readonly onVote?: (option: PostkitPollOption) => void | Promise<void>;
+  readonly onVote?: (option: PollOption) => void | Promise<void>;
 } & SharedRootProps<PostkitPollSlot> &
   RecipeVariantProps<typeof postkitPollRecipe> &
   UnstyledProp;
-export function PostkitPoll({
+export function Poll({
   question,
   description,
   options: value,
@@ -425,8 +425,8 @@ export function PostkitPoll({
   size,
   variant,
   unstyled,
-}: PostkitPollProps) {
-  const options = parseJsonProp<PostkitPollOption>(value, 'Poll options');
+}: PollProps) {
+  const options = parseJsonProp<PollOption>(value, 'Poll options');
   const [selection, setSelection] = useState(selectedId);
   const total =
     Number(totalVotes) ||
@@ -439,7 +439,7 @@ export function PostkitPoll({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
-  const vote = (option: PostkitPollOption) => {
+  const vote = (option: PollOption) => {
     setSelection(option.id);
     void onVote?.(option);
   };
@@ -527,7 +527,7 @@ export function PostkitPoll({
   );
 }
 
-export type PostkitProductCardProps = {
+export type ProductCardProps = {
   readonly title: string;
   readonly description?: string;
   readonly href: string;
@@ -541,7 +541,7 @@ export type PostkitProductCardProps = {
 } & SharedRootProps<PostkitProductCardSlot> &
   RecipeVariantProps<typeof postkitProductCardRecipe> &
   UnstyledProp;
-export function PostkitProductCard({
+export function ProductCard({
   title,
   description,
   href,
@@ -557,7 +557,7 @@ export function PostkitProductCard({
   size,
   variant,
   unstyled,
-}: PostkitProductCardProps) {
+}: ProductCardProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.productCard,
     postkitProductCardRecipe,
@@ -646,19 +646,19 @@ export function PostkitProductCard({
   );
 }
 
-export interface PostkitRelatedContentItem {
+export interface RelatedContentItem {
   readonly title: string;
   readonly href: string;
   readonly description?: string;
   readonly meta?: string;
 }
-export type PostkitRelatedContentProps = {
-  readonly items: string | readonly PostkitRelatedContentItem[];
+export type RelatedContentProps = {
+  readonly items: string | readonly RelatedContentItem[];
   readonly title?: string;
 } & SharedRootProps<PostkitRelatedContentSlot> &
   RecipeVariantProps<typeof postkitRelatedContentRecipe> &
   UnstyledProp;
-export function PostkitRelatedContent({
+export function RelatedContent({
   items: value,
   title = 'Related content',
   rootProps,
@@ -666,8 +666,8 @@ export function PostkitRelatedContent({
   size,
   variant,
   unstyled,
-}: PostkitRelatedContentProps) {
-  const items = parseJsonProp<PostkitRelatedContentItem>(
+}: RelatedContentProps) {
+  const items = parseJsonProp<RelatedContentItem>(
     value,
     'RelatedContent items',
   );
@@ -740,34 +740,34 @@ export function PostkitRelatedContent({
   );
 }
 
-export interface PostkitSeriesLink {
+export interface SeriesLink {
   readonly title: string;
   readonly href: string;
 }
-export type PostkitSeriesNavigationProps = {
+export type SeriesNavigationProps = {
   readonly title: string;
   readonly current?: number | string;
   readonly total?: number | string;
-  readonly previous?: PostkitSeriesLink | string;
-  readonly next?: PostkitSeriesLink | string;
+  readonly previous?: SeriesLink | string;
+  readonly next?: SeriesLink | string;
 } & SharedRootProps<PostkitSeriesNavigationSlot> &
   RecipeVariantProps<typeof postkitSeriesNavigationRecipe> &
   UnstyledProp;
 function parseSeriesLink(
-  value?: PostkitSeriesLink | string,
-): PostkitSeriesLink | undefined {
+  value?: SeriesLink | string,
+): SeriesLink | undefined {
   if (value === undefined) return undefined;
   if (typeof value !== 'string') return value;
   if (!value) return undefined;
   try {
-    return JSON.parse(value) as PostkitSeriesLink;
+    return JSON.parse(value) as SeriesLink;
   } catch {
     throw new TypeError(
       'Postkit SeriesNavigation links must contain valid JSON.',
     );
   }
 }
-export function PostkitSeriesNavigation({
+export function SeriesNavigation({
   title,
   current,
   total,
@@ -778,7 +778,7 @@ export function PostkitSeriesNavigation({
   size,
   variant,
   unstyled,
-}: PostkitSeriesNavigationProps) {
+}: SeriesNavigationProps) {
   const previous = parseSeriesLink(previousValue);
   const next = parseSeriesLink(nextValue);
   const recipe = usePostkitSlotRecipe(
@@ -790,7 +790,7 @@ export function PostkitSeriesNavigation({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const renderLink = (
-    link: PostkitSeriesLink | undefined,
+    link: SeriesLink | undefined,
     direction: 'Previous' | 'Next',
   ) =>
     link ? (
@@ -855,7 +855,7 @@ export function PostkitSeriesNavigation({
   );
 }
 
-export type PostkitSponsorBlockProps = {
+export type SponsorBlockProps = {
   readonly name: string;
   readonly message?: string;
   readonly href?: string;
@@ -866,7 +866,7 @@ export type PostkitSponsorBlockProps = {
 } & SharedRootProps<PostkitSponsorBlockSlot> &
   RecipeVariantProps<typeof postkitSponsorBlockRecipe> &
   UnstyledProp;
-export function PostkitSponsorBlock({
+export function SponsorBlock({
   name,
   message,
   href,
@@ -879,7 +879,7 @@ export function PostkitSponsorBlock({
   size,
   variant,
   unstyled,
-}: PostkitSponsorBlockProps) {
+}: SponsorBlockProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.sponsorBlock,
     postkitSponsorBlockRecipe,
@@ -944,7 +944,7 @@ export function PostkitSponsorBlock({
   );
 }
 
-export type PostkitAudienceBoundaryProps = {
+export type AudienceBoundaryProps = {
   readonly audience: string;
   readonly children?: ReactNode;
   readonly fallback?: ReactNode;
@@ -953,7 +953,7 @@ export type PostkitAudienceBoundaryProps = {
 } & SharedRootProps<PostkitAudienceBoundarySlot> &
   RecipeVariantProps<typeof postkitAudienceBoundaryRecipe> &
   UnstyledProp;
-export function PostkitAudienceBoundary({
+export function AudienceBoundary({
   audience,
   children,
   fallback = 'This section is available to a different audience.',
@@ -964,7 +964,7 @@ export function PostkitAudienceBoundary({
   size,
   variant,
   unstyled,
-}: PostkitAudienceBoundaryProps) {
+}: AudienceBoundaryProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.audienceBoundary,
     postkitAudienceBoundaryRecipe,

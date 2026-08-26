@@ -93,7 +93,7 @@ describe('Postkit prose', () => {
     );
   });
 
-  it('renders fenced Markdown code with PostkitCodeBlock', () => {
+  it('renders fenced Markdown code with CodeBlock', () => {
     const components = createPostkitMdxComponents();
     const Pre = components.pre;
     const { container } = render(

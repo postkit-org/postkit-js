@@ -68,7 +68,7 @@ import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import {
   createPostkitSystem,
   createPostkitTheme,
-  PostkitCarousel,
+  Carousel,
   PostkitProvider,
 } from '@postkit/react';
 
@@ -132,7 +132,7 @@ export function App({ documentation }: { documentation: React.ReactNode }) {
   return (
     <ChakraProvider value={siteSystem}>
       {/* Uses the site-wide Carousel defaults. */}
-      <PostkitCarousel items={[]} />
+      <Carousel items={[]} />
 
       <PostkitProvider system={siteSystem} theme={documentationTheme}>
         {/* Carousels here use the documentation-context override. */}
@@ -222,7 +222,7 @@ By default the map supplies Chakra-backed components for:
 Each semantic element consumes its matching `prose` slot. Site component-map
 entries still take final precedence, so a framework can replace any element
 without disabling the rest of the prose system. The map also exposes
-`wrapper: PostkitProse`; MDX runtimes with wrapper support use it as the prose
+`wrapper: Prose`; MDX runtimes with wrapper support use it as the prose
 root automatically.
 
 The root emits `data-postkit-component="Prose"`, semantic elements emit
@@ -231,7 +231,7 @@ The root emits `data-postkit-component="Prose"`, semantic elements emit
 hatch in addition to the typed recipe APIs.
 
 Fenced Markdown code is automatically promoted from `pre > code` into
-`PostkitCodeBlock`, which composes Chakra's CodeBlock primitive. Plain-text
+`CodeBlock`, which composes Chakra's CodeBlock primitive. Plain-text
 rendering works without another dependency. To add syntax highlighting, install
 `@postkit/shiki` and supply its lazy adapter through `PostkitProvider`:
 
@@ -338,12 +338,12 @@ product requires a fully custom implementation.
 
 ## Link previews and unfurling
 
-Explicit `metadata` keeps `PostkitLinkPreview` deterministic and always takes
+Explicit `metadata` keeps `LinkPreview` deterministic and always takes
 precedence. Resolve links in a server, build, or trusted editor process with
 `@postkit/unfurl`, then pass the normalized result to the component:
 
 ```tsx
-import { PostkitLinkPreview } from '@postkit/react';
+import { LinkPreview } from '@postkit/react';
 import {
   createIframelyResolver,
   createLinkResolverRegistry,
@@ -365,7 +365,7 @@ const metadata = await resolver.resolve('https://example.com/article');
 
 export function Preview() {
   return (
-    <PostkitLinkPreview
+    <LinkPreview
       href="https://example.com/article"
       metadata={metadata}
       presentation="card"
@@ -462,19 +462,19 @@ service-branded native card. `presentation="embed"` can instead activate a
 validated provider iframe; embeds are click-to-load by default.
 
 ```tsx
-<PostkitSocialPost
+<SocialPost
   href="https://bsky.app/profile/ada.example/post/abc"
   presentation="auto"
   showMetrics
 />
 
-<PostkitShareActions
+<ShareActions
   url="https://example.com/posts/launch"
   title="Launch notes"
   services={['native', 'copy', 'email', 'bluesky', 'linkedin']}
 />
 
-<PostkitAppearsOn
+<AppearsOn
   items={[
     {
       service: 'linegraph',
@@ -514,7 +514,7 @@ const metadata = await resolver.resolve(
 );
 const snapshot = createPostkitSocialPostSnapshot(metadata);
 
-<PostkitSocialPost
+<SocialPost
   href={metadata.url}
   metadata={snapshot}
   resolution="snapshot"
@@ -679,7 +679,7 @@ active Postkit theme. Components share `sm`, `md`, and `lg` sizes; `outline`,
 accepts a typed `slotStyles` object for one-off instance styling:
 
 ```tsx
-<PostkitAudio
+<Audio
   src="/media/episode.mp3"
   title="Episode 12"
   size="lg"

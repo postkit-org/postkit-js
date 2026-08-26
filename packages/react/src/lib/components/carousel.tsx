@@ -25,7 +25,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export interface PostkitCarouselItem {
+export interface CarouselItem {
   readonly id?: string;
   readonly image?: {
     readonly src: string;
@@ -36,8 +36,8 @@ export interface PostkitCarouselItem {
   readonly href?: string;
 }
 
-export type PostkitCarouselProps = {
-  readonly items?: string | readonly PostkitCarouselItem[];
+export type CarouselProps = {
+  readonly items?: string | readonly CarouselItem[];
   readonly children?: ReactNode;
   readonly label?: string;
   readonly initialIndex?: number | string;
@@ -53,7 +53,7 @@ function parsedInitialIndex(value: number | string | undefined): number {
 }
 
 function itemContent(
-  item: PostkitCarouselItem,
+  item: CarouselItem,
   styles: PostkitSlotStyles<PostkitCarouselSlot>,
   slotStyles: PostkitSlotStyles<PostkitCarouselSlot> | undefined,
   classNames: Partial<Record<PostkitCarouselSlot, string>>,
@@ -112,7 +112,7 @@ function itemContent(
   );
 }
 
-export function PostkitCarousel({
+export function Carousel({
   items,
   children,
   label = 'Article carousel',
@@ -122,7 +122,7 @@ export function PostkitCarousel({
   size,
   variant,
   unstyled,
-}: PostkitCarouselProps) {
+}: CarouselProps) {
   const generatedId = useId();
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.carousel,
@@ -137,7 +137,7 @@ export function PostkitCarousel({
     ...restRootProps
   } = rootProps ?? {};
   const itemSlides = items
-    ? parseJsonProp<PostkitCarouselItem>(items, 'Carousel items').map((item) =>
+    ? parseJsonProp<CarouselItem>(items, 'Carousel items').map((item) =>
         itemContent(item, styles, slotStyles, recipe.classNameMap),
       )
     : [];

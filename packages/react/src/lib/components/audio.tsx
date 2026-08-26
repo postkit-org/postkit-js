@@ -21,7 +21,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export type PostkitAudioProps = {
+export type AudioProps = {
   readonly src: string;
   readonly title: string;
   readonly caption?: string;
@@ -31,7 +31,7 @@ export type PostkitAudioProps = {
 } & RecipeVariantProps<typeof postkitAudioRecipe> &
   UnstyledProp;
 
-export function PostkitAudio({
+export function Audio({
   src,
   title,
   caption,
@@ -41,7 +41,7 @@ export function PostkitAudio({
   size,
   variant,
   unstyled,
-}: PostkitAudioProps) {
+}: AudioProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.audio,
     postkitAudioRecipe,

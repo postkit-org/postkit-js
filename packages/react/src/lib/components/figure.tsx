@@ -21,7 +21,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export type PostkitFigureProps = {
+export type FigureProps = {
   readonly src: string;
   readonly alt: string;
   readonly caption?: string;
@@ -47,7 +47,7 @@ function numericDimension(value: number | string | undefined) {
   return Number.isFinite(parsed) && parsed > 0 ? Math.trunc(parsed) : undefined;
 }
 
-export function PostkitFigure({
+export function Figure({
   src,
   alt,
   caption,
@@ -68,7 +68,7 @@ export function PostkitFigure({
   variant,
   layout,
   unstyled,
-}: PostkitFigureProps) {
+}: FigureProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.figure,
     postkitFigureRecipe,

@@ -25,7 +25,7 @@ import { postkitRecipeKeys } from '../theme.js';
 
 const AppearsOnTime = chakra('time');
 
-export interface PostkitSyndicationReference {
+export interface SyndicationReference {
   readonly service: string;
   readonly url: string;
   readonly label?: string;
@@ -34,8 +34,8 @@ export interface PostkitSyndicationReference {
   readonly status?: 'failed' | 'pending' | 'published' | 'removed';
 }
 
-export type PostkitAppearsOnProps = {
-  readonly items: string | readonly PostkitSyndicationReference[];
+export type AppearsOnProps = {
+  readonly items: string | readonly SyndicationReference[];
   readonly label?: string;
   readonly showDates?: boolean | string;
   readonly rootProps?: BoxProps;
@@ -58,7 +58,7 @@ function displayDate(value: string | undefined): string | undefined {
       }).format(date);
 }
 
-export function PostkitAppearsOn({
+export function AppearsOn({
   items: itemsValue,
   label = 'Appears on',
   showDates = false,
@@ -68,8 +68,8 @@ export function PostkitAppearsOn({
   size,
   variant,
   unstyled,
-}: PostkitAppearsOnProps) {
-  const items = parseJsonProp<PostkitSyndicationReference>(
+}: AppearsOnProps) {
+  const items = parseJsonProp<SyndicationReference>(
     itemsValue,
     'AppearsOn items',
   );

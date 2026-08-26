@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { PostkitCallout, PostkitCodeBlock } from '@postkit/react';
+import { Callout, CodeBlock } from '@postkit/react';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -125,16 +125,16 @@ export default function IndexPage({
             </Stack>
 
             <Box alignSelf="center" minW="0">
-              <PostkitCodeBlock
+              <CodeBlock
                 code={`import {
   PostkitProvider,
-  PostkitCallout,
+  Callout,
 } from '@postkit/react';
 
 <PostkitProvider>
-  <PostkitCallout title="Portable by default">
+  <Callout title="Portable by default">
     Keep the content. Change the renderer.
-  </PostkitCallout>
+  </Callout>
 </PostkitProvider>`}
                 filename="article.tsx"
                 language="tsx"
@@ -185,11 +185,11 @@ export default function IndexPage({
             ))}
           </SimpleGrid>
 
-          <PostkitCallout title="Documentation" tone="tip">
+          <Callout title="Documentation" tone="tip">
             Follow the guided setup, choose a framework adapter, or browse the
             component and Markdown concepts in the{' '}
             <NextLink href="/docs">PostKit documentation</NextLink>.
-          </PostkitCallout>
+          </Callout>
 
           {latestEntry ? (
             <Stack gap="6">

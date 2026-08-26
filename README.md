@@ -40,7 +40,7 @@ component map:
 ```tsx
 import {
   createPostkitMdxComponents,
-  PostkitCallout,
+  Callout,
   PostkitProvider,
 } from '@postkit/react';
 
@@ -51,9 +51,9 @@ export function Article() {
     <PostkitProvider>
       <main>
         <h1>Portable publishing</h1>
-        <PostkitCallout title="Keep the content" tone="tip">
+        <Callout title="Keep the content" tone="tip">
           Change the renderer without changing the article.
-        </PostkitCallout>
+        </Callout>
       </main>
     </PostkitProvider>
   );

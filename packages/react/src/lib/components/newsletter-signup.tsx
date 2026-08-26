@@ -25,7 +25,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export type PostkitNewsletterSignupProps = {
+export type NewsletterSignupProps = {
   readonly title: string;
   readonly description?: string;
   readonly list?: string;
@@ -48,7 +48,7 @@ type SubmissionState =
 const NewsletterForm = chakra('form');
 const NewsletterLabel = chakra('label');
 
-export function PostkitNewsletterSignup({
+export function NewsletterSignup({
   title,
   description,
   list,
@@ -65,7 +65,7 @@ export function PostkitNewsletterSignup({
   size,
   variant,
   unstyled,
-}: PostkitNewsletterSignupProps) {
+}: NewsletterSignupProps) {
   const { newsletter } = usePostkit();
   const inputId = useId();
   const [submission, setSubmission] = useState<SubmissionState>({

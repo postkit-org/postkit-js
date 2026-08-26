@@ -23,20 +23,20 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export interface PostkitChartDatum {
+export interface ChartDatum {
   readonly label: string;
   readonly [key: string]: string | number;
 }
 
-export interface PostkitChartSeries {
+export interface ChartSeries {
   readonly key: string;
   readonly label?: string;
   readonly color?: string;
 }
 
-export type PostkitChartProps = {
-  readonly data: string | readonly PostkitChartDatum[];
-  readonly series?: string | readonly PostkitChartSeries[];
+export type ChartProps = {
+  readonly data: string | readonly ChartDatum[];
+  readonly series?: string | readonly ChartSeries[];
   readonly title: string;
   readonly description?: string;
   readonly type?: 'bar' | 'line';
@@ -53,14 +53,14 @@ const DEFAULT_COLORS = [
   'var(--chakra-colors-orange-500, #dd6b20)',
 ] as const;
 
-function numericValue(datum: PostkitChartDatum, key: string): number {
+function numericValue(datum: ChartDatum, key: string): number {
   const value = datum[key];
   return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }
 
 function inferredSeries(
-  data: readonly PostkitChartDatum[],
-): PostkitChartSeries[] {
+  data: readonly ChartDatum[],
+): ChartSeries[] {
   const first = data[0];
   if (!first) {
     return [];
@@ -75,7 +75,7 @@ function shouldShowTable(value: boolean | string | undefined): boolean {
   return value === true || value === 'true';
 }
 
-export function PostkitChart({
+export function Chart({
   data,
   series,
   title,
@@ -87,7 +87,7 @@ export function PostkitChart({
   size,
   variant,
   unstyled,
-}: PostkitChartProps) {
+}: ChartProps) {
   const titleId = `${useId()}-title`;
   const descriptionId = `${titleId}-description`;
   const recipe = usePostkitSlotRecipe(
@@ -102,9 +102,9 @@ export function PostkitChart({
     className: rootClassName,
     ...restRootProps
   } = rootProps ?? {};
-  const records = parseJsonProp<PostkitChartDatum>(data, 'Chart data');
+  const records = parseJsonProp<ChartDatum>(data, 'Chart data');
   const configuredSeries = series
-    ? parseJsonProp<PostkitChartSeries>(series, 'Chart series')
+    ? parseJsonProp<ChartSeries>(series, 'Chart series')
     : inferredSeries(records);
   const width = 640;
   const height = 320;

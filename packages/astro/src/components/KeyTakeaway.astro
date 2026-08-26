@@ -1,7 +1,7 @@
 ---
-import type { PostkitKeyTakeawayProps } from '@postkit/react';
+import type { KeyTakeawayProps } from '@postkit/react';
 import { PostkitAstroKeyTakeaway } from '../lib/react-bridges';
-type Props = PostkitKeyTakeawayProps;
+type Props = KeyTakeawayProps;
 const props = Astro.props;
 ---
 <PostkitAstroKeyTakeaway {...props}><slot /></PostkitAstroKeyTakeaway>

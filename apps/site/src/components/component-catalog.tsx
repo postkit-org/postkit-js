@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { PostkitCodeBlock, postkitComponentCatalog } from '@postkit/react';
+import { CodeBlock, postkitComponentCatalog } from '@postkit/react';
 
 export function ComponentCatalog() {
   return (
@@ -57,13 +57,13 @@ export function ComponentCatalog() {
           </Text>
 
           <SimpleGrid columns={{ base: 1, lg: 2 }} gap="5" marginTop="6">
-            <PostkitCodeBlock
+            <CodeBlock
               code={component.example.jsx}
               filename={`${component.name}.mdx`}
               language="mdx"
               lineNumbers={false}
             />
-            <PostkitCodeBlock
+            <CodeBlock
               code={component.example.directive}
               filename="article.md"
               language="markdown"

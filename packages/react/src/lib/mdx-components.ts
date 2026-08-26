@@ -1,48 +1,48 @@
-import { PostkitAppearsOn } from './components/appears-on.js';
-import { PostkitAudio } from './components/audio.js';
-import { PostkitAuthorCard } from './components/author-card.js';
-import { PostkitCallToAction } from './components/call-to-action.js';
-import { PostkitCarousel } from './components/carousel.js';
-import { PostkitChart } from './components/chart.js';
-import { PostkitFigure } from './components/figure.js';
-import { PostkitLinkPreview } from './components/link-preview.js';
-import { PostkitNewsletterSignup } from './components/newsletter-signup.js';
+import { AppearsOn } from './components/appears-on.js';
+import { Audio } from './components/audio.js';
+import { AuthorCard } from './components/author-card.js';
+import { CallToAction } from './components/call-to-action.js';
+import { Carousel } from './components/carousel.js';
+import { Chart } from './components/chart.js';
+import { Figure } from './components/figure.js';
+import { LinkPreview } from './components/link-preview.js';
+import { NewsletterSignup } from './components/newsletter-signup.js';
 import {
   createPostkitProseLink,
   postkitProseComponents,
-  type PostkitProseComponents,
+  type ProseComponents,
 } from './components/prose.js';
-import { PostkitShareActions } from './components/share-actions.js';
-import { PostkitSocialPost } from './components/social-post.js';
-import { PostkitVideo } from './components/video.js';
+import { ShareActions } from './components/share-actions.js';
+import { SocialPost } from './components/social-post.js';
+import { Video } from './components/video.js';
 import {
-  PostkitCodeBlock,
-  PostkitCodeGroup,
-  PostkitDiff,
-  PostkitFileCard,
-  PostkitFileTree,
-  PostkitTerminal,
+  CodeBlock,
+  CodeGroup,
+  Diff,
+  FileCard,
+  FileTree,
+  Terminal,
 } from './components/technical-content.js';
 import {
-  PostkitAudienceBoundary,
-  PostkitComparison,
-  PostkitKeyTakeaway,
-  PostkitPoll,
-  PostkitProductCard,
-  PostkitPullQuote,
-  PostkitRelatedContent,
-  PostkitSeriesNavigation,
-  PostkitSponsorBlock,
-  PostkitStat,
+  AudienceBoundary,
+  Comparison,
+  KeyTakeaway,
+  Poll,
+  ProductCard,
+  PullQuote,
+  RelatedContent,
+  SeriesNavigation,
+  SponsorBlock,
+  Stat,
 } from './components/publication.js';
 import {
-  PostkitAside,
-  PostkitCallout,
-  PostkitCardGrid,
-  PostkitDisclosure,
-  PostkitGallery,
-  PostkitSteps,
-  PostkitTabs,
+  Aside,
+  Callout,
+  CardGrid,
+  Disclosure,
+  Gallery,
+  Steps,
+  Tabs,
 } from './components/article-structure.js';
 import {
   createPostkitLink,
@@ -51,81 +51,81 @@ import {
   type PostkitLinkProps,
 } from './link.js';
 
-export type PostkitMdxComponents = PostkitProseComponents & {
-  readonly AudienceBoundary: typeof PostkitAudienceBoundary;
-  readonly AppearsOn: typeof PostkitAppearsOn;
-  readonly Audio: typeof PostkitAudio;
-  readonly Aside: typeof PostkitAside;
-  readonly AuthorCard: typeof PostkitAuthorCard;
-  readonly CallToAction: typeof PostkitCallToAction;
-  readonly Callout: typeof PostkitCallout;
-  readonly CardGrid: typeof PostkitCardGrid;
-  readonly Carousel: typeof PostkitCarousel;
-  readonly Chart: typeof PostkitChart;
-  readonly CodeBlock: typeof PostkitCodeBlock;
-  readonly CodeGroup: typeof PostkitCodeGroup;
-  readonly Comparison: typeof PostkitComparison;
-  readonly Diff: typeof PostkitDiff;
-  readonly Figure: typeof PostkitFigure;
-  readonly FileCard: typeof PostkitFileCard;
-  readonly FileTree: typeof PostkitFileTree;
-  readonly Disclosure: typeof PostkitDisclosure;
-  readonly Gallery: typeof PostkitGallery;
-  readonly LinkPreview: typeof PostkitLinkPreview;
-  readonly KeyTakeaway: typeof PostkitKeyTakeaway;
-  readonly NewsletterSignup: typeof PostkitNewsletterSignup;
-  readonly Poll: typeof PostkitPoll;
-  readonly ProductCard: typeof PostkitProductCard;
-  readonly PullQuote: typeof PostkitPullQuote;
-  readonly RelatedContent: typeof PostkitRelatedContent;
-  readonly ShareActions: typeof PostkitShareActions;
-  readonly SeriesNavigation: typeof PostkitSeriesNavigation;
-  readonly SocialPost: typeof PostkitSocialPost;
-  readonly Steps: typeof PostkitSteps;
-  readonly SponsorBlock: typeof PostkitSponsorBlock;
-  readonly Stat: typeof PostkitStat;
-  readonly Tabs: typeof PostkitTabs;
-  readonly Terminal: typeof PostkitTerminal;
-  readonly Video: typeof PostkitVideo;
+export type PostkitMdxComponents = ProseComponents & {
+  readonly AudienceBoundary: typeof AudienceBoundary;
+  readonly AppearsOn: typeof AppearsOn;
+  readonly Audio: typeof Audio;
+  readonly Aside: typeof Aside;
+  readonly AuthorCard: typeof AuthorCard;
+  readonly CallToAction: typeof CallToAction;
+  readonly Callout: typeof Callout;
+  readonly CardGrid: typeof CardGrid;
+  readonly Carousel: typeof Carousel;
+  readonly Chart: typeof Chart;
+  readonly CodeBlock: typeof CodeBlock;
+  readonly CodeGroup: typeof CodeGroup;
+  readonly Comparison: typeof Comparison;
+  readonly Diff: typeof Diff;
+  readonly Figure: typeof Figure;
+  readonly FileCard: typeof FileCard;
+  readonly FileTree: typeof FileTree;
+  readonly Disclosure: typeof Disclosure;
+  readonly Gallery: typeof Gallery;
+  readonly LinkPreview: typeof LinkPreview;
+  readonly KeyTakeaway: typeof KeyTakeaway;
+  readonly NewsletterSignup: typeof NewsletterSignup;
+  readonly Poll: typeof Poll;
+  readonly ProductCard: typeof ProductCard;
+  readonly PullQuote: typeof PullQuote;
+  readonly RelatedContent: typeof RelatedContent;
+  readonly ShareActions: typeof ShareActions;
+  readonly SeriesNavigation: typeof SeriesNavigation;
+  readonly SocialPost: typeof SocialPost;
+  readonly Steps: typeof Steps;
+  readonly SponsorBlock: typeof SponsorBlock;
+  readonly Stat: typeof Stat;
+  readonly Tabs: typeof Tabs;
+  readonly Terminal: typeof Terminal;
+  readonly Video: typeof Video;
 };
 
 export const postkitMdxComponents: PostkitMdxComponents = Object.freeze({
   ...postkitProseComponents,
-  AudienceBoundary: PostkitAudienceBoundary,
-  AppearsOn: PostkitAppearsOn,
-  Aside: PostkitAside,
-  Audio: PostkitAudio,
-  AuthorCard: PostkitAuthorCard,
-  CallToAction: PostkitCallToAction,
-  Callout: PostkitCallout,
-  CardGrid: PostkitCardGrid,
-  Carousel: PostkitCarousel,
-  Chart: PostkitChart,
-  CodeBlock: PostkitCodeBlock,
-  CodeGroup: PostkitCodeGroup,
-  Comparison: PostkitComparison,
-  Diff: PostkitDiff,
-  Figure: PostkitFigure,
-  FileCard: PostkitFileCard,
-  FileTree: PostkitFileTree,
-  Disclosure: PostkitDisclosure,
-  Gallery: PostkitGallery,
-  LinkPreview: PostkitLinkPreview,
-  KeyTakeaway: PostkitKeyTakeaway,
-  NewsletterSignup: PostkitNewsletterSignup,
-  Poll: PostkitPoll,
-  ProductCard: PostkitProductCard,
-  PullQuote: PostkitPullQuote,
-  RelatedContent: PostkitRelatedContent,
-  ShareActions: PostkitShareActions,
-  SeriesNavigation: PostkitSeriesNavigation,
-  SocialPost: PostkitSocialPost,
-  Steps: PostkitSteps,
-  SponsorBlock: PostkitSponsorBlock,
-  Stat: PostkitStat,
-  Tabs: PostkitTabs,
-  Terminal: PostkitTerminal,
-  Video: PostkitVideo,
+  AudienceBoundary: AudienceBoundary,
+  AppearsOn: AppearsOn,
+  Aside: Aside,
+  Audio: Audio,
+  AuthorCard: AuthorCard,
+  CallToAction: CallToAction,
+  Callout: Callout,
+  CardGrid: CardGrid,
+  Carousel: Carousel,
+  Chart: Chart,
+  CodeBlock: CodeBlock,
+  CodeGroup: CodeGroup,
+  Comparison: Comparison,
+  Diff: Diff,
+  Figure: Figure,
+  FileCard: FileCard,
+  FileTree: FileTree,
+  Disclosure: Disclosure,
+  Gallery: Gallery,
+  LinkPreview: LinkPreview,
+  KeyTakeaway: KeyTakeaway,
+  NewsletterSignup: NewsletterSignup,
+  Poll: Poll,
+  ProductCard: ProductCard,
+  PullQuote: PullQuote,
+  RelatedContent: RelatedContent,
+  ShareActions: ShareActions,
+  SeriesNavigation: SeriesNavigation,
+  SocialPost: SocialPost,
+  Steps: Steps,
+  SponsorBlock: SponsorBlock,
+  Stat: Stat,
+  Tabs: Tabs,
+  Terminal: Terminal,
+  Video: Video,
 });
 
 export interface CreatePostkitMdxComponentsOptions<

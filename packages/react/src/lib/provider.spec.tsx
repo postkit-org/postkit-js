@@ -15,11 +15,11 @@ import {
 } from '@chakra-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { PostkitLinkPreview } from './components/link-preview.js';
-import { PostkitNewsletterSignup } from './components/newsletter-signup.js';
-import { PostkitShareActions } from './components/share-actions.js';
-import { PostkitSocialPost } from './components/social-post.js';
-import { PostkitCodeBlock } from './components/technical-content.js';
+import { LinkPreview } from './components/link-preview.js';
+import { NewsletterSignup } from './components/newsletter-signup.js';
+import { ShareActions } from './components/share-actions.js';
+import { SocialPost } from './components/social-post.js';
+import { CodeBlock } from './components/technical-content.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
 import { createPostkitTheme, postkitRecipeKeys } from './theme.js';
@@ -112,7 +112,7 @@ describe('PostkitProvider', () => {
 
     const { container } = render(
       <PostkitProvider codeBlockAdapter={adapter}>
-        <PostkitCodeBlock
+        <CodeBlock
           code={'const answer = 42;\nconsole.log(answer);'}
           language="typescript"
           highlightLines="2"
@@ -130,7 +130,7 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider resolver={callback} defaultResolver="site-callback">
-        <PostkitLinkPreview href="https://example.com/article" />
+        <LinkPreview href="https://example.com/article" />
       </PostkitProvider>,
     );
 
@@ -159,8 +159,8 @@ describe('PostkitProvider', () => {
         ]}
         defaultResolver="alternate"
       >
-        <PostkitLinkPreview href="https://example.com/article" />
-        <PostkitLinkPreview
+        <LinkPreview href="https://example.com/article" />
+        <LinkPreview
           href="https://example.com/other"
           provider="primary"
         />
@@ -178,7 +178,7 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider resolver={callback}>
-        <PostkitLinkPreview
+        <LinkPreview
           href="https://example.com/article"
           metadata={result('authored', 'Authored metadata')}
         />
@@ -202,12 +202,12 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider resolver={callback}>
-        <PostkitSocialPost
+        <SocialPost
           href="https://social.example/frozen"
           metadata={frozen}
           resolution="snapshot"
         />
-        <PostkitSocialPost
+        <SocialPost
           href="https://social.example/live"
           metadata={frozen}
           resolution="live"
@@ -266,7 +266,7 @@ describe('PostkitProvider', () => {
         }}
         onResolverError={onResolverError}
       >
-        <PostkitLinkPreview href="https://example.com/article" />
+        <LinkPreview href="https://example.com/article" />
       </PostkitProvider>,
     );
 
@@ -315,7 +315,7 @@ describe('PostkitProvider', () => {
           },
         }}
       >
-        <PostkitShareActions
+        <ShareActions
           url="https://example.com/article"
           title="Article"
           services={['linegraph']}
@@ -340,7 +340,7 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider newsletter={{ subscribe }}>
-        <PostkitNewsletterSignup title="Get new essays" list="essays" />
+        <NewsletterSignup title="Get new essays" list="essays" />
       </PostkitProvider>,
     );
 
@@ -361,7 +361,7 @@ describe('PostkitProvider', () => {
   it('keeps newsletter endpoints host-owned and disables unconfigured forms', () => {
     const { rerender } = render(
       <PostkitProvider>
-        <PostkitNewsletterSignup title="Get new essays" />
+        <NewsletterSignup title="Get new essays" />
       </PostkitProvider>,
     );
 
@@ -380,7 +380,7 @@ describe('PostkitProvider', () => {
           method: 'get',
         }}
       >
-        <PostkitNewsletterSignup title="Get new essays" />
+        <NewsletterSignup title="Get new essays" />
       </PostkitProvider>,
     );
 

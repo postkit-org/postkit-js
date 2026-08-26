@@ -22,7 +22,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export type PostkitCallToActionProps = {
+export type CallToActionProps = {
   readonly title: string;
   readonly eyebrow?: string;
   readonly description?: string;
@@ -36,7 +36,7 @@ export type PostkitCallToActionProps = {
 } & RecipeVariantProps<typeof postkitCallToActionRecipe> &
   UnstyledProp;
 
-export function PostkitCallToAction({
+export function CallToAction({
   title,
   eyebrow,
   description,
@@ -51,7 +51,7 @@ export function PostkitCallToAction({
   size,
   variant,
   unstyled,
-}: PostkitCallToActionProps) {
+}: CallToActionProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.callToAction,
     postkitCallToActionRecipe,

@@ -21,7 +21,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export interface PostkitVideoTrack {
+export interface VideoTrack {
   readonly src: string;
   readonly srcLang: string;
   readonly label: string;
@@ -29,20 +29,20 @@ export interface PostkitVideoTrack {
   readonly default?: boolean;
 }
 
-export type PostkitVideoProps = {
+export type VideoProps = {
   readonly src: string;
   readonly title: string;
   readonly poster?: string;
   readonly caption?: string;
   readonly aspectRatio?: string;
   readonly preload?: 'auto' | 'metadata' | 'none';
-  readonly tracks?: readonly PostkitVideoTrack[];
+  readonly tracks?: readonly VideoTrack[];
   readonly rootProps?: BoxProps;
   readonly slotStyles?: PostkitSlotStyles<PostkitVideoSlot>;
 } & RecipeVariantProps<typeof postkitVideoRecipe> &
   UnstyledProp;
 
-export function PostkitVideo({
+export function Video({
   src,
   title,
   poster,
@@ -55,7 +55,7 @@ export function PostkitVideo({
   size,
   variant,
   unstyled,
-}: PostkitVideoProps) {
+}: VideoProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.video,
     postkitVideoRecipe,
