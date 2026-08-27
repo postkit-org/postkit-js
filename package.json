@@ -104,6 +104,7 @@
     "verdaccio": "6.4.0",
     "vite": "^8.1.4",
     "vitest": "~4.1.10",
+    "yaml": "^2.9.0",
     "yalc": "1.0.0-pre.53"
   },
   "workspaces": [
@@ -112,6 +113,8 @@
     "libs/*"
   ],
   "overrides": {
+    "js-yaml": "4.3.1",
+    "nanoid": "3.3.18",
     "postcss": "8.5.23",
     "sharp": "0.35.3"
   },

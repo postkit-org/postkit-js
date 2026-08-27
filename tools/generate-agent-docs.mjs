@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import matter from 'gray-matter';
+import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const docsDirectory = join(workspaceRoot, 'libs', 'content', 'docs');
@@ -17,6 +18,14 @@ const packageDirectories = [
   'tanstack-router',
   'astro',
 ];
+const matterOptions = {
+  engines: {
+    yaml: {
+      parse: (source) => parseYaml(source.trim()),
+      stringify: stringifyYaml,
+    },
+  },
+};
 
 function requiredString(data, key, filename) {
   const value = data[key];
@@ -32,7 +41,7 @@ const documents = readdirSync(docsDirectory)
   .filter((filename) => filename.endsWith('.md'))
   .map((filename) => {
     const source = readFileSync(join(docsDirectory, filename), 'utf8');
-    const { data, content } = matter(source);
+    const { data, content } = matter(source, matterOptions);
     if (
       typeof data.order !== 'number' ||
       !Number.isInteger(data.order) ||
