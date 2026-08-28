@@ -6,8 +6,11 @@ import {
   CodeBlock as ChakraCodeBlock,
   Heading,
   Link,
+  Portal,
   Tabs as ChakraTabs,
   Text,
+  Tooltip,
+  VisuallyHidden,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
@@ -99,6 +102,7 @@ export type CodeBlockProps = {
   readonly copyIcon?: ReactNode;
   readonly copiedIcon?: ReactNode;
   readonly copyAriaLabel?: string;
+  readonly copyFeedback?: 'inline' | 'tooltip';
   readonly wrap?: boolean | string;
   readonly maxHeight?: number | string;
 } & SharedRootProps<PostkitCodeBlockSlot> &
@@ -118,6 +122,7 @@ export function CodeBlock({
   copyIcon,
   copiedIcon,
   copyAriaLabel,
+  copyFeedback,
   wrap,
   maxHeight,
   rootProps,
@@ -163,6 +168,11 @@ export function CodeBlock({
     codeBlockConfig.copyAriaLabel,
     'Copy code',
   );
+  const resolvedCopyFeedback = configuredValue(
+    copyFeedback,
+    codeBlockConfig.copyFeedback,
+    'inline',
+  );
 
   return (
     <ChakraCodeBlock.Root
@@ -204,36 +214,81 @@ export function CodeBlock({
               </Text>
             ) : null}
             {enabled(copy, true) ? (
-              <ChakraCodeBlock.CopyTrigger
-                asChild
-                className={recipe.classNameMap.button}
-                css={[styles.button, slotStyles?.button]}
-              >
-                <Button
-                  type="button"
-                  aria-label={resolvedCopyAriaLabel}
-                  size={size === 'lg' ? 'sm' : size === 'sm' ? '2xs' : 'xs'}
-                  variant="ghost"
-                >
-                  <ChakraCodeBlock.CopyIndicator
-                    aria-live="polite"
-                    css={{
-                      alignItems: 'center',
-                      display: 'inline-flex',
-                      gap: 'inherit',
-                    }}
-                    copied={
-                      <>
-                        {resolvedCopiedIcon}
-                        {resolvedCopiedLabel}
-                      </>
-                    }
-                  >
-                    {resolvedCopyIcon}
-                    {resolvedCopyLabel}
-                  </ChakraCodeBlock.CopyIndicator>
-                </Button>
-              </ChakraCodeBlock.CopyTrigger>
+              <ChakraCodeBlock.Context>
+                {({ clipboard }) => {
+                  const trigger = (
+                    <ChakraCodeBlock.CopyTrigger
+                      asChild
+                      className={recipe.classNameMap.button}
+                      css={[styles.button, slotStyles?.button]}
+                    >
+                      <Button
+                        type="button"
+                        aria-label={resolvedCopyAriaLabel}
+                        size={
+                          size === 'lg' ? 'sm' : size === 'sm' ? '2xs' : 'xs'
+                        }
+                        variant="ghost"
+                      >
+                        <ChakraCodeBlock.CopyIndicator
+                          aria-live={
+                            resolvedCopyFeedback === 'inline'
+                              ? 'polite'
+                              : undefined
+                          }
+                          css={{
+                            alignItems: 'center',
+                            display: 'inline-flex',
+                            gap: 'inherit',
+                          }}
+                          {...(resolvedCopyFeedback === 'tooltip'
+                            ? resolvedCopiedIcon === undefined
+                              ? {}
+                              : { copied: resolvedCopiedIcon }
+                            : {
+                                copied: (
+                                  <>
+                                    {resolvedCopiedIcon}
+                                    {resolvedCopiedLabel}
+                                  </>
+                                ),
+                              })}
+                        >
+                          {resolvedCopyIcon}
+                          {resolvedCopyLabel}
+                        </ChakraCodeBlock.CopyIndicator>
+                      </Button>
+                    </ChakraCodeBlock.CopyTrigger>
+                  );
+
+                  if (resolvedCopyFeedback === 'inline') {
+                    return trigger;
+                  }
+
+                  return (
+                    <>
+                      <Tooltip.Root
+                        open={clipboard.copied}
+                        positioning={{ placement: 'top' }}
+                      >
+                        <Tooltip.Trigger asChild>{trigger}</Tooltip.Trigger>
+                        {resolvedCopiedLabel !== null ? (
+                          <Portal>
+                            <Tooltip.Positioner>
+                              <Tooltip.Content>
+                                {resolvedCopiedLabel}
+                              </Tooltip.Content>
+                            </Tooltip.Positioner>
+                          </Portal>
+                        ) : null}
+                      </Tooltip.Root>
+                      <VisuallyHidden aria-live="polite" aria-atomic="true">
+                        {clipboard.copied ? resolvedCopiedLabel : null}
+                      </VisuallyHidden>
+                    </>
+                  );
+                }}
+              </ChakraCodeBlock.Context>
             ) : null}
           </ChakraCodeBlock.Control>
         </ChakraCodeBlock.Header>

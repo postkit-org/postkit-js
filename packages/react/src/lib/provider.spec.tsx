@@ -30,6 +30,17 @@ import {
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);
+globalThis.ResizeObserver ??= class ResizeObserver {
+  disconnect() {
+    return undefined;
+  }
+  observe() {
+    return undefined;
+  }
+  unobserve() {
+    return undefined;
+  }
+};
 
 function result(
   provider: string,
@@ -160,6 +171,47 @@ describe('PostkitProvider', () => {
       await waitFor(() => expect(writeText).toHaveBeenCalled());
       await screen.findByText('Copied!');
       expect(screen.getByTestId('copied-icon')).toBeTruthy();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: originalClipboard,
+      });
+    }
+  });
+
+  it('can present copied feedback as an icon and tooltip', async () => {
+    const writeText = vi.fn(async () => undefined);
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      render(
+        <PostkitProvider
+          codeBlock={{
+            copyAriaLabel: 'Copy snippet',
+            copyFeedback: 'tooltip',
+            copyIcon: <span data-testid="copy-icon">clipboard</span>,
+            copyLabel: null,
+            copiedLabel: 'Copied!',
+          }}
+        >
+          <CodeBlock code="const answer = 42;" />
+        </PostkitProvider>,
+      );
+
+      const trigger = screen.getByRole('button', { name: 'Copy snippet' });
+      expect(trigger.textContent).toBe('clipboard');
+      expect(screen.queryByRole('tooltip')).toBeNull();
+
+      fireEvent.click(trigger);
+
+      await waitFor(() => expect(writeText).toHaveBeenCalled());
+      expect((await screen.findByRole('tooltip')).textContent).toBe('Copied!');
+      expect(screen.queryByTestId('copy-icon')).toBeNull();
+      expect(trigger.querySelector('svg')).toBeTruthy();
     } finally {
       Object.defineProperty(navigator, 'clipboard', {
         configurable: true,

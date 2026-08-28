@@ -44,14 +44,16 @@ export interface PostkitContextValue {
 export interface PostkitCodeBlockConfig {
   /** Visible content shown before the source is copied. */
   readonly copyLabel?: ReactNode;
-  /** Visible content shown after the source is copied. */
+  /** Copied-state content shown inline or in the copied tooltip. */
   readonly copiedLabel?: ReactNode;
   /** Optional icon rendered before the idle label. */
   readonly copyIcon?: ReactNode;
-  /** Optional icon rendered before the copied label. */
+  /** Optional copied-state icon. Tooltip mode falls back to Chakra's check. */
   readonly copiedIcon?: ReactNode;
   /** Accessible name for the copy button. */
   readonly copyAriaLabel?: string;
+  /** How copied-state feedback is presented. @default 'inline' */
+  readonly copyFeedback?: 'inline' | 'tooltip';
 }
 
 export interface PostkitProviderProps {
