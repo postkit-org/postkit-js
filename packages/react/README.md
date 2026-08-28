@@ -54,8 +54,10 @@ export function App({ children }: { children: React.ReactNode }) {
 This host-native mode is the right default for an existing Chakra application:
 Postkit headings, links, buttons, inputs, tables, tabs, code, and other
 primitives use their Chakra components, so the host's component recipes flow
-through. Postkit still supplies semantic structure, accessible behavior, stable
-slots, and explicit overrides.
+through. The code-block copy action is a Chakra `Button`, while Postkit retains
+its clipboard behavior and placement. Postkit still supplies semantic
+structure, accessible behavior, wrapper-owned prose rhythm, stable slots, and
+explicit overrides.
 
 For a standalone application, opt into Postkit's visual preset:
 
@@ -252,6 +254,31 @@ entries still take final precedence, so a framework can replace any element
 without disabling the rest of the prose system. The map also exposes
 `wrapper: Prose`; MDX runtimes with wrapper support use it as the prose
 root automatically.
+
+The wrapper owns external content rhythm rather than placing margins on Chakra
+headings and other individual primitives. It applies overridable spacing tokens
+for normal flow, blocks, sections, headings, and titles:
+
+```tsx
+const documentationTheme = createPostkitTheme({
+  prose: {
+    base: {
+      root: {
+        '--postkit-prose-flow-space': 'spacing.5',
+        '--postkit-prose-block-space': 'spacing.8',
+        '--postkit-prose-section-space': 'spacing.10',
+        '--postkit-prose-heading-space': 'spacing.12',
+        '--postkit-prose-title-space': 'spacing.16',
+      },
+    },
+  },
+});
+```
+
+These structural defaults apply in host-native and preset modes. Pass
+`unstyled` directly to `Prose` when even the wrapper rhythm should be removed.
+The exported `postkitProseRhythm` object is available for lower-level
+composition.
 
 The root emits `data-postkit-component="Prose"`, semantic elements emit
 `data-postkit-prose-element`, and rich components emit their own
@@ -702,11 +729,11 @@ props instead of rendering them.
 ## Multi-part styling
 
 Every Postkit component can resolve an exported Chakra slot recipe from the
-active system. With no preset or host registration, that recipe is empty.
-Components still expose stable slots and share `sm`, `md`, and `lg` sizes;
-`outline`, `subtle`, and `plain` variants; and an `unstyled` mode. Each
-component also accepts a typed `slotStyles` object for one-off instance
-styling:
+active system. With no preset or host registration, that recipe is empty; the
+`Prose` wrapper's structural rhythm remains active independently. Components
+still expose stable slots and share `sm`, `md`, and `lg` sizes; `outline`,
+`subtle`, and `plain` variants; and an `unstyled` mode. Each component also
+accepts a typed `slotStyles` object for one-off instance styling:
 
 ```tsx
 <Audio
@@ -731,6 +758,7 @@ import {
   postkitAudioRecipe,
   postkitAudioSlots,
   postkitDefaultTheme,
+  postkitProseRhythm,
   postkitRecipeKeys,
   type PostkitAudioSlot,
   type PostkitSlotStyles,
