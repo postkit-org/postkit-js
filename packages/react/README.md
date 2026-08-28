@@ -306,6 +306,30 @@ and themes it needs through the `languages` and `themes` options. The
 highlighter is loaded once by Chakra and reused by every Postkit code block
 beneath that provider.
 
+Copy-control content is host-configurable at the same boundary. The trigger
+remains Chakra's `Button` and `CodeBlock.CopyTrigger`, so the host Button recipe
+and Postkit's `button` slot continue to control its presentation:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    copyAriaLabel: 'Copy code',
+    copyIcon: <ClipboardIcon aria-hidden="true" />,
+    copyLabel: null,
+    copiedIcon: <CheckIcon aria-hidden="true" />,
+    copiedLabel: 'Copied!',
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+`copyLabel`, `copiedLabel`, `copyIcon`, `copiedIcon`, and `copyAriaLabel` are
+also available directly on `CodeBlock`; component props take precedence over
+provider defaults. Passing `null` explicitly suppresses a configured icon or
+visible label. Copied-state content is exposed as a polite live region for
+assistive-technology feedback.
+
 Article authors can then use typed MDX declarations:
 
 ```mdx

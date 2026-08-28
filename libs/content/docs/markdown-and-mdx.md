@@ -44,6 +44,30 @@ const codeBlockAdapter = createPostkitShikiAdapter();
 Pass `languages` and `themes` when an application wants a smaller or customized
 bundle. Chakra loads the adapter once and reuses it for nested code blocks.
 
+## Customize code-copy feedback
+
+Fenced code blocks inherit copy-control content from `PostkitProvider`. This
+keeps site icons and labels outside authored Markdown while retaining Chakra's
+Button recipe and clipboard behavior:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    copyAriaLabel: 'Copy code',
+    copyIcon: <ClipboardIcon aria-hidden="true" />,
+    copyLabel: null,
+    copiedIcon: <CheckIcon aria-hidden="true" />,
+    copiedLabel: 'Copied!',
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+Direct `CodeBlock` props with the same names override these provider defaults.
+Use `null` to suppress a provider label or icon for one block. The copied state
+is announced through a polite live region.
+
 ## Plain Markdown directives
 
 Plain Markdown pipelines can use literal-only directives:

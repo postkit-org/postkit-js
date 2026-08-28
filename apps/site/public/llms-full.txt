@@ -246,6 +246,30 @@ const codeBlockAdapter = createPostkitShikiAdapter();
 Pass `languages` and `themes` when an application wants a smaller or customized
 bundle. Chakra loads the adapter once and reuses it for nested code blocks.
 
+## Customize code-copy feedback
+
+Fenced code blocks inherit copy-control content from `PostkitProvider`. This
+keeps site icons and labels outside authored Markdown while retaining Chakra's
+Button recipe and clipboard behavior:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    copyAriaLabel: 'Copy code',
+    copyIcon: <ClipboardIcon aria-hidden="true" />,
+    copyLabel: null,
+    copiedIcon: <CheckIcon aria-hidden="true" />,
+    copiedLabel: 'Copied!',
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+Direct `CodeBlock` props with the same names override these provider defaults.
+Use `null` to suppress a provider label or icon for one block. The copied state
+is announced through a polite live region.
+
 ## Plain Markdown directives
 
 Plain Markdown pipelines can use literal-only directives:
@@ -1233,6 +1257,30 @@ Keeping the adapter host-owned lets each application select only the languages
 and themes it needs through the `languages` and `themes` options. The
 highlighter is loaded once by Chakra and reused by every Postkit code block
 beneath that provider.
+
+Copy-control content is host-configurable at the same boundary. The trigger
+remains Chakra's `Button` and `CodeBlock.CopyTrigger`, so the host Button recipe
+and Postkit's `button` slot continue to control its presentation:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    copyAriaLabel: 'Copy code',
+    copyIcon: <ClipboardIcon aria-hidden="true" />,
+    copyLabel: null,
+    copiedIcon: <CheckIcon aria-hidden="true" />,
+    copiedLabel: 'Copied!',
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+`copyLabel`, `copiedLabel`, `copyIcon`, `copiedIcon`, and `copyAriaLabel` are
+also available directly on `CodeBlock`; component props take precedence over
+provider defaults. Passing `null` explicitly suppresses a configured icon or
+visible label. Copied-state content is exposed as a polite live region for
+assistive-technology feedback.
 
 Article authors can then use typed MDX declarations:
 
