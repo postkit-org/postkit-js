@@ -71,6 +71,10 @@ function rootParts(rootProps?: BoxProps) {
   return { rootCss: css, rootClassName: className, restRootProps: rest };
 }
 
+function slotClassNames(...classNames: Array<string | undefined>) {
+  return classNames.filter(Boolean).join(' ') || undefined;
+}
+
 function highlightedLines(value?: string): number[] {
   const lines = new Set<number>();
   for (const part of value?.split(',') ?? []) {
@@ -139,6 +143,7 @@ export function CodeBlock({
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeBlock,
     postkitCodeBlockRecipe,
+    { fallback: 'recipe' },
   );
   const resolvedSize = configuredValue(size, codeBlockConfig.size);
   const resolvedVariant = configuredValue(variant, codeBlockConfig.variant);
@@ -216,8 +221,16 @@ export function CodeBlock({
               {filename ? (
                 <Box
                   as="span"
-                  className={recipe.classNameMap.filename}
-                  css={[styles.filename, slotStyles?.filename]}
+                  className={slotClassNames(
+                    recipe.classNameMap.filename,
+                    recipe.classNameMap.title,
+                  )}
+                  css={[
+                    styles.filename,
+                    styles.title,
+                    slotStyles?.filename,
+                    slotStyles?.title,
+                  ]}
                 >
                   {filename}
                 </Box>
@@ -235,11 +248,16 @@ export function CodeBlock({
           ) : null}
           {shouldCopy ? (
             <ChakraCodeBlock.Control
-              className={recipe.classNameMap.actions}
+              className={slotClassNames(
+                recipe.classNameMap.actions,
+                recipe.classNameMap.control,
+              )}
               css={[
                 { marginInlineStart: 'auto' },
                 styles.actions,
+                styles.control,
                 slotStyles?.actions,
+                slotStyles?.control,
               ]}
             >
               <ChakraCodeBlock.Context>
@@ -247,8 +265,16 @@ export function CodeBlock({
                   const trigger = (
                     <ChakraCodeBlock.CopyTrigger
                       asChild
-                      className={recipe.classNameMap.button}
-                      css={[styles.button, slotStyles?.button]}
+                      className={slotClassNames(
+                        recipe.classNameMap.button,
+                        recipe.classNameMap.copyTrigger,
+                      )}
+                      css={[
+                        styles.button,
+                        styles.copyTrigger,
+                        slotStyles?.button,
+                        slotStyles?.copyTrigger,
+                      ]}
                     >
                       <Button
                         type="button"
@@ -263,16 +289,16 @@ export function CodeBlock({
                         variant="ghost"
                       >
                         <ChakraCodeBlock.CopyIndicator
+                          className={recipe.classNameMap.copyIndicator}
                           aria-live={
                             resolvedCopyFeedback === 'inline'
                               ? 'polite'
                               : undefined
                           }
-                          css={{
-                            alignItems: 'center',
-                            display: 'inline-flex',
-                            gap: 'inherit',
-                          }}
+                          css={[
+                            styles.copyIndicator,
+                            slotStyles?.copyIndicator,
+                          ]}
                           {...(resolvedCopyFeedback === 'tooltip'
                             ? resolvedCopiedIcon === undefined
                               ? {}
@@ -326,25 +352,30 @@ export function CodeBlock({
         </ChakraCodeBlock.Header>
       ) : null}
       <ChakraCodeBlock.Content
-        className={recipe.classNameMap.scroller}
+        className={slotClassNames(
+          recipe.classNameMap.scroller,
+          recipe.classNameMap.content,
+        )}
         css={[
           styles.scroller,
+          styles.content,
           maxHeight ? { maxHeight } : undefined,
           slotStyles?.scroller,
+          slotStyles?.content,
         ]}
       >
         <ChakraCodeBlock.Code
           className={recipe.classNameMap.code}
-          css={[
-            styles.code,
-            shouldWrap ? { minWidth: 0 } : undefined,
-            slotStyles?.code,
-          ]}
+          css={[styles.code, slotStyles?.code]}
         >
           <ChakraCodeBlock.CodeText
-            className={recipe.classNameMap.lineContent}
+            className={slotClassNames(
+              recipe.classNameMap.lineContent,
+              recipe.classNameMap.codeText,
+            )}
             css={[
               styles.lineContent,
+              styles.codeText,
               {
                 '& [data-line]': {
                   ...styles.line,
@@ -356,6 +387,7 @@ export function CodeBlock({
                 },
               },
               slotStyles?.lineContent,
+              slotStyles?.codeText,
             ]}
           />
         </ChakraCodeBlock.Code>
@@ -398,6 +430,7 @@ export function CodeGroup({
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeGroup,
     postkitCodeGroupRecipe,
+    { fallback: 'recipe' },
   );
   const styles: PostkitSlotStyles<PostkitCodeGroupSlot> = unstyled
     ? {}
@@ -477,6 +510,7 @@ export function Terminal({
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.terminal,
     postkitTerminalRecipe,
+    { fallback: 'recipe' },
   );
   const styles: PostkitSlotStyles<PostkitTerminalSlot> = unstyled
     ? {}

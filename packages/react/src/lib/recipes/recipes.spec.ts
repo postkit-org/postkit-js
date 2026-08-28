@@ -34,6 +34,17 @@ import {
   postkitSocialPostRecipe,
   postkitSocialPostSlots,
 } from './social-post.recipe.js';
+import {
+  postkitCodeBlockRecipe,
+  postkitCodeBlockSlots,
+  postkitCodeGroupRecipe,
+  postkitCodeGroupSlots,
+  postkitStandaloneCodeBlockRecipe,
+  postkitStandaloneCodeGroupRecipe,
+  postkitStandaloneTerminalRecipe,
+  postkitTerminalRecipe,
+  postkitTerminalSlots,
+} from './technical-content.recipe.js';
 import { postkitVideoRecipe, postkitVideoSlots } from './video.recipe.js';
 
 describe('Postkit slot recipes', () => {
@@ -44,6 +55,8 @@ describe('Postkit slot recipes', () => {
     ['CallToAction', postkitCallToActionRecipe, postkitCallToActionSlots],
     ['Carousel', postkitCarouselRecipe, postkitCarouselSlots],
     ['Chart', postkitChartRecipe, postkitChartSlots],
+    ['CodeBlock', postkitCodeBlockRecipe, postkitCodeBlockSlots],
+    ['CodeGroup', postkitCodeGroupRecipe, postkitCodeGroupSlots],
     ['Figure', postkitFigureRecipe, postkitFigureSlots],
     ['LinkPreview', postkitLinkPreviewRecipe, postkitLinkPreviewSlots],
     [
@@ -53,6 +66,7 @@ describe('Postkit slot recipes', () => {
     ],
     ['ShareActions', postkitShareActionsRecipe, postkitShareActionsSlots],
     ['SocialPost', postkitSocialPostRecipe, postkitSocialPostSlots],
+    ['Terminal', postkitTerminalRecipe, postkitTerminalSlots],
     ['Video', postkitVideoRecipe, postkitVideoSlots],
   ])(
     '%s exposes stable multi-part styling slots and variants',
@@ -73,6 +87,45 @@ describe('Postkit slot recipes', () => {
       ]);
     },
   );
+
+  it('keeps technical-content structure semantic and standalone visuals opt-in', () => {
+    expect(postkitCodeBlockSlots).toEqual(
+      expect.arrayContaining([
+        'title',
+        'filename',
+        'control',
+        'actions',
+        'copyTrigger',
+        'button',
+        'copyIndicator',
+        'content',
+        'scroller',
+        'codeText',
+        'lineContent',
+      ]),
+    );
+    expect(postkitCodeBlockRecipe.base?.root).toMatchObject({
+      background: 'bg',
+      color: 'fg',
+    });
+    expect(postkitCodeBlockRecipe.base?.language?.color).toBe('fg.muted');
+    expect(postkitCodeBlockRecipe.base?.lineNumber?.color).toBe('fg.muted');
+    expect(postkitCodeBlockRecipe.base?.code?.minWidth).toBeUndefined();
+    expect(postkitCodeGroupRecipe.base?.tabs?.background).toBe('bg.muted');
+    expect(postkitTerminalRecipe.base?.root?.background).toBe('bg');
+    expect(postkitTerminalRecipe.base?.output?.color).toBe('fg.muted');
+
+    expect(postkitStandaloneCodeBlockRecipe.base?.root).toMatchObject({
+      background: 'gray.950',
+      color: 'gray.100',
+    });
+    expect(postkitStandaloneCodeGroupRecipe.base?.tabs?.background).toBe(
+      'gray.900',
+    );
+    expect(postkitStandaloneTerminalRecipe.base?.root?.background).toBe(
+      'gray.950',
+    );
+  });
 
   it('exposes prose as a stable multi-part Markdown recipe', () => {
     expect(postkitProseRecipe.slots).toEqual(postkitProseSlots);

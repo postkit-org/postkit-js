@@ -37,11 +37,14 @@ export function postkitSlotClassName(
 export function usePostkitSlotRecipe<Recipe extends SlotRecipeConfig>(
   key: string,
   defaultRecipe: Recipe,
+  options?: { readonly fallback?: 'recipe' | 'unstyled' },
 ) {
   const system = useChakraContext();
   const recipe = system.getSlotRecipe(
     key,
-    unstyledSlotRecipe(defaultRecipe),
+    options?.fallback === 'recipe'
+      ? defaultRecipe
+      : unstyledSlotRecipe(defaultRecipe),
   ) as Recipe;
   return useSlotRecipe({ recipe });
 }

@@ -192,6 +192,17 @@ describe('Postkit article components', () => {
 
     expect(code).toContain('data-postkit-component="CodeBlock"');
     expect(code).toContain('code-block__root');
+    expect(code).toContain('postkit-code-block__title');
+    expect(code).toContain('postkit-code-block__filename');
+    expect(code).toContain('postkit-code-block__control');
+    expect(code).toContain('postkit-code-block__actions');
+    expect(code).toContain('postkit-code-block__copyTrigger');
+    expect(code).toContain('postkit-code-block__button');
+    expect(code).toContain('postkit-code-block__copyIndicator');
+    expect(code).toContain('postkit-code-block__content');
+    expect(code).toContain('postkit-code-block__scroller');
+    expect(code).toContain('postkit-code-block__codeText');
+    expect(code).toContain('postkit-code-block__lineContent');
     expect(code).toContain('data-highlight=""');
     expect(code).not.toContain('data-has-line-numbers=""');
     expect(code).toContain('aria-label="Copy code"');
