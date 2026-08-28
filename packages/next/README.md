@@ -38,15 +38,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 Mount `PostkitProvider` in the application's provider tree:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <PostkitProvider>{children}</PostkitProvider>;
+  return (
+    <PostkitProvider preset={postkitDefaultTheme}>{children}</PostkitProvider>
+  );
 }
 ```
 
 The consuming application owns its Chakra system, page layout, content loader,
-and Next.js image configuration.
+and Next.js image configuration. The preset is optional; omit it when the host
+Chakra recipes should provide the visual policy.
 
 ## Customize components
 
@@ -92,7 +95,8 @@ The returned value is an MDX component map. Components supplied through
 
 ## Troubleshooting
 
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 - If internal links reload the page, confirm this adapter's component map is
   passed to the MDX runtime.
 - If a site component is ignored, pass it through `components` in the same map

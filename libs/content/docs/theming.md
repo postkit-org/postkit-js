@@ -7,9 +7,10 @@ order: 60
 
 # Theming
 
-PostKit components use Chakra UI tokens and slot recipes. The default system is
-usable immediately, while an existing application can retain its own tokens,
-conditions, utilities, and global styles.
+PostKit is host-native by default. Its semantic components use Chakra
+primitives internally, allowing an existing application's Heading, Link,
+Button, Input, Table, Tabs, Code, and related recipes to flow through. PostKit
+adds no visual preset unless the host opts into one.
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
@@ -17,6 +18,7 @@ import {
   createPostkitSystem,
   createPostkitTheme,
   PostkitProvider,
+  postkitDefaultTheme,
 } from '@postkit/react';
 
 const siteSystem = createSystem(defaultConfig, {
@@ -31,21 +33,36 @@ const siteSystem = createSystem(defaultConfig, {
   },
 });
 
-const system = createPostkitSystem(
-  siteSystem,
-  createPostkitTheme({
+const system = createPostkitSystem({
+  system: siteSystem,
+  // Optional. Omit this when the host supplies all visual policy.
+  preset: postkitDefaultTheme,
+  theme: createPostkitTheme({
     prose: { base: { p: { fontSize: 'lg' } } },
   }),
-);
+});
 
 <PostkitProvider system={system}>{article}</PostkitProvider>;
 ```
 
 The layering order is:
 
-1. PostKit defaults
-2. The site-wide Chakra system
-3. The theme supplied to the nearest `PostkitProvider`
+1. The optional `preset`, such as `postkitDefaultTheme`
+2. The site-wide Chakra `system`
+3. The explicit `theme` supplied to the nearest `PostkitProvider`
 
 Use content props for semantic variation and theme recipes for persistent visual
-policy.
+policy. `createPostkitTheme` remains the final, component-scoped override for a
+documentation or editorial subtree.
+
+## Choose a styling mode
+
+- Host-native: pass the site's `system` and omit `preset`. Chakra primitive
+  recipes and any host-registered PostKit slot recipes control presentation.
+- Standalone preset: pass `preset={postkitDefaultTheme}` for PostKit's complete
+  visual treatment.
+- Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
+
+Markdown headings render through Chakra `Heading` with `as="h1"` through
+`as="h6"`. PostKit's preset supplies content spacing but does not override the
+Heading recipe's font weight, family, line height, letter spacing, or color.

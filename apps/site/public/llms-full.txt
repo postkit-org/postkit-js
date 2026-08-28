@@ -20,11 +20,11 @@ npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
 Mount the provider near the article:
 
 ```tsx
-import { Callout, PostkitProvider } from '@postkit/react';
+import { Callout, PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 
 export function Article() {
   return (
-    <PostkitProvider>
+    <PostkitProvider preset={postkitDefaultTheme}>
       <article>
         <h1>My first PostKit article</h1>
         <Callout title="Portable by default" tone="tip">
@@ -36,9 +36,11 @@ export function Article() {
 }
 ```
 
-`PostkitProvider` supplies PostKit's Chakra system. An application that already
-has a Chakra system can pass it through the `system` prop and layer PostKit's
-component recipes over its existing tokens.
+The preset gives a standalone article PostKit's visual defaults. In an existing
+Chakra application, omit `preset` and pass the site's system through `system`.
+PostKit then uses the host's component recipes for headings, links, buttons,
+inputs, tables, tabs, code, and other primitives. Add PostKit's preset only when
+its content-specific visual defaults are wanted.
 
 ## Add Markdown or MDX
 
@@ -269,9 +271,10 @@ Source: /docs/theming
 
 # Theming
 
-PostKit components use Chakra UI tokens and slot recipes. The default system is
-usable immediately, while an existing application can retain its own tokens,
-conditions, utilities, and global styles.
+PostKit is host-native by default. Its semantic components use Chakra
+primitives internally, allowing an existing application's Heading, Link,
+Button, Input, Table, Tabs, Code, and related recipes to flow through. PostKit
+adds no visual preset unless the host opts into one.
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
@@ -279,6 +282,7 @@ import {
   createPostkitSystem,
   createPostkitTheme,
   PostkitProvider,
+  postkitDefaultTheme,
 } from '@postkit/react';
 
 const siteSystem = createSystem(defaultConfig, {
@@ -293,24 +297,39 @@ const siteSystem = createSystem(defaultConfig, {
   },
 });
 
-const system = createPostkitSystem(
-  siteSystem,
-  createPostkitTheme({
+const system = createPostkitSystem({
+  system: siteSystem,
+  // Optional. Omit this when the host supplies all visual policy.
+  preset: postkitDefaultTheme,
+  theme: createPostkitTheme({
     prose: { base: { p: { fontSize: 'lg' } } },
   }),
-);
+});
 
 <PostkitProvider system={system}>{article}</PostkitProvider>;
 ```
 
 The layering order is:
 
-1. PostKit defaults
-2. The site-wide Chakra system
-3. The theme supplied to the nearest `PostkitProvider`
+1. The optional `preset`, such as `postkitDefaultTheme`
+2. The site-wide Chakra `system`
+3. The explicit `theme` supplied to the nearest `PostkitProvider`
 
 Use content props for semantic variation and theme recipes for persistent visual
-policy.
+policy. `createPostkitTheme` remains the final, component-scoped override for a
+documentation or editorial subtree.
+
+## Choose a styling mode
+
+- Host-native: pass the site's `system` and omit `preset`. Chakra primitive
+  recipes and any host-registered PostKit slot recipes control presentation.
+- Standalone preset: pass `preset={postkitDefaultTheme}` for PostKit's complete
+  visual treatment.
+- Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
+
+Markdown headings render through Chakra `Heading` with `as="h1"` through
+`as="h6"`. PostKit's preset supplies content spacing but does not override the
+Heading recipe's font weight, family, line height, letter spacing, or color.
 
 ## Framework guides
 
@@ -513,11 +532,13 @@ Source: /docs/troubleshooting
 
 # Troubleshooting
 
-## Components render without PostKit styling
+## Components render with only host styling
 
-Ensure the article is beneath `PostkitProvider`. If the application supplies a
-custom Chakra system, pass it through PostKit's system helpers so the component
-recipes are registered.
+This is the default. PostKit inherits the host Chakra system and does not apply
+its visual preset automatically. Pass `preset={postkitDefaultTheme}` for the
+standalone appearance, register PostKit slot recipes in the host system, or use
+`theme={createPostkitTheme(...)}` for deliberate scoped overrides. The article
+must still render beneath `PostkitProvider` so Chakra context is available.
 
 ## Internal links reload the page
 
@@ -914,8 +935,8 @@ The package is ESM-only and includes TypeScript declarations.
 ## Quick start
 
 Mount `PostkitProvider` near the application root. It owns the Chakra provider,
-layers Postkit's default component theme over Chakra's default system, and
-provides optional link resolution to every `LinkPreview`.
+uses the host's Chakra system without adding Postkit presentation by default,
+and provides optional link resolution to every `LinkPreview`.
 
 ```tsx
 import { PostkitProvider } from '@postkit/react';
@@ -925,13 +946,31 @@ export function App({ children }: { children: React.ReactNode }) {
 }
 ```
 
-Pass the site's existing Chakra `SystemContext` through `system`. Postkit
-preserves its tokens, conditions, utilities, and global styles, then adds the
-Postkit component recipes. The layering order is:
+This host-native mode is the right default for an existing Chakra application:
+Postkit headings, links, buttons, inputs, tables, tabs, code, and other
+primitives use their Chakra components, so the host's component recipes flow
+through. Postkit still supplies semantic structure, accessible behavior, stable
+slots, and explicit overrides.
 
-1. Postkit defaults.
-2. The site-wide Chakra system.
-3. The `theme` supplied to the nearest `PostkitProvider`.
+For a standalone application, opt into Postkit's visual preset:
+
+```tsx
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <PostkitProvider preset={postkitDefaultTheme}>{children}</PostkitProvider>
+  );
+}
+```
+
+Pass the site's existing Chakra `SystemContext` through `system`. Postkit
+preserves its tokens, recipes, conditions, utilities, and global styles. The
+layering order is:
+
+1. The optional `preset`, such as `postkitDefaultTheme`.
+2. The site-wide Chakra `system`.
+3. The explicit `theme` supplied to the nearest `PostkitProvider`.
 
 That makes the same recipe keys useful at two levels: a site can establish
 global defaults for Postkit components, and an article or documentation area
@@ -944,6 +983,7 @@ import {
   createPostkitTheme,
   Carousel,
   PostkitProvider,
+  postkitDefaultTheme,
 } from '@postkit/react';
 
 const baseSiteSystem = createSystem(defaultConfig, {
@@ -961,9 +1001,11 @@ const baseSiteSystem = createSystem(defaultConfig, {
   },
 });
 
-const siteSystem = createPostkitSystem(
-  baseSiteSystem,
-  createPostkitTheme({
+const siteSystem = createPostkitSystem({
+  system: baseSiteSystem,
+  // Omit this in a site that defines all Postkit slot recipes itself.
+  preset: postkitDefaultTheme,
+  theme: createPostkitTheme({
     carousel: {
       base: {
         root: {
@@ -986,7 +1028,7 @@ const siteSystem = createPostkitSystem(
       },
     },
   }),
-);
+});
 
 const documentationTheme = createPostkitTheme({
   typography: {
@@ -1019,12 +1061,19 @@ export function App({ documentation }: { documentation: React.ReactNode }) {
 
 ### Typography
 
-Postkit uses Chakra's three standard font tokens consistently:
+Postkit routes heading-like content through Chakra's `Heading` recipe and uses
+Chakra recipes for the other primitives it owns. The host therefore controls
+font family, weight, size, line height, letter spacing, and color through its
+normal component recipes. Postkit's optional preset avoids restating heading
+typography in prose and heading-like slots.
+
+The opt-in Postkit preset uses Chakra's three standard font tokens for the
+remaining content-specific treatment:
 
 - `fonts.body` for every Postkit component root, prose, descriptions, labels,
   and controls.
-- `fonts.heading` for `h1` through `h6` and heading-like component slots such
-  as titles, card titles, questions, and pull quotes.
+- `fonts.heading` for deliberate editorial display treatments such as pull
+  quotes and statistics. Regular headings and titles use Chakra `Heading`.
 - `fonts.mono` for inline code, code blocks, terminals, diffs, and file trees.
 
 Configure those tokens in the site's Chakra system, as shown above, when the
@@ -1547,10 +1596,12 @@ props instead of rendering them.
 
 ## Multi-part styling
 
-Every Postkit component resolves its exported Chakra slot recipe from the
-active Postkit theme. Components share `sm`, `md`, and `lg` sizes; `outline`,
-`subtle`, and `plain` variants; and an `unstyled` mode. Each component also
-accepts a typed `slotStyles` object for one-off instance styling:
+Every Postkit component can resolve an exported Chakra slot recipe from the
+active system. With no preset or host registration, that recipe is empty.
+Components still expose stable slots and share `sm`, `md`, and `lg` sizes;
+`outline`, `subtle`, and `plain` variants; and an `unstyled` mode. Each
+component also accepts a typed `slotStyles` object for one-off instance
+styling:
 
 ```tsx
 <Audio
@@ -1599,8 +1650,9 @@ published sites use the interactive React renderers.
 
 ## Troubleshooting
 
-- Missing styles: render the article beneath `PostkitProvider`, or merge the
-  site's Chakra system with `createPostkitSystem`.
+- Unexpectedly bare Postkit-specific layouts: pass
+  `preset={postkitDefaultTheme}`, register the exported Postkit slot recipes in
+  the host system, or provide explicit `theme` overrides.
 - Unknown MDX components: pass `createPostkitMdxComponents()` to the active MDX
   runtime.
 - Ignored plain Markdown directives: enable `createPostkitRemarkPlugins()` and
@@ -1730,15 +1782,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 Mount `PostkitProvider` in the application's provider tree:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <PostkitProvider>{children}</PostkitProvider>;
+  return (
+    <PostkitProvider preset={postkitDefaultTheme}>{children}</PostkitProvider>
+  );
 }
 ```
 
 The consuming application owns its Chakra system, page layout, content loader,
-and Next.js image configuration.
+and Next.js image configuration. The preset is optional; omit it when the host
+Chakra recipes should provide the visual policy.
 
 ## Customize components
 
@@ -1784,7 +1839,8 @@ The returned value is an MDX component map. Components supplied through
 
 ## Troubleshooting
 
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 - If internal links reload the page, confirm this adapter's component map is
   passed to the MDX runtime.
 - If a site component is ignored, pass it through `components` in the same map
@@ -1835,13 +1891,13 @@ export const mdxComponents = createPostkitReactRouterComponents();
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 import { BrowserRouter } from 'react-router';
 
 export function App() {
   return (
     <BrowserRouter>
-      <PostkitProvider>
+      <PostkitProvider preset={postkitDefaultTheme}>
         <Article components={mdxComponents} />
       </PostkitProvider>
     </BrowserRouter>
@@ -1850,7 +1906,8 @@ export function App() {
 ```
 
 The application owns route definitions, data loading, and the outer page
-layout.
+layout. The preset is optional; omit it when the host Chakra recipes should
+provide the visual policy.
 
 ## Customize components
 
@@ -1888,7 +1945,8 @@ export const mdxComponents = createPostkitReactRouterComponents({
 
 - If React Router reports missing context, move the rendered article beneath
   the router provider.
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 
@@ -1937,7 +1995,9 @@ export const mdxComponents = createPostkitTanStackRouterComponents();
 
 Render the article beneath the application's TanStack Router provider and
 `PostkitProvider`. The application owns its generated route tree, data loading,
-and page layout.
+and page layout. `PostkitProvider` is host-native by default; pass
+`preset={postkitDefaultTheme}` only when PostKit's standalone visual treatment
+is wanted.
 
 ## Recover typed routes
 
@@ -1987,7 +2047,8 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If router context is missing, move the article beneath the router provider.
 - If a generated route rejects a portable string, translate it in
   `mapLinkProps`.
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 
 See the [`@postkit/react`](../react) guide for components, declarations,
 Markdown directives, and theming. A checked
@@ -2054,13 +2115,21 @@ mdx(
 );
 ```
 
-`postkitAstro()` uses Chakra's `defaultSystem` unless the site provides a
-module that default-exports its own `SystemContext`:
+`postkitAstro()` uses Chakra's host-native `defaultSystem` unless the site
+provides a module that default-exports its own `SystemContext`:
 
 ```ts
 postkitAstro({
   chakraSystem: './src/styles/postkit-system.ts',
 });
+```
+
+Opt into PostKit's standalone preset from that module when desired:
+
+```ts
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/react';
+
+export default createPostkitSystem({ preset: postkitDefaultTheme });
 ```
 
 The relative path resolves from the Astro project root and is imported by both

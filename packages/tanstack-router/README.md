@@ -34,7 +34,9 @@ export const mdxComponents = createPostkitTanStackRouterComponents();
 
 Render the article beneath the application's TanStack Router provider and
 `PostkitProvider`. The application owns its generated route tree, data loading,
-and page layout.
+and page layout. `PostkitProvider` is host-native by default; pass
+`preset={postkitDefaultTheme}` only when PostKit's standalone visual treatment
+is wanted.
 
 ## Recover typed routes
 
@@ -84,7 +86,8 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If router context is missing, move the article beneath the router provider.
 - If a generated route rejects a portable string, translate it in
   `mapLinkProps`.
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 
 See the [`@postkit/react`](../react) guide for components, declarations,
 Markdown directives, and theming. A checked

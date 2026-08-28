@@ -43,8 +43,8 @@ export interface PostkitContextValue {
 export interface PostkitProviderProps {
   readonly children: ReactNode;
   /**
-   * The site's contextual Chakra system. Its tokens, global styles, and
-   * Postkit recipe customizations are layered over Postkit's defaults.
+   * The site's contextual Chakra system. Its tokens, component recipes,
+   * global styles, and Postkit recipe customizations are preserved.
    */
   readonly system?: SystemContext;
   /**
@@ -53,9 +53,9 @@ export interface PostkitProviderProps {
    */
   readonly preset?: SystemConfig;
   /**
-   * Chakra configuration merged after both Postkit's defaults and the
-   * contextual system. Use createPostkitTheme to target only the nearest
-   * Postkit context without changing site-wide component defaults.
+   * Chakra configuration merged after the optional preset and contextual
+   * system. Use createPostkitTheme to target only the nearest Postkit context
+   * without changing site-wide component defaults.
    */
   readonly theme?: SystemConfig;
   /**

@@ -19,11 +19,11 @@ npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
 Mount the provider near the article:
 
 ```tsx
-import { Callout, PostkitProvider } from '@postkit/react';
+import { Callout, PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 
 export function Article() {
   return (
-    <PostkitProvider>
+    <PostkitProvider preset={postkitDefaultTheme}>
       <article>
         <h1>My first PostKit article</h1>
         <Callout title="Portable by default" tone="tip">
@@ -35,9 +35,11 @@ export function Article() {
 }
 ```
 
-`PostkitProvider` supplies PostKit's Chakra system. An application that already
-has a Chakra system can pass it through the `system` prop and layer PostKit's
-component recipes over its existing tokens.
+The preset gives a standalone article PostKit's visual defaults. In an existing
+Chakra application, omit `preset` and pass the site's system through `system`.
+PostKit then uses the host's component recipes for headings, links, buttons,
+inputs, tables, tabs, code, and other primitives. Add PostKit's preset only when
+its content-specific visual defaults are wanted.
 
 ## Add Markdown or MDX
 

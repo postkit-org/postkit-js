@@ -7,11 +7,13 @@ order: 90
 
 # Troubleshooting
 
-## Components render without PostKit styling
+## Components render with only host styling
 
-Ensure the article is beneath `PostkitProvider`. If the application supplies a
-custom Chakra system, pass it through PostKit's system helpers so the component
-recipes are registered.
+This is the default. PostKit inherits the host Chakra system and does not apply
+its visual preset automatically. Pass `preset={postkitDefaultTheme}` for the
+standalone appearance, register PostKit slot recipes in the host system, or use
+`theme={createPostkitTheme(...)}` for deliberate scoped overrides. The article
+must still render beneath `PostkitProvider` so Chakra context is available.
 
 ## Internal links reload the page
 

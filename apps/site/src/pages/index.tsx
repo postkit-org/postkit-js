@@ -128,10 +128,11 @@ export default function IndexPage({
               <CodeBlock
                 code={`import {
   PostkitProvider,
+  postkitDefaultTheme,
   Callout,
 } from '@postkit/react';
 
-<PostkitProvider>
+<PostkitProvider preset={postkitDefaultTheme}>
   <Callout title="Portable by default">
     Keep the content. Change the renderer.
   </Callout>

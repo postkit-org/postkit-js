@@ -35,13 +35,13 @@ export const mdxComponents = createPostkitReactRouterComponents();
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
 import { BrowserRouter } from 'react-router';
 
 export function App() {
   return (
     <BrowserRouter>
-      <PostkitProvider>
+      <PostkitProvider preset={postkitDefaultTheme}>
         <Article components={mdxComponents} />
       </PostkitProvider>
     </BrowserRouter>
@@ -50,7 +50,8 @@ export function App() {
 ```
 
 The application owns route definitions, data loading, and the outer page
-layout.
+layout. The preset is optional; omit it when the host Chakra recipes should
+provide the visual policy.
 
 ## Customize components
 
@@ -88,7 +89,8 @@ export const mdxComponents = createPostkitReactRouterComponents({
 
 - If React Router reports missing context, move the rendered article beneath
   the router provider.
-- If components are unstyled, render the article beneath `PostkitProvider`.
+- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register PostKit slot recipes in the host Chakra system.
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 

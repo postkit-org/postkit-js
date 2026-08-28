@@ -54,13 +54,21 @@ mdx(
 );
 ```
 
-`postkitAstro()` uses Chakra's `defaultSystem` unless the site provides a
-module that default-exports its own `SystemContext`:
+`postkitAstro()` uses Chakra's host-native `defaultSystem` unless the site
+provides a module that default-exports its own `SystemContext`:
 
 ```ts
 postkitAstro({
   chakraSystem: './src/styles/postkit-system.ts',
 });
+```
+
+Opt into PostKit's standalone preset from that module when desired:
+
+```ts
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/react';
+
+export default createPostkitSystem({ preset: postkitDefaultTheme });
 ```
 
 The relative path resolves from the Astro project root and is imported by both
