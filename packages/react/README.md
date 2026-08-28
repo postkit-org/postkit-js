@@ -314,6 +314,7 @@ and Postkit's `button` slot continue to control its presentation:
 <PostkitProvider
   codeBlock={{
     copyAriaLabel: 'Copy code',
+    copyFeedback: 'tooltip',
     copyIcon: <ClipboardIcon aria-hidden="true" />,
     copyLabel: null,
     copiedIcon: <CheckIcon aria-hidden="true" />,
@@ -324,11 +325,17 @@ and Postkit's `button` slot continue to control its presentation:
 </PostkitProvider>
 ```
 
-`copyLabel`, `copiedLabel`, `copyIcon`, `copiedIcon`, and `copyAriaLabel` are
-also available directly on `CodeBlock`; component props take precedence over
-provider defaults. Passing `null` explicitly suppresses a configured icon or
-visible label. Copied-state content is exposed as a polite live region for
-assistive-technology feedback.
+Set `copyFeedback` to `"tooltip"` for a compact icon-only control. After a
+successful copy, the trigger swaps to `copiedIcon` and the copied label appears
+in a tooltip. When `copiedIcon` is omitted, Chakra's CodeBlock check icon is
+used. The default `"inline"` mode keeps both the copied icon and label inside
+the trigger.
+
+`copyFeedback`, `copyLabel`, `copiedLabel`, `copyIcon`, `copiedIcon`, and
+`copyAriaLabel` are also available directly on `CodeBlock`; component props
+take precedence over provider defaults. Passing `null` explicitly suppresses a
+configured icon or visible label. Both feedback modes expose the copied label
+through a polite live region for assistive technology.
 
 Article authors can then use typed MDX declarations:
 

@@ -54,6 +54,7 @@ Button recipe and clipboard behavior:
 <PostkitProvider
   codeBlock={{
     copyAriaLabel: 'Copy code',
+    copyFeedback: 'tooltip',
     copyIcon: <ClipboardIcon aria-hidden="true" />,
     copyLabel: null,
     copiedIcon: <CheckIcon aria-hidden="true" />,
@@ -64,9 +65,14 @@ Button recipe and clipboard behavior:
 </PostkitProvider>
 ```
 
+With `copyFeedback: 'tooltip'`, the control swaps to `copiedIcon` and shows the
+copied label in a tooltip without changing the button's width. Chakra's default
+check icon is used when `copiedIcon` is omitted. Leave `copyFeedback` unset for
+the default inline icon-and-label behavior.
+
 Direct `CodeBlock` props with the same names override these provider defaults.
-Use `null` to suppress a provider label or icon for one block. The copied state
-is announced through a polite live region.
+Use `null` to suppress a provider label or icon for one block. Both feedback
+modes announce the copied label through a polite live region.
 
 ## Plain Markdown directives
 
