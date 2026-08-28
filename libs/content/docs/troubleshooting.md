@@ -14,6 +14,8 @@ its visual preset automatically. Pass `preset={postkitDefaultTheme}` for the
 standalone appearance, register PostKit slot recipes in the host system, or use
 `theme={createPostkitTheme(...)}` for deliberate scoped overrides. The article
 must still render beneath `PostkitProvider` so Chakra context is available.
+CodeBlock, CodeGroup, and Terminal retain semantic structural styling in this
+mode, but their opinionated dark palettes belong only to the standalone preset.
 
 ## Internal links reload the page
 

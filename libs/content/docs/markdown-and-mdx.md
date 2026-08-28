@@ -26,6 +26,29 @@ Fenced code blocks are automatically rendered with PostKit's Chakra CodeBlock
 component. They have plain-text output, copying, wrapping, and line-number
 support without requiring a syntax-highlighting dependency.
 
+By default, non-empty blocks show `"Copy code"`, line numbers are hidden, and
+long lines remain unwrapped with horizontal scrolling. Set site-wide behavior
+without replacing the Markdown component map:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    colorScheme: 'light',
+    copy: true,
+    lineNumbers: false,
+    size: 'md',
+    variant: 'outline',
+    wrap: false,
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+Direct `CodeBlock` props override provider configuration, and provider
+configuration overrides Postkit's neutral defaults. Chakra CodeBlock defaults
+the highlighting color scheme to `"dark"` when it is not configured.
+
 Hosts that want syntax highlighting can install `@postkit/shiki`, create its
 lazy adapter once at module scope, and pass it to `PostkitProvider`:
 
@@ -73,6 +96,26 @@ the default inline icon-and-label behavior.
 Direct `CodeBlock` props with the same names override these provider defaults.
 Use `null` to suppress a provider label or icon for one block. Both feedback
 modes announce the copied label through a polite live region.
+
+## Configure individual fences
+
+When the Markdown compiler forwards fence metadata through `meta`,
+`metastring`, or `data-meta`, Postkit recognizes safe literal options:
+
+````md
+```tsx title="button.tsx" lineNumbers wrap {2-3} maxHeight="24rem"
+export function Button() {
+  return <button>Save</button>
+}
+```
+````
+
+Supported options are `title`/`filename`, `lineNumbers`/`noLineNumbers`,
+`wrap`/`noWrap`, highlighted ranges such as `{1,3-5}`, and validated
+`maxHeight` lengths. Pipeline adapters can instead emit `data-title`,
+`data-filename`, `data-line-numbers`, `data-wrap`, `data-highlight-lines`, and
+`data-max-height`. Explicit attributes take precedence over the metadata
+string. CSS expressions and authored JavaScript are rejected.
 
 ## Plain Markdown directives
 

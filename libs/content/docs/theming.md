@@ -60,15 +60,22 @@ documentation or editorial subtree.
 
 - Host-native: pass the site's `system` and omit `preset`. Chakra primitive
   recipes and any host-registered PostKit slot recipes control presentation;
-  wrapper-owned prose spacing remains active.
+  wrapper-owned prose spacing and semantic technical-content structure remain
+  active.
 - Standalone preset: pass `preset={postkitDefaultTheme}` for PostKit's complete
-  visual treatment.
+  visual treatment, including its dark CodeBlock, CodeGroup, and Terminal
+  palettes.
 - Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
 
 Markdown headings render through Chakra `Heading` with `as="h1"` through
 `as="h6"`. PostKit does not override the Heading recipe's font weight, family,
 line height, letter spacing, or color. Code-block copy actions similarly render
 through Chakra `Button` while retaining PostKit's copy behavior.
+
+CodeBlock's canonical content-specific slots are `title`, `language`,
+`control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
+`line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,
+and `lineContent` slot names remain compatibility aliases.
 
 ## Tune prose rhythm
 

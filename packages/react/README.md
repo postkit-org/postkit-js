@@ -306,9 +306,33 @@ and themes it needs through the `languages` and `themes` options. The
 highlighter is loaded once by Chakra and reused by every Postkit code block
 beneath that provider.
 
+Postkit's neutral defaults copy non-empty code, show the visible label
+`"Copy code"`, hide line numbers, and keep long lines unwrapped with horizontal
+scrolling. Configure every direct and fenced code block at the provider:
+
+```tsx
+<PostkitProvider
+  codeBlock={{
+    colorScheme: 'light',
+    copy: true,
+    lineNumbers: false,
+    size: 'md',
+    variant: 'outline',
+    wrap: false,
+  }}
+>
+  {article}
+</PostkitProvider>
+```
+
+Direct `CodeBlock` props override provider values, and provider values override
+the neutral defaults. `colorScheme` selects both Chakra's semantic-token scope
+and the adapter highlighting theme; Chakra CodeBlock uses `"dark"` when it is
+not configured.
+
 Copy-control content is host-configurable at the same boundary. The trigger
 remains Chakra's `Button` and `CodeBlock.CopyTrigger`, so the host Button recipe
-and Postkit's `button` slot continue to control its presentation:
+and Postkit's `copyTrigger` slot continue to control its presentation:
 
 ```tsx
 <PostkitProvider
@@ -336,6 +360,26 @@ the trigger.
 take precedence over provider defaults. Passing `null` explicitly suppresses a
 configured icon or visible label. Both feedback modes expose the copied label
 through a polite live region for assistive technology.
+
+When a Markdown pipeline forwards the fence metadata through `meta`,
+`metastring`, or `data-meta`, Postkit recognizes a literal-only subset:
+
+````md
+```tsx title="button.tsx" lineNumbers wrap {2-3} maxHeight="24rem"
+export function Button() {
+  return <button>Save</button>
+}
+```
+````
+
+Supported options are `title`/`filename`, `lineNumbers`/`noLineNumbers`,
+`wrap`/`noWrap`, highlighted ranges such as `{1,3-5}`, and `maxHeight` using a
+non-negative number or ordinary CSS length. Pipeline adapters can provide the
+same values explicitly through `data-title`, `data-filename`,
+`data-line-numbers`, `data-wrap`, `data-highlight-lines`, and
+`data-max-height`. Explicit attributes override the metadata string, and both
+override provider defaults. CSS expressions and arbitrary authored JavaScript
+are not accepted.
 
 Article authors can then use typed MDX declarations:
 
@@ -760,11 +804,14 @@ props instead of rendering them.
 ## Multi-part styling
 
 Every Postkit component can resolve an exported Chakra slot recipe from the
-active system. With no preset or host registration, that recipe is empty; the
-`Prose` wrapper's structural rhythm remains active independently. Components
-still expose stable slots and share `sm`, `md`, and `lg` sizes; `outline`,
-`subtle`, and `plain` variants; and an `unstyled` mode. Each component also
-accepts a typed `slotStyles` object for one-off instance styling:
+active system. With no preset or host registration, most visual recipes are
+empty; the `Prose` wrapper retains structural rhythm, while `CodeBlock`,
+`CodeGroup`, and `Terminal` retain small semantic structural recipes. Their
+opinionated dark palettes remain exclusive to `postkitDefaultTheme`.
+Components still expose stable slots and share `sm`, `md`, and `lg` sizes;
+`outline`, `subtle`, and `plain` variants; and an `unstyled` mode. Each
+component also accepts a typed `slotStyles` object for one-off instance
+styling:
 
 ```tsx
 <Audio
@@ -800,6 +847,11 @@ Stable classes such as `.postkit-audio__root`,
 `.postkit-audio__player`, and `.postkit-audio__caption` provide a CSS escape
 hatch. `rootProps` can supply standard Chakra props and a site class name
 without replacing the generated slot class.
+
+Code blocks expose conceptual `title`, `language`, `control`, `copyTrigger`,
+`copyIndicator`, `content`, `code`, `codeText`, `line`, and `lineNumber` slots.
+The earlier `filename`, `actions`, `button`, `scroller`, and `lineContent` names
+remain compatibility aliases and style the same elements.
 
 ## Integration boundary
 
