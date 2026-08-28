@@ -24,6 +24,7 @@ import {
 } from 'react';
 
 import { CodeBlock } from './technical-content.js';
+import { resolvePostkitFenceMetadata } from '../fence-metadata.js';
 import {
   postkitProseRecipe,
   postkitProseRhythm,
@@ -175,21 +176,78 @@ const fencedCodeLanguagePattern = /(?:^|\s)language-([^\s]+)/;
 interface FencedCodeElementProps {
   readonly children?: ReactNode;
   readonly className?: string;
+  readonly meta?: string;
+  readonly metastring?: string;
+  readonly 'data-meta'?: string;
+  readonly 'data-filename'?: string;
+  readonly 'data-title'?: string;
+  readonly 'data-highlight-lines'?: string;
+  readonly 'data-line-numbers'?: boolean | string;
+  readonly 'data-max-height'?: number | string;
+  readonly 'data-wrap'?: boolean | string;
 }
 
-export function ProsePre({ children, ...props }: HTMLChakraProps<'pre'>) {
+export type ProsePreProps = HTMLChakraProps<'pre'> & {
+  readonly 'data-meta'?: string;
+  readonly 'data-filename'?: string;
+  readonly 'data-title'?: string;
+  readonly 'data-highlight-lines'?: string;
+  readonly 'data-line-numbers'?: boolean | string;
+  readonly 'data-max-height'?: number | string;
+  readonly 'data-wrap'?: boolean | string;
+};
+
+export function ProsePre({
+  children,
+  'data-meta': meta,
+  'data-filename': filename,
+  'data-title': title,
+  'data-highlight-lines': highlightLines,
+  'data-line-numbers': lineNumbers,
+  'data-max-height': maxHeight,
+  'data-wrap': wrap,
+  ...props
+}: ProsePreProps) {
   if (isValidElement<FencedCodeElementProps>(children)) {
     const source = children.props.children;
     if (typeof source === 'string') {
       const language = children.props.className?.match(
         fencedCodeLanguagePattern,
       )?.[1];
+      const metadata = resolvePostkitFenceMetadata(
+        {
+          filename,
+          highlightLines,
+          lineNumbers,
+          maxHeight,
+          meta,
+          title,
+          wrap,
+        },
+        {
+          filename: children.props['data-filename'],
+          highlightLines: children.props['data-highlight-lines'],
+          lineNumbers: children.props['data-line-numbers'],
+          maxHeight: children.props['data-max-height'],
+          meta:
+            children.props['data-meta'] ??
+            children.props.metastring ??
+            children.props.meta,
+          title: children.props['data-title'],
+          wrap: children.props['data-wrap'],
+        },
+      );
 
       return (
         <CodeBlock
           code={source}
+          filename={metadata.filename}
+          highlightLines={metadata.highlightLines}
           language={language}
+          lineNumbers={metadata.lineNumbers}
+          maxHeight={metadata.maxHeight}
           rootProps={props as BoxProps}
+          wrap={metadata.wrap}
         />
       );
     }

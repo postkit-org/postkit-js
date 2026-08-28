@@ -175,6 +175,7 @@ export {
   ProsePre,
   postkitProseComponents,
   type ProseComponents,
+  type ProsePreProps,
   type ProseProps,
 } from './lib/components/prose.js';
 export {

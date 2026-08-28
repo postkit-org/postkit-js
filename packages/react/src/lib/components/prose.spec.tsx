@@ -2,7 +2,12 @@
  * @jest-environment jsdom
  */
 
-import { createSystem, defaultConfig, defineRecipe } from '@chakra-ui/react';
+import {
+  type CodeBlockAdapter,
+  createSystem,
+  defaultConfig,
+  defineRecipe,
+} from '@chakra-ui/react';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
@@ -137,6 +142,90 @@ describe('Postkit prose', () => {
     expect(codeBlock?.className).toContain('code-block__root');
     expect(screen.getByText('tsx')).toBeTruthy();
     expect(screen.getByText('const answer = 42;')).toBeTruthy();
+  });
+
+  it('maps safe fenced-code metadata over provider defaults', () => {
+    const adapter: CodeBlockAdapter = {
+      getHighlighter:
+        () =>
+        ({ code, meta }) => ({
+          highlighted: true,
+          code: code
+            .split('\n')
+            .map(
+              (line, index) =>
+                `<span data-line="${index + 1}"${
+                  meta?.highlightLines?.includes(index + 1)
+                    ? ' data-highlight'
+                    : ''
+                }>${line}</span>`,
+            )
+            .join('\n'),
+        }),
+    };
+    const Pre = createPostkitMdxComponents().pre;
+    const { container } = render(
+      <PostkitProvider
+        codeBlock={{ lineNumbers: false, wrap: false }}
+        codeBlockAdapter={adapter}
+      >
+        <Pre>
+          <code
+            className="language-tsx"
+            data-meta={'title="answer.tsx" lineNumbers wrap {2} maxHeight="24rem"'}
+          >
+            {'const answer = 42;\nconsole.log(answer);'}
+          </code>
+        </Pre>
+      </PostkitProvider>,
+    );
+
+    const root = container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    expect(root?.hasAttribute('data-has-line-numbers')).toBe(true);
+    expect(container.querySelector('code')?.hasAttribute('data-word-wrap')).toBe(
+      true,
+    );
+    expect(container.querySelector('[data-highlight]')?.textContent).toBe(
+      'console.log(answer);',
+    );
+    expect(screen.getByText('answer.tsx')).toBeTruthy();
+    expect(
+      getComputedStyle(
+        container.querySelector('.postkit-code-block__content') as Element,
+      ).maxHeight,
+    ).toBe('24rem');
+  });
+
+  it('lets explicit fenced-code attributes override metadata and provider values', () => {
+    const Pre = createPostkitMdxComponents().pre;
+    const { container } = render(
+      <PostkitProvider codeBlock={{ lineNumbers: true, wrap: true }}>
+        <Pre
+          data-title="explicit.ts"
+          data-line-numbers="false"
+          data-wrap="false"
+        >
+          <code
+            className="language-ts"
+            data-meta={'title="metadata.ts" lineNumbers wrap'}
+          >
+            {'const answer = 42;'}
+          </code>
+        </Pre>
+      </PostkitProvider>,
+    );
+
+    const root = container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    expect(root?.hasAttribute('data-has-line-numbers')).toBe(false);
+    expect(container.querySelector('code')?.hasAttribute('data-word-wrap')).toBe(
+      false,
+    );
+    expect(screen.getByText('explicit.ts')).toBeTruthy();
+    expect(screen.queryByText('metadata.ts')).toBeNull();
   });
 
   it('keeps framework links styled when adapting internal navigation', () => {
