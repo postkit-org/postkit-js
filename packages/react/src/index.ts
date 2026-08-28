@@ -253,6 +253,7 @@ export {
   PostkitProvider,
   usePostkit,
   type PostkitContextValue,
+  type PostkitCodeBlockConfig,
   type PostkitProviderProps,
   type PostkitResolverErrorContext,
 } from './lib/provider.js';

@@ -38,6 +38,20 @@ export interface PostkitContextValue {
   readonly resolveLink?: LinkResolverCallback;
   readonly socialServices: PostkitSocialServiceRegistry;
   readonly newsletter?: PostkitNewsletterConfig;
+  readonly codeBlock: PostkitCodeBlockConfig;
+}
+
+export interface PostkitCodeBlockConfig {
+  /** Visible content shown before the source is copied. */
+  readonly copyLabel?: ReactNode;
+  /** Visible content shown after the source is copied. */
+  readonly copiedLabel?: ReactNode;
+  /** Optional icon rendered before the idle label. */
+  readonly copyIcon?: ReactNode;
+  /** Optional icon rendered before the copied label. */
+  readonly copiedIcon?: ReactNode;
+  /** Accessible name for the copy button. */
+  readonly copyAriaLabel?: string;
 }
 
 export interface PostkitProviderProps {
@@ -64,6 +78,11 @@ export interface PostkitProviderProps {
    * plain-text rendering as the dependency-free fallback.
    */
   readonly codeBlockAdapter?: CodeBlockAdapter;
+  /**
+   * Provider-level copy-control content used by every Postkit CodeBlock.
+   * Individual CodeBlock props take precedence.
+   */
+  readonly codeBlock?: PostkitCodeBlockConfig;
   /**
    * A configured resolver or a custom callback. A callback is assigned the
    * `defaultResolver` id, or `custom` when no id is supplied.
@@ -101,6 +120,7 @@ export interface PostkitProviderProps {
 
 const PostkitContext = createContext<PostkitContextValue>(
   Object.freeze({
+    codeBlock: Object.freeze({}),
     socialServices: mergePostkitSocialServices(),
   }) as PostkitContextValue,
 );
@@ -159,6 +179,7 @@ export function PostkitProvider({
   preset,
   theme,
   codeBlockAdapter,
+  codeBlock,
   resolver,
   resolvers,
   defaultResolver,
@@ -190,9 +211,14 @@ export function PostkitProvider({
     () => mergePostkitSocialServices(socialServices),
     [socialServices],
   );
+  const configuredCodeBlock = useMemo(
+    () => Object.freeze({ ...codeBlock }),
+    [codeBlock],
+  );
   const context = useMemo<PostkitContextValue>(() => {
     if (!configured) {
       return Object.freeze({
+        codeBlock: configuredCodeBlock,
         defaultResolver,
         newsletter,
         socialServices: configuredSocialServices,
@@ -223,6 +249,7 @@ export function PostkitProvider({
     };
 
     return Object.freeze({
+      codeBlock: configuredCodeBlock,
       resolver: configured,
       defaultResolver: selectedDefault,
       resolveLink,
@@ -231,6 +258,7 @@ export function PostkitProvider({
     });
   }, [
     configured,
+    configuredCodeBlock,
     configuredSocialServices,
     defaultResolver,
     newsletter,

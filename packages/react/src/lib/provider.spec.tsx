@@ -129,6 +129,69 @@ describe('PostkitProvider', () => {
     );
   });
 
+  it('configures accessible code-block copy content for every document', async () => {
+    const writeText = vi.fn(async () => undefined);
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      render(
+        <PostkitProvider
+          codeBlock={{
+            copyAriaLabel: 'Copy snippet',
+            copyIcon: <span data-testid="copy-icon">clipboard</span>,
+            copyLabel: null,
+            copiedIcon: <span data-testid="copied-icon">check</span>,
+            copiedLabel: 'Copied!',
+          }}
+        >
+          <CodeBlock code="const answer = 42;" />
+        </PostkitProvider>,
+      );
+
+      const trigger = screen.getByRole('button', { name: 'Copy snippet' });
+      expect(trigger.textContent).toBe('clipboard');
+
+      fireEvent.click(trigger);
+
+      await waitFor(() => expect(writeText).toHaveBeenCalled());
+      await screen.findByText('Copied!');
+      expect(screen.getByTestId('copied-icon')).toBeTruthy();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: originalClipboard,
+      });
+    }
+  });
+
+  it('lets an individual code block override provider copy content', () => {
+    render(
+      <PostkitProvider
+        codeBlock={{
+          copyAriaLabel: 'Provider copy',
+          copyIcon: <span>provider icon</span>,
+          copyLabel: 'Provider label',
+        }}
+      >
+        <CodeBlock
+          code="const answer = 42;"
+          copyAriaLabel="Copy this example"
+          copyIcon={null}
+          copyLabel="Duplicate"
+        />
+      </PostkitProvider>,
+    );
+
+    const trigger = screen.getByRole('button', {
+      name: 'Copy this example',
+    });
+    expect(trigger.textContent).toBe('Duplicate');
+  });
+
   it('resolves missing LinkPreview metadata with a custom callback', async () => {
     const callback = vi.fn(async () => result('site-callback'));
 

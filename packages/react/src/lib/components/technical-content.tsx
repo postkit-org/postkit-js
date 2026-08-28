@@ -35,6 +35,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { usePostkit } from '../provider.js';
 import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
@@ -48,6 +49,18 @@ function enabled(value: boolean | string | undefined, fallback = false) {
     : typeof value === 'boolean'
       ? value
       : value === 'true';
+}
+
+function configuredValue<Value>(
+  value: Value | undefined,
+  configured: Value | undefined,
+  fallback?: Value,
+): Value | undefined {
+  return value !== undefined
+    ? value
+    : configured !== undefined
+      ? configured
+      : fallback;
 }
 
 function rootParts(rootProps?: BoxProps) {
@@ -81,6 +94,11 @@ export type CodeBlockProps = {
   readonly highlightLines?: string;
   readonly lineNumbers?: boolean | string;
   readonly copy?: boolean | string;
+  readonly copyLabel?: ReactNode;
+  readonly copiedLabel?: ReactNode;
+  readonly copyIcon?: ReactNode;
+  readonly copiedIcon?: ReactNode;
+  readonly copyAriaLabel?: string;
   readonly wrap?: boolean | string;
   readonly maxHeight?: number | string;
 } & SharedRootProps<PostkitCodeBlockSlot> &
@@ -95,6 +113,11 @@ export function CodeBlock({
   highlightLines: highlightsValue,
   lineNumbers = true,
   copy = true,
+  copyLabel,
+  copiedLabel,
+  copyIcon,
+  copiedIcon,
+  copyAriaLabel,
   wrap,
   maxHeight,
   rootProps,
@@ -103,6 +126,7 @@ export function CodeBlock({
   variant,
   unstyled,
 }: CodeBlockProps) {
+  const { codeBlock: codeBlockConfig } = usePostkit();
   const source = code ?? (typeof children === 'string' ? children : '');
   const highlights = highlightedLines(highlightsValue);
   const recipe = usePostkitSlotRecipe(
@@ -119,6 +143,26 @@ export function CodeBlock({
   >;
   const shouldNumber = enabled(lineNumbers, true);
   const shouldWrap = enabled(wrap);
+  const resolvedCopyLabel = configuredValue(
+    copyLabel,
+    codeBlockConfig.copyLabel,
+    'Copy',
+  );
+  const resolvedCopiedLabel = configuredValue(
+    copiedLabel,
+    codeBlockConfig.copiedLabel,
+    'Copied',
+  );
+  const resolvedCopyIcon = configuredValue(copyIcon, codeBlockConfig.copyIcon);
+  const resolvedCopiedIcon = configuredValue(
+    copiedIcon,
+    codeBlockConfig.copiedIcon,
+  );
+  const resolvedCopyAriaLabel = configuredValue(
+    copyAriaLabel,
+    codeBlockConfig.copyAriaLabel,
+    'Copy code',
+  );
 
   return (
     <ChakraCodeBlock.Root
@@ -167,12 +211,21 @@ export function CodeBlock({
               >
                 <Button
                   type="button"
-                  aria-label="Copy code"
+                  aria-label={resolvedCopyAriaLabel}
                   size={size === 'lg' ? 'sm' : size === 'sm' ? '2xs' : 'xs'}
                   variant="ghost"
                 >
-                  <ChakraCodeBlock.CopyIndicator copied="Copied">
-                    Copy
+                  <ChakraCodeBlock.CopyIndicator
+                    aria-live="polite"
+                    copied={
+                      <>
+                        {resolvedCopiedIcon}
+                        {resolvedCopiedLabel}
+                      </>
+                    }
+                  >
+                    {resolvedCopyIcon}
+                    {resolvedCopyLabel}
                   </ChakraCodeBlock.CopyIndicator>
                 </Button>
               </ChakraCodeBlock.CopyTrigger>
