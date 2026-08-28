@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Heading,
   Image,
   Link,
   Text,
@@ -22,6 +23,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 export interface AuthorLink {
   readonly label: string;
@@ -122,13 +124,18 @@ export function AuthorCard({
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          <Text
-            as="span"
+          <Heading
+            as="p"
+            size={postkitHeadingSize(size, {
+              sm: 'sm',
+              md: 'md',
+              lg: 'lg',
+            })}
             className={recipe.classNameMap.name}
             css={[styles.name, slotStyles?.name]}
           >
             {authorName}
-          </Text>
+          </Heading>
           {role ? (
             <Text
               as="span"

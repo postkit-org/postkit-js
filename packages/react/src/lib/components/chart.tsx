@@ -3,6 +3,8 @@
 import {
   Box,
   Flex,
+  Heading,
+  Table,
   Text,
   chakra,
   type BoxProps,
@@ -22,6 +24,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 export interface ChartDatum {
   readonly label: string;
@@ -129,14 +132,15 @@ export function Chart({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
         id={titleId}
         as="h3"
+        size={postkitHeadingSize(size, { sm: 'md', md: 'lg', lg: 'xl' })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           id={descriptionId}
@@ -323,54 +327,55 @@ export function Chart({
           className={recipe.classNameMap.tableContainer}
           css={[styles.tableContainer, slotStyles?.tableContainer]}
         >
-          <chakra.table
+          <Table.Root
+            size={size ?? 'md'}
             className={recipe.classNameMap.table}
             css={[styles.table, slotStyles?.table]}
           >
-            <thead>
-              <tr>
-                <chakra.th
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader
                   textAlign="left"
                   className={recipe.classNameMap.headerCell}
                   css={[styles.headerCell, slotStyles?.headerCell]}
                 >
                   Label
-                </chakra.th>
+                </Table.ColumnHeader>
                 {configuredSeries.map((item) => (
-                  <chakra.th
+                  <Table.ColumnHeader
                     key={item.key}
                     textAlign="right"
                     className={recipe.classNameMap.headerCell}
                     css={[styles.headerCell, slotStyles?.headerCell]}
                   >
                     {item.label ?? item.key}
-                  </chakra.th>
+                  </Table.ColumnHeader>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
               {records.map((datum) => (
-                <tr key={datum.label}>
-                  <chakra.th
+                <Table.Row key={datum.label}>
+                  <Table.ColumnHeader
                     scope="row"
                     className={recipe.classNameMap.rowHeader}
                     css={[styles.rowHeader, slotStyles?.rowHeader]}
                   >
                     {datum.label}
-                  </chakra.th>
+                  </Table.ColumnHeader>
                   {configuredSeries.map((item) => (
-                    <chakra.td
+                    <Table.Cell
                       key={item.key}
                       className={recipe.classNameMap.dataCell}
                       css={[styles.dataCell, slotStyles?.dataCell]}
                     >
                       {numericValue(datum, item.key)}
-                    </chakra.td>
+                    </Table.Cell>
                   ))}
-                </tr>
+                </Table.Row>
               ))}
-            </tbody>
-          </chakra.table>
+            </Table.Body>
+          </Table.Root>
         </Box>
       ) : null}
     </Box>

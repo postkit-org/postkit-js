@@ -30,7 +30,7 @@ export const postkitCalloutRecipe = defineSlotRecipe({
       width: '6',
     },
     content: { minWidth: '0' },
-    title: { fontWeight: 'semibold', lineHeight: '1.35' },
+    title: {},
     body: { color: 'fg.muted', marginTop: '1' },
   },
   variants: {
@@ -79,7 +79,7 @@ export const postkitGalleryRecipe = defineSlotRecipe({
   base: {
     root: { display: 'grid', gap: '3' },
     header: { display: 'grid', gap: '1' },
-    title: { fontWeight: 'semibold' },
+    title: {},
     description: { color: 'fg.muted' },
     grid: {
       display: 'grid',
@@ -261,7 +261,7 @@ export const postkitStepsRecipe = defineSlotRecipe({
       width: '7',
     },
     content: { minWidth: '0', paddingTop: '0.5' },
-    title: { fontWeight: 'semibold' },
+    title: {},
     description: { color: 'fg.muted', marginTop: '1' },
   },
   variants: {
@@ -315,7 +315,7 @@ export const postkitCardGridRecipe = defineSlotRecipe({
   base: {
     root: { display: 'grid', gap: '4' },
     header: { display: 'grid', gap: '1' },
-    title: { fontWeight: 'semibold' },
+    title: {},
     description: { color: 'fg.muted' },
     grid: {
       display: 'grid',
@@ -332,7 +332,7 @@ export const postkitCardGridRecipe = defineSlotRecipe({
     },
     image: { aspectRatio: '16 / 9', objectFit: 'cover', width: '100%' },
     cardBody: { display: 'grid', flex: '1', gap: '2', padding: '4' },
-    cardTitle: { fontWeight: 'semibold' },
+    cardTitle: {},
     cardDescription: { color: 'fg.muted' },
     meta: { color: 'fg.muted', fontSize: 'sm' },
     link: {

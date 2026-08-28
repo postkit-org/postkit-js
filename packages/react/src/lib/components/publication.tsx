@@ -2,10 +2,12 @@
 
 import {
   Box,
+  Button,
+  Heading,
   Image,
   Link,
+  Table,
   Text,
-  chakra,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
@@ -41,9 +43,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
-
-const OptionButton = chakra('button');
-const TableHeader = chakra('th');
+import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -167,12 +167,18 @@ export function KeyTakeaway({
           {eyebrow}
         </Text>
       ) : null}
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, {
+          sm: 'lg',
+          md: 'xl',
+          lg: '2xl',
+        })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
+      </Heading>
       {children ? (
         <Box
           className={recipe.classNameMap.body}
@@ -312,12 +318,18 @@ export function Comparison({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {title ? (
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'lg',
+            md: 'xl',
+            lg: '2xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
       ) : null}
       {description ? (
         <Text
@@ -331,65 +343,60 @@ export function Comparison({
         className={recipe.classNameMap.scroller}
         css={[styles.scroller, slotStyles?.scroller]}
       >
-        <Box
-          as="table"
+        <Table.Root
+          size={size ?? 'md'}
           className={recipe.classNameMap.table}
           css={[styles.table, slotStyles?.table]}
         >
-          <Box
-            as="thead"
+          <Table.Header
             className={recipe.classNameMap.head}
             css={[styles.head, slotStyles?.head]}
           >
-            <Box as="tr">
-              <Box
-                as="th"
+            <Table.Row>
+              <Table.ColumnHeader
                 className={recipe.classNameMap.header}
                 css={[styles.header, slotStyles?.header]}
               >
                 Feature
-              </Box>
+              </Table.ColumnHeader>
               {columns.map((column) => (
-                <Box
-                  as="th"
+                <Table.ColumnHeader
                   className={recipe.classNameMap.header}
                   css={[styles.header, slotStyles?.header]}
                   key={column}
                 >
                   {column}
-                </Box>
+                </Table.ColumnHeader>
               ))}
-            </Box>
-          </Box>
-          <Box as="tbody">
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {items.map((item) => (
-              <Box
-                as="tr"
+              <Table.Row
                 className={recipe.classNameMap.row}
                 css={[styles.row, slotStyles?.row]}
                 key={item.label}
               >
-                <TableHeader
+                <Table.ColumnHeader
                   scope="row"
                   className={recipe.classNameMap.label}
                   css={[styles.label, slotStyles?.label]}
                 >
                   {item.label}
-                </TableHeader>
+                </Table.ColumnHeader>
                 {columns.map((_, index) => (
-                  <Box
-                    as="td"
+                  <Table.Cell
                     className={recipe.classNameMap.value}
                     css={[styles.value, slotStyles?.value]}
                     key={index}
                   >
                     {displayValue(item.values[index])}
-                  </Box>
+                  </Table.Cell>
                 ))}
-              </Box>
+              </Table.Row>
             ))}
-          </Box>
-        </Box>
+          </Table.Body>
+        </Table.Root>
       </Box>
     </Box>
   );
@@ -447,12 +454,18 @@ export function Poll({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, {
+          sm: 'lg',
+          md: 'xl',
+          lg: '2xl',
+        })}
         className={recipe.classNameMap.question}
         css={[styles.question, slotStyles?.question]}
       >
         {question}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           className={recipe.classNameMap.description}
@@ -471,8 +484,10 @@ export function Poll({
           const percentage =
             total > 0 ? Math.round(((option.votes ?? 0) / total) * 100) : 0;
           return (
-            <OptionButton
+            <Button
               type="button"
+              size={size ?? 'md'}
+              variant="outline"
               aria-pressed={selection === option.id}
               onClick={() => vote(option)}
               className={recipe.classNameMap.option}
@@ -505,7 +520,7 @@ export function Poll({
                   ]}
                 />
               ) : null}
-            </OptionButton>
+            </Button>
           );
         })}
       </Box>
@@ -592,12 +607,18 @@ export function ProductCard({
             {badge}
           </Text>
         ) : null}
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'lg',
+            md: 'xl',
+            lg: '2xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
         {description ? (
           <Text
             className={recipe.classNameMap.description}
@@ -629,14 +650,17 @@ export function ProductCard({
           ) : (
             <span />
           )}
-          <Link
-            href={href}
-            rel={rel}
+          <Button
+            asChild
+            size={size ?? 'md'}
+            variant="solid"
             className={recipe.classNameMap.action}
             css={[styles.action, slotStyles?.action]}
           >
-            {actionLabel}
-          </Link>
+            <Link href={href} rel={rel}>
+              {actionLabel}
+            </Link>
+          </Button>
         </Box>
       </Box>
     </Box>
@@ -684,12 +708,18 @@ export function RelatedContent({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, {
+          sm: 'md',
+          md: 'lg',
+          lg: 'xl',
+        })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
+      </Heading>
       <Box
         as="ul"
         className={recipe.classNameMap.list}
@@ -707,12 +737,18 @@ export function RelatedContent({
               className={recipe.classNameMap.link}
               css={[styles.link, slotStyles?.link]}
             >
-              <Text
+              <Heading
+                as="p"
+                size={postkitHeadingSize(size, {
+                  sm: 'sm',
+                  md: 'md',
+                  lg: 'lg',
+                })}
                 className={recipe.classNameMap.itemTitle}
                 css={[styles.itemTitle, slotStyles?.itemTitle]}
               >
                 {item.title}
-              </Text>
+              </Heading>
               {item.description ? (
                 <Text
                   className={recipe.classNameMap.description}
@@ -801,12 +837,18 @@ export function SeriesNavigation({
         >
           {direction}
         </Text>
-        <Text
+        <Heading
+          as="span"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.linkTitle}
           css={[styles.linkTitle, slotStyles?.linkTitle]}
         >
           {link.title}
-        </Text>
+        </Heading>
       </Link>
     ) : (
       <span />
@@ -824,12 +866,18 @@ export function SeriesNavigation({
         className={recipe.classNameMap.header}
         css={[styles.header, slotStyles?.header]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
         {current && total ? (
           <Text
             className={recipe.classNameMap.position}
@@ -910,12 +958,18 @@ export function SponsorBlock({
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.name}
           css={[styles.name, slotStyles?.name]}
         >
           {name}
-        </Text>
+        </Heading>
         {message ? (
           <Text
             className={recipe.classNameMap.message}
@@ -925,14 +979,17 @@ export function SponsorBlock({
           </Text>
         ) : null}
         {href ? (
-          <Link
-            href={href}
-            rel="sponsored"
+          <Button
+            asChild
+            size={size ?? 'md'}
+            variant="outline"
             className={recipe.classNameMap.action}
             css={[styles.action, slotStyles?.action]}
           >
-            {actionLabel}
-          </Link>
+            <Link href={href} rel="sponsored">
+              {actionLabel}
+            </Link>
+          </Button>
         ) : null}
       </Box>
     </Box>

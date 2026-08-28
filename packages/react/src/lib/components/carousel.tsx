@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
   Image,
   Link,
   Text,
@@ -24,6 +25,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 export interface CarouselItem {
   readonly id?: string;
@@ -54,6 +56,7 @@ function parsedInitialIndex(value: number | string | undefined): number {
 
 function itemContent(
   item: CarouselItem,
+  size: CarouselProps['size'],
   styles: PostkitSlotStyles<PostkitCarouselSlot>,
   slotStyles: PostkitSlotStyles<PostkitCarouselSlot> | undefined,
   classNames: Partial<Record<PostkitCarouselSlot, string>>,
@@ -74,13 +77,18 @@ function itemContent(
           css={[styles.content, slotStyles?.content]}
         >
           {item.title ? (
-            <Text
+            <Heading
               as="h3"
+              size={postkitHeadingSize(size, {
+                sm: 'md',
+                md: 'lg',
+                lg: 'xl',
+              })}
               className={classNames.title}
               css={[styles.title, slotStyles?.title]}
             >
               {item.title}
-            </Text>
+            </Heading>
           ) : null}
           {item.description ? (
             <Text
@@ -138,7 +146,7 @@ export function Carousel({
   } = rootProps ?? {};
   const itemSlides = items
     ? parseJsonProp<CarouselItem>(items, 'Carousel items').map((item) =>
-        itemContent(item, styles, slotStyles, recipe.classNameMap),
+        itemContent(item, size, styles, slotStyles, recipe.classNameMap),
       )
     : [];
   const childSlides = Children.toArray(children);

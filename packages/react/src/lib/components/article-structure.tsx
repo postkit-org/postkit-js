@@ -3,14 +3,16 @@
 import {
   Box,
   chakra,
+  Heading,
   Image,
   Link,
+  Tabs as ChakraTabs,
   Text,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useId, useState, type ComponentProps, type ReactNode } from 'react';
+import { useState, type ComponentProps, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -33,10 +35,10 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 const DisclosureRoot = chakra('details');
 const DisclosureSummary = chakra('summary');
-const TabButton = chakra('button');
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -108,12 +110,18 @@ export function Callout({
         css={[styles.content, slotStyles?.content]}
       >
         {title ? (
-          <Text
+          <Heading
+            as="p"
+            size={postkitHeadingSize(size, {
+              sm: 'sm',
+              md: 'md',
+              lg: 'lg',
+            })}
             className={recipe.classNameMap.title}
             css={[styles.title, slotStyles?.title]}
           >
             {title}
-          </Text>
+          </Heading>
         ) : null}
         <Box
           className={recipe.classNameMap.body}
@@ -181,12 +189,18 @@ export function Gallery({
           css={[styles.header, slotStyles?.header]}
         >
           {title ? (
-            <Text
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
               className={recipe.classNameMap.title}
               css={[styles.title, slotStyles?.title]}
             >
               {title}
-            </Text>
+            </Heading>
           ) : null}
           {description ? (
             <Text
@@ -343,13 +357,12 @@ export function Tabs({
   const items = parseJsonProp<TabItem>(value, 'Tabs items');
   const requested =
     typeof initialIndex === 'string' ? Number(initialIndex) : initialIndex;
-  const [selected, setSelected] = useState(
-    Math.max(
-      0,
-      Math.min(items.length - 1, Number.isFinite(requested) ? requested : 0),
-    ),
+  const selectedIndex = Math.max(
+    0,
+    Math.min(items.length - 1, Number.isFinite(requested) ? requested : 0),
   );
-  const id = useId();
+  const itemValues = items.map((item, index) => item.id ?? String(index));
+  const [selected, setSelected] = useState(itemValues[selectedIndex] ?? '');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.tabs,
     postkitTabsRecipe,
@@ -358,55 +371,53 @@ export function Tabs({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const tabsRootProps = restRootProps as Omit<
+    ChakraTabs.RootProps,
+    'children' | 'onValueChange' | 'size' | 'value' | 'variant'
+  >;
   return (
-    <Box
+    <ChakraTabs.Root
+      {...tabsRootProps}
+      value={selected}
+      onValueChange={({ value: nextValue }) => setSelected(nextValue)}
+      size={size ?? 'md'}
+      variant={variant ?? 'outline'}
       data-postkit-component="Tabs"
-      {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="tablist"
+      <ChakraTabs.List
         aria-label={label}
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item, index) => (
-          <TabButton
-            type="button"
-            role="tab"
-            id={`${id}-tab-${index}`}
-            aria-controls={`${id}-panel-${index}`}
-            aria-selected={selected === index}
-            tabIndex={selected === index ? 0 : -1}
-            onClick={() => setSelected(index)}
+          <ChakraTabs.Trigger
+            value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
             key={item.id ?? item.label}
           >
             {item.label}
-          </TabButton>
+          </ChakraTabs.Trigger>
         ))}
-      </Box>
-      <Box
+      </ChakraTabs.List>
+      <ChakraTabs.ContentGroup
         className={recipe.classNameMap.panels}
         css={[styles.panels, slotStyles?.panels]}
       >
         {items.map((item, index) => (
-          <Box
-            role="tabpanel"
-            id={`${id}-panel-${index}`}
-            aria-labelledby={`${id}-tab-${index}`}
-            hidden={selected !== index}
+          <ChakraTabs.Content
+            value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.panel}
             css={[styles.panel, slotStyles?.panel]}
             key={item.id ?? item.label}
           >
             {item.content}
-          </Box>
+          </ChakraTabs.Content>
         ))}
-      </Box>
-    </Box>
+      </ChakraTabs.ContentGroup>
+    </ChakraTabs.Root>
   );
 }
 
@@ -463,12 +474,18 @@ export function Steps({
             className={recipe.classNameMap.content}
             css={[styles.content, slotStyles?.content]}
           >
-            <Text
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
               className={recipe.classNameMap.title}
               css={[styles.title, slotStyles?.title]}
             >
               {item.title}
-            </Text>
+            </Heading>
             {item.description ? (
               <Box
                 className={recipe.classNameMap.description}
@@ -579,12 +596,18 @@ export function CardGrid({
               className={recipe.classNameMap.cardBody}
               css={[styles.cardBody, slotStyles?.cardBody]}
             >
-              <Text
+              <Heading
+                as="p"
+                size={postkitHeadingSize(size, {
+                  sm: 'sm',
+                  md: 'md',
+                  lg: 'lg',
+                })}
                 className={recipe.classNameMap.cardTitle}
                 css={[styles.cardTitle, slotStyles?.cardTitle]}
               >
                 {item.title}
-              </Text>
+              </Heading>
               {item.description ? (
                 <Text
                   className={recipe.classNameMap.cardDescription}

@@ -78,7 +78,7 @@ export const postkitKeyTakeawayRecipe = defineSlotRecipe({
       letterSpacing: 'wide',
       textTransform: 'uppercase',
     },
-    title: { fontSize: 'xl', fontWeight: 'bold', marginTop: '1' },
+    title: { marginTop: '1' },
     body: { color: 'fg.muted', marginTop: '2' },
     list: {
       display: 'grid',
@@ -90,11 +90,10 @@ export const postkitKeyTakeawayRecipe = defineSlotRecipe({
   },
   variants: {
     size: {
-      sm: { root: { fontSize: 'sm', padding: '4' }, title: { fontSize: 'lg' } },
+      sm: { root: { fontSize: 'sm', padding: '4' } },
       md: {},
       lg: {
         root: { fontSize: 'lg', padding: '6' },
-        title: { fontSize: '2xl' },
       },
     },
     variant: {
@@ -172,7 +171,7 @@ export const postkitComparisonRecipe = defineSlotRecipe({
   slots: postkitComparisonSlots,
   base: {
     root: { display: 'grid', gap: '2' },
-    title: { fontSize: 'xl', fontWeight: 'bold' },
+    title: {},
     description: { color: 'fg.muted' },
     scroller: { marginTop: '2', overflowX: 'auto' },
     table: {
@@ -229,7 +228,7 @@ export const postkitPollRecipe = defineSlotRecipe({
   slots: postkitPollSlots,
   base: {
     root: { borderRadius: 'xl', padding: '5' },
-    question: { fontSize: 'xl', fontWeight: 'bold' },
+    question: {},
     description: { color: 'fg.muted', marginTop: '1' },
     options: { display: 'grid', gap: '2', marginTop: '4' },
     option: {
@@ -265,12 +264,10 @@ export const postkitPollRecipe = defineSlotRecipe({
     size: {
       sm: {
         root: { fontSize: 'sm', padding: '4' },
-        question: { fontSize: 'lg' },
       },
       md: {},
       lg: {
         root: { fontSize: 'lg', padding: '6' },
-        question: { fontSize: '2xl' },
       },
     },
     variant: {
@@ -327,7 +324,7 @@ export const postkitProductCardRecipe = defineSlotRecipe({
       paddingBlock: '1',
       paddingInline: '2',
     },
-    title: { fontSize: 'xl', fontWeight: 'bold' },
+    title: {},
     description: { color: 'fg.muted' },
     rating: { color: 'orange.fg', fontSize: 'sm' },
     footer: {
@@ -352,12 +349,10 @@ export const postkitProductCardRecipe = defineSlotRecipe({
     size: {
       sm: {
         content: { fontSize: 'sm', padding: '4' },
-        title: { fontSize: 'lg' },
       },
       md: {},
       lg: {
         content: { fontSize: 'lg', padding: '6' },
-        title: { fontSize: '2xl' },
       },
     },
     variant: {
@@ -386,7 +381,7 @@ export const postkitRelatedContentRecipe = defineSlotRecipe({
   slots: postkitRelatedContentSlots,
   base: {
     root: { display: 'grid', gap: '3' },
-    title: { fontSize: 'lg', fontWeight: 'bold' },
+    title: {},
     list: {
       display: 'grid',
       gap: '3',
@@ -404,7 +399,7 @@ export const postkitRelatedContentRecipe = defineSlotRecipe({
       textDecoration: 'none',
       _hover: { background: 'bg.muted', textDecoration: 'none' },
     },
-    itemTitle: { color: 'colorPalette.fg', fontWeight: 'semibold' },
+    itemTitle: { color: 'colorPalette.fg' },
     description: { color: 'fg.muted', fontSize: 'sm' },
     meta: { color: 'fg.muted', fontSize: 'xs' },
   },
@@ -448,7 +443,7 @@ export const postkitSeriesNavigationRecipe = defineSlotRecipe({
       gap: '3',
       justifyContent: 'space-between',
     },
-    title: { fontWeight: 'bold' },
+    title: {},
     position: { color: 'fg.muted', fontSize: 'sm' },
     links: {
       display: 'grid',
@@ -469,7 +464,7 @@ export const postkitSeriesNavigationRecipe = defineSlotRecipe({
       fontSize: 'xs',
       textTransform: 'uppercase',
     },
-    linkTitle: { color: 'colorPalette.fg', fontWeight: 'semibold' },
+    linkTitle: { color: 'colorPalette.fg' },
   },
   variants: {
     size: {
@@ -515,7 +510,7 @@ export const postkitSponsorBlockRecipe = defineSlotRecipe({
       objectPosition: 'left center',
     },
     content: { display: 'grid', gap: '1' },
-    name: { fontFamily: 'heading', fontWeight: 'bold' },
+    name: {},
     message: { color: 'fg.muted' },
     action: {
       color: 'colorPalette.fg',

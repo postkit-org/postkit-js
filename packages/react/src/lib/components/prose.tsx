@@ -2,8 +2,16 @@
 
 import {
   chakra,
+  Code as ChakraCode,
+  Heading,
+  Kbd,
+  Link as ChakraLink,
+  Mark,
+  Separator,
+  Table,
   type BoxProps,
   type ChakraComponent,
+  type HeadingProps,
   type HTMLChakraProps,
 } from '@chakra-ui/react';
 import {
@@ -59,6 +67,60 @@ function createPostkitProseElement<Element extends ElementType>(
   return PostkitProseElement as ChakraComponent<Element>;
 }
 
+function createPostkitProsePrimitive<Element extends ElementType>(
+  primitive: ComponentType<Readonly<Record<string, unknown>>>,
+  slot: PostkitProseSlot,
+): ChakraComponent<Element> {
+  function PostkitProsePrimitive(props: HTMLChakraProps<Element>) {
+    const recipe = usePostkitSlotRecipe(
+      postkitRecipeKeys.prose,
+      postkitProseRecipe,
+    );
+    const styles = recipe();
+    const { className, css, ...rest } = props;
+
+    return createElement(primitive, {
+      ...rest,
+      'data-postkit-prose-element': slot,
+      className: postkitSlotClassName(recipe.classNameMap[slot], className),
+      css: [styles[slot], css],
+    });
+  }
+
+  PostkitProsePrimitive.displayName = `Prose.${slot}`;
+  return PostkitProsePrimitive as ChakraComponent<Element>;
+}
+
+function createPostkitProseHeading<Element extends `h${1 | 2 | 3 | 4 | 5 | 6}`>(
+  element: Element,
+  size: HeadingProps['size'],
+): ChakraComponent<Element> {
+  function PostkitProseHeading({ className, css, ...props }: HeadingProps) {
+    const recipe = usePostkitSlotRecipe(
+      postkitRecipeKeys.prose,
+      postkitProseRecipe,
+    );
+    const styles = recipe();
+
+    return (
+      <Heading
+        {...props}
+        as={element}
+        size={size}
+        data-postkit-prose-element={element}
+        className={postkitSlotClassName(
+          recipe.classNameMap[element],
+          className,
+        )}
+        css={[styles[element], css]}
+      />
+    );
+  }
+
+  PostkitProseHeading.displayName = `Prose.${element}`;
+  return PostkitProseHeading as ChakraComponent<Element>;
+}
+
 export type ProseProps = HTMLChakraProps<'div'>;
 
 export function Prose({ className, css, ...props }: ProseProps) {
@@ -82,8 +144,6 @@ export function Prose({ className, css, ...props }: ProseProps) {
 export function createPostkitProseLink(
   Link: PostkitLinkComponent,
 ): PostkitLinkComponent {
-  const StyledLink = chakra(Link);
-
   function ProseLink({ className, ...props }: PostkitLinkProps) {
     const recipe = usePostkitSlotRecipe(
       postkitRecipeKeys.prose,
@@ -92,12 +152,14 @@ export function createPostkitProseLink(
     const styles = recipe();
 
     return (
-      <StyledLink
-        {...props}
+      <ChakraLink
+        asChild
         data-postkit-prose-element="a"
         className={postkitSlotClassName(recipe.classNameMap.a, className)}
         css={styles.a}
-      />
+      >
+        <Link {...props} />
+      </ChakraLink>
     );
   }
 
@@ -136,30 +198,54 @@ export function ProsePre({ children, ...props }: HTMLChakraProps<'pre'>) {
 
 export const postkitProseComponents = Object.freeze({
   wrapper: Prose,
-  h1: createPostkitProseElement('h1', 'h1'),
-  h2: createPostkitProseElement('h2', 'h2'),
-  h3: createPostkitProseElement('h3', 'h3'),
-  h4: createPostkitProseElement('h4', 'h4'),
-  h5: createPostkitProseElement('h5', 'h5'),
-  h6: createPostkitProseElement('h6', 'h6'),
+  h1: createPostkitProseHeading('h1', { base: '3xl', md: '5xl' }),
+  h2: createPostkitProseHeading('h2', { base: '2xl', md: '3xl' }),
+  h3: createPostkitProseHeading('h3', { base: 'xl', md: '2xl' }),
+  h4: createPostkitProseHeading('h4', 'xl'),
+  h5: createPostkitProseHeading('h5', 'lg'),
+  h6: createPostkitProseHeading('h6', 'md'),
   p: createPostkitProseElement('p', 'p'),
   a: createPostkitProseLink(createPostkitLink()),
   blockquote: createPostkitProseElement('blockquote', 'blockquote'),
   ul: createPostkitProseElement('ul', 'ul'),
   ol: createPostkitProseElement('ol', 'ol'),
   li: createPostkitProseElement('li', 'li'),
-  hr: createPostkitProseElement('hr', 'hr'),
+  hr: createPostkitProsePrimitive<'hr'>(
+    Separator as ComponentType<Readonly<Record<string, unknown>>>,
+    'hr',
+  ),
   pre: ProsePre,
-  code: createPostkitProseElement('code', 'code'),
+  code: createPostkitProsePrimitive<'code'>(
+    ChakraCode as ComponentType<Readonly<Record<string, unknown>>>,
+    'code',
+  ),
   strong: createPostkitProseElement('strong', 'strong'),
   em: createPostkitProseElement('em', 'em'),
   del: createPostkitProseElement('del', 'del'),
-  table: createPostkitProseElement('table', 'table'),
-  thead: createPostkitProseElement('thead', 'thead'),
-  tbody: createPostkitProseElement('tbody', 'tbody'),
-  tr: createPostkitProseElement('tr', 'tr'),
-  th: createPostkitProseElement('th', 'th'),
-  td: createPostkitProseElement('td', 'td'),
+  table: createPostkitProsePrimitive<'table'>(
+    Table.Root as ComponentType<Readonly<Record<string, unknown>>>,
+    'table',
+  ),
+  thead: createPostkitProsePrimitive<'thead'>(
+    Table.Header as ComponentType<Readonly<Record<string, unknown>>>,
+    'thead',
+  ),
+  tbody: createPostkitProsePrimitive<'tbody'>(
+    Table.Body as ComponentType<Readonly<Record<string, unknown>>>,
+    'tbody',
+  ),
+  tr: createPostkitProsePrimitive<'tr'>(
+    Table.Row as ComponentType<Readonly<Record<string, unknown>>>,
+    'tr',
+  ),
+  th: createPostkitProsePrimitive<'th'>(
+    Table.ColumnHeader as ComponentType<Readonly<Record<string, unknown>>>,
+    'th',
+  ),
+  td: createPostkitProsePrimitive<'td'>(
+    Table.Cell as ComponentType<Readonly<Record<string, unknown>>>,
+    'td',
+  ),
   img: createPostkitProseElement('img', 'img'),
   figure: createPostkitProseElement('figure', 'figure'),
   figcaption: createPostkitProseElement('figcaption', 'figcaption'),
@@ -169,8 +255,14 @@ export const postkitProseComponents = Object.freeze({
   dl: createPostkitProseElement('dl', 'dl'),
   dt: createPostkitProseElement('dt', 'dt'),
   dd: createPostkitProseElement('dd', 'dd'),
-  kbd: createPostkitProseElement('kbd', 'kbd'),
-  mark: createPostkitProseElement('mark', 'mark'),
+  kbd: createPostkitProsePrimitive<'kbd'>(
+    Kbd as ComponentType<Readonly<Record<string, unknown>>>,
+    'kbd',
+  ),
+  mark: createPostkitProsePrimitive<'mark'>(
+    Mark as ComponentType<Readonly<Record<string, unknown>>>,
+    'mark',
+  ),
   small: createPostkitProseElement('small', 'small'),
   details: createPostkitProseElement('details', 'details'),
   summary: createPostkitProseElement('summary', 'summary'),

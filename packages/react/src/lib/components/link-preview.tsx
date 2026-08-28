@@ -10,6 +10,7 @@ import {
   Button,
   chakra,
   Flex,
+  Heading,
   Image,
   Link,
   Text,
@@ -34,6 +35,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 const LinkPreviewIframe = chakra('iframe');
 
@@ -315,13 +317,14 @@ export function LinkPreview({
           {siteName}
         </Text>
       </Flex>
-      <Text
+      <Heading
         as="h3"
+        size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title ?? domain}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           className={recipe.classNameMap.description}

@@ -250,21 +250,6 @@ export interface PostkitSystemOptions {
   readonly theme?: SystemConfig;
 }
 
-const postkitHeadingSlots = new Set([
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'title',
-  'cardTitle',
-  'itemTitle',
-  'linkTitle',
-  'question',
-  'summary',
-]);
-
 function withPostkitTypographyDefaults(
   recipes: Record<string, SlotRecipeConfig>,
 ): Record<string, SlotRecipeConfig> {
@@ -274,12 +259,7 @@ function withPostkitTypographyDefaults(
 
       for (const slot of recipe.slots) {
         const styles = base[slot] ?? {};
-        const defaultFontFamily =
-          slot === 'root'
-            ? 'body'
-            : postkitHeadingSlots.has(slot) && styles.fontFamily === undefined
-              ? 'heading'
-              : undefined;
+        const defaultFontFamily = slot === 'root' ? 'body' : undefined;
 
         if (defaultFontFamily) {
           base[slot] = { ...styles, fontFamily: defaultFontFamily };

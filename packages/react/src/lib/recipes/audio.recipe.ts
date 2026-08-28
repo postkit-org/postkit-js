@@ -18,9 +18,7 @@ export const postkitAudioRecipe = defineSlotRecipe({
       margin: '0',
       borderRadius: 'xl',
     },
-    title: {
-      fontWeight: 'semibold',
-    },
+    title: {},
     player: {
       display: 'block',
       width: '100%',
@@ -37,17 +35,17 @@ export const postkitAudioRecipe = defineSlotRecipe({
     size: {
       sm: {
         root: { padding: '3' },
-        title: { fontSize: 'sm', marginBottom: '2' },
+        title: { marginBottom: '2' },
         caption: { fontSize: 'xs', marginTop: '2' },
       },
       md: {
         root: { padding: '4' },
-        title: { fontSize: 'md', marginBottom: '3' },
+        title: { marginBottom: '3' },
         caption: { fontSize: 'sm', marginTop: '3' },
       },
       lg: {
         root: { padding: '5' },
-        title: { fontSize: 'lg', marginBottom: '4' },
+        title: { marginBottom: '4' },
         caption: { fontSize: 'md', marginTop: '3' },
       },
     },

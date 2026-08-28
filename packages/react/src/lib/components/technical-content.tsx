@@ -3,14 +3,15 @@
 import {
   Box,
   CodeBlock as ChakraCodeBlock,
+  Heading,
   Link,
+  Tabs as ChakraTabs,
   Text,
-  chakra,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useId, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -33,8 +34,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
-
-const ActionButton = chakra('button');
+import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -243,7 +243,6 @@ export function CodeGroup({
       ? Math.max(0, Math.min(items.length - 1, requested))
       : 0,
   );
-  const id = useId();
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeGroup,
     postkitCodeGroupRecipe,
@@ -252,41 +251,40 @@ export function CodeGroup({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const tabsRootProps = restRootProps as Omit<
+    ChakraTabs.RootProps,
+    'children' | 'onValueChange' | 'size' | 'value' | 'variant'
+  >;
   return (
-    <Box
+    <ChakraTabs.Root
+      {...tabsRootProps}
+      value={String(selected)}
+      onValueChange={({ value: nextValue }) => setSelected(Number(nextValue))}
+      size={size ?? 'md'}
+      variant={variant ?? 'outline'}
       data-postkit-component="CodeGroup"
-      {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="tablist"
+      <ChakraTabs.List
         aria-label={label}
         className={recipe.classNameMap.tabs}
         css={[styles.tabs, slotStyles?.tabs]}
       >
         {items.map((item, index) => (
-          <ActionButton
-            role="tab"
-            type="button"
-            id={`${id}-tab-${index}`}
-            aria-controls={`${id}-panel-${index}`}
-            aria-selected={selected === index}
-            onClick={() => setSelected(index)}
+          <ChakraTabs.Trigger
+            value={String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
             key={`${item.label}-${index}`}
           >
             {item.label}
-          </ActionButton>
+          </ChakraTabs.Trigger>
         ))}
-      </Box>
+      </ChakraTabs.List>
       {items.map((item, index) => (
-        <Box
-          role="tabpanel"
-          id={`${id}-panel-${index}`}
-          aria-labelledby={`${id}-tab-${index}`}
-          hidden={selected !== index}
+        <ChakraTabs.Content
+          value={String(index)}
           className={recipe.classNameMap.panel}
           css={[styles.panel, slotStyles?.panel]}
           key={`${item.label}-${index}`}
@@ -298,9 +296,9 @@ export function CodeGroup({
             variant="plain"
             size={size}
           />
-        </Box>
+        </ChakraTabs.Content>
       ))}
-    </Box>
+    </ChakraTabs.Root>
   );
 }
 
@@ -532,12 +530,18 @@ export function FileTree({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {title ? (
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
       ) : null}
       <Box
         as="ul"
@@ -641,12 +645,18 @@ export function FileCard({
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.name}
           css={[styles.name, slotStyles?.name]}
         >
           {name}
-        </Text>
+        </Heading>
         {description ? (
           <Text
             className={recipe.classNameMap.description}

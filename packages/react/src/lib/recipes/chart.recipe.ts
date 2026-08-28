@@ -29,9 +29,7 @@ export const postkitChartRecipe = defineSlotRecipe({
     root: {
       margin: '0',
     },
-    title: {
-      fontWeight: 'semibold',
-    },
+    title: {},
     description: {
       color: 'fg.muted',
     },
@@ -88,7 +86,6 @@ export const postkitChartRecipe = defineSlotRecipe({
     size: {
       sm: {
         root: { padding: '3' },
-        title: { fontSize: 'md' },
         description: { fontSize: 'sm', marginTop: '1' },
         legend: { gap: '3', marginTop: '2' },
         legendItem: { gap: '1', fontSize: 'xs' },
@@ -103,7 +100,6 @@ export const postkitChartRecipe = defineSlotRecipe({
       },
       md: {
         root: { padding: { base: '3', md: '5' } },
-        title: { fontSize: 'lg' },
         description: { fontSize: 'md', marginTop: '1' },
         legend: { gap: '4', marginTop: '3' },
         legendItem: { gap: '2', fontSize: 'sm' },
@@ -118,7 +114,6 @@ export const postkitChartRecipe = defineSlotRecipe({
       },
       lg: {
         root: { padding: { base: '4', md: '6' } },
-        title: { fontSize: 'xl' },
         description: { fontSize: 'lg', marginTop: '2' },
         legend: { gap: '5', marginTop: '4' },
         legendItem: { gap: '2', fontSize: 'md' },

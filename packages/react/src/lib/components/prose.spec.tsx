@@ -2,11 +2,13 @@
  * @jest-environment jsdom
  */
 
+import { createSystem, defaultConfig, defineRecipe } from '@chakra-ui/react';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
 import { createPostkitMdxComponents } from '../mdx-components.js';
 import { PostkitProvider } from '../provider.js';
+import { postkitDefaultTheme } from '../theme.js';
 import { postkitProseComponents } from './prose.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
@@ -91,6 +93,30 @@ describe('Postkit prose', () => {
     expect(screen.getByText('inline code').className).toContain(
       'postkit-prose__code',
     );
+    expect(screen.getByText('inline code').className).toContain('chakra-code');
+  });
+
+  it('routes Markdown headings through the host Heading recipe', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        recipes: {
+          heading: defineRecipe({
+            base: { fontWeight: 'normal' },
+          }),
+        },
+      },
+    });
+    const Heading = createPostkitMdxComponents().h2;
+
+    render(
+      <PostkitProvider system={system} preset={postkitDefaultTheme}>
+        <Heading>Host-owned heading</Heading>
+      </PostkitProvider>,
+    );
+
+    const heading = screen.getByRole('heading', { level: 2 });
+    expect(heading.className).toContain('chakra-heading');
+    expect(system.getRecipe('heading').base?.fontWeight).toBe('normal');
   });
 
   it('renders fenced Markdown code with CodeBlock', () => {
@@ -155,5 +181,6 @@ describe('Postkit prose', () => {
       '/articles/hello',
     );
     expect(link.className).toContain('postkit-prose__a');
+    expect(link.className).toContain('chakra-link');
   });
 });

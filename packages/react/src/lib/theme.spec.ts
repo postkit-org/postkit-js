@@ -100,13 +100,13 @@ describe('Postkit theme', () => {
     }
 
     expect(prose.base?.root?.fontFamily).toBe('body');
-    expect(prose.base?.h1?.fontFamily).toBe('heading');
-    expect(prose.base?.h6?.fontFamily).toBe('heading');
+    expect(prose.base?.h1?.fontFamily).toBeUndefined();
+    expect(prose.base?.h6?.fontFamily).toBeUndefined();
     expect(prose.base?.code?.fontFamily).toBe('mono');
     expect(prose.base?.pre?.fontFamily).toBe('mono');
 
     expect(callToAction.base?.root?.fontFamily).toBe('body');
-    expect(callToAction.base?.title?.fontFamily).toBe('heading');
+    expect(callToAction.base?.title?.fontFamily).toBeUndefined();
     expect(terminal.base?.root?.fontFamily).toBe('body');
     expect(terminal.base?.title?.fontFamily).toBe('mono');
     expect(terminal.base?.body?.fontFamily).toBe('mono');
@@ -159,7 +159,7 @@ describe('Postkit theme', () => {
     expect(contextSystem.token('fonts.mono')).toBe('"Postkit Mono", monospace');
     expect(contextProse.base?.root?.fontFamily).toBe('body');
     expect(contextProse.base?.h1?.fontFamily).toBe('display');
-    expect(contextProse.base?.h2?.fontFamily).toBe('heading');
+    expect(contextProse.base?.h2?.fontFamily).toBeUndefined();
     expect(contextProse.base?.code?.fontFamily).toBe('mono');
 
     expect(siteSystem.token('fonts.body')).toBe('"Site Body", sans-serif');

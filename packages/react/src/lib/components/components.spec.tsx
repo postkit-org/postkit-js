@@ -130,8 +130,10 @@ describe('Postkit article components', () => {
     expect(takeaway).toContain('data-postkit-component="KeyTakeaway"');
     expect(stat).toContain('98%');
     expect(comparison).toContain('<table');
+    expect(comparison).toContain('chakra-table__root');
     expect(comparison).toContain('scope="row"');
     expect(poll).toContain('aria-pressed="false"');
+    expect(poll).toContain('chakra-button');
     expect(poll).toContain('80%');
     expect(product).toContain('rel="sponsored"');
     expect(product).toContain('4.8 out of 5 stars');
@@ -195,11 +197,13 @@ describe('Postkit article components', () => {
     expect(code).toContain('aria-label="Copy code"');
     expect(group).toContain('data-postkit-component="CodeGroup"');
     expect(group).toContain('role="tablist"');
+    expect(group).toContain('chakra-tabs__trigger');
     expect(terminal).toContain('data-postkit-component="Terminal"');
     expect(terminal).toContain('<samp');
     expect(diff).toContain('data-diff="deletion"');
     expect(diff).toContain('data-diff="addition"');
     expect(tree).toContain('data-postkit-component="FileTree"');
+    expect(tree).toContain('chakra-heading');
     expect(tree).toContain('index.ts');
     expect(file).toContain('download=""');
     expect(file).toContain('2.4 MB');
@@ -267,6 +271,7 @@ describe('Postkit article components', () => {
     expect(disclosure).toContain('<summary');
     expect(tabs).toContain('role="tablist"');
     expect(tabs).toContain('role="tabpanel"');
+    expect(tabs).toContain('chakra-tabs__trigger');
     expect(steps).toContain('<ol');
     expect(cards).toContain('postkit-card-grid__card');
     expect(cards).toContain('href="/guide"');
@@ -313,15 +318,19 @@ describe('Postkit article components', () => {
     expect(author).toContain('aria-label="About Ada Lovelace"');
     expect(author).toContain('rel="author"');
     expect(author).toContain('postkit-author-card__links');
+    expect(author).toContain('chakra-heading');
     expect(cta).toContain('data-postkit-component="CallToAction"');
     expect(cta).toContain('<h2');
     expect(cta).toContain('postkit-call-to-action__primaryAction');
+    expect(cta).toContain('chakra-button');
     expect(newsletter).toContain(
       'action="https://newsletter.example/subscribe"',
     );
     expect(newsletter).toContain('name="list" value="weekly"');
     expect(newsletter).toContain('name="source" value="postkit"');
     expect(newsletter).toContain('data-postkit-configured="true"');
+    expect(newsletter).toContain('chakra-input');
+    expect(newsletter).toContain('chakra-button');
   });
 
   it('server-renders a labeled carousel from literal JSON', () => {
@@ -408,6 +417,7 @@ describe('Postkit article components', () => {
     expect(markup).toContain('<svg');
     expect(markup).toContain('role="img"');
     expect(markup).toContain('<table');
+    expect(markup).toContain('chakra-table__root');
     expect(markup).toContain('Quarterly revenue');
     expect(markup).toContain('Q2, Revenue: 18');
   });

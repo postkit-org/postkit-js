@@ -251,7 +251,7 @@ export const postkitFileTreeRecipe = defineSlotRecipe({
   slots: postkitFileTreeSlots,
   base: {
     root: { borderRadius: 'xl', padding: '4' },
-    title: { fontWeight: 'semibold', marginBottom: '3' },
+    title: { marginBottom: '3' },
     list: {
       display: 'grid',
       fontFamily: 'mono',
@@ -325,7 +325,6 @@ export const postkitFileCardRecipe = defineSlotRecipe({
     },
     content: { minWidth: '0' },
     name: {
-      fontWeight: 'semibold',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',

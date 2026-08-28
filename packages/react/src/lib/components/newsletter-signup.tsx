@@ -24,6 +24,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 export type NewsletterSignupProps = {
   readonly title: string;
@@ -132,6 +133,11 @@ export function NewsletterSignup({
       >
         <Heading
           as="h2"
+          size={postkitHeadingSize(size, {
+            sm: 'lg',
+            md: 'xl',
+            lg: '2xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
@@ -165,6 +171,7 @@ export function NewsletterSignup({
           css={[styles.fields, slotStyles?.fields]}
         >
           <Input
+            size={size ?? 'md'}
             id={inputId}
             name={emailFieldName}
             type="email"
@@ -176,6 +183,8 @@ export function NewsletterSignup({
             css={[styles.input, slotStyles?.input]}
           />
           <Button
+            size={size ?? 'md'}
+            variant="solid"
             type="submit"
             disabled={!configured || submission.status === 'submitting'}
             loading={submission.status === 'submitting'}
