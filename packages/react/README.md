@@ -367,7 +367,7 @@ When a Markdown pipeline forwards the fence metadata through `meta`,
 ````md
 ```tsx title="button.tsx" lineNumbers wrap {2-3} maxHeight="24rem"
 export function Button() {
-  return <button>Save</button>
+  return <button>Save</button>;
 }
 ```
 ````

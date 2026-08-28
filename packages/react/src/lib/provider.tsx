@@ -56,9 +56,7 @@ export interface PostkitCodeBlockConfig {
   /** Postkit recipe variant applied across Postkit-rendered code. */
   readonly variant?: PostkitCodeBlockVariant;
   /** Highlighting and semantic-token color scheme. Chakra defaults to dark. */
-  readonly colorScheme?: NonNullable<
-    CodeBlock.RootProps['defaultColorScheme']
-  >;
+  readonly colorScheme?: NonNullable<CodeBlock.RootProps['defaultColorScheme']>;
   /** Visible content shown before the source is copied. */
   readonly copyLabel?: ReactNode;
   /** Copied-state content shown inline or in the copied tooltip. */

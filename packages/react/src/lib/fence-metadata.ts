@@ -19,8 +19,7 @@ export interface PostkitFenceMetadataAttributes {
 const fenceMetaAttributePattern =
   /(?:^|\s)([A-Za-z][\w-]*)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g;
 const highlightedLinesPattern = /(?:^|\s)\{([\d,\s-]+)\}(?=\s|$)/;
-const safeMaxHeightPattern =
-  /^\d+(?:\.\d+)?(?:px|r?em|ch|%|d?vh|svh|lvh)$/i;
+const safeMaxHeightPattern = /^\d+(?:\.\d+)?(?:px|r?em|ch|%|d?vh|svh|lvh)$/i;
 
 function metadataBoolean(value: unknown): boolean | undefined {
   if (typeof value === 'boolean') return value;
@@ -50,9 +49,7 @@ function normalizedMetaKey(value: string) {
   return value.replaceAll('-', '').toLowerCase();
 }
 
-export function parsePostkitFenceMeta(
-  value: unknown,
-): PostkitFenceMetadata {
+export function parsePostkitFenceMeta(value: unknown): PostkitFenceMetadata {
   if (typeof value !== 'string' || !value.trim()) return {};
 
   let filename: string | undefined;
@@ -77,9 +74,7 @@ export function parsePostkitFenceMeta(
       case 'linenumbers':
       case 'showlinenumbers':
         lineNumbers =
-          attributeValue === undefined
-            ? true
-            : metadataBoolean(attributeValue);
+          attributeValue === undefined ? true : metadataBoolean(attributeValue);
         break;
       case 'nolinenumbers':
         lineNumbers = false;
@@ -90,9 +85,7 @@ export function parsePostkitFenceMeta(
       case 'wrap':
       case 'wordwrap':
         wrap =
-          attributeValue === undefined
-            ? true
-            : metadataBoolean(attributeValue);
+          attributeValue === undefined ? true : metadataBoolean(attributeValue);
         break;
       case 'nowrap':
         wrap = false;

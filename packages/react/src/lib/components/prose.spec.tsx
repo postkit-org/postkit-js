@@ -172,7 +172,9 @@ describe('Postkit prose', () => {
         <Pre>
           <code
             className="language-tsx"
-            data-meta={'title="answer.tsx" lineNumbers wrap {2} maxHeight="24rem"'}
+            data-meta={
+              'title="answer.tsx" lineNumbers wrap {2} maxHeight="24rem"'
+            }
           >
             {'const answer = 42;\nconsole.log(answer);'}
           </code>
@@ -184,9 +186,9 @@ describe('Postkit prose', () => {
       '[data-postkit-component="CodeBlock"]',
     );
     expect(root?.hasAttribute('data-has-line-numbers')).toBe(true);
-    expect(container.querySelector('code')?.hasAttribute('data-word-wrap')).toBe(
-      true,
-    );
+    expect(
+      container.querySelector('code')?.hasAttribute('data-word-wrap'),
+    ).toBe(true);
     expect(container.querySelector('[data-highlight]')?.textContent).toBe(
       'console.log(answer);',
     );
@@ -221,9 +223,9 @@ describe('Postkit prose', () => {
       '[data-postkit-component="CodeBlock"]',
     );
     expect(root?.hasAttribute('data-has-line-numbers')).toBe(false);
-    expect(container.querySelector('code')?.hasAttribute('data-word-wrap')).toBe(
-      false,
-    );
+    expect(
+      container.querySelector('code')?.hasAttribute('data-word-wrap'),
+    ).toBe(false);
     expect(screen.getByText('explicit.ts')).toBeTruthy();
     expect(screen.queryByText('metadata.ts')).toBeNull();
   });
