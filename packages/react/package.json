@@ -39,6 +39,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./theme": {
+      "@postkit/source": "./src/theme.ts",
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "default": "./dist/theme.js"
+    },
+    "./remark": {
+      "@postkit/source": "./src/remark.ts",
+      "types": "./dist/remark.d.ts",
+      "import": "./dist/remark.js",
+      "default": "./dist/remark.js"
     }
   },
   "files": [

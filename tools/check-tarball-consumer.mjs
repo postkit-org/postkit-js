@@ -90,6 +90,8 @@ try {
     `const packages = await Promise.all([
   import('@postkit/unfurl'),
   import('@postkit/react'),
+  import('@postkit/react/theme'),
+  import('@postkit/react/remark'),
   import('@postkit/email'),
   import('@postkit/shiki'),
   import('@postkit/next'),
@@ -109,6 +111,8 @@ console.log('PostKit tarball runtime entry points loaded.');
     join(consumerRoot, 'consumer.ts'),
     `import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { PostkitProvider } from '@postkit/react';
+import { createPostkitTheme } from '@postkit/react/theme';
+import { remarkPostkit } from '@postkit/react/remark';
 import { PostkitEmailProvider } from '@postkit/email';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 import { createPostkitNextComponents } from '@postkit/next';
@@ -120,6 +124,8 @@ import type { Audio } from '@postkit/astro/react';
 
 void createLinkResolverRegistry;
 void PostkitProvider;
+void createPostkitTheme;
+void remarkPostkit;
 void PostkitEmailProvider;
 void createPostkitShikiAdapter;
 void createPostkitNextComponents;
