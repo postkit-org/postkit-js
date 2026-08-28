@@ -22,7 +22,11 @@ import { SocialPost } from './components/social-post.js';
 import { CodeBlock } from './components/technical-content.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
-import { createPostkitTheme, postkitRecipeKeys } from './theme.js';
+import {
+  createPostkitTheme,
+  postkitDefaultTheme,
+  postkitRecipeKeys,
+} from './theme.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);
@@ -219,7 +223,7 @@ describe('PostkitProvider', () => {
     );
   });
 
-  it('layers Postkit defaults and component overrides over a contextual Chakra theme', () => {
+  it('layers an optional Postkit preset beneath the contextual Chakra theme and overrides', () => {
     const contextualSystem = createSystem(defaultConfig, {
       theme: {
         tokens: {
@@ -233,6 +237,7 @@ describe('PostkitProvider', () => {
     render(
       <PostkitProvider
         system={contextualSystem}
+        preset={postkitDefaultTheme}
         theme={createPostkitTheme({
           linkPreview: {
             base: {

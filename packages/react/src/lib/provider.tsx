@@ -48,6 +48,11 @@ export interface PostkitProviderProps {
    */
   readonly system?: SystemContext;
   /**
+   * Optional visual defaults layered beneath the site's Chakra system. Pass
+   * `postkitDefaultTheme` to opt into Postkit's standalone appearance.
+   */
+  readonly preset?: SystemConfig;
+  /**
    * Chakra configuration merged after both Postkit's defaults and the
    * contextual system. Use createPostkitTheme to target only the nearest
    * Postkit context without changing site-wide component defaults.
@@ -151,6 +156,7 @@ function configuredResolver({
 export function PostkitProvider({
   children,
   system,
+  preset,
   theme,
   codeBlockAdapter,
   resolver,
@@ -162,8 +168,13 @@ export function PostkitProvider({
   newsletter,
 }: PostkitProviderProps) {
   const chakraSystem = useMemo(
-    () => createPostkitSystem(system ?? defaultSystem, theme),
-    [system, theme],
+    () =>
+      createPostkitSystem({
+        system: system ?? defaultSystem,
+        preset,
+        theme,
+      }),
+    [preset, system, theme],
   );
   const configured = useMemo(
     () =>

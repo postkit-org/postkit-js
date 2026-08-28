@@ -3,12 +3,21 @@ import { createSystem, defaultConfig, defaultSystem } from '@chakra-ui/react';
 import {
   createPostkitSystem,
   createPostkitTheme,
+  postkitDefaultTheme,
   postkitRecipeKeys,
 } from './theme.js';
 
 describe('Postkit theme', () => {
-  it('registers every component under a stable Chakra slot-recipe key', () => {
+  it('leaves Postkit presentation recipes opt-in', () => {
     const system = createPostkitSystem();
+
+    for (const key of Object.values(postkitRecipeKeys)) {
+      expect(system.isSlotRecipe(key)).toBe(false);
+    }
+  });
+
+  it('registers every component under a stable Chakra slot-recipe key', () => {
+    const system = createPostkitSystem({ preset: postkitDefaultTheme });
 
     expect(Object.values(postkitRecipeKeys)).toHaveLength(35);
     for (const key of Object.values(postkitRecipeKeys)) {
@@ -17,16 +26,17 @@ describe('Postkit theme', () => {
   });
 
   it('merges component-specific overrides after Postkit defaults', () => {
-    const system = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         audio: {
           base: {
             root: { boxShadow: 'md' },
           },
         },
       }),
-    );
+    });
     const recipe = system.getSlotRecipe(postkitRecipeKeys.audio) as {
       readonly base?: {
         readonly root?: {
@@ -43,9 +53,9 @@ describe('Postkit theme', () => {
   });
 
   it('exposes typed prose slots for Markdown typography', () => {
-    const system = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      theme: createPostkitTheme({
         prose: {
           base: {
             h1: { color: 'purple.500' },
@@ -54,7 +64,7 @@ describe('Postkit theme', () => {
           },
         },
       }),
-    );
+    });
     const recipe = system.getSlotRecipe(postkitRecipeKeys.prose) as {
       readonly base?: {
         readonly h1?: { readonly color?: string };
@@ -69,7 +79,7 @@ describe('Postkit theme', () => {
   });
 
   it('assigns body, heading, and mono roles across Postkit recipes', () => {
-    const system = createPostkitSystem();
+    const system = createPostkitSystem({ preset: postkitDefaultTheme });
     const prose = system.getSlotRecipe(postkitRecipeKeys.prose) as {
       readonly base?: Record<string, { readonly fontFamily?: string }>;
     };
@@ -105,9 +115,10 @@ describe('Postkit theme', () => {
   });
 
   it('configures each font role through either Postkit or Chakra tokens', () => {
-    const contextSystem = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const contextSystem = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         typography: {
           body: '"Postkit Body", sans-serif',
           heading: '"Postkit Heading", serif',
@@ -119,7 +130,7 @@ describe('Postkit theme', () => {
           },
         },
       }),
-    );
+    });
     const siteSystem = createPostkitSystem(
       createSystem(defaultConfig, {
         theme: {
@@ -157,9 +168,10 @@ describe('Postkit theme', () => {
   });
 
   it('layers site-wide rich-component styles before context overrides', () => {
-    const siteSystem = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const siteSystem = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         carousel: {
           base: {
             root: {
@@ -169,7 +181,7 @@ describe('Postkit theme', () => {
           },
         },
       }),
-    );
+    });
     const contextSystem = createPostkitSystem(
       siteSystem,
       createPostkitTheme({

@@ -241,6 +241,15 @@ export interface PostkitThemeOverrides {
   readonly video?: PostkitRecipeOverride<typeof postkitVideoRecipe>;
 }
 
+export interface PostkitSystemOptions {
+  /** The site's Chakra system. Its configuration is layered over the preset. */
+  readonly system?: SystemContext;
+  /** Optional Postkit visual defaults layered beneath the site's system. */
+  readonly preset?: SystemConfig;
+  /** Deliberate contextual overrides layered after the site's system. */
+  readonly theme?: SystemConfig;
+}
+
 const postkitHeadingSlots = new Set([
   'h1',
   'h2',
@@ -575,17 +584,31 @@ export function createPostkitTheme(
 }
 
 /**
- * Layers an existing Chakra system and optional context overrides over
- * Postkit's defaults. A site system can therefore establish global Postkit
- * styles while a nested PostkitProvider can supply narrower defaults.
+ * Composes an optional Postkit visual preset, a host Chakra system, and
+ * contextual Postkit overrides. Postkit is host-native by default; pass
+ * `postkitDefaultTheme` as `preset` to opt into its standalone appearance.
  */
 export function createPostkitSystem(
-  system: SystemContext = defaultSystem,
-  overrides?: SystemConfig,
+  options?: PostkitSystemOptions,
+): SystemContext;
+/** @deprecated Prefer the options-object overload. */
+export function createPostkitSystem(
+  system?: SystemContext,
+  theme?: SystemConfig,
+): SystemContext;
+export function createPostkitSystem(
+  optionsOrSystem: PostkitSystemOptions | SystemContext = {},
+  legacyTheme?: SystemConfig,
 ): SystemContext {
+  const options: PostkitSystemOptions =
+    '_config' in optionsOrSystem
+      ? { system: optionsOrSystem, theme: legacyTheme }
+      : optionsOrSystem;
+  const system = options.system ?? defaultSystem;
+
   return createSystem(
-    postkitDefaultTheme,
+    ...(options.preset ? [options.preset] : []),
     system._config,
-    ...(overrides ? [overrides] : []),
+    ...(options.theme ? [options.theme] : []),
   );
 }

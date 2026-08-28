@@ -336,6 +336,7 @@ export {
   postkitRecipeKeys,
   type PostkitFontFamily,
   type PostkitRecipeKey,
+  type PostkitSystemOptions,
   type PostkitThemeOverrides,
   type PostkitTypography,
 } from './lib/theme.js';

@@ -1,5 +1,9 @@
 import { createSystem, defaultConfig } from '@chakra-ui/react';
-import { createPostkitSystem, createPostkitTheme } from '@postkit/react';
+import {
+  createPostkitSystem,
+  createPostkitTheme,
+  postkitDefaultTheme,
+} from '@postkit/react';
 
 const chakraSystem = createSystem(defaultConfig, {
   globalCss: {
@@ -61,4 +65,8 @@ const postkitSiteTheme = createPostkitTheme({
   },
 });
 
-export const siteSystem = createPostkitSystem(chakraSystem, postkitSiteTheme);
+export const siteSystem = createPostkitSystem({
+  system: chakraSystem,
+  preset: postkitDefaultTheme,
+  theme: postkitSiteTheme,
+});
