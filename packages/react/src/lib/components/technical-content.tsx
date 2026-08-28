@@ -217,6 +217,11 @@ export function CodeBlock({
                 >
                   <ChakraCodeBlock.CopyIndicator
                     aria-live="polite"
+                    css={{
+                      alignItems: 'center',
+                      display: 'inline-flex',
+                      gap: 'inherit',
+                    }}
                     copied={
                       <>
                         {resolvedCopiedIcon}
