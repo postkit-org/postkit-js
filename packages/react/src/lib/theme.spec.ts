@@ -5,6 +5,7 @@ import {
   createPostkitTheme,
   postkitDefaultTheme,
   postkitRecipeKeys,
+  type PostkitThemeOverrides,
 } from './theme.js';
 
 describe('Postkit theme', () => {
@@ -81,6 +82,23 @@ describe('Postkit theme', () => {
     expect(recipe.variants?.variant?.outline?.root?.borderColor).toBe(
       'whiteAlpha.200',
     );
+  });
+
+  it('keeps recipe slot and variant dimension names explicit', () => {
+    const overrides: PostkitThemeOverrides = {
+      codeBlock: {
+        base: {
+          // @ts-expect-error Invalid CodeBlock slot.
+          toolbar: {},
+        },
+        variants: {
+          // @ts-expect-error Invalid CodeBlock variant dimension.
+          density: {},
+        },
+      },
+    };
+
+    expect(overrides.codeBlock).toBeDefined();
   });
 
   it('exposes typed prose slots for Markdown typography', () => {

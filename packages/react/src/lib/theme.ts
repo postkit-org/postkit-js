@@ -8,6 +8,24 @@ import {
   type SystemStyleObject,
 } from '@chakra-ui/react';
 
+import type {
+  PostkitFontFamily,
+  PostkitThemeOverrides,
+} from './theme-contract.js';
+export type {
+  PostkitFontFamily,
+  PostkitRecipeOverride,
+  PostkitThemeCompoundVariant,
+  PostkitThemeOverrides,
+  PostkitThemeSlotMap,
+  PostkitThemeSlotStyles,
+  PostkitThemeStyleObject,
+  PostkitThemeVariantSelection,
+  PostkitThemeVariantMap,
+  PostkitThemeVariantStyles,
+  PostkitTypography,
+} from './theme-contract.js';
+
 import {
   postkitAudioRecipe,
   postkitAudioSlots,
@@ -75,9 +93,7 @@ import {
   postkitVideoSlots,
 } from './recipes/video.recipe.js';
 import {
-  postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
-  postkitCodeGroupRecipe,
   postkitCodeGroupSlots,
   postkitDiffRecipe,
   postkitDiffSlots,
@@ -85,7 +101,6 @@ import {
   postkitFileCardSlots,
   postkitFileTreeRecipe,
   postkitFileTreeSlots,
-  postkitTerminalRecipe,
   postkitTerminalSlots,
   postkitStandaloneCodeBlockRecipe,
   postkitStandaloneCodeGroupRecipe,
@@ -154,111 +169,6 @@ export const postkitRecipeKeys = Object.freeze({
 
 export type PostkitRecipeKey =
   (typeof postkitRecipeKeys)[keyof typeof postkitRecipeKeys];
-
-export type PostkitFontFamily = string | readonly string[];
-
-export interface PostkitTypography {
-  /**
-   * The default font for prose, descriptions, controls, and component copy.
-   * This overrides Chakra's `fonts.body` token.
-   */
-  readonly body?: PostkitFontFamily;
-  /**
-   * The font for prose headings and heading-like rich-component slots.
-   * This overrides Chakra's `fonts.heading` token.
-   */
-  readonly heading?: PostkitFontFamily;
-  /**
-   * The font for inline code, code blocks, terminals, diffs, and file trees.
-   * This overrides Chakra's `fonts.mono` token.
-   */
-  readonly mono?: PostkitFontFamily;
-}
-
-type DeepPartial<T> = T extends (...args: never[]) => unknown
-  ? T
-  : T extends readonly unknown[]
-    ? T
-    : T extends object
-      ? { readonly [Key in keyof T]?: DeepPartial<T[Key]> }
-      : T;
-
-type PostkitRecipeSlot<Recipe extends SlotRecipeConfig> =
-  Recipe['slots'][number] & string;
-type PostkitRecipeSlotStyles<Recipe extends SlotRecipeConfig> = Partial<
-  Readonly<Record<PostkitRecipeSlot<Recipe>, SystemStyleObject>>
->;
-type PostkitRecipeVariantOverrides<Recipe extends SlotRecipeConfig> = {
-  readonly [Variant in keyof NonNullable<Recipe['variants']>]?: {
-    readonly [
-      Value in keyof NonNullable<Recipe['variants']>[Variant]
-    ]?: PostkitRecipeSlotStyles<Recipe>;
-  };
-};
-
-type PostkitRecipeOverride<Recipe extends SlotRecipeConfig> = DeepPartial<
-  Omit<Recipe, 'base' | 'slots' | 'variants'>
-> & {
-  readonly base?: PostkitRecipeSlotStyles<Recipe>;
-  readonly variants?: PostkitRecipeVariantOverrides<Recipe>;
-};
-
-export interface PostkitThemeOverrides {
-  /**
-   * Optional font stacks for Postkit's three independent typography roles.
-   * A host can instead configure the matching Chakra font tokens directly.
-   */
-  readonly typography?: PostkitTypography;
-  readonly audienceBoundary?: PostkitRecipeOverride<
-    typeof postkitAudienceBoundaryRecipe
-  >;
-  readonly appearsOn?: PostkitRecipeOverride<typeof postkitAppearsOnRecipe>;
-  readonly audio?: PostkitRecipeOverride<typeof postkitAudioRecipe>;
-  readonly authorCard?: PostkitRecipeOverride<typeof postkitAuthorCardRecipe>;
-  readonly callout?: PostkitRecipeOverride<typeof postkitCalloutRecipe>;
-  readonly callToAction?: PostkitRecipeOverride<
-    typeof postkitCallToActionRecipe
-  >;
-  readonly carousel?: PostkitRecipeOverride<typeof postkitCarouselRecipe>;
-  readonly cardGrid?: PostkitRecipeOverride<typeof postkitCardGridRecipe>;
-  readonly chart?: PostkitRecipeOverride<typeof postkitChartRecipe>;
-  readonly codeBlock?: PostkitRecipeOverride<typeof postkitCodeBlockRecipe>;
-  readonly codeGroup?: PostkitRecipeOverride<typeof postkitCodeGroupRecipe>;
-  readonly comparison?: PostkitRecipeOverride<typeof postkitComparisonRecipe>;
-  readonly diff?: PostkitRecipeOverride<typeof postkitDiffRecipe>;
-  readonly figure?: PostkitRecipeOverride<typeof postkitFigureRecipe>;
-  readonly fileCard?: PostkitRecipeOverride<typeof postkitFileCardRecipe>;
-  readonly fileTree?: PostkitRecipeOverride<typeof postkitFileTreeRecipe>;
-  readonly disclosure?: PostkitRecipeOverride<typeof postkitDisclosureRecipe>;
-  readonly gallery?: PostkitRecipeOverride<typeof postkitGalleryRecipe>;
-  readonly keyTakeaway?: PostkitRecipeOverride<typeof postkitKeyTakeawayRecipe>;
-  readonly linkPreview?: PostkitRecipeOverride<typeof postkitLinkPreviewRecipe>;
-  readonly newsletterSignup?: PostkitRecipeOverride<
-    typeof postkitNewsletterSignupRecipe
-  >;
-  readonly poll?: PostkitRecipeOverride<typeof postkitPollRecipe>;
-  readonly productCard?: PostkitRecipeOverride<typeof postkitProductCardRecipe>;
-  readonly prose?: PostkitRecipeOverride<typeof postkitProseRecipe>;
-  readonly pullQuote?: PostkitRecipeOverride<typeof postkitPullQuoteRecipe>;
-  readonly relatedContent?: PostkitRecipeOverride<
-    typeof postkitRelatedContentRecipe
-  >;
-  readonly shareActions?: PostkitRecipeOverride<
-    typeof postkitShareActionsRecipe
-  >;
-  readonly seriesNavigation?: PostkitRecipeOverride<
-    typeof postkitSeriesNavigationRecipe
-  >;
-  readonly socialPost?: PostkitRecipeOverride<typeof postkitSocialPostRecipe>;
-  readonly steps?: PostkitRecipeOverride<typeof postkitStepsRecipe>;
-  readonly sponsorBlock?: PostkitRecipeOverride<
-    typeof postkitSponsorBlockRecipe
-  >;
-  readonly stat?: PostkitRecipeOverride<typeof postkitStatRecipe>;
-  readonly tabs?: PostkitRecipeOverride<typeof postkitTabsRecipe>;
-  readonly terminal?: PostkitRecipeOverride<typeof postkitTerminalRecipe>;
-  readonly video?: PostkitRecipeOverride<typeof postkitVideoRecipe>;
-}
 
 export interface PostkitSystemOptions {
   /** The site's Chakra system. Its configuration is layered over the preset. */
@@ -338,7 +248,7 @@ export const postkitDefaultTheme = defineConfig({
 
 function overrideRecipe(
   slots: readonly string[],
-  override: PostkitRecipeOverride<SlotRecipeConfig>,
+  override: object,
 ): SlotRecipeConfig {
   return { slots, ...override } as SlotRecipeConfig;
 }
