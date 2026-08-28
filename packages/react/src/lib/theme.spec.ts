@@ -58,6 +58,9 @@ describe('Postkit theme', () => {
       theme: createPostkitTheme({
         prose: {
           base: {
+            root: {
+              '--postkit-prose-flow-space': 'var(--chakra-spacing-5)',
+            },
             h1: { color: 'purple.500' },
             h2: { letterSpacing: 'wide' },
             code: { borderWidth: '1px' },
@@ -67,12 +70,18 @@ describe('Postkit theme', () => {
     });
     const recipe = system.getSlotRecipe(postkitRecipeKeys.prose) as {
       readonly base?: {
+        readonly root?: {
+          readonly '--postkit-prose-flow-space'?: string;
+        };
         readonly h1?: { readonly color?: string };
         readonly h2?: { readonly letterSpacing?: string };
         readonly code?: { readonly borderWidth?: string };
       };
     };
 
+    expect(recipe.base?.root?.['--postkit-prose-flow-space']).toBe(
+      'var(--chakra-spacing-5)',
+    );
     expect(recipe.base?.h1?.color).toBe('purple.500');
     expect(recipe.base?.h2?.letterSpacing).toBe('wide');
     expect(recipe.base?.code?.borderWidth).toBe('1px');

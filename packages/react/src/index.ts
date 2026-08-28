@@ -310,6 +310,7 @@ export {
 } from './lib/recipes/newsletter-signup.recipe.js';
 export {
   postkitProseRecipe,
+  postkitProseRhythm,
   postkitProseSlots,
   type PostkitProseSlot,
 } from './lib/recipes/prose.recipe.js';

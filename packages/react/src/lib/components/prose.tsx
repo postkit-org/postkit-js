@@ -13,6 +13,7 @@ import {
   type ChakraComponent,
   type HeadingProps,
   type HTMLChakraProps,
+  type UnstyledProp,
 } from '@chakra-ui/react';
 import {
   createElement,
@@ -25,6 +26,7 @@ import {
 import { CodeBlock } from './technical-content.js';
 import {
   postkitProseRecipe,
+  postkitProseRhythm,
   type PostkitProseSlot,
 } from '../recipes/prose.recipe.js';
 import {
@@ -121,9 +123,9 @@ function createPostkitProseHeading<Element extends `h${1 | 2 | 3 | 4 | 5 | 6}`>(
   return PostkitProseHeading as ChakraComponent<Element>;
 }
 
-export type ProseProps = HTMLChakraProps<'div'>;
+export type ProseProps = HTMLChakraProps<'div'> & UnstyledProp;
 
-export function Prose({ className, css, ...props }: ProseProps) {
+export function Prose({ className, css, unstyled, ...props }: ProseProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.prose,
     postkitProseRecipe,
@@ -136,7 +138,7 @@ export function Prose({ className, css, ...props }: ProseProps) {
       data-postkit-prose=""
       {...props}
       className={postkitSlotClassName(recipe.classNameMap.root, className)}
-      css={[styles.root, css]}
+      css={[unstyled ? undefined : postkitProseRhythm, styles.root, css]}
     />
   );
 }

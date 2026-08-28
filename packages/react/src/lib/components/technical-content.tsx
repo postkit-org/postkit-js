@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Button,
   CodeBlock as ChakraCodeBlock,
   Heading,
   Link,
@@ -160,14 +161,20 @@ export function CodeBlock({
             ) : null}
             {enabled(copy, true) ? (
               <ChakraCodeBlock.CopyTrigger
-                type="button"
-                aria-label="Copy code"
+                asChild
                 className={recipe.classNameMap.button}
                 css={[styles.button, slotStyles?.button]}
               >
-                <ChakraCodeBlock.CopyIndicator copied="Copied">
-                  Copy
-                </ChakraCodeBlock.CopyIndicator>
+                <Button
+                  type="button"
+                  aria-label="Copy code"
+                  size={size === 'lg' ? 'sm' : size === 'sm' ? '2xs' : 'xs'}
+                  variant="ghost"
+                >
+                  <ChakraCodeBlock.CopyIndicator copied="Copied">
+                    Copy
+                  </ChakraCodeBlock.CopyIndicator>
+                </Button>
               </ChakraCodeBlock.CopyTrigger>
             ) : null}
           </ChakraCodeBlock.Control>

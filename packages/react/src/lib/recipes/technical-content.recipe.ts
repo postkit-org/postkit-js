@@ -42,15 +42,7 @@ export const postkitCodeBlockRecipe = defineSlotRecipe({
       textTransform: 'uppercase',
     },
     actions: { display: 'flex', gap: '1' },
-    button: {
-      borderRadius: 'md',
-      color: 'gray.300',
-      cursor: 'pointer',
-      fontSize: 'xs',
-      paddingBlock: '1',
-      paddingInline: '2',
-      _hover: { background: 'whiteAlpha.200', color: 'white' },
-    },
+    button: {},
     scroller: { maxWidth: '100%', overflow: 'auto' },
     code: {
       display: 'block',

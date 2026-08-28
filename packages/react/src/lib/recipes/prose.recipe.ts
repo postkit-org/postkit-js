@@ -1,4 +1,4 @@
-import { defineSlotRecipe } from '@chakra-ui/react';
+import { defineSlotRecipe, type SystemStyleObject } from '@chakra-ui/react';
 
 export const postkitProseSlots = [
   'root',
@@ -46,6 +46,48 @@ export const postkitProseSlots = [
 
 export type PostkitProseSlot = (typeof postkitProseSlots)[number];
 
+/**
+ * Contextual spacing applied by the Prose wrapper before theme overrides.
+ * Consumers can tune the custom properties or replace individual selectors
+ * through the prose root recipe or the Prose `css` prop.
+ */
+export const postkitProseRhythm = {
+  '--postkit-prose-flow-space': 'var(--chakra-spacing-4)',
+  '--postkit-prose-block-space': 'var(--chakra-spacing-6)',
+  '--postkit-prose-section-space': 'var(--chakra-spacing-8)',
+  '--postkit-prose-heading-space': 'var(--chakra-spacing-10)',
+  '--postkit-prose-title-space': 'var(--chakra-spacing-12)',
+  minWidth: '0',
+  '& > :where(*)': {
+    marginBlockStart: '0',
+    marginBlockEnd: '0',
+  },
+  '& > :where(* + *)': {
+    marginBlockStart: 'var(--postkit-prose-flow-space)',
+  },
+  '& > :where(* + [data-postkit-prose-element="h1"])': {
+    marginBlockStart: 'var(--postkit-prose-title-space)',
+  },
+  '& > :where(* + [data-postkit-prose-element="h2"])': {
+    marginBlockStart: 'var(--postkit-prose-heading-space)',
+  },
+  '& > :where(* + [data-postkit-prose-element="h3"], * + [data-postkit-prose-element="h4"], * + [data-postkit-prose-element="h5"], * + [data-postkit-prose-element="h6"])':
+    {
+      marginBlockStart: 'var(--postkit-prose-section-space)',
+    },
+  '& > :where(* + [data-postkit-prose-element="blockquote"], * + [data-postkit-prose-element="pre"], * + [data-postkit-prose-element="table"], * + [data-postkit-prose-element="details"], * + [data-postkit-component])':
+    {
+      marginBlockStart: 'var(--postkit-prose-block-space)',
+    },
+  '& > :where(* + [data-postkit-prose-element="figure"], * + [data-postkit-prose-element="section"])':
+    {
+      marginBlockStart: 'var(--postkit-prose-section-space)',
+    },
+  '& > :where(* + [data-postkit-prose-element="hr"])': {
+    marginBlockStart: 'var(--postkit-prose-heading-space)',
+  },
+} satisfies SystemStyleObject;
+
 export const postkitProseRecipe = defineSlotRecipe({
   className: 'postkit-prose',
   slots: postkitProseSlots,
@@ -54,35 +96,14 @@ export const postkitProseRecipe = defineSlotRecipe({
       color: 'fg',
       colorPalette: 'blue',
       lineHeight: '1.75',
-      minWidth: '0',
     },
-    h1: {
-      marginBlockStart: '12',
-      marginBlockEnd: '5',
-    },
-    h2: {
-      marginBlockStart: '10',
-      marginBlockEnd: '4',
-    },
-    h3: {
-      marginBlockStart: '8',
-      marginBlockEnd: '3',
-    },
-    h4: {
-      marginBlockStart: '7',
-      marginBlockEnd: '3',
-    },
-    h5: {
-      marginBlockStart: '6',
-      marginBlockEnd: '2',
-    },
-    h6: {
-      marginBlockStart: '6',
-      marginBlockEnd: '2',
-    },
-    p: {
-      marginBlock: '4',
-    },
+    h1: {},
+    h2: {},
+    h3: {},
+    h4: {},
+    h5: {},
+    h6: {},
+    p: {},
     a: {
       color: 'colorPalette.fg',
       fontWeight: 'medium',
@@ -98,17 +119,14 @@ export const postkitProseRecipe = defineSlotRecipe({
       borderInlineStartWidth: '4px',
       color: 'fg.muted',
       fontStyle: 'italic',
-      marginBlock: '6',
       paddingInlineStart: '5',
     },
     ul: {
       listStyleType: 'disc',
-      marginBlock: '4',
       paddingInlineStart: '6',
     },
     ol: {
       listStyleType: 'decimal',
-      marginBlock: '4',
       paddingInlineStart: '6',
     },
     li: {
@@ -117,7 +135,6 @@ export const postkitProseRecipe = defineSlotRecipe({
     },
     hr: {
       borderColor: 'border',
-      marginBlock: '10',
     },
     pre: {
       background: 'bg.muted',
@@ -125,7 +142,6 @@ export const postkitProseRecipe = defineSlotRecipe({
       fontFamily: 'mono',
       fontSize: 'sm',
       lineHeight: '1.7',
-      marginBlock: '6',
       overflowX: 'auto',
       padding: '5',
       whiteSpace: 'pre',
@@ -158,7 +174,6 @@ export const postkitProseRecipe = defineSlotRecipe({
     table: {
       borderCollapse: 'collapse',
       display: 'block',
-      marginBlock: '6',
       maxWidth: '100%',
       overflowX: 'auto',
       width: 'max-content',
@@ -189,12 +204,9 @@ export const postkitProseRecipe = defineSlotRecipe({
       borderRadius: 'md',
       display: 'block',
       height: 'auto',
-      marginBlock: '6',
       maxWidth: '100%',
     },
-    figure: {
-      marginBlock: '8',
-    },
+    figure: {},
     figcaption: {
       color: 'fg.muted',
       fontSize: 'sm',
@@ -211,12 +223,8 @@ export const postkitProseRecipe = defineSlotRecipe({
       lineHeight: '0',
       verticalAlign: 'sub',
     },
-    section: {
-      marginBlock: '8',
-    },
-    dl: {
-      marginBlock: '6',
-    },
+    section: {},
+    dl: {},
     dt: {
       fontWeight: 'semibold',
       marginBlockStart: '4',
@@ -250,7 +258,6 @@ export const postkitProseRecipe = defineSlotRecipe({
       borderColor: 'border',
       borderRadius: 'md',
       borderWidth: '1px',
-      marginBlock: '6',
       padding: '4',
     },
     summary: {

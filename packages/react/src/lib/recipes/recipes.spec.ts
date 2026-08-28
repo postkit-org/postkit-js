@@ -21,7 +21,11 @@ import {
   postkitNewsletterSignupRecipe,
   postkitNewsletterSignupSlots,
 } from './newsletter-signup.recipe.js';
-import { postkitProseRecipe, postkitProseSlots } from './prose.recipe.js';
+import {
+  postkitProseRecipe,
+  postkitProseRhythm,
+  postkitProseSlots,
+} from './prose.recipe.js';
 import {
   postkitShareActionsRecipe,
   postkitShareActionsSlots,
@@ -91,6 +95,15 @@ describe('Postkit slot recipes', () => {
       postkitProseRecipe.slots.length,
     );
     expect(postkitProseRecipe.className).toBe('postkit-prose');
+    expect(postkitProseRecipe.base?.h2?.marginBlockStart).toBeUndefined();
+    expect(postkitProseRhythm['--postkit-prose-flow-space']).toBe(
+      'var(--chakra-spacing-4)',
+    );
+    expect(
+      postkitProseRhythm['& > :where(* + [data-postkit-prose-element="h2"])'],
+    ).toEqual({
+      marginBlockStart: 'var(--postkit-prose-heading-space)',
+    });
   });
 });
 import {
