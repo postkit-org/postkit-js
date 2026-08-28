@@ -131,6 +131,18 @@ Enable PostKit's Remark preset in the Markdown pipeline. Directive props are
 literal values rather than arbitrary JavaScript, which keeps the format
 portable and suitable for untrusted authoring environments.
 
+```ts
+import { createPostkitRemarkPlugins } from '@postkit/react/remark';
+
+export const markdownOptions = {
+  remarkPlugins: createPostkitRemarkPlugins(),
+};
+```
+
+The focused `@postkit/react/remark` entry point keeps React components and
+Chakra theme declarations out of build-only Markdown tooling. Existing root
+imports remain supported.
+
 ## Choose one syntax per file
 
 MDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and

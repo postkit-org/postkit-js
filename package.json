@@ -37,6 +37,7 @@
     "test": "nx run-many -t test --projects=tag:npm:public",
     "coverage": "nx run-many -t test --projects=tag:npm:public --coverage",
     "typecheck": "nx run-many -t typecheck --projects=tag:npm:public",
+    "types:performance:check": "npm exec nx build @postkit/react && node tools/check-react-theme-types.mjs",
     "check": "nx run-many -t build lint test typecheck --projects=tag:npm:public",
     "catalog:generate": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs",
     "catalog:check": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs --check",

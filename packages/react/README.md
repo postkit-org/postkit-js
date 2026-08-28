@@ -35,6 +35,12 @@ The package is ESM-only and includes TypeScript declarations.
 - `postkitDeclarationManifest` for editor integrations
 - `postkitComponentCatalog` and `component-manifest.json` for component
   discovery
+
+Shared theme libraries should import from `@postkit/react/theme`, and Markdown
+build pipelines can import from `@postkit/react/remark`. These focused entry
+points avoid loading the root component declaration graph during TypeScript
+checking. The root exports remain available for compatibility.
+
 - Slot recipes, recipe keys, and typed style overrides
 
 ## Quick start
@@ -62,7 +68,8 @@ explicit overrides.
 For a standalone application, opt into Postkit's visual preset:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider } from '@postkit/react';
+import { postkitDefaultTheme } from '@postkit/react/theme';
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
@@ -85,13 +92,12 @@ can narrow those defaults within its Postkit context.
 
 ```tsx
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { Carousel, PostkitProvider } from '@postkit/react';
 import {
   createPostkitSystem,
   createPostkitTheme,
-  Carousel,
-  PostkitProvider,
   postkitDefaultTheme,
-} from '@postkit/react';
+} from '@postkit/react/theme';
 
 const baseSiteSystem = createSystem(defaultConfig, {
   theme: {
@@ -725,7 +731,7 @@ The base preset includes:
 - Postkit directive-to-component transformation.
 
 ```ts
-import { createPostkitRemarkPlugins } from '@postkit/react';
+import { createPostkitRemarkPlugins } from '@postkit/react/remark';
 
 export const markdownOptions = {
   remarkPlugins: createPostkitRemarkPlugins(),
@@ -740,7 +746,7 @@ import remarkCustomHeading from './remark-custom-heading';
 import {
   createPostkitRemarkPreset,
   type PostkitRemarkPresetOptions,
-} from '@postkit/react';
+} from '@postkit/react/remark';
 
 const options: PostkitRemarkPresetOptions = {
   before: [remarkCustomHeading],
@@ -832,15 +838,17 @@ constants are exported for type-safe composition:
 
 ```ts
 import {
-  createPostkitTheme,
   postkitAudioRecipe,
   postkitAudioSlots,
-  postkitDefaultTheme,
   postkitProseRhythm,
-  postkitRecipeKeys,
   type PostkitAudioSlot,
   type PostkitSlotStyles,
 } from '@postkit/react';
+import {
+  createPostkitTheme,
+  postkitDefaultTheme,
+  postkitRecipeKeys,
+} from '@postkit/react/theme';
 ```
 
 Stable classes such as `.postkit-audio__root`,
