@@ -1,7 +1,7 @@
 {
   "id": "postkit.component-catalog",
   "version": 1,
-  "declarationVersion": 6,
+  "declarationVersion": 7,
   "components": {
     "Aside": {
       "name": "Aside",
@@ -398,6 +398,11 @@
           "kind": "string",
           "description": "The syntax-language identifier."
         },
+        "colorScheme": {
+          "kind": "enum",
+          "values": ["light", "dark"],
+          "description": "The highlighting and semantic-token color scheme."
+        },
         "filename": {
           "kind": "string",
           "description": "The displayed filename."
@@ -432,6 +437,8 @@
         "size",
         "variant",
         "language",
+        "color",
+        "scheme",
         "filename",
         "highlight",
         "lines",

@@ -38,7 +38,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
-import { usePostkit } from '../provider.js';
+import { usePostkit, type PostkitCodeBlockConfig } from '../provider.js';
 import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
@@ -103,6 +103,7 @@ export type CodeBlockProps = {
   readonly copiedIcon?: ReactNode;
   readonly copyAriaLabel?: string;
   readonly copyFeedback?: 'inline' | 'tooltip';
+  readonly colorScheme?: PostkitCodeBlockConfig['colorScheme'];
   readonly wrap?: boolean | string;
   readonly maxHeight?: number | string;
 } & SharedRootProps<PostkitCodeBlockSlot> &
@@ -115,14 +116,15 @@ export function CodeBlock({
   language,
   filename,
   highlightLines: highlightsValue,
-  lineNumbers = true,
-  copy = true,
+  lineNumbers,
+  copy,
   copyLabel,
   copiedLabel,
   copyIcon,
   copiedIcon,
   copyAriaLabel,
   copyFeedback,
+  colorScheme,
   wrap,
   maxHeight,
   rootProps,
@@ -138,20 +140,31 @@ export function CodeBlock({
     postkitRecipeKeys.codeBlock,
     postkitCodeBlockRecipe,
   );
+  const resolvedSize = configuredValue(size, codeBlockConfig.size);
+  const resolvedVariant = configuredValue(variant, codeBlockConfig.variant);
+  const resolvedColorScheme = configuredValue(
+    colorScheme,
+    codeBlockConfig.colorScheme,
+  );
   const styles: PostkitSlotStyles<PostkitCodeBlockSlot> = unstyled
     ? {}
-    : recipe({ size, variant });
+    : recipe({ size: resolvedSize, variant: resolvedVariant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const codeBlockRootProps = restRootProps as Omit<
     ChakraCodeBlock.RootProps,
     'children' | 'code' | 'language' | 'meta' | 'size' | 'unstyled'
   >;
-  const shouldNumber = enabled(lineNumbers, true);
-  const shouldWrap = enabled(wrap);
+  const shouldNumber = enabled(
+    configuredValue(lineNumbers, codeBlockConfig.lineNumbers),
+  );
+  const shouldWrap = enabled(configuredValue(wrap, codeBlockConfig.wrap));
+  const shouldCopy =
+    source.trim().length > 0 &&
+    enabled(configuredValue(copy, codeBlockConfig.copy), true);
   const resolvedCopyLabel = configuredValue(
     copyLabel,
     codeBlockConfig.copyLabel,
-    'Copy',
+    'Copy code',
   );
   const resolvedCopiedLabel = configuredValue(
     copiedLabel,
@@ -185,35 +198,50 @@ export function CodeBlock({
         showLineNumbers: shouldNumber,
         wordWrap: shouldWrap,
       }}
-      size={size}
+      {...(resolvedColorScheme
+        ? { defaultColorScheme: resolvedColorScheme }
+        : {})}
+      size={resolvedSize}
       unstyled={unstyled}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {filename || language || enabled(copy, true) ? (
+      {filename || language || shouldCopy ? (
         <ChakraCodeBlock.Header
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          <ChakraCodeBlock.Title
-            className={recipe.classNameMap.filename}
-            css={[styles.filename, slotStyles?.filename]}
-          >
-            {filename}
-          </ChakraCodeBlock.Title>
-          <ChakraCodeBlock.Control
-            className={recipe.classNameMap.actions}
-            css={[styles.actions, slotStyles?.actions]}
-          >
-            {language ? (
-              <Text
-                className={recipe.classNameMap.language}
-                css={[styles.language, slotStyles?.language]}
-              >
-                {language}
-              </Text>
-            ) : null}
-            {enabled(copy, true) ? (
+          {filename || language ? (
+            <ChakraCodeBlock.Title>
+              {filename ? (
+                <Box
+                  as="span"
+                  className={recipe.classNameMap.filename}
+                  css={[styles.filename, slotStyles?.filename]}
+                >
+                  {filename}
+                </Box>
+              ) : null}
+              {language ? (
+                <Text
+                  as="span"
+                  className={recipe.classNameMap.language}
+                  css={[styles.language, slotStyles?.language]}
+                >
+                  {language}
+                </Text>
+              ) : null}
+            </ChakraCodeBlock.Title>
+          ) : null}
+          {shouldCopy ? (
+            <ChakraCodeBlock.Control
+              className={recipe.classNameMap.actions}
+              css={[
+                { marginInlineStart: 'auto' },
+                styles.actions,
+                slotStyles?.actions,
+              ]}
+            >
               <ChakraCodeBlock.Context>
                 {({ clipboard }) => {
                   const trigger = (
@@ -226,7 +254,11 @@ export function CodeBlock({
                         type="button"
                         aria-label={resolvedCopyAriaLabel}
                         size={
-                          size === 'lg' ? 'sm' : size === 'sm' ? '2xs' : 'xs'
+                          resolvedSize === 'lg'
+                            ? 'sm'
+                            : resolvedSize === 'sm'
+                              ? '2xs'
+                              : 'xs'
                         }
                         variant="ghost"
                       >
@@ -289,8 +321,8 @@ export function CodeBlock({
                   );
                 }}
               </ChakraCodeBlock.Context>
-            ) : null}
-          </ChakraCodeBlock.Control>
+            </ChakraCodeBlock.Control>
+          ) : null}
         </ChakraCodeBlock.Header>
       ) : null}
       <ChakraCodeBlock.Content

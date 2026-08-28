@@ -244,6 +244,104 @@ describe('PostkitProvider', () => {
     expect(trigger.textContent).toBe('Duplicate');
   });
 
+  it('resolves code-block behavior from component, provider, then neutral defaults', () => {
+    const providerRender = render(
+      <PostkitProvider
+        codeBlock={{
+          colorScheme: 'light',
+          copy: false,
+          lineNumbers: true,
+          size: 'sm',
+          variant: 'subtle',
+          wrap: true,
+        }}
+      >
+        <CodeBlock code="const answer = 42;" />
+      </PostkitProvider>,
+    );
+
+    const providerRoot = providerRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const providerCode = providerRender.container.querySelector('code');
+    expect(providerRoot?.hasAttribute('data-has-line-numbers')).toBe(true);
+    expect(providerRoot?.classList.contains('light')).toBe(true);
+    expect(providerCode?.hasAttribute('data-word-wrap')).toBe(true);
+    expect(providerRender.queryByRole('button')).toBeNull();
+    providerRender.unmount();
+
+    const componentRender = render(
+      <PostkitProvider
+        codeBlock={{
+          colorScheme: 'light',
+          copy: false,
+          lineNumbers: false,
+          wrap: false,
+        }}
+      >
+        <CodeBlock
+          code="const answer = 42;"
+          colorScheme="dark"
+          copy
+          lineNumbers
+          wrap
+        />
+      </PostkitProvider>,
+    );
+
+    const componentRoot = componentRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const componentCode = componentRender.container.querySelector('code');
+    expect(componentRoot?.hasAttribute('data-has-line-numbers')).toBe(true);
+    expect(componentRoot?.classList.contains('dark')).toBe(true);
+    expect(componentCode?.hasAttribute('data-word-wrap')).toBe(true);
+    expect(
+      componentRender.getByRole('button', { name: 'Copy code' }).textContent,
+    ).toBe('Copy code');
+    componentRender.unmount();
+
+    const defaultRender = render(
+      <PostkitProvider>
+        <CodeBlock code="const answer = 42;" />
+      </PostkitProvider>,
+    );
+    const defaultRoot = defaultRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const defaultCode = defaultRender.container.querySelector('code');
+    expect(defaultRoot?.hasAttribute('data-has-line-numbers')).toBe(false);
+    expect(defaultCode?.hasAttribute('data-word-wrap')).toBe(false);
+    expect(
+      defaultRender.getByRole('button', { name: 'Copy code' }).textContent,
+    ).toBe('Copy code');
+  });
+
+  it('omits copy controls for empty code and keeps metadata left of controls', () => {
+    const empty = render(
+      <PostkitProvider>
+        <CodeBlock code="   " />
+      </PostkitProvider>,
+    );
+    expect(empty.queryByRole('button')).toBeNull();
+    expect(empty.container.querySelector('header')).toBeNull();
+    empty.unmount();
+
+    const populated = render(
+      <PostkitProvider>
+        <CodeBlock
+          code="const answer = 42;"
+          filename="answer.ts"
+          language="typescript"
+        />
+      </PostkitProvider>,
+    );
+    const header = populated.container.querySelector('header');
+    expect(header?.children).toHaveLength(2);
+    expect(header?.firstElementChild?.textContent).toBe('answer.tstypescript');
+    expect(header?.lastElementChild?.textContent).toBe('Copy code');
+  });
+
   it('resolves missing LinkPreview metadata with a custom callback', async () => {
     const callback = vi.fn(async () => result('site-callback'));
 

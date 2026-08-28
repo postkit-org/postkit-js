@@ -41,7 +41,24 @@ export interface PostkitContextValue {
   readonly codeBlock: PostkitCodeBlockConfig;
 }
 
+export type PostkitCodeBlockSize = 'sm' | 'md' | 'lg';
+export type PostkitCodeBlockVariant = 'outline' | 'subtle' | 'plain';
+
 export interface PostkitCodeBlockConfig {
+  /** Whether non-empty code blocks show a copy action. @default true */
+  readonly copy?: boolean;
+  /** Whether code blocks show line numbers. @default false */
+  readonly lineNumbers?: boolean;
+  /** Whether long code lines wrap instead of scrolling. @default false */
+  readonly wrap?: boolean;
+  /** Chakra CodeBlock size applied across Postkit-rendered code. */
+  readonly size?: PostkitCodeBlockSize;
+  /** Postkit recipe variant applied across Postkit-rendered code. */
+  readonly variant?: PostkitCodeBlockVariant;
+  /** Highlighting and semantic-token color scheme. Chakra defaults to dark. */
+  readonly colorScheme?: NonNullable<
+    CodeBlock.RootProps['defaultColorScheme']
+  >;
   /** Visible content shown before the source is copied. */
   readonly copyLabel?: ReactNode;
   /** Copied-state content shown inline or in the copied tooltip. */
@@ -81,8 +98,8 @@ export interface PostkitProviderProps {
    */
   readonly codeBlockAdapter?: CodeBlockAdapter;
   /**
-   * Provider-level copy-control content used by every Postkit CodeBlock.
-   * Individual CodeBlock props take precedence.
+   * Provider-level behavior and copy-control defaults used by every Postkit
+   * CodeBlock. Individual CodeBlock props take precedence.
    */
   readonly codeBlock?: PostkitCodeBlockConfig;
   /**
