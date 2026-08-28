@@ -52,6 +52,37 @@ describe('Postkit theme', () => {
     });
   });
 
+  it('accepts host Chakra values without narrowing them to recipe literals', () => {
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
+        codeBlock: {
+          variants: {
+            variant: {
+              outline: {
+                root: { borderColor: 'whiteAlpha.200' },
+              },
+            },
+          },
+        },
+      }),
+    });
+    const recipe = system.getSlotRecipe(postkitRecipeKeys.codeBlock) as {
+      readonly variants?: {
+        readonly variant?: {
+          readonly outline?: {
+            readonly root?: { readonly borderColor?: string };
+          };
+        };
+      };
+    };
+
+    expect(recipe.variants?.variant?.outline?.root?.borderColor).toBe(
+      'whiteAlpha.200',
+    );
+  });
+
   it('exposes typed prose slots for Markdown typography', () => {
     const system = createPostkitSystem({
       system: defaultSystem,

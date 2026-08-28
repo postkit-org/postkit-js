@@ -183,9 +183,25 @@ type DeepPartial<T> = T extends (...args: never[]) => unknown
       ? { readonly [Key in keyof T]?: DeepPartial<T[Key]> }
       : T;
 
-type PostkitRecipeOverride<Recipe extends SlotRecipeConfig> = DeepPartial<
-  Omit<Recipe, 'slots'>
+type PostkitRecipeSlot<Recipe extends SlotRecipeConfig> =
+  Recipe['slots'][number] & string;
+type PostkitRecipeSlotStyles<Recipe extends SlotRecipeConfig> = Partial<
+  Readonly<Record<PostkitRecipeSlot<Recipe>, SystemStyleObject>>
 >;
+type PostkitRecipeVariantOverrides<Recipe extends SlotRecipeConfig> = {
+  readonly [Variant in keyof NonNullable<Recipe['variants']>]?: {
+    readonly [
+      Value in keyof NonNullable<Recipe['variants']>[Variant]
+    ]?: PostkitRecipeSlotStyles<Recipe>;
+  };
+};
+
+type PostkitRecipeOverride<Recipe extends SlotRecipeConfig> = DeepPartial<
+  Omit<Recipe, 'base' | 'slots' | 'variants'>
+> & {
+  readonly base?: PostkitRecipeSlotStyles<Recipe>;
+  readonly variants?: PostkitRecipeVariantOverrides<Recipe>;
+};
 
 export interface PostkitThemeOverrides {
   /**
