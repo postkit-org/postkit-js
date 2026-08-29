@@ -22,6 +22,7 @@ import {
   postkitNewsletterSignupSlots,
 } from './newsletter-signup.recipe.js';
 import {
+  postkitProseListRhythm,
   postkitProseRecipe,
   postkitProseRhythm,
   postkitProseSlots,
@@ -152,6 +153,14 @@ describe('Postkit slot recipes', () => {
     expect(postkitProseRhythm['--postkit-prose-flow-space']).toBe(
       'var(--chakra-spacing-4)',
     );
+    expect(postkitProseListRhythm.ul.paddingInlineStart).toContain(
+      '--postkit-prose-list-indent',
+    );
+    expect(postkitProseListRhythm.li.marginBlock).toContain(
+      '--postkit-prose-list-item-space',
+    );
+    expect(postkitProseRecipe.base?.ul).toEqual({});
+    expect(postkitProseRecipe.base?.ol).toEqual({});
     expect(
       postkitProseRhythm['& > :where(* + [data-postkit-prose-element="h2"])'],
     ).toEqual({

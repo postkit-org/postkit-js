@@ -248,7 +248,7 @@ By default the map supplies Chakra-backed components for:
 
 - Headings `h1` through `h6`, paragraphs, links, blockquotes, strong,
   emphasis, strikethrough, horizontal rules, and line breaks.
-- Ordered, unordered, and task lists.
+- Ordered, unordered, and task lists routed through Chakra's List recipe.
 - Inline code, code blocks, keyboard input, highlights, and small text.
 - GFM tables and their sections, rows, headers, and cells.
 - Images, figures, captions, footnote elements, definition lists, details,
@@ -263,7 +263,7 @@ root automatically.
 
 The wrapper owns external content rhythm rather than placing margins on Chakra
 headings and other individual primitives. It applies overridable spacing tokens
-for normal flow, blocks, sections, headings, and titles:
+for normal flow, blocks, sections, headings, titles, and internal list rhythm:
 
 ```tsx
 const documentationTheme = createPostkitTheme({
@@ -275,6 +275,9 @@ const documentationTheme = createPostkitTheme({
         '--postkit-prose-section-space': 'spacing.10',
         '--postkit-prose-heading-space': 'spacing.12',
         '--postkit-prose-title-space': 'spacing.16',
+        '--postkit-prose-list-indent': 'spacing.8',
+        '--postkit-prose-list-item-space': 'spacing.2',
+        '--postkit-prose-list-item-indent': 'spacing.1',
       },
     },
   },
@@ -283,8 +286,9 @@ const documentationTheme = createPostkitTheme({
 
 These structural defaults apply in host-native and preset modes. Pass
 `unstyled` directly to `Prose` when even the wrapper rhythm should be removed.
-The exported `postkitProseRhythm` object is available for lower-level
-composition.
+Pass `unstyled` to a mapped `ul` or `ol` for a bare list subtree. The exported
+`postkitProseRhythm` and `postkitProseListRhythm` objects are available for
+lower-level composition.
 
 The root emits `data-postkit-component="Prose"`, semantic elements emit
 `data-postkit-prose-element`, and rich components emit their own

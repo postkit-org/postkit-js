@@ -313,6 +313,7 @@ export {
   type PostkitNewsletterSignupSlot,
 } from './lib/recipes/newsletter-signup.recipe.js';
 export {
+  postkitProseListRhythm,
   postkitProseRecipe,
   postkitProseRhythm,
   postkitProseSlots,

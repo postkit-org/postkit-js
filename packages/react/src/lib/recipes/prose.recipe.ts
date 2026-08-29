@@ -57,6 +57,9 @@ export const postkitProseRhythm = {
   '--postkit-prose-section-space': 'var(--chakra-spacing-8)',
   '--postkit-prose-heading-space': 'var(--chakra-spacing-10)',
   '--postkit-prose-title-space': 'var(--chakra-spacing-12)',
+  '--postkit-prose-list-indent': 'var(--chakra-spacing-6)',
+  '--postkit-prose-list-item-space': 'var(--chakra-spacing-1)',
+  '--postkit-prose-list-item-indent': 'var(--chakra-spacing-1)',
   minWidth: '0',
   '& > :where(*)': {
     marginBlockStart: '0',
@@ -87,6 +90,24 @@ export const postkitProseRhythm = {
     marginBlockStart: 'var(--postkit-prose-heading-space)',
   },
 } satisfies SystemStyleObject;
+
+/** List rhythm applied before host and Postkit recipe overrides. */
+export const postkitProseListRhythm = {
+  ul: {
+    paddingInlineStart:
+      'var(--postkit-prose-list-indent, var(--chakra-spacing-6))',
+  },
+  ol: {
+    paddingInlineStart:
+      'var(--postkit-prose-list-indent, var(--chakra-spacing-6))',
+  },
+  li: {
+    marginBlock:
+      'var(--postkit-prose-list-item-space, var(--chakra-spacing-1))',
+    paddingInlineStart:
+      'var(--postkit-prose-list-item-indent, var(--chakra-spacing-1))',
+  },
+} satisfies Readonly<Record<'ul' | 'ol' | 'li', SystemStyleObject>>;
 
 export const postkitProseRecipe = defineSlotRecipe({
   className: 'postkit-prose',
@@ -121,18 +142,9 @@ export const postkitProseRecipe = defineSlotRecipe({
       fontStyle: 'italic',
       paddingInlineStart: '5',
     },
-    ul: {
-      listStyleType: 'disc',
-      paddingInlineStart: '6',
-    },
-    ol: {
-      listStyleType: 'decimal',
-      paddingInlineStart: '6',
-    },
-    li: {
-      marginBlock: '1',
-      paddingInlineStart: '1',
-    },
+    ul: {},
+    ol: {},
+    li: {},
     hr: {
       borderColor: 'border',
     },

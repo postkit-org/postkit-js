@@ -19,16 +19,19 @@ import {
   type UnstyledProp,
 } from '@chakra-ui/react';
 import {
+  createContext,
   createElement,
   isValidElement,
   type ComponentType,
   type ElementType,
   type ReactNode,
+  useContext,
 } from 'react';
 
 import { CodeBlock } from './technical-content.js';
 import { resolvePostkitFenceMetadata } from '../fence-metadata.js';
 import {
+  postkitProseListRhythm,
   postkitProseRecipe,
   postkitProseRhythm,
   type PostkitProseSlot,
@@ -129,8 +132,16 @@ function createPostkitProseHeading<Element extends `h${1 | 2 | 3 | 4 | 5 | 6}`>(
 
 function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
   element: Element,
-): ChakraComponent<Element> {
-  function PostkitProseListRoot({ className, css, ...props }: ListRootProps) {
+): ComponentType<ListRootProps> {
+  function PostkitProseListRoot({
+    children,
+    className,
+    css,
+    unstyled,
+    ...props
+  }: ListRootProps) {
+    const inheritedUnstyled = useContext(PostkitProseListUnstyledContext);
+    const isUnstyled = unstyled ?? inheritedUnstyled;
     const recipe = usePostkitSlotRecipe(
       postkitRecipeKeys.prose,
       postkitProseRecipe,
@@ -138,24 +149,42 @@ function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
     const styles = recipe();
 
     return (
-      <List.Root
-        {...props}
-        as={element}
-        data-postkit-prose-element={element}
-        className={postkitSlotClassName(
-          recipe.classNameMap[element],
-          className,
-        )}
-        css={[styles[element], css]}
-      />
+      <PostkitProseListUnstyledContext.Provider value={isUnstyled}>
+        <List.Root
+          {...props}
+          as={element}
+          unstyled={isUnstyled}
+          data-postkit-prose-element={element}
+          className={postkitSlotClassName(
+            recipe.classNameMap[element],
+            className,
+          )}
+          css={[
+            isUnstyled ? undefined : postkitProseListRhythm[element],
+            isUnstyled ? undefined : styles[element],
+            css,
+          ]}
+        >
+          {children}
+        </List.Root>
+      </PostkitProseListUnstyledContext.Provider>
     );
   }
 
   PostkitProseListRoot.displayName = `Prose.${element}`;
-  return PostkitProseListRoot as ChakraComponent<Element>;
+  return PostkitProseListRoot;
 }
 
-function PostkitProseListItem({ className, css, ...props }: ListItemProps) {
+const PostkitProseListUnstyledContext = createContext(false);
+
+function PostkitProseListItem({
+  className,
+  css,
+  unstyled,
+  ...props
+}: ListItemProps) {
+  const inheritedUnstyled = useContext(PostkitProseListUnstyledContext);
+  const isUnstyled = unstyled ?? inheritedUnstyled;
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.prose,
     postkitProseRecipe,
@@ -165,9 +194,14 @@ function PostkitProseListItem({ className, css, ...props }: ListItemProps) {
   return (
     <List.Item
       {...props}
+      unstyled={isUnstyled}
       data-postkit-prose-element="li"
       className={postkitSlotClassName(recipe.classNameMap.li, className)}
-      css={[styles.li, css]}
+      css={[
+        isUnstyled ? undefined : postkitProseListRhythm.li,
+        isUnstyled ? undefined : styles.li,
+        css,
+      ]}
     />
   );
 }

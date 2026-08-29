@@ -14,7 +14,12 @@ import type { ReactNode } from 'react';
 
 import { createPostkitMdxComponents } from '../mdx-components.js';
 import { PostkitProvider } from '../provider.js';
-import { postkitDefaultTheme } from '../theme.js';
+import {
+  createPostkitSystem,
+  createPostkitTheme,
+  postkitDefaultTheme,
+  postkitRecipeKeys,
+} from '../theme.js';
 import { postkitProseComponents } from './prose.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
@@ -190,6 +195,67 @@ describe('Postkit prose', () => {
       root: { listStyleType: 'square' },
       item: { color: 'purple.500' },
     });
+  });
+
+  it('lets Postkit theme and direct styles override list rhythm', () => {
+    const theme = createPostkitTheme({
+      prose: {
+        base: {
+          ul: { paddingInlineStart: '12' },
+          li: { marginBlock: '3' },
+        },
+      },
+    });
+    const system = createPostkitSystem({ theme });
+    const components = createPostkitMdxComponents();
+    const UnorderedList = components.ul;
+    const ListItem = components.li;
+
+    render(
+      <PostkitProvider system={system}>
+        <UnorderedList css={{ paddingInlineStart: '16' }}>
+          <ListItem>Custom rhythm</ListItem>
+        </UnorderedList>
+      </PostkitProvider>,
+    );
+
+    expect(system.getSlotRecipe(postkitRecipeKeys.prose).base).toMatchObject({
+      ul: { paddingInlineStart: '12' },
+      li: { marginBlock: '3' },
+    });
+    expect(screen.getByRole('list').className).toContain('chakra-list__root');
+    expect(screen.getByRole('list').className).toMatch(/\bcss-/);
+  });
+
+  it('supports a completely unstyled list subtree', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        slotRecipes: {
+          list: defineSlotRecipe({
+            className: 'host-list',
+            slots: ['root', 'item', 'indicator'],
+            base: {
+              root: { listStyleType: 'square' },
+              item: { marginBlock: '4' },
+            },
+          }),
+        },
+      },
+    });
+    const components = createPostkitMdxComponents();
+    const UnorderedList = components.ul;
+    const ListItem = components.li;
+
+    render(
+      <PostkitProvider system={system} preset={postkitDefaultTheme}>
+        <UnorderedList unstyled>
+          <ListItem>Bare item</ListItem>
+        </UnorderedList>
+      </PostkitProvider>,
+    );
+
+    expect(screen.getByRole('list').className).not.toMatch(/\bcss-/);
+    expect(screen.getByRole('listitem').className).not.toMatch(/\bcss-/);
   });
 
   it('renders fenced Markdown code with CodeBlock', () => {

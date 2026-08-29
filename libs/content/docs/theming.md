@@ -85,8 +85,9 @@ and `lineContent` slot names remain compatibility aliases.
 ## Tune prose rhythm
 
 External spacing belongs to the `Prose` wrapper rather than the individual
-Heading, paragraph, table, or code components. Five custom properties provide
-the default flow scale and can be changed through a scoped PostKit theme:
+Heading, paragraph, table, or code components. Eight custom properties provide
+the default flow and internal list scales and can be changed through a scoped
+PostKit theme:
 
 ```tsx
 const documentationTheme = createPostkitTheme({
@@ -98,6 +99,9 @@ const documentationTheme = createPostkitTheme({
         '--postkit-prose-section-space': 'spacing.10',
         '--postkit-prose-heading-space': 'spacing.12',
         '--postkit-prose-title-space': 'spacing.16',
+        '--postkit-prose-list-indent': 'spacing.8',
+        '--postkit-prose-list-item-space': 'spacing.2',
+        '--postkit-prose-list-item-indent': 'spacing.1',
       },
     },
   },
@@ -110,4 +114,6 @@ const documentationTheme = createPostkitTheme({
 
 The wrapper applies these defaults before its prose recipe and direct `css`
 prop, preserving both theme-level and instance-level overrides. Use
-`<Prose unstyled>` for a completely bare wrapper.
+`<Prose unstyled>` for a completely bare wrapper. Markdown `ul`, `ol`, and `li`
+elements render through Chakra's List recipe; pass `unstyled` to a mapped list
+root when its complete list subtree should be bare.
