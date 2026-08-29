@@ -440,7 +440,10 @@ responsive video or embed frames use `AspectRatio`. PostKit retains semantic
 `article` and `aside` roots through Chakra's polymorphic rendering. Carousels
 delegate paging, pointer dragging, and accessible controls to Chakra
 `Carousel`, so the host's Carousel recipe flows through while PostKit retains
-its article item model and content slots.
+its article item model and content slots. Instructional `Steps` compose Chakra
+`List`, allowing the host List recipe to flow through beneath PostKit's numbered
+marker treatment. `Disclosure` intentionally remains native `details` and
+`summary`, preserving built-in toggle behavior without client-side JavaScript.
 
 CodeBlock's canonical content-specific slots are `title`, `language`,
 `control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
@@ -1124,7 +1127,10 @@ Card-like publishing surfaces compose Chakra `Card`; author imagery composes
 `AspectRatio`. Semantic roots such as `article` and `aside` are preserved with
 polymorphic Chakra roots. `Carousel` delegates paging, pointer dragging, and
 accessible controls to Chakra `Carousel`, while retaining Postkit's article
-item model and stable content slots.
+item model and stable content slots. Instructional `Steps` compose Chakra
+`List` while retaining their numbered editorial markers. `Disclosure`
+intentionally uses native `details` and `summary`, preserving toggle behavior
+when client-side JavaScript is unavailable.
 
 For a standalone application, opt into Postkit's visual preset:
 

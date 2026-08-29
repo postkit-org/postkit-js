@@ -75,7 +75,10 @@ Card-like publishing surfaces compose Chakra `Card`; author imagery composes
 `AspectRatio`. Semantic roots such as `article` and `aside` are preserved with
 polymorphic Chakra roots. `Carousel` delegates paging, pointer dragging, and
 accessible controls to Chakra `Carousel`, while retaining Postkit's article
-item model and stable content slots.
+item model and stable content slots. Instructional `Steps` compose Chakra
+`List` while retaining their numbered editorial markers. `Disclosure`
+intentionally uses native `details` and `summary`, preserving toggle behavior
+when client-side JavaScript is unavailable.
 
 For a standalone application, opt into Postkit's visual preset:
 

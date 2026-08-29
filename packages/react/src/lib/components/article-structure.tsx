@@ -8,6 +8,7 @@ import {
   Heading,
   Image,
   Link,
+  List,
   Tabs as ChakraTabs,
   Text,
   type BoxProps,
@@ -292,6 +293,11 @@ export type DisclosureProps = {
   RecipeVariantProps<typeof postkitDisclosureRecipe> &
   UnstyledProp;
 
+/**
+ * A progressively enhanced disclosure built on native `details` and `summary`.
+ * It intentionally remains native so its toggle behavior works without
+ * client-side JavaScript.
+ */
 export function Disclosure({
   summary,
   children,
@@ -463,17 +469,21 @@ export function Steps({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const listRootProps = restRootProps as Omit<
+    List.RootProps,
+    'as' | 'children' | 'variant'
+  >;
   return (
-    <Box
+    <List.Root
       as="ol"
+      variant="plain"
       data-postkit-component="Steps"
-      {...restRootProps}
+      {...listRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {items.map((item, index) => (
-        <Box
-          as="li"
+        <List.Item
           className={recipe.classNameMap.item}
           css={[styles.item, slotStyles?.item]}
           key={`${item.title}-${index}`}
@@ -510,9 +520,9 @@ export function Steps({
               </Box>
             ) : null}
           </Box>
-        </Box>
+        </List.Item>
       ))}
-    </Box>
+    </List.Root>
   );
 }
 

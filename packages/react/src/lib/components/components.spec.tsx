@@ -96,6 +96,10 @@ describe('Postkit article components', () => {
               'progressText',
             ],
           }),
+          list: defineSlotRecipe({
+            className: 'host-list',
+            slots: ['root', 'item', 'indicator'],
+          }),
         },
       },
     });
@@ -105,6 +109,7 @@ describe('Postkit article components', () => {
         <Callout title="Host alert">Host-owned presentation.</Callout>
         <ProductCard title="Field guide" href="/guide" />
         <Carousel items={[{ title: 'First' }, { title: 'Second' }]} />
+        <Steps items={[{ title: 'Install' }, { title: 'Render' }]} />
       </>,
       system,
     );
@@ -117,6 +122,8 @@ describe('Postkit article components', () => {
     expect(markup).toContain('host-carousel__root');
     expect(markup).toContain('host-carousel__item');
     expect(markup).toContain('host-carousel__control');
+    expect(markup).toContain('host-list__root');
+    expect(markup).toContain('host-list__item');
   });
 
   it('server-renders publication and audience components', () => {
@@ -371,6 +378,8 @@ describe('Postkit article components', () => {
     expect(tabs).toContain('role="tabpanel"');
     expect(tabs).toContain('chakra-tabs__trigger');
     expect(steps).toContain('<ol');
+    expect(steps).toContain('chakra-list__root');
+    expect(steps).toContain('chakra-list__item');
     expect(cards).toContain('postkit-card-grid__card');
     expect(cards).toContain('chakra-card__root');
     expect(cards).toContain('chakra-card__body');
