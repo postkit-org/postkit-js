@@ -7,6 +7,7 @@ import {
   createSystem,
   defaultConfig,
   defineRecipe,
+  defineSlotRecipe,
 } from '@chakra-ui/react';
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -122,6 +123,73 @@ describe('Postkit prose', () => {
     const heading = screen.getByRole('heading', { level: 2 });
     expect(heading.className).toContain('chakra-heading');
     expect(system.getRecipe('heading').base?.fontWeight).toBe('normal');
+  });
+
+  it('renders ordered, unordered, and nested Markdown lists semantically', () => {
+    const components = createPostkitMdxComponents();
+    const UnorderedList = components.ul;
+    const OrderedList = components.ol;
+    const ListItem = components.li;
+
+    render(
+      <PostkitProvider>
+        <UnorderedList data-testid="unordered-list">
+          <ListItem>
+            First item
+            <OrderedList data-testid="nested-ordered-list">
+              <ListItem>Nested item</ListItem>
+            </OrderedList>
+          </ListItem>
+          <ListItem>Second item</ListItem>
+        </UnorderedList>
+      </PostkitProvider>,
+    );
+
+    const unorderedList = screen.getByTestId('unordered-list');
+    const orderedList = screen.getByTestId('nested-ordered-list');
+    expect(unorderedList.tagName).toBe('UL');
+    expect(orderedList.tagName).toBe('OL');
+    expect(unorderedList.className).toContain('chakra-list__root');
+    expect(orderedList.className).toContain('chakra-list__root');
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    expect(orderedList.parentElement?.tagName).toBe('LI');
+  });
+
+  it('routes Markdown lists through the host List recipe', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        slotRecipes: {
+          list: defineSlotRecipe({
+            className: 'host-list',
+            slots: ['root', 'item', 'indicator'],
+            base: {
+              root: { listStyleType: 'square' },
+              item: { color: 'purple.500' },
+            },
+          }),
+        },
+      },
+    });
+    const components = createPostkitMdxComponents();
+    const UnorderedList = components.ul;
+    const ListItem = components.li;
+
+    render(
+      <PostkitProvider system={system}>
+        <UnorderedList data-testid="host-list">
+          <ListItem>Host-owned list</ListItem>
+        </UnorderedList>
+      </PostkitProvider>,
+    );
+
+    expect(screen.getByTestId('host-list').className).toContain(
+      'host-list__root',
+    );
+    expect(screen.getByRole('listitem').className).toContain('host-list__item');
+    expect(system.getSlotRecipe('list').base).toMatchObject({
+      root: { listStyleType: 'square' },
+      item: { color: 'purple.500' },
+    });
   });
 
   it('renders fenced Markdown code with CodeBlock', () => {

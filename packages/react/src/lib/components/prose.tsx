@@ -6,6 +6,7 @@ import {
   Heading,
   Kbd,
   Link as ChakraLink,
+  List,
   Mark,
   Separator,
   Table,
@@ -13,6 +14,8 @@ import {
   type ChakraComponent,
   type HeadingProps,
   type HTMLChakraProps,
+  type ListItemProps,
+  type ListRootProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
 import {
@@ -123,6 +126,53 @@ function createPostkitProseHeading<Element extends `h${1 | 2 | 3 | 4 | 5 | 6}`>(
   PostkitProseHeading.displayName = `Prose.${element}`;
   return PostkitProseHeading as ChakraComponent<Element>;
 }
+
+function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
+  element: Element,
+): ChakraComponent<Element> {
+  function PostkitProseListRoot({ className, css, ...props }: ListRootProps) {
+    const recipe = usePostkitSlotRecipe(
+      postkitRecipeKeys.prose,
+      postkitProseRecipe,
+    );
+    const styles = recipe();
+
+    return (
+      <List.Root
+        {...props}
+        as={element}
+        data-postkit-prose-element={element}
+        className={postkitSlotClassName(
+          recipe.classNameMap[element],
+          className,
+        )}
+        css={[styles[element], css]}
+      />
+    );
+  }
+
+  PostkitProseListRoot.displayName = `Prose.${element}`;
+  return PostkitProseListRoot as ChakraComponent<Element>;
+}
+
+function PostkitProseListItem({ className, css, ...props }: ListItemProps) {
+  const recipe = usePostkitSlotRecipe(
+    postkitRecipeKeys.prose,
+    postkitProseRecipe,
+  );
+  const styles = recipe();
+
+  return (
+    <List.Item
+      {...props}
+      data-postkit-prose-element="li"
+      className={postkitSlotClassName(recipe.classNameMap.li, className)}
+      css={[styles.li, css]}
+    />
+  );
+}
+
+PostkitProseListItem.displayName = 'Prose.li';
 
 export type ProseProps = HTMLChakraProps<'div'> & UnstyledProp;
 
@@ -267,9 +317,9 @@ export const postkitProseComponents = Object.freeze({
   p: createPostkitProseElement('p', 'p'),
   a: createPostkitProseLink(createPostkitLink()),
   blockquote: createPostkitProseElement('blockquote', 'blockquote'),
-  ul: createPostkitProseElement('ul', 'ul'),
-  ol: createPostkitProseElement('ol', 'ol'),
-  li: createPostkitProseElement('li', 'li'),
+  ul: createPostkitProseListRoot('ul'),
+  ol: createPostkitProseListRoot('ol'),
+  li: PostkitProseListItem,
   hr: createPostkitProsePrimitive<'hr'>(
     Separator as ComponentType<Readonly<Record<string, unknown>>>,
     'hr',
