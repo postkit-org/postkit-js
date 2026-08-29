@@ -79,6 +79,11 @@ including lists inside publishing components, render through Chakra
 `Blockquote` and `List`. Code-block copy actions similarly render through
 Chakra `Button` while retaining PostKit's copy behavior.
 
+Structured controls also retain their Chakra recipe boundaries:
+`NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
+composes `Stat`, poll result bars compose `Progress`, and product ratings
+compose a read-only `RatingGroup`.
+
 CodeBlock's canonical content-specific slots are `title`, `language`,
 `control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
 `line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,

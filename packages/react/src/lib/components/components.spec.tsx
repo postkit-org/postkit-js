@@ -127,18 +127,25 @@ describe('Postkit article components', () => {
 
     expect(pullQuote).toContain('<blockquote');
     expect(pullQuote).toContain('<cite');
+    expect(pullQuote).toContain('chakra-blockquote__root');
+    expect(pullQuote).toContain('chakra-blockquote__content');
     expect(takeaway).toContain('data-postkit-component="KeyTakeaway"');
     expect(takeaway).toContain('chakra-list__root');
     expect(takeaway).toContain('chakra-list__item');
     expect(stat).toContain('98%');
+    expect(stat).toContain('chakra-stat__root');
+    expect(stat).toContain('chakra-stat__valueText');
     expect(comparison).toContain('<table');
     expect(comparison).toContain('chakra-table__root');
     expect(comparison).toContain('scope="row"');
     expect(poll).toContain('aria-pressed="false"');
     expect(poll).toContain('chakra-button');
     expect(poll).toContain('80%');
+    expect(poll).toContain('chakra-progress__root');
+    expect(poll).toContain('chakra-progress__range');
     expect(product).toContain('rel="sponsored"');
     expect(product).toContain('4.8 out of 5 stars');
+    expect(product).toContain('chakra-rating-group__root');
     expect(related).toContain('data-postkit-component="RelatedContent"');
     expect(related).toContain('chakra-list__root');
     expect(series).toContain('rel="prev"');
@@ -349,6 +356,8 @@ describe('Postkit article components', () => {
     expect(newsletter).toContain('data-postkit-configured="true"');
     expect(newsletter).toContain('chakra-input');
     expect(newsletter).toContain('chakra-button');
+    expect(newsletter).toContain('chakra-field__root');
+    expect(newsletter).toContain('chakra-field__label');
   });
 
   it('server-renders a labeled carousel from literal JSON', () => {

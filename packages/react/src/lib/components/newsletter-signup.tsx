@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   chakra,
+  Field,
   Heading,
   Input,
   Text,
@@ -47,7 +48,6 @@ type SubmissionState =
   | { readonly status: 'success' | 'error'; readonly message: string };
 
 const NewsletterForm = chakra('form');
-const NewsletterLabel = chakra('label');
 
 export function NewsletterSignup({
   title,
@@ -159,55 +159,71 @@ export function NewsletterSignup({
         className={recipe.classNameMap.form}
         css={[styles.form, slotStyles?.form]}
       >
-        <NewsletterLabel
-          htmlFor={inputId}
-          className={recipe.classNameMap.label}
-          css={[styles.label, slotStyles?.label]}
+        <Field.Root
+          required
+          invalid={submission.status === 'error'}
+          disabled={submission.status === 'submitting'}
         >
-          {emailLabel}
-        </NewsletterLabel>
-        <Box
-          className={recipe.classNameMap.fields}
-          css={[styles.fields, slotStyles?.fields]}
-        >
-          <Input
-            size={size ?? 'md'}
-            id={inputId}
-            name={emailFieldName}
-            type="email"
-            autoComplete="email"
-            placeholder={emailPlaceholder}
-            required
-            disabled={submission.status === 'submitting'}
-            className={recipe.classNameMap.input}
-            css={[styles.input, slotStyles?.input]}
-          />
-          <Button
-            size={size ?? 'md'}
-            variant="solid"
-            type="submit"
-            disabled={!configured || submission.status === 'submitting'}
-            loading={submission.status === 'submitting'}
-            className={recipe.classNameMap.submit}
-            css={[styles.submit, slotStyles?.submit]}
+          <Field.Label
+            htmlFor={inputId}
+            className={recipe.classNameMap.label}
+            css={[styles.label, slotStyles?.label]}
           >
-            {buttonLabel}
-          </Button>
-        </Box>
+            {emailLabel}
+          </Field.Label>
+          <Box
+            className={recipe.classNameMap.fields}
+            css={[styles.fields, slotStyles?.fields]}
+          >
+            <Input
+              size={size ?? 'md'}
+              id={inputId}
+              name={emailFieldName}
+              type="email"
+              autoComplete="email"
+              placeholder={emailPlaceholder}
+              required
+              disabled={submission.status === 'submitting'}
+              className={recipe.classNameMap.input}
+              css={[styles.input, slotStyles?.input]}
+            />
+            <Button
+              size={size ?? 'md'}
+              variant="solid"
+              type="submit"
+              disabled={!configured || submission.status === 'submitting'}
+              loading={submission.status === 'submitting'}
+              className={recipe.classNameMap.submit}
+              css={[styles.submit, slotStyles?.submit]}
+            >
+              {buttonLabel}
+            </Button>
+          </Box>
+          {submission.status === 'error' ? (
+            <Field.ErrorText
+              aria-live="polite"
+              className={recipe.classNameMap.status}
+              css={[styles.status, slotStyles?.status]}
+            >
+              {statusMessage}
+            </Field.ErrorText>
+          ) : (
+            <Field.HelperText
+              aria-live="polite"
+              role="status"
+              className={recipe.classNameMap.status}
+              css={[styles.status, slotStyles?.status]}
+            >
+              {statusMessage}
+            </Field.HelperText>
+          )}
+        </Field.Root>
         {list ? (
           <input type="hidden" name={listFieldName} value={list} />
         ) : null}
         {Object.entries(newsletter?.hiddenFields ?? {}).map(([name, value]) => (
           <input key={name} type="hidden" name={name} value={value} />
         ))}
-        <Text
-          aria-live="polite"
-          role={submission.status === 'error' ? 'alert' : 'status'}
-          className={recipe.classNameMap.status}
-          css={[styles.status, slotStyles?.status]}
-        >
-          {statusMessage}
-        </Text>
         {privacy ? (
           <Text
             className={recipe.classNameMap.privacy}

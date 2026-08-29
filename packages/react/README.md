@@ -66,6 +66,11 @@ while Postkit retains its clipboard behavior and placement. Postkit still
 supplies semantic structure, accessible behavior, wrapper-owned prose rhythm,
 stable slots, and explicit overrides.
 
+Multipart publishing controls follow the same rule: `NewsletterSignup` uses
+Chakra `Field`, `PullQuote` uses `Blockquote`, `Stat` uses `Stat`, poll results
+use `Progress`, and product ratings use a read-only `RatingGroup`. Postkit owns
+their content contract while the host's corresponding recipes remain active.
+
 For a standalone application, opt into Postkit's visual preset:
 
 ```tsx

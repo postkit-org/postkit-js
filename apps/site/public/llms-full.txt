@@ -429,6 +429,11 @@ including lists inside publishing components, render through Chakra
 `Blockquote` and `List`. Code-block copy actions similarly render through
 Chakra `Button` while retaining PostKit's copy behavior.
 
+Structured controls also retain their Chakra recipe boundaries:
+`NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
+composes `Stat`, poll result bars compose `Progress`, and product ratings
+compose a read-only `RatingGroup`.
+
 CodeBlock's canonical content-specific slots are `title`, `language`,
 `control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
 `line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,
@@ -1101,6 +1106,11 @@ inside publishing components. The code-block copy action is a Chakra `Button`,
 while Postkit retains its clipboard behavior and placement. Postkit still
 supplies semantic structure, accessible behavior, wrapper-owned prose rhythm,
 stable slots, and explicit overrides.
+
+Multipart publishing controls follow the same rule: `NewsletterSignup` uses
+Chakra `Field`, `PullQuote` uses `Blockquote`, `Stat` uses `Stat`, poll results
+use `Progress`, and product ratings use a read-only `RatingGroup`. Postkit owns
+their content contract while the host's corresponding recipes remain active.
 
 For a standalone application, opt into Postkit's visual preset:
 

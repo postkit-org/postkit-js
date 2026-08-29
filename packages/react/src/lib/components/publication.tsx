@@ -1,12 +1,16 @@
 'use client';
 
 import {
+  Blockquote,
   Box,
   Button,
   Heading,
   Image,
   Link,
   List,
+  Progress,
+  RatingGroup,
+  Stat as ChakraStat,
   Table,
   Text,
   type BoxProps,
@@ -81,30 +85,24 @@ export function PullQuote({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
-      as="figure"
+    <Blockquote.Root
       data-postkit-component="PullQuote"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        aria-hidden="true"
+      <Blockquote.Icon
         className={recipe.classNameMap.mark}
         css={[styles.mark, slotStyles?.mark]}
-      >
-        “
-      </Box>
-      <Box
-        as="blockquote"
+      />
+      <Blockquote.Content
         className={recipe.classNameMap.quote}
         css={[styles.quote, slotStyles?.quote]}
       >
         {quote}
-      </Box>
+      </Blockquote.Content>
       {attribution || cite ? (
-        <Box
-          as="figcaption"
+        <Blockquote.Caption
           className={recipe.classNameMap.attribution}
           css={[styles.attribution, slotStyles?.attribution]}
         >
@@ -118,9 +116,9 @@ export function PullQuote({
               {attribution ? ` — ${cite}` : cite}
             </Box>
           ) : null}
-        </Box>
+        </Blockquote.Caption>
       ) : null}
-    </Box>
+    </Blockquote.Root>
   );
 }
 
@@ -236,42 +234,47 @@ export function Stat({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const statRootProps = restRootProps as Omit<
+    ChakraStat.RootProps,
+    'children' | 'size'
+  >;
   return (
-    <Box
+    <ChakraStat.Root
+      size={size ?? 'md'}
       data-postkit-component="Stat"
-      {...restRootProps}
+      {...statRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <ChakraStat.ValueText
         className={recipe.classNameMap.value}
         css={[styles.value, slotStyles?.value]}
       >
         {value}
-      </Text>
-      <Text
+      </ChakraStat.ValueText>
+      <ChakraStat.Label
         className={recipe.classNameMap.label}
         css={[styles.label, slotStyles?.label]}
       >
         {label}
-      </Text>
+      </ChakraStat.Label>
       {trend ? (
-        <Text
+        <ChakraStat.HelpText
           className={recipe.classNameMap.trend}
           css={[styles.trend, slotStyles?.trend]}
         >
           {trend}
-        </Text>
+        </ChakraStat.HelpText>
       ) : null}
       {description ? (
-        <Text
+        <ChakraStat.HelpText
           className={recipe.classNameMap.description}
           css={[styles.description, slotStyles?.description]}
         >
           {description}
-        </Text>
+        </ChakraStat.HelpText>
       ) : null}
-    </Box>
+    </ChakraStat.Root>
   );
 }
 
@@ -510,15 +513,18 @@ export function Poll({
                 ) : null}
               </Box>
               {total ? (
-                <Box
-                  aria-hidden="true"
-                  className={recipe.classNameMap.bar}
-                  css={[
-                    styles.bar,
-                    { width: `${percentage}%` },
-                    slotStyles?.bar,
-                  ]}
-                />
+                <Progress.Root
+                  value={percentage}
+                  size="xs"
+                  aria-label={`${option.label}: ${percentage}%`}
+                >
+                  <Progress.Track>
+                    <Progress.Range
+                      className={recipe.classNameMap.bar}
+                      css={[styles.bar, slotStyles?.bar]}
+                    />
+                  </Progress.Track>
+                </Progress.Root>
               ) : null}
             </Button>
           );
@@ -628,13 +634,17 @@ export function ProductCard({
           </Text>
         ) : null}
         {rating ? (
-          <Text
+          <RatingGroup.Root
+            count={5}
+            value={Number(rating)}
+            allowHalf
+            readOnly
             aria-label={`${rating} out of 5 stars`}
             className={recipe.classNameMap.rating}
             css={[styles.rating, slotStyles?.rating]}
           >
-            ★ {rating}
-          </Text>
+            <RatingGroup.Control />
+          </RatingGroup.Root>
         ) : null}
         <Box
           className={recipe.classNameMap.footer}
