@@ -84,6 +84,18 @@ describe('Postkit article components', () => {
             className: 'host-card',
             slots: ['root', 'header', 'body', 'footer', 'title', 'description'],
           }),
+          carousel: defineSlotRecipe({
+            className: 'host-carousel',
+            slots: [
+              'root',
+              'itemGroup',
+              'item',
+              'control',
+              'nextTrigger',
+              'prevTrigger',
+              'progressText',
+            ],
+          }),
         },
       },
     });
@@ -92,6 +104,7 @@ describe('Postkit article components', () => {
         <AuthorCard name="Ada Lovelace" />
         <Callout title="Host alert">Host-owned presentation.</Callout>
         <ProductCard title="Field guide" href="/guide" />
+        <Carousel items={[{ title: 'First' }, { title: 'Second' }]} />
       </>,
       system,
     );
@@ -101,6 +114,9 @@ describe('Postkit article components', () => {
     expect(markup).toContain('host-card__body');
     expect(markup).toContain('host-alert__root');
     expect(markup).toContain('host-alert__content');
+    expect(markup).toContain('host-carousel__root');
+    expect(markup).toContain('host-carousel__item');
+    expect(markup).toContain('host-carousel__control');
   });
 
   it('server-renders publication and audience components', () => {
@@ -446,6 +462,10 @@ describe('Postkit article components', () => {
     expect(markup).toContain('postkit-carousel__root');
     expect(markup).toContain('postkit-carousel__slide');
     expect(markup).toContain('postkit-carousel__controls');
+    expect(markup).toContain('carousel__root');
+    expect(markup).toContain('carousel__itemGroup');
+    expect(markup).toContain('carousel__item');
+    expect(markup).toContain('carousel__control');
     expect(markup).toContain('aria-roledescription="carousel"');
     expect(markup).toContain('aria-label="Field notes"');
     expect(markup).toContain('alt="A mountain ridge"');

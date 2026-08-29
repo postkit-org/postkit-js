@@ -73,7 +73,9 @@ their content contract while the host's corresponding recipes remain active.
 Card-like publishing surfaces compose Chakra `Card`; author imagery composes
 `Avatar`; callouts and takeaways compose `Alert`; and video or embed frames use
 `AspectRatio`. Semantic roots such as `article` and `aside` are preserved with
-polymorphic Chakra roots.
+polymorphic Chakra roots. `Carousel` delegates paging, pointer dragging, and
+accessible controls to Chakra `Carousel`, while retaining Postkit's article
+item model and stable content slots.
 
 For a standalone application, opt into Postkit's visual preset:
 

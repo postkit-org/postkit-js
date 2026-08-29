@@ -3,7 +3,7 @@
 import {
   Box,
   Button,
-  Flex,
+  Carousel as ChakraCarousel,
   Heading,
   Image,
   Link,
@@ -12,7 +12,7 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { Children, type ReactNode, useId, useState } from 'react';
+import { Children, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -131,7 +131,6 @@ export function Carousel({
   variant,
   unstyled,
 }: CarouselProps) {
-  const generatedId = useId();
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.carousel,
     postkitCarouselRecipe,
@@ -155,9 +154,6 @@ export function Carousel({
     parsedInitialIndex(initialIndex),
     Math.max(0, slides.length - 1),
   );
-  const [selectedIndex, setSelectedIndex] = useState(startingIndex);
-  const boundedIndex = Math.min(selectedIndex, Math.max(0, slides.length - 1));
-  const statusId = `${generatedId}-status`;
 
   if (slides.length === 0) {
     return (
@@ -181,71 +177,64 @@ export function Carousel({
     );
   }
 
-  const selectPrevious = () => {
-    setSelectedIndex((current) => {
-      const boundedCurrent = Math.min(current, slides.length - 1);
-      return boundedCurrent <= 0 ? slides.length - 1 : boundedCurrent - 1;
-    });
-  };
-  const selectNext = () => {
-    setSelectedIndex((current) => {
-      const boundedCurrent = Math.min(current, slides.length - 1);
-      return boundedCurrent >= slides.length - 1 ? 0 : boundedCurrent + 1;
-    });
-  };
+  const carouselRootProps = restRootProps as Omit<
+    ChakraCarousel.RootProps,
+    'children' | 'defaultPage' | 'slideCount'
+  >;
 
   return (
-    <Box
+    <ChakraCarousel.Root
       data-postkit-component="Carousel"
-      role="region"
-      aria-roledescription="carousel"
       aria-label={label}
-      {...restRootProps}
+      {...carouselRootProps}
+      allowMouseDrag
+      defaultPage={startingIndex}
+      loop
+      slideCount={slides.length}
+      spacing="0px"
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="group"
-        aria-roledescription="slide"
-        aria-label={`${boundedIndex + 1} of ${slides.length}`}
-        className={recipe.classNameMap.slide}
-        css={[styles.slide, slotStyles?.slide]}
-      >
-        {slides[boundedIndex]}
-      </Box>
-      <Flex
+      <ChakraCarousel.ItemGroup>
+        {slides.map((slide, index) => (
+          <ChakraCarousel.Item
+            index={index}
+            className={recipe.classNameMap.slide}
+            css={[styles.slide, slotStyles?.slide]}
+            key={index}
+          >
+            {slide}
+          </ChakraCarousel.Item>
+        ))}
+      </ChakraCarousel.ItemGroup>
+      <ChakraCarousel.Control
         className={recipe.classNameMap.controls}
         css={[styles.controls, slotStyles?.controls]}
       >
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={selectPrevious}
-          aria-describedby={statusId}
+        <ChakraCarousel.PrevTrigger
+          asChild
           className={recipe.classNameMap.previousTrigger}
           css={[styles.previousTrigger, slotStyles?.previousTrigger]}
         >
-          Previous
-        </Button>
-        <Text
-          id={statusId}
+          <Button size="sm" variant="outline">
+            Previous
+          </Button>
+        </ChakraCarousel.PrevTrigger>
+        <ChakraCarousel.ProgressText
           aria-live="polite"
           className={recipe.classNameMap.status}
           css={[styles.status, slotStyles?.status]}
-        >
-          {boundedIndex + 1} / {slides.length}
-        </Text>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={selectNext}
-          aria-describedby={statusId}
+        />
+        <ChakraCarousel.NextTrigger
+          asChild
           className={recipe.classNameMap.nextTrigger}
           css={[styles.nextTrigger, slotStyles?.nextTrigger]}
         >
-          Next
-        </Button>
-      </Flex>
-    </Box>
+          <Button size="sm" variant="outline">
+            Next
+          </Button>
+        </ChakraCarousel.NextTrigger>
+      </ChakraCarousel.Control>
+    </ChakraCarousel.Root>
   );
 }
