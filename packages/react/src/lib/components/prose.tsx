@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Blockquote,
   chakra,
   Code as ChakraCode,
   Heading,
@@ -11,6 +12,7 @@ import {
   Separator,
   Table,
   type BoxProps,
+  type BlockquoteContentProps,
   type ChakraComponent,
   type HeadingProps,
   type HTMLChakraProps,
@@ -176,6 +178,38 @@ function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
 }
 
 const PostkitProseListUnstyledContext = createContext(false);
+
+function PostkitProseBlockquote({
+  children,
+  className,
+  css,
+  unstyled,
+  ...props
+}: BlockquoteContentProps) {
+  const recipe = usePostkitSlotRecipe(
+    postkitRecipeKeys.prose,
+    postkitProseRecipe,
+  );
+  const styles = recipe();
+
+  return (
+    <Blockquote.Root
+      unstyled={unstyled}
+      data-postkit-prose-element="blockquote"
+      className={postkitSlotClassName(
+        recipe.classNameMap.blockquote,
+        className,
+      )}
+      css={[unstyled ? undefined : styles.blockquote, css]}
+    >
+      <Blockquote.Content {...props} unstyled={unstyled}>
+        {children}
+      </Blockquote.Content>
+    </Blockquote.Root>
+  );
+}
+
+PostkitProseBlockquote.displayName = 'Prose.blockquote';
 
 function PostkitProseListItem({
   className,
@@ -350,7 +384,7 @@ export const postkitProseComponents = Object.freeze({
   h6: createPostkitProseHeading('h6', 'md'),
   p: createPostkitProseElement('p', 'p'),
   a: createPostkitProseLink(createPostkitLink()),
-  blockquote: createPostkitProseElement('blockquote', 'blockquote'),
+  blockquote: PostkitProseBlockquote,
   ul: createPostkitProseListRoot('ul'),
   ol: createPostkitProseListRoot('ol'),
   li: PostkitProseListItem,

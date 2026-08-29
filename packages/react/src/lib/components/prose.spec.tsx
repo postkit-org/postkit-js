@@ -130,6 +130,39 @@ describe('Postkit prose', () => {
     expect(system.getRecipe('heading').base?.fontWeight).toBe('normal');
   });
 
+  it('routes Markdown blockquotes through the host Blockquote recipe', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        slotRecipes: {
+          blockquote: defineSlotRecipe({
+            className: 'host-blockquote',
+            slots: ['root', 'icon', 'content', 'caption'],
+            base: {
+              root: { borderInlineStartWidth: '8px' },
+              content: { fontStyle: 'italic' },
+            },
+          }),
+        },
+      },
+    });
+    const Blockquote = createPostkitMdxComponents().blockquote;
+
+    render(
+      <PostkitProvider system={system}>
+        <Blockquote cite="https://example.com/source">
+          Host-owned quotation
+        </Blockquote>
+      </PostkitProvider>,
+    );
+
+    const content = screen.getByText('Host-owned quotation');
+    const root = content.closest('figure');
+    expect(root?.className).toContain('host-blockquote__root');
+    expect(root?.getAttribute('data-postkit-prose-element')).toBe('blockquote');
+    expect(content.className).toContain('host-blockquote__content');
+    expect(content.getAttribute('cite')).toBe('https://example.com/source');
+  });
+
   it('renders ordered, unordered, and nested Markdown lists semantically', () => {
     const components = createPostkitMdxComponents();
     const UnorderedList = components.ul;

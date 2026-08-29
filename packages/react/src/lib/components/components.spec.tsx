@@ -128,6 +128,8 @@ describe('Postkit article components', () => {
     expect(pullQuote).toContain('<blockquote');
     expect(pullQuote).toContain('<cite');
     expect(takeaway).toContain('data-postkit-component="KeyTakeaway"');
+    expect(takeaway).toContain('chakra-list__root');
+    expect(takeaway).toContain('chakra-list__item');
     expect(stat).toContain('98%');
     expect(comparison).toContain('<table');
     expect(comparison).toContain('chakra-table__root');
@@ -138,6 +140,7 @@ describe('Postkit article components', () => {
     expect(product).toContain('rel="sponsored"');
     expect(product).toContain('4.8 out of 5 stars');
     expect(related).toContain('data-postkit-component="RelatedContent"');
+    expect(related).toContain('chakra-list__root');
     expect(series).toContain('rel="prev"');
     expect(series).toContain('rel="next"');
     expect(sponsor).toContain('aria-label="Sponsored by Example"');
@@ -215,6 +218,8 @@ describe('Postkit article components', () => {
     expect(diff).toContain('data-diff="deletion"');
     expect(diff).toContain('data-diff="addition"');
     expect(tree).toContain('data-postkit-component="FileTree"');
+    expect(tree).toContain('chakra-list__root');
+    expect(tree).toContain('chakra-list__item');
     expect(tree).toContain('chakra-heading');
     expect(tree).toContain('index.ts');
     expect(file).toContain('download=""');
@@ -330,6 +335,7 @@ describe('Postkit article components', () => {
     expect(author).toContain('aria-label="About Ada Lovelace"');
     expect(author).toContain('rel="author"');
     expect(author).toContain('postkit-author-card__links');
+    expect(author).toContain('chakra-list__root');
     expect(author).toContain('chakra-heading');
     expect(cta).toContain('data-postkit-component="CallToAction"');
     expect(cta).toContain('<h2');
@@ -617,6 +623,7 @@ describe('Postkit article components', () => {
     );
 
     expect(appearances).toContain('data-postkit-component="AppearsOn"');
+    expect(appearances).toContain('chakra-list__root');
     expect(appearances).toContain('rel="syndication"');
     expect(appearances).toContain('Bluesky');
     expect(appearances).toContain('Medium');

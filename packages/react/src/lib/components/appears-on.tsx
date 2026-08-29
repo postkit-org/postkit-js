@@ -4,6 +4,7 @@ import {
   Box,
   chakra,
   Link,
+  List,
   Text,
   type BoxProps,
   type RecipeVariantProps,
@@ -102,8 +103,9 @@ export function AppearsOn({
       >
         {label}
       </Text>
-      <Box
+      <List.Root
         as="ul"
+        variant="plain"
         aria-label={label}
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
@@ -114,8 +116,7 @@ export function AppearsOn({
           const date = datesVisible ? displayDate(item.publishedAt) : undefined;
 
           return (
-            <Box
-              as="li"
+            <List.Item
               key={`${item.service}-${item.url}-${index}`}
               data-postkit-service={item.service}
               className={recipe.classNameMap.item}
@@ -159,10 +160,10 @@ export function AppearsOn({
                   {item.status}
                 </Text>
               ) : null}
-            </Box>
+            </List.Item>
           );
         })}
-      </Box>
+      </List.Root>
     </Box>
   );
 }

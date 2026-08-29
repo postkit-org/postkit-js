@@ -6,6 +6,7 @@ import {
   CodeBlock as ChakraCodeBlock,
   Heading,
   Link,
+  List,
   Portal,
   Tabs as ChakraTabs,
   Text,
@@ -729,14 +730,14 @@ export function FileTree({
           {title}
         </Heading>
       ) : null}
-      <Box
+      <List.Root
         as="ul"
+        variant="plain"
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item, index) => (
-          <Box
-            as="li"
+          <List.Item
             className={recipe.classNameMap.item}
             css={[
               styles.item,
@@ -771,9 +772,9 @@ export function FileTree({
                 {item.meta}
               </Box>
             ) : null}
-          </Box>
+          </List.Item>
         ))}
-      </Box>
+      </List.Root>
     </Box>
   );
 }

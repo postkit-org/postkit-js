@@ -6,6 +6,7 @@ import {
   Heading,
   Image,
   Link,
+  List,
   Table,
   Text,
   type BoxProps,
@@ -188,22 +189,21 @@ export function KeyTakeaway({
         </Box>
       ) : null}
       {items.length ? (
-        <Box
+        <List.Root
           as="ul"
           className={recipe.classNameMap.list}
           css={[styles.list, slotStyles?.list]}
         >
           {items.map((item, index) => (
-            <Box
-              as="li"
+            <List.Item
               className={recipe.classNameMap.item}
               css={[styles.item, slotStyles?.item]}
               key={`${item}-${index}`}
             >
               {item}
-            </Box>
+            </List.Item>
           ))}
-        </Box>
+        </List.Root>
       ) : null}
     </Box>
   );
@@ -720,14 +720,14 @@ export function RelatedContent({
       >
         {title}
       </Heading>
-      <Box
+      <List.Root
         as="ul"
+        variant="plain"
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item) => (
-          <Box
-            as="li"
+          <List.Item
             className={recipe.classNameMap.item}
             css={[styles.item, slotStyles?.item]}
             key={item.href}
@@ -766,9 +766,9 @@ export function RelatedContent({
                 </Text>
               ) : null}
             </Link>
-          </Box>
+          </List.Item>
         ))}
-      </Box>
+      </List.Root>
     </Box>
   );
 }

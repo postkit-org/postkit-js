@@ -58,12 +58,13 @@ export function App({ children }: { children: React.ReactNode }) {
 ```
 
 This host-native mode is the right default for an existing Chakra application:
-Postkit headings, links, buttons, inputs, tables, tabs, code, and other
-primitives use their Chakra components, so the host's component recipes flow
-through. The code-block copy action is a Chakra `Button`, while Postkit retains
-its clipboard behavior and placement. Postkit still supplies semantic
-structure, accessible behavior, wrapper-owned prose rhythm, stable slots, and
-explicit overrides.
+Postkit headings, links, buttons, inputs, lists, blockquotes, tables, tabs,
+code, and other primitives use their Chakra components, so the host's
+component recipes flow through. This includes both authored Markdown and lists
+inside publishing components. The code-block copy action is a Chakra `Button`,
+while Postkit retains its clipboard behavior and placement. Postkit still
+supplies semantic structure, accessible behavior, wrapper-owned prose rhythm,
+stable slots, and explicit overrides.
 
 For a standalone application, opt into Postkit's visual preset:
 

@@ -5,6 +5,7 @@ import {
   Heading,
   Image,
   Link,
+  List,
   Text,
   type BoxProps,
   type RecipeVariantProps,
@@ -155,14 +156,15 @@ export function AuthorCard({
           </Box>
         ) : null}
         {links.length ? (
-          <Box
+          <List.Root
             as="ul"
+            variant="plain"
             aria-label={`${name} links`}
             className={recipe.classNameMap.links}
             css={[styles.links, slotStyles?.links]}
           >
             {links.map((link) => (
-              <Box as="li" key={`${link.label}-${link.href}`}>
+              <List.Item key={`${link.label}-${link.href}`}>
                 <Link
                   href={link.href}
                   rel={link.rel}
@@ -171,9 +173,9 @@ export function AuthorCard({
                 >
                   {link.label}
                 </Link>
-              </Box>
+              </List.Item>
             ))}
-          </Box>
+          </List.Root>
         ) : null}
       </Box>
     </Box>

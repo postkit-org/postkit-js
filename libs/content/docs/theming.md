@@ -74,8 +74,10 @@ supported.
 
 Markdown headings render through Chakra `Heading` with `as="h1"` through
 `as="h6"`. PostKit does not override the Heading recipe's font weight, family,
-line height, letter spacing, or color. Code-block copy actions similarly render
-through Chakra `Button` while retaining PostKit's copy behavior.
+line height, letter spacing, or color. Markdown blockquotes and semantic lists,
+including lists inside publishing components, render through Chakra
+`Blockquote` and `List`. Code-block copy actions similarly render through
+Chakra `Button` while retaining PostKit's copy behavior.
 
 CodeBlock's canonical content-specific slots are `title`, `language`,
 `control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
