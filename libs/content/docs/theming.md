@@ -84,6 +84,11 @@ Structured controls also retain their Chakra recipe boundaries:
 composes `Stat`, poll result bars compose `Progress`, and product ratings
 compose a read-only `RatingGroup`.
 
+Card-like surfaces use Chakra `Card` roots and parts where their content model
+matches, author imagery uses `Avatar`, callouts and takeaways use `Alert`, and
+responsive video or embed frames use `AspectRatio`. PostKit retains semantic
+`article` and `aside` roots through Chakra's polymorphic rendering.
+
 CodeBlock's canonical content-specific slots are `title`, `language`,
 `control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
 `line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,

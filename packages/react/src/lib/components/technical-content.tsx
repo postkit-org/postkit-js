@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Card,
   CodeBlock as ChakraCodeBlock,
   Heading,
   Link,
@@ -815,7 +816,7 @@ export function FileCard({
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const extension = fileType ?? name.split('.').at(-1)?.toUpperCase() ?? 'FILE';
   return (
-    <Box
+    <Card.Root
       data-postkit-component="FileCard"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
@@ -869,6 +870,6 @@ export function FileCard({
       >
         {actionLabel ?? (enabled(download) ? 'Download' : 'Open')}
       </Link>
-    </Box>
+    </Card.Root>
   );
 }

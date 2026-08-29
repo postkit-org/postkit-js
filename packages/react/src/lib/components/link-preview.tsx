@@ -6,8 +6,10 @@ import type {
   ResolvedLinkPreview,
 } from '@postkit/unfurl';
 import {
+  AspectRatio,
   Box,
   Button,
+  Card,
   chakra,
   Flex,
   Heading,
@@ -36,6 +38,7 @@ import {
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
 import { postkitHeadingSize } from './heading-size.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
 const LinkPreviewIframe = chakra('iframe');
 
@@ -292,7 +295,7 @@ export function LinkPreview({
   }
 
   const siteContent = (
-    <Box
+    <Card.Body
       className={recipe.classNameMap.content}
       css={[styles.content, slotStyles?.content]}
     >
@@ -339,7 +342,7 @@ export function LinkPreview({
       >
         {domain}
       </Text>
-    </Box>
+    </Card.Body>
   );
 
   let primaryContent: ReactNode;
@@ -379,15 +382,10 @@ export function LinkPreview({
     embed.type !== 'photo'
   ) {
     primaryContent = (
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(embed.aspectRatio)}
         className={recipe.classNameMap.embedFrame}
-        css={[
-          styles.embedFrame,
-          embed.aspectRatio
-            ? { aspectRatio: String(embed.aspectRatio) }
-            : undefined,
-          slotStyles?.embedFrame,
-        ]}
+        css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
         {embedActive ? (
           <LinkPreviewIframe
@@ -430,7 +428,7 @@ export function LinkPreview({
             </Button>
           </Box>
         )}
-      </Box>
+      </AspectRatio>
     );
   } else {
     const shownImages =
@@ -480,7 +478,7 @@ export function LinkPreview({
   }
 
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="LinkPreview"
       data-postkit-presentation={resolvedPresentation}
@@ -499,6 +497,6 @@ export function LinkPreview({
       >
         {siteContent}
       </Link>
-    </Box>
+    </Card.Root>
   );
 }

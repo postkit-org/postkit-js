@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  AspectRatio,
   Box,
   Link,
   Text,
@@ -20,6 +21,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
 export interface VideoTrack {
   readonly src: string;
@@ -77,7 +79,8 @@ export function Video({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(aspectRatio)}
         className={recipe.classNameMap.frame}
         css={[styles.frame, slotStyles?.frame]}
       >
@@ -89,7 +92,7 @@ export function Video({
           preload={preload}
           controls
           playsInline
-          css={[styles.player, { aspectRatio }, slotStyles?.player]}
+          css={[styles.player, slotStyles?.player]}
         >
           {tracks.map((track) => (
             <track
@@ -109,7 +112,7 @@ export function Video({
             Open {title}
           </Link>
         </chakra.video>
-      </Box>
+      </AspectRatio>
       {caption ? (
         <Text
           as="figcaption"

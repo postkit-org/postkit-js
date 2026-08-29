@@ -70,6 +70,10 @@ Multipart publishing controls follow the same rule: `NewsletterSignup` uses
 Chakra `Field`, `PullQuote` uses `Blockquote`, `Stat` uses `Stat`, poll results
 use `Progress`, and product ratings use a read-only `RatingGroup`. Postkit owns
 their content contract while the host's corresponding recipes remain active.
+Card-like publishing surfaces compose Chakra `Card`; author imagery composes
+`Avatar`; callouts and takeaways compose `Alert`; and video or embed frames use
+`AspectRatio`. Semantic roots such as `article` and `aside` are preserved with
+polymorphic Chakra roots.
 
 For a standalone application, opt into Postkit's visual preset:
 

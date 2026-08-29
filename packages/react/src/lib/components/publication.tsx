@@ -1,9 +1,11 @@
 'use client';
 
 import {
+  Alert,
   Blockquote,
   Box,
   Button,
+  Card,
   Heading,
   Image,
   Link,
@@ -151,59 +153,64 @@ export function KeyTakeaway({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Alert.Root
       as="aside"
+      status="info"
       data-postkit-component="KeyTakeaway"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {eyebrow ? (
-        <Text
-          className={recipe.classNameMap.eyebrow}
-          css={[styles.eyebrow, slotStyles?.eyebrow]}
-        >
-          {eyebrow}
-        </Text>
-      ) : null}
-      <Heading
-        as="p"
-        size={postkitHeadingSize(size, {
-          sm: 'lg',
-          md: 'xl',
-          lg: '2xl',
-        })}
-        className={recipe.classNameMap.title}
-        css={[styles.title, slotStyles?.title]}
-      >
-        {title}
-      </Heading>
-      {children ? (
-        <Box
-          className={recipe.classNameMap.body}
-          css={[styles.body, slotStyles?.body]}
-        >
-          {children}
-        </Box>
-      ) : null}
-      {items.length ? (
-        <List.Root
-          as="ul"
-          className={recipe.classNameMap.list}
-          css={[styles.list, slotStyles?.list]}
-        >
-          {items.map((item, index) => (
-            <List.Item
-              className={recipe.classNameMap.item}
-              css={[styles.item, slotStyles?.item]}
-              key={`${item}-${index}`}
-            >
-              {item}
-            </List.Item>
-          ))}
-        </List.Root>
-      ) : null}
-    </Box>
+      <Alert.Content>
+        {eyebrow ? (
+          <Text
+            className={recipe.classNameMap.eyebrow}
+            css={[styles.eyebrow, slotStyles?.eyebrow]}
+          >
+            {eyebrow}
+          </Text>
+        ) : null}
+        <Alert.Title asChild>
+          <Heading
+            as="p"
+            size={postkitHeadingSize(size, {
+              sm: 'lg',
+              md: 'xl',
+              lg: '2xl',
+            })}
+            className={recipe.classNameMap.title}
+            css={[styles.title, slotStyles?.title]}
+          >
+            {title}
+          </Heading>
+        </Alert.Title>
+        {children ? (
+          <Alert.Description
+            className={recipe.classNameMap.body}
+            css={[styles.body, slotStyles?.body]}
+          >
+            {children}
+          </Alert.Description>
+        ) : null}
+        {items.length ? (
+          <List.Root
+            as="ul"
+            className={recipe.classNameMap.list}
+            css={[styles.list, slotStyles?.list]}
+          >
+            {items.map((item, index) => (
+              <List.Item
+                className={recipe.classNameMap.item}
+                css={[styles.item, slotStyles?.item]}
+                key={`${item}-${index}`}
+              >
+                {item}
+              </List.Item>
+            ))}
+          </List.Root>
+        ) : null}
+      </Alert.Content>
+    </Alert.Root>
   );
 }
 
@@ -585,7 +592,7 @@ export function ProductCard({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="ProductCard"
       {...restRootProps}
@@ -601,7 +608,7 @@ export function ProductCard({
           css={[styles.image, slotStyles?.image]}
         />
       ) : null}
-      <Box
+      <Card.Body
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
@@ -646,7 +653,7 @@ export function ProductCard({
             <RatingGroup.Control />
           </RatingGroup.Root>
         ) : null}
-        <Box
+        <Card.Footer
           className={recipe.classNameMap.footer}
           css={[styles.footer, slotStyles?.footer]}
         >
@@ -671,9 +678,9 @@ export function ProductCard({
               {actionLabel}
             </Link>
           </Button>
-        </Box>
-      </Box>
-    </Box>
+        </Card.Footer>
+      </Card.Body>
+    </Card.Root>
   );
 }
 
@@ -711,7 +718,7 @@ export function RelatedContent({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="aside"
       data-postkit-component="RelatedContent"
       {...restRootProps}
@@ -779,7 +786,7 @@ export function RelatedContent({
           </List.Item>
         ))}
       </List.Root>
-    </Box>
+    </Card.Root>
   );
 }
 
@@ -942,7 +949,7 @@ export function SponsorBlock({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="aside"
       aria-label={`${disclosure} by ${name}`}
       data-postkit-component="SponsorBlock"
@@ -1002,7 +1009,7 @@ export function SponsorBlock({
           </Button>
         ) : null}
       </Box>
-    </Box>
+    </Card.Root>
   );
 }
 

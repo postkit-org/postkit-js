@@ -1,9 +1,10 @@
 'use client';
 
 import {
+  Avatar,
   Box,
+  Card,
   Heading,
-  Image,
   Link,
   List,
   Text,
@@ -90,7 +91,7 @@ export function AuthorCard({
   );
 
   return (
-    <Box
+    <Card.Root
       as="aside"
       aria-label={`About ${name}`}
       data-postkit-component="AuthorCard"
@@ -98,25 +99,18 @@ export function AuthorCard({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {avatarSrc ? (
-        <Image
-          src={avatarSrc}
-          alt={avatarAlt ?? ''}
-          loading="lazy"
-          decoding="async"
-          className={recipe.classNameMap.avatar}
-          css={[styles.avatar, slotStyles?.avatar]}
-        />
-      ) : (
-        <Box
-          as="span"
-          aria-hidden="true"
-          className={recipe.classNameMap.avatar}
-          css={[styles.avatar, slotStyles?.avatar]}
-        >
-          {name.trim().slice(0, 1).toUpperCase()}
-        </Box>
-      )}
+      <Avatar.Root
+        className={recipe.classNameMap.avatar}
+        css={[styles.avatar, slotStyles?.avatar]}
+      >
+        {avatarSrc ? (
+          <Avatar.Image src={avatarSrc} alt={avatarAlt ?? ''} loading="lazy" />
+        ) : (
+          <Avatar.Fallback name={name}>
+            {name.trim().slice(0, 1).toUpperCase()}
+          </Avatar.Fallback>
+        )}
+      </Avatar.Root>
       <Box
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
@@ -178,6 +172,6 @@ export function AuthorCard({
           </List.Root>
         ) : null}
       </Box>
-    </Box>
+    </Card.Root>
   );
 }

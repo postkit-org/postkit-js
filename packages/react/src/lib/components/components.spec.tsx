@@ -1,6 +1,11 @@
 // @vitest-environment node
 
-import { defaultSystem } from '@chakra-ui/react';
+import {
+  createSystem,
+  defaultConfig,
+  defaultSystem,
+  defineSlotRecipe,
+} from '@chakra-ui/react';
 import { createPostkitSocialPostSnapshot } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -53,7 +58,51 @@ function render(component: React.ReactNode): string {
   );
 }
 
+function renderWithSystem(
+  component: React.ReactNode,
+  system: Parameters<typeof PostkitProvider>[0]['system'],
+): string {
+  return renderToStaticMarkup(
+    <PostkitProvider system={system}>{component}</PostkitProvider>,
+  );
+}
+
 describe('Postkit article components', () => {
+  it('inherits host recipes through composed multipart primitives', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        slotRecipes: {
+          alert: defineSlotRecipe({
+            className: 'host-alert',
+            slots: ['root', 'indicator', 'content', 'title', 'description'],
+          }),
+          avatar: defineSlotRecipe({
+            className: 'host-avatar',
+            slots: ['root', 'image', 'fallback'],
+          }),
+          card: defineSlotRecipe({
+            className: 'host-card',
+            slots: ['root', 'header', 'body', 'footer', 'title', 'description'],
+          }),
+        },
+      },
+    });
+    const markup = renderWithSystem(
+      <>
+        <AuthorCard name="Ada Lovelace" />
+        <Callout title="Host alert">Host-owned presentation.</Callout>
+        <ProductCard title="Field guide" href="/guide" />
+      </>,
+      system,
+    );
+
+    expect(markup).toContain('host-avatar__root');
+    expect(markup).toContain('host-card__root');
+    expect(markup).toContain('host-card__body');
+    expect(markup).toContain('host-alert__root');
+    expect(markup).toContain('host-alert__content');
+  });
+
   it('server-renders publication and audience components', () => {
     const pullQuote = render(
       <PullQuote
@@ -132,6 +181,7 @@ describe('Postkit article components', () => {
     expect(takeaway).toContain('data-postkit-component="KeyTakeaway"');
     expect(takeaway).toContain('chakra-list__root');
     expect(takeaway).toContain('chakra-list__item');
+    expect(takeaway).toContain('chakra-alert__root');
     expect(stat).toContain('98%');
     expect(stat).toContain('chakra-stat__root');
     expect(stat).toContain('chakra-stat__valueText');
@@ -146,11 +196,16 @@ describe('Postkit article components', () => {
     expect(product).toContain('rel="sponsored"');
     expect(product).toContain('4.8 out of 5 stars');
     expect(product).toContain('chakra-rating-group__root');
+    expect(product).toContain('chakra-card__root');
+    expect(product).toContain('chakra-card__body');
+    expect(product).toContain('chakra-card__footer');
     expect(related).toContain('data-postkit-component="RelatedContent"');
     expect(related).toContain('chakra-list__root');
+    expect(related).toContain('chakra-card__root');
     expect(series).toContain('rel="prev"');
     expect(series).toContain('rel="next"');
     expect(sponsor).toContain('aria-label="Sponsored by Example"');
+    expect(sponsor).toContain('chakra-card__root');
     expect(boundary).toContain('data-postkit-audience="members"');
     expect(boundary).toContain('Members only.');
     expect(boundary).not.toContain('Protected content.');
@@ -231,6 +286,7 @@ describe('Postkit article components', () => {
     expect(tree).toContain('index.ts');
     expect(file).toContain('download=""');
     expect(file).toContain('2.4 MB');
+    expect(file).toContain('chakra-card__root');
   });
 
   it('server-renders foundational article structure components', () => {
@@ -287,6 +343,8 @@ describe('Postkit article components', () => {
 
     expect(callout).toContain('data-postkit-component="Callout"');
     expect(callout).toContain('data-postkit-tone="warning"');
+    expect(callout).toContain('chakra-alert__root');
+    expect(callout).toContain('chakra-alert__content');
     expect(aside).toContain('data-postkit-component="Aside"');
     expect(gallery).toContain('data-postkit-component="Gallery"');
     expect(gallery).toContain('<figure');
@@ -298,6 +356,8 @@ describe('Postkit article components', () => {
     expect(tabs).toContain('chakra-tabs__trigger');
     expect(steps).toContain('<ol');
     expect(cards).toContain('postkit-card-grid__card');
+    expect(cards).toContain('chakra-card__root');
+    expect(cards).toContain('chakra-card__body');
     expect(cards).toContain('href="/guide"');
   });
 
@@ -344,6 +404,9 @@ describe('Postkit article components', () => {
     expect(author).toContain('postkit-author-card__links');
     expect(author).toContain('chakra-list__root');
     expect(author).toContain('chakra-heading');
+    expect(author).toContain('chakra-avatar__root');
+    expect(author).toContain('chakra-avatar__image');
+    expect(author).toContain('chakra-card__root');
     expect(cta).toContain('data-postkit-component="CallToAction"');
     expect(cta).toContain('<h2');
     expect(cta).toContain('postkit-call-to-action__primaryAction');
@@ -416,6 +479,7 @@ describe('Postkit article components', () => {
     expect(video).toContain('data-postkit-component="Video"');
     expect(video).toContain('postkit-video__frame');
     expect(video).toContain('postkit-video__player');
+    expect(video).toContain('chakra-aspect-ratio');
     expect(video).toContain('<video');
     expect(video).toContain('controls=""');
     expect(video).toContain('srcLang="en"');
@@ -522,6 +586,8 @@ describe('Postkit article components', () => {
     expect(small).toContain('data-postkit-component="LinkPreview"');
     expect(small).toContain('data-postkit-provider="opengraphs"');
     expect(small).toContain('postkit-link-preview__siteRow');
+    expect(small).toContain('chakra-card__root');
+    expect(small).toContain('chakra-card__body');
     expect(small).toContain('A portable article');
     expect(large).toContain('postkit-link-preview__carousel');
     expect(large).toContain('data-postkit-component="Carousel"');
@@ -614,6 +680,7 @@ describe('Postkit article components', () => {
     expect(markup).toContain('src="https://player.example.com/embed/1"');
     expect(markup).toContain('sandbox="allow-scripts allow-same-origin');
     expect(markup).toContain('loading="lazy"');
+    expect(markup).toContain('chakra-aspect-ratio');
   });
 
   it('renders syndicated destinations and share actions from literal JSON', () => {
@@ -690,6 +757,7 @@ describe('Postkit article components', () => {
     expect(social).toContain('Ada Example');
     expect(social).toContain('12 likes');
     expect(social).toContain('View original');
+    expect(social).toContain('chakra-card__root');
     expect(delegated).toContain('data-postkit-component="SocialPost"');
     expect(delegated).not.toContain('data-postkit-component="LinkPreview"');
   });

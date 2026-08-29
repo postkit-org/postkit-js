@@ -1,7 +1,9 @@
 'use client';
 
 import {
+  Alert,
   Box,
+  Card,
   chakra,
   Heading,
   Image,
@@ -90,47 +92,60 @@ export function Callout({
     typeof tone === 'string' && tone in calloutMarks ? tone : 'note';
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Alert.Root
       as="aside"
+      status={
+        resolvedTone === 'tip'
+          ? 'success'
+          : resolvedTone === 'warning'
+            ? 'warning'
+            : resolvedTone === 'caution'
+              ? 'error'
+              : resolvedTone === 'important'
+                ? 'neutral'
+                : 'info'
+      }
       data-postkit-component={componentName}
       data-postkit-tone={resolvedTone}
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
+      <Alert.Indicator
         aria-hidden="true"
         className={recipe.classNameMap.icon}
         css={[styles.icon, slotStyles?.icon]}
       >
         {icon ?? calloutMarks[resolvedTone]}
-      </Box>
-      <Box
+      </Alert.Indicator>
+      <Alert.Content
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
         {title ? (
-          <Heading
-            as="p"
-            size={postkitHeadingSize(size, {
-              sm: 'sm',
-              md: 'md',
-              lg: 'lg',
-            })}
-            className={recipe.classNameMap.title}
-            css={[styles.title, slotStyles?.title]}
-          >
-            {title}
-          </Heading>
+          <Alert.Title asChild>
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
+              className={recipe.classNameMap.title}
+              css={[styles.title, slotStyles?.title]}
+            >
+              {title}
+            </Heading>
+          </Alert.Title>
         ) : null}
-        <Box
+        <Alert.Description
           className={recipe.classNameMap.body}
           css={[styles.body, slotStyles?.body]}
         >
           {children}
-        </Box>
-      </Box>
-    </Box>
+        </Alert.Description>
+      </Alert.Content>
+    </Alert.Root>
   );
 }
 
@@ -577,7 +592,7 @@ export function CardGrid({
         ]}
       >
         {items.map((item, index) => (
-          <Box
+          <Card.Root
             as="article"
             className={recipe.classNameMap.card}
             css={[styles.card, slotStyles?.card]}
@@ -592,7 +607,7 @@ export function CardGrid({
                 css={[styles.image, slotStyles?.image]}
               />
             ) : null}
-            <Box
+            <Card.Body
               className={recipe.classNameMap.cardBody}
               css={[styles.cardBody, slotStyles?.cardBody]}
             >
@@ -637,8 +652,8 @@ export function CardGrid({
                   </Box>
                 </Link>
               ) : null}
-            </Box>
-          </Box>
+            </Card.Body>
+          </Card.Root>
         ))}
       </Box>
     </Box>

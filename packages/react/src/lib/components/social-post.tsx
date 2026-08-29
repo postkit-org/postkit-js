@@ -7,8 +7,10 @@ import {
   type ResolvedSocialPost,
 } from '@postkit/unfurl';
 import {
+  AspectRatio,
   Box,
   Button,
+  Card,
   chakra,
   Flex,
   Image,
@@ -31,6 +33,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
 const SocialPostIframe = chakra('iframe');
 const SocialPostQuote = chakra('blockquote');
@@ -301,15 +304,10 @@ export function SocialPost({
   let primaryContent: ReactNode;
   if (resolvedPresentation === 'embed' && embed?.src) {
     primaryContent = (
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(embed.aspectRatio)}
         className={recipe.classNameMap.embedFrame}
-        css={[
-          styles.embedFrame,
-          embed.aspectRatio
-            ? { aspectRatio: String(embed.aspectRatio) }
-            : undefined,
-          slotStyles?.embedFrame,
-        ]}
+        css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
         {embedActive ? (
           <SocialPostIframe
@@ -345,7 +343,7 @@ export function SocialPost({
             </Button>
           </Box>
         )}
-      </Box>
+      </AspectRatio>
     );
   } else {
     primaryContent = (
@@ -504,7 +502,7 @@ export function SocialPost({
   }
 
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="SocialPost"
       data-postkit-provider={provider ?? preview?.provider.id}
@@ -517,6 +515,6 @@ export function SocialPost({
     >
       {primaryContent}
       {snapshotProvenance}
-    </Box>
+    </Card.Root>
   );
 }
