@@ -174,7 +174,12 @@ describe('Postkit prose', () => {
         <UnorderedList data-testid="unordered-list">
           <ListItem>
             First item
-            <OrderedList data-testid="nested-ordered-list">
+            <OrderedList
+              data-testid="nested-ordered-list"
+              reversed
+              start={4}
+              type="A"
+            >
               <ListItem>Nested item</ListItem>
             </OrderedList>
           </ListItem>
@@ -187,6 +192,9 @@ describe('Postkit prose', () => {
     const orderedList = screen.getByTestId('nested-ordered-list');
     expect(unorderedList.tagName).toBe('UL');
     expect(orderedList.tagName).toBe('OL');
+    expect(orderedList.getAttribute('start')).toBe('4');
+    expect(orderedList.hasAttribute('reversed')).toBe(true);
+    expect(orderedList.getAttribute('type')).toBe('A');
     expect(unorderedList.className).toContain('chakra-list__root');
     expect(orderedList.className).toContain('chakra-list__root');
     expect(screen.getAllByRole('listitem')).toHaveLength(3);

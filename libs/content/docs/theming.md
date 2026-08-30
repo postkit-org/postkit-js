@@ -134,4 +134,5 @@ The wrapper applies these defaults before its prose recipe and direct `css`
 prop, preserving both theme-level and instance-level overrides. Use
 `<Prose unstyled>` for a completely bare wrapper. Markdown `ul`, `ol`, and `li`
 elements render through Chakra's List recipe; pass `unstyled` to a mapped list
-root when its complete list subtree should be bare.
+root when its complete list subtree should be bare. Ordered-list mappings retain
+native `start`, `reversed`, and `type` attributes supplied by Markdown renderers.

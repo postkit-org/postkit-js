@@ -132,16 +132,29 @@ function createPostkitProseHeading<Element extends `h${1 | 2 | 3 | 4 | 5 | 6}`>(
   return PostkitProseHeading as ChakraComponent<Element>;
 }
 
-function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
-  element: Element,
-): ComponentType<ListRootProps> {
+type PostkitOrderedListRootProps = Omit<
+  ListRootProps,
+  keyof HTMLChakraProps<'ol'>
+> &
+  HTMLChakraProps<'ol'> &
+  UnstyledProp;
+
+function createPostkitProseListRoot(
+  element: 'ul',
+): ComponentType<ListRootProps>;
+function createPostkitProseListRoot(
+  element: 'ol',
+): ComponentType<PostkitOrderedListRootProps>;
+function createPostkitProseListRoot(element: 'ul' | 'ol') {
+  type ProseListRootProps = ListRootProps | PostkitOrderedListRootProps;
+
   function PostkitProseListRoot({
     children,
     className,
     css,
     unstyled,
     ...props
-  }: ListRootProps) {
+  }: ProseListRootProps) {
     const inheritedUnstyled = useContext(PostkitProseListUnstyledContext);
     const isUnstyled = unstyled ?? inheritedUnstyled;
     const recipe = usePostkitSlotRecipe(
@@ -153,7 +166,7 @@ function createPostkitProseListRoot<Element extends 'ul' | 'ol'>(
     return (
       <PostkitProseListUnstyledContext.Provider value={isUnstyled}>
         <List.Root
-          {...props}
+          {...(props as ListRootProps)}
           as={element}
           unstyled={isUnstyled}
           data-postkit-prose-element={element}

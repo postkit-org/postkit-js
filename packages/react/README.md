@@ -263,7 +263,9 @@ By default the map supplies Chakra-backed components for:
 
 - Headings `h1` through `h6`, paragraphs, links, blockquotes, strong,
   emphasis, strikethrough, horizontal rules, and line breaks.
-- Ordered, unordered, and task lists routed through Chakra's List recipe.
+- Ordered, unordered, and task lists routed through Chakra's List recipe while
+  preserving native ordered-list attributes such as `start`, `reversed`, and
+  `type`.
 - Inline code, code blocks, keyboard input, highlights, and small text.
 - GFM tables and their sections, rows, headers, and cells.
 - Images, figures, captions, footnote elements, definition lists, details,
