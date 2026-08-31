@@ -1,0 +1,32 @@
+export {
+  POSTKIT_DOCUMENT_VERSION,
+  PostkitParseError,
+  createPostkitDocument,
+  parsePostkit,
+  parsePostkitHtml,
+  parsePostkitJson,
+  parsePostkitMarkdown,
+  type ParsePostkitHtmlOptions,
+  type ParsePostkitMarkdownOptions,
+  type ParsePostkitOptions,
+  type PostkitAttributeValue,
+  type PostkitComponentNode,
+  type PostkitDocument,
+  type PostkitElementNode,
+  type PostkitInputFormat,
+  type PostkitJsonValue,
+  type PostkitNode,
+  type PostkitTextNode,
+  type PostkitUnknownElementBehavior,
+} from '@postkit/core';
+
+export {
+  DocumentRenderer,
+  createPostkitDocumentComponents,
+  postkitDocumentComponents,
+  type CreatePostkitDocumentComponentsOptions,
+  type DocumentRendererProps,
+  type PostkitDocumentComponentMap,
+  type PostkitRenderComponent,
+  type PostkitUnknownNodeBehavior,
+} from './lib/document-renderer.js';

@@ -48,6 +48,20 @@ describe('Postkit document parsing', () => {
     });
   });
 
+  it('treats the Postkit prose renderer as a transparent document wrapper', () => {
+    const document = parsePostkitHtml(
+      '<div data-postkit-component="Prose" data-postkit-prose=""><p>Article body.</p></div>',
+    );
+
+    expect(document.children).toEqual([
+      {
+        type: 'element',
+        name: 'p',
+        children: [{ type: 'text', value: 'Article body.' }],
+      },
+    ]);
+  });
+
   it('parses GFM Markdown into the same semantic document model', () => {
     const document = parsePostkitMarkdown(`
 ## Article

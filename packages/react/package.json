@@ -51,6 +51,12 @@
       "types": "./dist/remark.d.ts",
       "import": "./dist/remark.js",
       "default": "./dist/remark.js"
+    },
+    "./document": {
+      "@postkit/source": "./src/document.ts",
+      "types": "./dist/document.d.ts",
+      "import": "./dist/document.js",
+      "default": "./dist/document.js"
     }
   },
   "files": [
@@ -59,6 +65,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
+    "@postkit/core": "0.1.1",
     "@postkit/unfurl": "0.1.1",
     "remark-directive": "^4.0.0",
     "remark-frontmatter": "^5.0.0",

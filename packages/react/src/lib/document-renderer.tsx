@@ -1,0 +1,299 @@
+'use client';
+
+import {
+  POSTKIT_DOCUMENT_VERSION,
+  type PostkitComponentNode,
+  type PostkitDocument,
+  type PostkitElementNode,
+  type PostkitJsonValue,
+  type PostkitNode,
+} from '@postkit/core';
+import { chakra } from '@chakra-ui/react';
+import {
+  createElement,
+  Fragment,
+  type ElementType,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
+
+import { Prose, postkitProseComponents } from './components/prose.js';
+import { postkitMdxComponents } from './mdx-components.js';
+
+export type PostkitRenderComponent = ElementType;
+export type PostkitDocumentComponentMap = Readonly<
+  Record<string, PostkitRenderComponent>
+>;
+export type PostkitUnknownNodeBehavior = 'drop' | 'unwrap';
+
+const structuralElementNames = [
+  'abbr',
+  'article',
+  'aside',
+  'audio',
+  'b',
+  'caption',
+  'div',
+  'footer',
+  'header',
+  'i',
+  'main',
+  'picture',
+  'section',
+  'source',
+  'span',
+  'tfoot',
+  'time',
+  'u',
+  'video',
+] as const;
+
+const structuralComponents = Object.fromEntries(
+  structuralElementNames.map((name) => [name, chakra(name)]),
+) as PostkitDocumentComponentMap;
+
+export const postkitDocumentComponents: PostkitDocumentComponentMap =
+  Object.freeze({
+    ...structuralComponents,
+    ...postkitProseComponents,
+    ...postkitMdxComponents,
+    Prose,
+  });
+
+export interface CreatePostkitDocumentComponentsOptions {
+  readonly components?: Readonly<Record<string, PostkitRenderComponent>>;
+}
+
+export function createPostkitDocumentComponents(
+  options: CreatePostkitDocumentComponentsOptions = {},
+): PostkitDocumentComponentMap {
+  return {
+    ...postkitDocumentComponents,
+    ...options.components,
+  };
+}
+
+export interface DocumentRendererProps {
+  readonly document: PostkitDocument;
+  /** Override semantic elements (such as `img`) and Postkit components by name. */
+  readonly components?: Readonly<Record<string, PostkitRenderComponent>>;
+  /** Wrap the document in Postkit's spacing-rhythm component. Set to false for fragments. */
+  readonly wrapper?: PostkitRenderComponent | false;
+  readonly wrapperProps?: Readonly<Record<string, unknown>>;
+  readonly unknownElements?: PostkitUnknownNodeBehavior;
+  readonly unknownComponents?: PostkitUnknownNodeBehavior;
+  /** Emit versioned `data-postkit-*` reconstruction hints. */
+  readonly annotate?: boolean;
+}
+
+const blockedComponentProps = new Set([
+  'children',
+  'className',
+  'css',
+  'dangerouslySetInnerHTML',
+  'ref',
+  'rootProps',
+  'slotStyles',
+  'style',
+]);
+
+const voidElementNames = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
+
+function safeComponentProps(
+  props: Readonly<Record<string, PostkitJsonValue>> | undefined,
+): Record<string, PostkitJsonValue> {
+  return Object.fromEntries(
+    Object.entries(props ?? {}).filter(
+      ([name]) =>
+        !blockedComponentProps.has(name) &&
+        !name.toLowerCase().startsWith('on'),
+    ),
+  );
+}
+
+function annotationProps(
+  node: PostkitComponentNode,
+): Readonly<Record<string, unknown>> {
+  const props = safeComponentProps(node.props);
+  return {
+    'data-postkit-component': node.name,
+    'data-postkit-version': POSTKIT_DOCUMENT_VERSION,
+    ...(Object.keys(props).length > 0
+      ? { 'data-postkit-props': JSON.stringify(props) }
+      : {}),
+  };
+}
+
+function renderChildren(
+  children: readonly PostkitNode[],
+  context: RenderContext,
+  path: string,
+): ReactNode[] {
+  return children.flatMap((child, index) =>
+    renderNode(child, context, `${path}.${index}`),
+  );
+}
+
+function elementProps(node: PostkitElementNode, annotate: boolean) {
+  const attributes = Object.fromEntries(
+    Object.entries(node.attributes ?? {}).filter(([name, value]) => {
+      if (
+        blockedComponentProps.has(name) ||
+        name.toLowerCase().startsWith('on')
+      ) {
+        return false;
+      }
+      if (
+        ['action', 'cite', 'formAction', 'href', 'poster', 'src'].includes(
+          name,
+        ) &&
+        typeof value === 'string'
+      ) {
+        const normalized = value.trim().toLowerCase();
+        return !(
+          normalized.startsWith('javascript:') ||
+          normalized.startsWith('vbscript:') ||
+          normalized.startsWith('data:text/html')
+        );
+      }
+      return true;
+    }),
+  ) as Record<string, unknown>;
+  if (node.name === 'code') {
+    const language = attributes['language'];
+    if (typeof language === 'string' && language.length > 0) {
+      attributes['className'] = `language-${language}`;
+      delete attributes['language'];
+    }
+    const meta = attributes['meta'];
+    if (typeof meta === 'string' && meta.length > 0) {
+      attributes['data-meta'] = meta;
+      delete attributes['meta'];
+    }
+  }
+  if (annotate) {
+    attributes['data-postkit-node'] = node.name;
+    attributes['data-postkit-version'] = POSTKIT_DOCUMENT_VERSION;
+  }
+  return attributes;
+}
+
+interface RenderContext {
+  readonly components: PostkitDocumentComponentMap;
+  readonly unknownElements: PostkitUnknownNodeBehavior;
+  readonly unknownComponents: PostkitUnknownNodeBehavior;
+  readonly annotate: boolean;
+}
+
+function renderElement(
+  node: PostkitElementNode,
+  context: RenderContext,
+  path: string,
+): ReactElement | ReactNode[] | null {
+  const Component = context.components[node.name];
+  const children = renderChildren(node.children, context, path);
+  if (!Component) {
+    return context.unknownElements === 'drop' ? null : children;
+  }
+  const props = elementProps(node, context.annotate);
+  if (node.name === 'li' && typeof props['checked'] === 'boolean') {
+    const checked = props['checked'];
+    delete props['checked'];
+    children.unshift(
+      createElement('input', {
+        key: `${path}.task`,
+        type: 'checkbox',
+        checked,
+        disabled: true,
+        'aria-label': checked ? 'Completed' : 'Not completed',
+      }),
+    );
+  }
+  return voidElementNames.has(node.name)
+    ? createElement(Component, { ...props, key: path })
+    : createElement(Component, { ...props, key: path }, children);
+}
+
+function renderComponent(
+  node: PostkitComponentNode,
+  context: RenderContext,
+  path: string,
+): ReactElement | ReactNode[] | null {
+  const Component = context.components[node.name];
+  const children = renderChildren(node.children, context, path);
+  if (!Component) {
+    return context.unknownComponents === 'drop' ? null : children;
+  }
+  const props = safeComponentProps(node.props);
+  const annotations = context.annotate ? annotationProps(node) : {};
+  return createElement(
+    Component,
+    {
+      ...props,
+      key: path,
+      rootProps: annotations,
+    },
+    children,
+  );
+}
+
+function renderNode(
+  node: PostkitNode,
+  context: RenderContext,
+  path: string,
+): ReactNode[] {
+  if (node.type === 'text') return [node.value];
+  const rendered =
+    node.type === 'element'
+      ? renderElement(node, context, path)
+      : renderComponent(node, context, path);
+  if (rendered === null) return [];
+  return Array.isArray(rendered) ? rendered : [rendered];
+}
+
+export function DocumentRenderer({
+  document,
+  components,
+  wrapper = Prose,
+  wrapperProps,
+  unknownElements = 'unwrap',
+  unknownComponents = 'unwrap',
+  annotate = true,
+}: DocumentRendererProps) {
+  const context: RenderContext = {
+    components: createPostkitDocumentComponents({ components }),
+    unknownElements,
+    unknownComponents,
+    annotate,
+  };
+  const children = renderChildren(document.children, context, 'document');
+  if (wrapper === false) return createElement(Fragment, null, children);
+  return createElement(
+    wrapper,
+    {
+      ...(annotate
+        ? {
+            'data-postkit-document': '',
+            'data-postkit-version': document.version,
+          }
+        : {}),
+      ...wrapperProps,
+    },
+    children,
+  );
+}

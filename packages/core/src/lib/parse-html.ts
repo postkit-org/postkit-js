@@ -285,6 +285,13 @@ function convertElement(
     'data-postkit-node',
   );
   if (
+    componentName === 'Prose' &&
+    ('dataPostkitProse' in node.properties ||
+      'data-postkit-prose' in node.properties)
+  ) {
+    return children;
+  }
+  if (
     componentName &&
     componentNamePattern.test(componentName) &&
     (options.allowComponent?.(componentName) ?? true)

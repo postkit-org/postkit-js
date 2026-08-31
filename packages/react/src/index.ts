@@ -223,6 +223,16 @@ export {
   type PostkitMdxComponents,
 } from './lib/mdx-components.js';
 export {
+  DocumentRenderer,
+  createPostkitDocumentComponents,
+  postkitDocumentComponents,
+  type CreatePostkitDocumentComponentsOptions,
+  type DocumentRendererProps,
+  type PostkitDocumentComponentMap,
+  type PostkitRenderComponent,
+  type PostkitUnknownNodeBehavior,
+} from './lib/document-renderer.js';
+export {
   createPostkitLink,
   isPostkitInternalHref,
   type CreatePostkitLinkOptions,
