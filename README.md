@@ -14,6 +14,7 @@ or rendering environment changes.
 
 | Package                                                | Use it when                                                                                               |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| [`@postkit/core`](packages/core)                       | An API, feed reader, or renderer needs versioned HTML, Markdown, MDX, and JSON interchange without React. |
 | [`@postkit/react`](packages/react)                     | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
 | [`@postkit/email`](packages/email)                     | An email build needs Postkit content rendered with Chakra Email primitives and email-safe fallbacks.      |
 | [`@postkit/shiki`](packages/shiki)                     | A Postkit application needs lazy Shiki syntax highlighting for Chakra code blocks.                        |
@@ -70,11 +71,11 @@ For a framework application, continue with its package guide:
 ## How the pieces fit together
 
 ```text
-Markdown, MDX, or structured declarations
+HTML, Markdown, MDX, JSON, or structured declarations
                     |
-        Postkit component contract
+       @postkit/core document contract
                     |
-       Framework component adapter
+      Component or framework renderer
                     |
      Site theme, router, and resolvers
                     |

@@ -31,6 +31,7 @@ The package is ESM-only and includes TypeScript declarations.
 - Chakra-backed article and publishing components
 - `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
 - `createPostkitMdxComponents`
+- `DocumentRenderer` and the `@postkit/react/document` interchange entry point
 - `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
 - `postkitDeclarationManifest` for editor integrations
 - `postkitComponentCatalog` and `component-manifest.json` for component
@@ -42,6 +43,43 @@ points avoid loading the root component declaration graph during TypeScript
 checking. The root exports remain available for compatibility.
 
 - Slot recipes, recipe keys, and typed style overrides
+
+## Render portable documents
+
+`@postkit/react/document` combines the React-independent parser contract from
+`@postkit/core` with a Chakra-backed renderer. This is useful for RSS, API, and
+other content whose source format is selected at runtime:
+
+```tsx
+import { DocumentRenderer, parsePostkit } from '@postkit/react/document';
+
+const document = parsePostkit(feedItem.content, { format: 'html' });
+
+<PostkitProvider system={siteSystem}>
+  <DocumentRenderer document={document} />
+</PostkitProvider>;
+```
+
+Semantic nodes use the same host-native primitives as authored Markdown:
+headings use Chakra `Heading`, lists use `List`, tables use `Table`, images use
+`Image`, and fenced code uses Postkit's Chakra `CodeBlock`. Replace a semantic
+element or rich component without replacing the rest of the registry:
+
+```tsx
+<DocumentRenderer
+  document={document}
+  components={{
+    a: SiteLink,
+    img: FeedImage,
+  }}
+/>
+```
+
+Unknown elements and components are unwrapped by default so readable children
+survive without creating arbitrary DOM tags. The renderer emits versioned
+`data-postkit-*` annotations by default, and the HTML parser recognizes those
+annotations when rendered output needs to become a Postkit document again.
+Set `annotate={false}` only when reconstruction is not needed.
 
 ## Quick start
 

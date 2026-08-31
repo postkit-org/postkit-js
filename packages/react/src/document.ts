@@ -6,6 +6,11 @@ export {
   parsePostkitHtml,
   parsePostkitJson,
   parsePostkitMarkdown,
+  serializePostkit,
+  serializePostkitHtml,
+  serializePostkitJson,
+  serializePostkitMarkdown,
+  serializePostkitMdx,
   type ParsePostkitHtmlOptions,
   type ParsePostkitMarkdownOptions,
   type ParsePostkitOptions,
@@ -16,8 +21,13 @@ export {
   type PostkitInputFormat,
   type PostkitJsonValue,
   type PostkitNode,
+  type PostkitOutputFormat,
   type PostkitTextNode,
   type PostkitUnknownElementBehavior,
+  type SerializePostkitHtmlOptions,
+  type SerializePostkitJsonOptions,
+  type SerializePostkitMarkdownOptions,
+  type SerializePostkitOptions,
 } from '@postkit/core';
 
 export {

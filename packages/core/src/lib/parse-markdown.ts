@@ -47,6 +47,24 @@ interface MdxAttribute {
     string | null | { readonly type: string; readonly value?: string };
 }
 
+function isPostkitJsonValue(value: unknown): value is PostkitJsonValue {
+  if (
+    value === null ||
+    typeof value === 'boolean' ||
+    typeof value === 'string' ||
+    (typeof value === 'number' && Number.isFinite(value))
+  ) {
+    return true;
+  }
+  if (Array.isArray(value)) return value.every(isPostkitJsonValue);
+  if (typeof value !== 'object') return false;
+  return Object.values(value).every(isPostkitJsonValue);
+}
+
+function safePropName(name: string): boolean {
+  return !['__proto__', 'constructor', 'prototype'].includes(name);
+}
+
 function element(
   name: string,
   children: readonly PostkitNode[],
@@ -63,7 +81,10 @@ function element(
 function mdxProps(
   attributes: readonly MdxAttribute[] | undefined,
 ): Readonly<Record<string, PostkitJsonValue>> | undefined {
-  const props: Record<string, PostkitJsonValue> = {};
+  const props: Record<string, PostkitJsonValue> = Object.create(null) as Record<
+    string,
+    PostkitJsonValue
+  >;
   for (const attribute of attributes ?? []) {
     if (attribute.type === 'mdxJsxExpressionAttribute') {
       throw new PostkitParseError(
@@ -71,12 +92,30 @@ function mdxProps(
         'MDX spread attributes are not supported by the safe Postkit parser.',
       );
     }
-    if (!attribute.name) continue;
+    if (!attribute.name || !safePropName(attribute.name)) continue;
     if (attribute.value === null || attribute.value === undefined) {
       props[attribute.name] = true;
       continue;
     }
     if (typeof attribute.value === 'string') {
+      if (attribute.name === 'data-postkit-props') {
+        try {
+          const value = JSON.parse(attribute.value) as unknown;
+          if (
+            typeof value === 'object' &&
+            value !== null &&
+            !Array.isArray(value) &&
+            isPostkitJsonValue(value)
+          ) {
+            for (const [name, item] of Object.entries(value)) {
+              if (safePropName(name)) props[name] = item;
+            }
+          }
+        } catch {
+          // Malformed reconstruction hints are ignored.
+        }
+        continue;
+      }
       props[attribute.name] = attribute.value;
       continue;
     }
@@ -93,6 +132,19 @@ function convertChildren(
   options: ParsePostkitMarkdownOptions,
 ): PostkitNode[] {
   return (children ?? []).flatMap((child) => convertNode(child, options));
+}
+
+function convertTableRow(
+  node: SyntaxNode,
+  options: ParsePostkitMarkdownOptions,
+  cellName: 'td' | 'th',
+): PostkitNode {
+  return element(
+    'tr',
+    (node.children ?? []).map((cell) =>
+      element(cellName, convertChildren(cell.children, options)),
+    ),
+  );
 }
 
 function convertNode(
@@ -165,8 +217,24 @@ function convertNode(
           ...(node.spread ? { spread: true } : {}),
         }),
       ];
-    case 'table':
-      return [element('table', [element('tbody', children())])];
+    case 'table': {
+      const [header, ...body] = node.children ?? [];
+      return [
+        element('table', [
+          ...(header
+            ? [element('thead', [convertTableRow(header, options, 'th')])]
+            : []),
+          ...(body.length > 0
+            ? [
+                element(
+                  'tbody',
+                  body.map((row) => convertTableRow(row, options, 'td')),
+                ),
+              ]
+            : []),
+        ]),
+      ];
+    }
     case 'tableRow':
       return [element('tr', children())];
     case 'tableCell':
@@ -182,9 +250,10 @@ function convertNode(
           ? (Object.fromEntries(
               Object.entries(props).filter(
                 (entry): entry is [string, PostkitAttributeValue] =>
-                  typeof entry[1] === 'boolean' ||
-                  typeof entry[1] === 'number' ||
-                  typeof entry[1] === 'string',
+                  !entry[0].startsWith('data-postkit-') &&
+                  (typeof entry[1] === 'boolean' ||
+                    typeof entry[1] === 'number' ||
+                    typeof entry[1] === 'string'),
               ),
             ) as Record<string, PostkitAttributeValue>)
           : undefined;

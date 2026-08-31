@@ -88,10 +88,12 @@ try {
   writeFileSync(
     join(consumerRoot, 'smoke.mjs'),
     `const packages = await Promise.all([
+  import('@postkit/core'),
   import('@postkit/unfurl'),
   import('@postkit/react'),
   import('@postkit/react/theme'),
   import('@postkit/react/remark'),
+  import('@postkit/react/document'),
   import('@postkit/email'),
   import('@postkit/shiki'),
   import('@postkit/next'),
@@ -109,8 +111,10 @@ console.log('PostKit tarball runtime entry points loaded.');
 
   writeFileSync(
     join(consumerRoot, 'consumer.ts'),
-    `import { createLinkResolverRegistry } from '@postkit/unfurl';
+    `import { parsePostkitHtml, serializePostkitJson } from '@postkit/core';
+import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { PostkitProvider } from '@postkit/react';
+import { DocumentRenderer } from '@postkit/react/document';
 import { createPostkitTheme } from '@postkit/react/theme';
 import { remarkPostkit } from '@postkit/react/remark';
 import { PostkitEmailProvider } from '@postkit/email';
@@ -122,8 +126,11 @@ import { postkitAstro } from '@postkit/astro';
 import type { PostkitAstroComponents } from '@postkit/astro/components';
 import type { Audio } from '@postkit/astro/react';
 
+void parsePostkitHtml;
+void serializePostkitJson;
 void createLinkResolverRegistry;
 void PostkitProvider;
+void DocumentRenderer;
 void createPostkitTheme;
 void remarkPostkit;
 void PostkitEmailProvider;

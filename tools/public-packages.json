@@ -1,4 +1,5 @@
 [
+  "@postkit/core",
   "@postkit/unfurl",
   "@postkit/react",
   "@postkit/email",

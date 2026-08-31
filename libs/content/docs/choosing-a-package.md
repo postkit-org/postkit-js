@@ -13,6 +13,7 @@ behavior.
 
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
 | `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
 | `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
 | `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
@@ -23,6 +24,13 @@ behavior.
 | `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
 
 ## Common combinations
+
+An API, feed processor, or non-React content service can use the core document
+contract by itself:
+
+```sh
+npm install @postkit/core
+```
 
 A Next.js publishing site commonly uses:
 

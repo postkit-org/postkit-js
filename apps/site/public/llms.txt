@@ -17,6 +17,7 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 
 - [Components](/docs/components): Learn how PostKit components, declarations, props, and presentation variants work together.
 - [Markdown and MDX](/docs/markdown-and-mdx): Author PostKit declarations in MDX or literal-only plain Markdown directives.
+- [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
 
 ## Integration
 

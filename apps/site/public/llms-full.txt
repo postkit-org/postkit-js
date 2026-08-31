@@ -75,6 +75,7 @@ behavior.
 
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
 | `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
 | `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
 | `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
@@ -85,6 +86,13 @@ behavior.
 | `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
 
 ## Common combinations
+
+An API, feed processor, or non-React content service can use the core document
+contract by itself:
+
+```sh
+npm install @postkit/core
+```
 
 A Next.js publishing site commonly uses:
 
@@ -134,14 +142,18 @@ Components such as `Callout`, `Figure`, `Audio`, and `LinkPreview` describe
 article intent. Their declarations define names, directive syntax, accepted
 props, and whether they contain Markdown children.
 
-The contract can be authored as JSX in MDX or as literal-only directives in
-plain Markdown.
+The versioned `@postkit/core` document preserves semantic elements, rich
+component names, literal props, and children independently of any renderer.
+It can be parsed from or serialized to HTML, Markdown, safe literal MDX, and
+JSON. The component contract can also be authored as JSX in trusted MDX or as
+literal-only directives in plain Markdown.
 
 ## The renderer
 
-Each environment maps the portable declaration to a real component. React uses
-Chakra-backed components. Astro bridges the same declarations into Astro
-components and hydrates only the interactive parts.
+Each environment maps the portable declaration to a real component. React's
+`DocumentRenderer` maps semantic nodes and declarations to Chakra-backed
+components. Astro bridges the same declarations into Astro components and
+hydrates only the interactive parts.
 
 ## The host application
 
@@ -350,6 +362,70 @@ imports remain supported.
 
 MDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and
 reserve `::postkit-*{...}` declarations for plain Markdown pipelines.
+
+## Portable documents and feeds
+
+Source: /docs/portable-documents
+
+# Portable documents and feeds
+
+Use `@postkit/core` when an API or feed needs to offer the same article as
+HTML, Markdown, MDX, or versioned JSON. The package has no React dependency.
+
+```ts
+import { parsePostkit, serializePostkit } from '@postkit/core';
+
+const document = parsePostkit(input, { format: 'html' });
+
+return {
+  html: serializePostkit(document, { format: 'html' }),
+  markdown: serializePostkit(document, { format: 'markdown' }),
+  json: serializePostkit(document, { format: 'json' }),
+};
+```
+
+The HTML parser keeps safe semantic structure and strips scripts, event
+handlers, presentation attributes, and executable URLs. The safe MDX parser
+accepts literal component tags but rejects expressions, spread props, imports,
+and exports. JSON input must match the current versioned document schema.
+
+## Render through Chakra
+
+`@postkit/react/document` supplies `DocumentRenderer`. Semantic input is mapped
+through Postkit's Chakra-backed prose primitives, so the host's Heading, List,
+Table, Image, Code, and other recipes continue to apply.
+
+```tsx
+import { DocumentRenderer, parsePostkitHtml } from '@postkit/react/document';
+
+const document = parsePostkitHtml(rssItem.content);
+
+<PostkitProvider system={siteSystem}>
+  <DocumentRenderer
+    document={document}
+    components={{
+      a: SiteLink,
+      img: FeedImage,
+    }}
+  />
+</PostkitProvider>;
+```
+
+The renderer never creates arbitrary elements or invokes unknown components.
+Unknown nodes are unwrapped by default, retaining readable children. Use the
+`unknownElements` and `unknownComponents` props to drop them instead.
+
+## Reconstruct rendered output
+
+HTML serialization and `DocumentRenderer` emit versioned `data-postkit-*`
+annotations by default. They identify semantic nodes, rich component names,
+and JSON-compatible component props without requiring an extra layout wrapper.
+`parsePostkitHtml` recognizes those hints, while also remaining useful for
+ordinary unannotated RSS or CMS HTML.
+
+Annotations improve round trips, but they are not an authenticity mechanism.
+Continue to treat remote content as untrusted and expose only application-
+approved component overrides and link behavior.
 
 ## Theming
 
@@ -601,16 +677,17 @@ The package manifests are authoritative for exact peer dependency ranges.
 
 ## Runtime matrix
 
-| Capability                   | Environment                                                  |
-| ---------------------------- | ------------------------------------------------------------ |
-| React rendering              | Server rendering or a browser-capable React application      |
-| Static Astro components      | Build/server render with no component hydration              |
-| Interactive Astro components | `client:visible` islands                                     |
-| Native audio and video       | Browser-native controls; no PostKit client runtime           |
-| Unfurling                    | Server, build process, or trusted editor with Web Fetch APIs |
-| Plain Markdown transforms    | Node/build tooling using Unified and Remark                  |
-| Shiki syntax highlighting    | Lazy client runtime beneath `PostkitProvider`                |
-| Email rendering              | Not defined in the current component contract                |
+| Capability                     | Environment                                                  |
+| ------------------------------ | ------------------------------------------------------------ |
+| Document parsing/serialization | Any ES2022 ESM runtime; React is not required                |
+| React rendering                | Server rendering or a browser-capable React application      |
+| Static Astro components        | Build/server render with no component hydration              |
+| Interactive Astro components   | `client:visible` islands                                     |
+| Native audio and video         | Browser-native controls; no PostKit client runtime           |
+| Unfurling                      | Server, build process, or trusted editor with Web Fetch APIs |
+| Plain Markdown transforms      | Node/build tooling using Unified and Remark                  |
+| Shiki syntax highlighting      | Lazy client runtime beneath `PostkitProvider`                |
+| Email rendering                | Not defined in the current component contract                |
 
 Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
 visible Astro islands. Other current Astro bridges render statically; Audio and
@@ -1084,6 +1161,7 @@ The package is ESM-only and includes TypeScript declarations.
 - Chakra-backed article and publishing components
 - `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
 - `createPostkitMdxComponents`
+- `DocumentRenderer` and the `@postkit/react/document` interchange entry point
 - `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
 - `postkitDeclarationManifest` for editor integrations
 - `postkitComponentCatalog` and `component-manifest.json` for component
@@ -1095,6 +1173,43 @@ points avoid loading the root component declaration graph during TypeScript
 checking. The root exports remain available for compatibility.
 
 - Slot recipes, recipe keys, and typed style overrides
+
+## Render portable documents
+
+`@postkit/react/document` combines the React-independent parser contract from
+`@postkit/core` with a Chakra-backed renderer. This is useful for RSS, API, and
+other content whose source format is selected at runtime:
+
+```tsx
+import { DocumentRenderer, parsePostkit } from '@postkit/react/document';
+
+const document = parsePostkit(feedItem.content, { format: 'html' });
+
+<PostkitProvider system={siteSystem}>
+  <DocumentRenderer document={document} />
+</PostkitProvider>;
+```
+
+Semantic nodes use the same host-native primitives as authored Markdown:
+headings use Chakra `Heading`, lists use `List`, tables use `Table`, images use
+`Image`, and fenced code uses Postkit's Chakra `CodeBlock`. Replace a semantic
+element or rich component without replacing the rest of the registry:
+
+```tsx
+<DocumentRenderer
+  document={document}
+  components={{
+    a: SiteLink,
+    img: FeedImage,
+  }}
+/>
+```
+
+Unknown elements and components are unwrapped by default so readable children
+survive without creating arbitrary DOM tags. The renderer emits versioned
+`data-postkit-*` annotations by default, and the HTML parser recognizes those
+annotations when rendered output needs to become a Postkit document again.
+Set `annotate={false}` only when reconstruction is not needed.
 
 ## Quick start
 

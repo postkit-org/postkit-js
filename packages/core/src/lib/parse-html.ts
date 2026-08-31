@@ -209,22 +209,14 @@ function annotatedProps(
 }
 
 function safeUrl(value: string, property: 'href' | 'src'): boolean {
-  const normalized = value.trim().toLowerCase();
-  if (
-    normalized.startsWith('#') ||
-    normalized.startsWith('/') ||
-    normalized.startsWith('./') ||
-    normalized.startsWith('../')
-  ) {
-    return true;
-  }
-  try {
-    const url = new URL(value);
-    if (url.protocol === 'http:' || url.protocol === 'https:') return true;
-    return property === 'href' && ['mailto:', 'tel:'].includes(url.protocol);
-  } catch {
-    return false;
-  }
+  const normalized = [...value.trim()]
+    .filter((character) => character.charCodeAt(0) > 0x20)
+    .join('')
+    .toLowerCase();
+  const scheme = normalized.match(/^([a-z][a-z0-9+.-]*):/)?.[1];
+  if (!scheme) return true;
+  if (scheme === 'http' || scheme === 'https') return true;
+  return property === 'href' && (scheme === 'mailto' || scheme === 'tel');
 }
 
 function normalizeAttributes(
@@ -277,6 +269,12 @@ function convertElement(
   allowed: ReadonlySet<string>,
 ): PostkitNode[] {
   const children = convertChildren(node.children, options, allowed);
+  if (
+    'dataPostkitDocument' in node.properties ||
+    'data-postkit-document' in node.properties
+  ) {
+    return children;
+  }
   const componentName = propertyString(
     node.properties,
     'dataPostkitComponent',

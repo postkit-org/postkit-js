@@ -65,6 +65,7 @@
   "release": {
     "projectsRelationship": "fixed",
     "projects": [
+      "@postkit/core",
       "@postkit/unfurl",
       "@postkit/react",
       "@postkit/email",

@@ -100,7 +100,7 @@ describe('DocumentRenderer', () => {
             type: 'element',
             name: 'a',
             attributes: {
-              href: 'javascript:alert(1)',
+              href: 'java\tscript:alert(1)',
               onClick: 'alert(1)',
             },
             children: [{ type: 'text', value: 'Read safely' }],
@@ -113,6 +113,7 @@ describe('DocumentRenderer', () => {
 
     expect(markup).toContain('Read safely');
     expect(markup).not.toContain('javascript:');
+    expect(markup).not.toContain('script:alert');
     expect(markup).not.toContain('onClick');
   });
 });

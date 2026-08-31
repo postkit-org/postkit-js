@@ -25,3 +25,15 @@ export {
   type ParsePostkitMarkdownOptions,
 } from './lib/parse-markdown.js';
 export { parsePostkitJson } from './lib/parse-json.js';
+export {
+  serializePostkit,
+  serializePostkitHtml,
+  serializePostkitJson,
+  serializePostkitMarkdown,
+  serializePostkitMdx,
+  type PostkitOutputFormat,
+  type SerializePostkitHtmlOptions,
+  type SerializePostkitJsonOptions,
+  type SerializePostkitMarkdownOptions,
+  type SerializePostkitOptions,
+} from './lib/serialize.js';

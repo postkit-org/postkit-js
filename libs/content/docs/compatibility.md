@@ -27,16 +27,17 @@ The package manifests are authoritative for exact peer dependency ranges.
 
 ## Runtime matrix
 
-| Capability                   | Environment                                                  |
-| ---------------------------- | ------------------------------------------------------------ |
-| React rendering              | Server rendering or a browser-capable React application      |
-| Static Astro components      | Build/server render with no component hydration              |
-| Interactive Astro components | `client:visible` islands                                     |
-| Native audio and video       | Browser-native controls; no PostKit client runtime           |
-| Unfurling                    | Server, build process, or trusted editor with Web Fetch APIs |
-| Plain Markdown transforms    | Node/build tooling using Unified and Remark                  |
-| Shiki syntax highlighting    | Lazy client runtime beneath `PostkitProvider`                |
-| Email rendering              | Not defined in the current component contract                |
+| Capability                     | Environment                                                  |
+| ------------------------------ | ------------------------------------------------------------ |
+| Document parsing/serialization | Any ES2022 ESM runtime; React is not required                |
+| React rendering                | Server rendering or a browser-capable React application      |
+| Static Astro components        | Build/server render with no component hydration              |
+| Interactive Astro components   | `client:visible` islands                                     |
+| Native audio and video         | Browser-native controls; no PostKit client runtime           |
+| Unfurling                      | Server, build process, or trusted editor with Web Fetch APIs |
+| Plain Markdown transforms      | Node/build tooling using Unified and Remark                  |
+| Shiki syntax highlighting      | Lazy client runtime beneath `PostkitProvider`                |
+| Email rendering                | Not defined in the current component contract                |
 
 Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
 visible Astro islands. Other current Astro bridges render statically; Audio and

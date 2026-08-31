@@ -114,15 +114,64 @@ const voidElementNames = new Set([
   'wbr',
 ]);
 
+function safePortableUrl(value: string): boolean {
+  const normalized = [...value.trim()]
+    .filter((character) => character.charCodeAt(0) > 0x20)
+    .join('')
+    .toLowerCase();
+  const scheme = normalized.match(/^([a-z][a-z0-9+.-]*):/)?.[1];
+  return !scheme || ['http', 'https', 'mailto', 'tel'].includes(scheme);
+}
+
+const omittedJsonValue = Symbol('omittedPostkitJsonValue');
+
+function safeJsonProp(
+  value: PostkitJsonValue,
+  name?: string,
+): PostkitJsonValue | typeof omittedJsonValue {
+  if (
+    typeof value === 'string' &&
+    name &&
+    /(?:href|poster|src|url)$/i.test(name) &&
+    !safePortableUrl(value)
+  ) {
+    return omittedJsonValue;
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => {
+      const safe = safeJsonProp(item);
+      return safe === omittedJsonValue ? [] : [safe];
+    });
+  }
+  if (value === null || typeof value !== 'object') return value;
+  return Object.fromEntries(
+    Object.entries(value).flatMap(([childName, childValue]) => {
+      if (
+        blockedComponentProps.has(childName) ||
+        childName.toLowerCase().startsWith('on')
+      ) {
+        return [];
+      }
+      const safe = safeJsonProp(childValue, childName);
+      return safe === omittedJsonValue ? [] : [[childName, safe]];
+    }),
+  );
+}
+
 function safeComponentProps(
   props: Readonly<Record<string, PostkitJsonValue>> | undefined,
 ): Record<string, PostkitJsonValue> {
   return Object.fromEntries(
-    Object.entries(props ?? {}).filter(
-      ([name]) =>
-        !blockedComponentProps.has(name) &&
-        !name.toLowerCase().startsWith('on'),
-    ),
+    Object.entries(props ?? {}).flatMap(([name, value]) => {
+      if (
+        blockedComponentProps.has(name) ||
+        name.toLowerCase().startsWith('on')
+      ) {
+        return [];
+      }
+      const safe = safeJsonProp(value, name);
+      return safe === omittedJsonValue ? [] : [[name, safe]];
+    }),
   );
 }
 
@@ -164,12 +213,7 @@ function elementProps(node: PostkitElementNode, annotate: boolean) {
         ) &&
         typeof value === 'string'
       ) {
-        const normalized = value.trim().toLowerCase();
-        return !(
-          normalized.startsWith('javascript:') ||
-          normalized.startsWith('vbscript:') ||
-          normalized.startsWith('data:text/html')
-        );
+        return safePortableUrl(value);
       }
       return true;
     }),

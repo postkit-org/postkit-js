@@ -3,6 +3,7 @@
   "name": "PostKit API",
   "entryPointStrategy": "packages",
   "entryPoints": [
+    "packages/core",
     "packages/unfurl",
     "packages/react",
     "packages/email",

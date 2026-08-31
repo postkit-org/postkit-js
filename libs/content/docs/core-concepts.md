@@ -15,14 +15,18 @@ Components such as `Callout`, `Figure`, `Audio`, and `LinkPreview` describe
 article intent. Their declarations define names, directive syntax, accepted
 props, and whether they contain Markdown children.
 
-The contract can be authored as JSX in MDX or as literal-only directives in
-plain Markdown.
+The versioned `@postkit/core` document preserves semantic elements, rich
+component names, literal props, and children independently of any renderer.
+It can be parsed from or serialized to HTML, Markdown, safe literal MDX, and
+JSON. The component contract can also be authored as JSX in trusted MDX or as
+literal-only directives in plain Markdown.
 
 ## The renderer
 
-Each environment maps the portable declaration to a real component. React uses
-Chakra-backed components. Astro bridges the same declarations into Astro
-components and hydrates only the interactive parts.
+Each environment maps the portable declaration to a real component. React's
+`DocumentRenderer` maps semantic nodes and declarations to Chakra-backed
+components. Astro bridges the same declarations into Astro components and
+hydrates only the interactive parts.
 
 ## The host application
 

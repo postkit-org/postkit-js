@@ -42,10 +42,11 @@ it after trusted publishing is configured.
 
 Packages are published in dependency order:
 
-1. `@postkit/unfurl`
-2. `@postkit/react`
-3. `@postkit/shiki`
-4. Framework adapters
+1. `@postkit/core`
+2. `@postkit/unfurl`
+3. `@postkit/react`
+4. `@postkit/email` and `@postkit/shiki`
+5. Framework adapters
 
 Before mutating the registry, the workflow checks each requested package and
 version. A partially completed publication can be rerun when every package

@@ -12,7 +12,7 @@ describe('Postkit document parsing', () => {
     const document = parsePostkitHtml(`
       <article class="feed-theme" style="color:red">
         <h2 onclick="bad()">Hello</h2>
-        <p>Read <a href="javascript:bad()">this</a>.</p>
+        <p>Read <a href="javascript:bad()">this</a> or <a href="article.html">that</a>.</p>
         <img src="https://example.com/photo.jpg" alt="Photo">
         <script>alert('bad')</script>
       </article>
@@ -22,6 +22,7 @@ describe('Postkit document parsing', () => {
     expect(JSON.stringify(document)).not.toContain('feed-theme');
     expect(JSON.stringify(document)).not.toContain('javascript:');
     expect(JSON.stringify(document)).not.toContain('alert');
+    expect(JSON.stringify(document)).toContain('article.html');
     expect(document.children).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: 'element', name: 'article' }),

@@ -9,6 +9,7 @@ examples live in `examples/`, and validation and release programs live in
 
 | Package                    | Responsibility                                                                   |
 | -------------------------- | -------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned portable documents, safe parsers, and format serializers               |
 | `@postkit/unfurl`          | Provider-neutral server/build-time metadata resolution                           |
 | `@postkit/react`           | Portable declarations, React renderers, Markdown/MDX tooling, and Chakra recipes |
 | `@postkit/email`           | Email-safe renderers and fallbacks built on Chakra Email primitives              |
@@ -18,7 +19,7 @@ examples live in `examples/`, and validation and release programs live in
 | `@postkit/tanstack-router` | TanStack Router link and MDX adapter                                             |
 | `@postkit/astro`           | Astro integration, components, React bridges, and hydration policy               |
 
-Dependency order is `unfurl` → renderers (`react`, `email`) → framework
+Dependency order is `core` and `unfurl` → renderers (`react`, `email`) → framework
 adapters. Keep application
 layout, route definitions, credentials, asset storage, and persistence outside
 the portable component layer. `@postkit/shiki` is an optional companion adapter
@@ -26,6 +27,7 @@ passed into the React provider and does not change the core dependency chain.
 
 ## Sources of truth
 
+- `packages/core/src/lib/document.ts` defines the versioned interchange model.
 - `packages/react/src/lib/declarations.ts` defines the portable component and
   prop contract.
 - `packages/react/src/lib/component-catalog.ts` enriches declarations for
