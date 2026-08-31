@@ -1,0 +1,228 @@
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { gfmFromMarkdown } from 'mdast-util-gfm';
+import { mdxFromMarkdown } from 'mdast-util-mdx';
+import { gfm } from 'micromark-extension-gfm';
+import { mdxjs } from 'micromark-extension-mdxjs';
+
+import {
+  createPostkitDocument,
+  type PostkitAttributeValue,
+  type PostkitDocument,
+  type PostkitJsonValue,
+  type PostkitNode,
+} from './document.js';
+import { PostkitParseError } from './parse-error.js';
+import { parsePostkitHtml } from './parse-html.js';
+
+export interface ParsePostkitMarkdownOptions {
+  /** Parse MDX component syntax while continuing to reject executable expressions. */
+  readonly mdx?: boolean;
+  /** Allow only the component names accepted by this predicate. */
+  readonly allowComponent?: (name: string) => boolean;
+}
+
+interface SyntaxNode {
+  readonly type: string;
+  readonly children?: readonly SyntaxNode[];
+  readonly value?: string;
+  readonly depth?: number;
+  readonly lang?: string | null;
+  readonly meta?: string | null;
+  readonly url?: string;
+  readonly title?: string | null;
+  readonly alt?: string | null;
+  readonly ordered?: boolean;
+  readonly start?: number | null;
+  readonly spread?: boolean;
+  readonly checked?: boolean | null;
+  readonly align?: readonly (string | null)[];
+  readonly name?: string | null;
+  readonly attributes?: readonly MdxAttribute[];
+}
+
+interface MdxAttribute {
+  readonly type: string;
+  readonly name?: string;
+  readonly value?:
+    string | null | { readonly type: string; readonly value?: string };
+}
+
+function element(
+  name: string,
+  children: readonly PostkitNode[],
+  attributes?: Readonly<Record<string, PostkitAttributeValue>>,
+): PostkitNode {
+  return {
+    type: 'element',
+    name,
+    ...(attributes && Object.keys(attributes).length > 0 ? { attributes } : {}),
+    children,
+  };
+}
+
+function mdxProps(
+  attributes: readonly MdxAttribute[] | undefined,
+): Readonly<Record<string, PostkitJsonValue>> | undefined {
+  const props: Record<string, PostkitJsonValue> = {};
+  for (const attribute of attributes ?? []) {
+    if (attribute.type === 'mdxJsxExpressionAttribute') {
+      throw new PostkitParseError(
+        'unsafe-mdx-expression',
+        'MDX spread attributes are not supported by the safe Postkit parser.',
+      );
+    }
+    if (!attribute.name) continue;
+    if (attribute.value === null || attribute.value === undefined) {
+      props[attribute.name] = true;
+      continue;
+    }
+    if (typeof attribute.value === 'string') {
+      props[attribute.name] = attribute.value;
+      continue;
+    }
+    throw new PostkitParseError(
+      'unsafe-mdx-expression',
+      `MDX expression prop "${attribute.name}" is not supported by the safe Postkit parser.`,
+    );
+  }
+  return Object.keys(props).length > 0 ? props : undefined;
+}
+
+function convertChildren(
+  children: readonly SyntaxNode[] | undefined,
+  options: ParsePostkitMarkdownOptions,
+): PostkitNode[] {
+  return (children ?? []).flatMap((child) => convertNode(child, options));
+}
+
+function convertNode(
+  node: SyntaxNode,
+  options: ParsePostkitMarkdownOptions,
+): PostkitNode[] {
+  const children = () => convertChildren(node.children, options);
+  switch (node.type) {
+    case 'root':
+      return children();
+    case 'text':
+      return [{ type: 'text', value: node.value ?? '' }];
+    case 'paragraph':
+      return [element('p', children())];
+    case 'heading':
+      return [element(`h${node.depth ?? 1}`, children())];
+    case 'emphasis':
+      return [element('em', children())];
+    case 'strong':
+      return [element('strong', children())];
+    case 'delete':
+      return [element('del', children())];
+    case 'blockquote':
+      return [element('blockquote', children())];
+    case 'thematicBreak':
+      return [element('hr', [])];
+    case 'break':
+      return [element('br', [])];
+    case 'inlineCode':
+      return [element('code', [{ type: 'text', value: node.value ?? '' }])];
+    case 'code':
+      return [
+        element('pre', [
+          element('code', [{ type: 'text', value: node.value ?? '' }], {
+            ...(node.lang ? { language: node.lang } : {}),
+            ...(node.meta ? { meta: node.meta } : {}),
+          }),
+        ]),
+      ];
+    case 'link':
+      return [
+        element('a', children(), {
+          href: node.url ?? '',
+          ...(node.title ? { title: node.title } : {}),
+        }),
+      ];
+    case 'image':
+      return [
+        element('img', [], {
+          src: node.url ?? '',
+          alt: node.alt ?? '',
+          ...(node.title ? { title: node.title } : {}),
+        }),
+      ];
+    case 'list':
+      return [
+        element(node.ordered ? 'ol' : 'ul', children(), {
+          ...(node.ordered && node.start !== null && node.start !== undefined
+            ? { start: node.start }
+            : {}),
+          ...(node.spread ? { spread: true } : {}),
+        }),
+      ];
+    case 'listItem':
+      return [
+        element('li', children(), {
+          ...(node.checked === true || node.checked === false
+            ? { checked: node.checked }
+            : {}),
+          ...(node.spread ? { spread: true } : {}),
+        }),
+      ];
+    case 'table':
+      return [element('table', [element('tbody', children())])];
+    case 'tableRow':
+      return [element('tr', children())];
+    case 'tableCell':
+      return [element('td', children())];
+    case 'html':
+      return parsePostkitHtml(node.value ?? '').children.slice();
+    case 'mdxJsxFlowElement':
+    case 'mdxJsxTextElement': {
+      if (!node.name) return children();
+      if (/^[a-z][a-z0-9-]*$/.test(node.name)) {
+        const props = mdxProps(node.attributes);
+        const attributes = props
+          ? (Object.fromEntries(
+              Object.entries(props).filter(
+                (entry): entry is [string, PostkitAttributeValue] =>
+                  typeof entry[1] === 'boolean' ||
+                  typeof entry[1] === 'number' ||
+                  typeof entry[1] === 'string',
+              ),
+            ) as Record<string, PostkitAttributeValue>)
+          : undefined;
+        return [element(node.name, children(), attributes)];
+      }
+      if (options.allowComponent && !options.allowComponent(node.name)) {
+        return children();
+      }
+      const props = mdxProps(node.attributes);
+      return [
+        {
+          type: 'component',
+          name: node.name,
+          ...(props ? { props } : {}),
+          children: children(),
+        },
+      ];
+    }
+    case 'mdxFlowExpression':
+    case 'mdxTextExpression':
+    case 'mdxjsEsm':
+      throw new PostkitParseError(
+        'unsafe-mdx-expression',
+        'Executable MDX expressions and ESM are not supported by the safe Postkit parser.',
+      );
+    default:
+      return children();
+  }
+}
+
+export function parsePostkitMarkdown(
+  source: string,
+  options: ParsePostkitMarkdownOptions = {},
+): PostkitDocument {
+  const mdx = options.mdx === true;
+  const root = fromMarkdown(source, {
+    extensions: [gfm(), ...(mdx ? [mdxjs()] : [])],
+    mdastExtensions: [gfmFromMarkdown(), ...(mdx ? [mdxFromMarkdown()] : [])],
+  }) as SyntaxNode;
+  return createPostkitDocument(convertChildren(root.children, options));
+}

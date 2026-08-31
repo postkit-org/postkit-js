@@ -1,0 +1,61 @@
+{
+  "name": "@postkit/core",
+  "version": "0.1.1",
+  "description": "Portable Postkit document model, parsers, and serializers",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "html",
+    "markdown",
+    "mdx"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "hast-util-from-html": "^2.0.3",
+    "mdast-util-from-markdown": "^2.0.3",
+    "mdast-util-gfm": "^3.1.0",
+    "mdast-util-mdx": "^3.0.0",
+    "micromark-extension-gfm": "^3.0.0",
+    "micromark-extension-mdxjs": "^3.0.0",
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:foundation"
+    ]
+  }
+}

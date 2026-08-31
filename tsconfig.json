@@ -44,6 +44,9 @@
     },
     {
       "path": "./packages/email"
+    },
+    {
+      "path": "./packages/core"
     }
   ],
   "compilerOptions": {}
