@@ -6,10 +6,15 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import publicPackages from './public-packages.json' with { type: 'json' };
+import {
+  createPostkitPackageGraph,
+  missingPostkitPackageClosure,
+} from './yalc-package-closure.mjs';
 
 const require = createRequire(import.meta.url);
 const workspaceRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const yalcBin = require.resolve('yalc/src/yalc.js');
+const { readInstallationsFile } = require('yalc/src/installations.js');
 const command = process.argv[2];
 const extraArgs = process.argv.slice(3);
 
@@ -45,8 +50,44 @@ const packages = publicPackages.map((packageName) => {
     );
   }
 
-  return { directory, packageName, version: manifest.version };
+  return { directory, manifest, packageName, version: manifest.version };
 });
+
+const packageGraph = createPostkitPackageGraph(packages);
+
+function runYalc(args, workingDir) {
+  const result = spawnSync(process.execPath, [yalcBin, ...args], {
+    cwd: workingDir,
+    env: process.env,
+    stdio: 'inherit',
+  });
+
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exit(result.status ?? 1);
+}
+
+function linkMissingClosure(packageName) {
+  const installations = readInstallationsFile();
+  const consumers = installations[packageName] ?? [];
+  for (const consumerPath of consumers) {
+    if (!existsSync(join(consumerPath, 'package.json'))) continue;
+    const missing = missingPostkitPackageClosure({
+      consumerPath,
+      installations,
+      packageName,
+      packageGraph,
+      packageOrder: publicPackages,
+    });
+    if (missing.length === 0) continue;
+    process.stdout.write(
+      `Linking ${missing.join(', ')} in ${consumerPath} for ${packageName}...\n`,
+    );
+    runYalc(
+      ['link', '--no-pure', '--no-scripts', '--no-sig', ...missing],
+      consumerPath,
+    );
+  }
+}
 
 for (const packageEntry of packages) {
   const action = command === 'push' ? 'Pushing' : 'Publishing';
@@ -54,18 +95,14 @@ for (const packageEntry of packages) {
     `${action} ${packageEntry.packageName}@${packageEntry.version} with yalc...\n`,
   );
 
-  const result = spawnSync(
-    process.execPath,
-    [yalcBin, command, '--no-scripts', '--no-sig', ...extraArgs],
-    {
-      cwd: packageEntry.directory,
-      env: process.env,
-      stdio: 'inherit',
-    },
-  );
+  if (command === 'push') {
+    linkMissingClosure(packageEntry.packageName);
+  }
 
-  if (result.error) throw result.error;
-  if (result.status !== 0) process.exit(result.status ?? 1);
+  runYalc(
+    [command, '--no-scripts', '--no-sig', ...extraArgs],
+    packageEntry.directory,
+  );
 }
 
 process.stdout.write(

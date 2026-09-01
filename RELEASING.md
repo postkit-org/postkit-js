@@ -52,6 +52,16 @@ Before mutating the registry, the workflow checks each requested package and
 version. A partially completed publication can be rerun when every package
 already on npm has the same integrity as the local release tarball.
 
+## Local yalc consumers
+
+`npm run yalc:publish` rebuilds every public package and writes it to the local
+yalc store. `npm run yalc:push` additionally refreshes registered consumers.
+Before pushing a package, the helper resolves its complete internal Postkit
+dependency and peer closure and links any missing packages into that consumer
+with `--no-pure`. This keeps newly introduced internal packages available
+without converting them to peer dependencies or requiring every consumer to
+track the Postkit package graph manually.
+
 For a manual, reviewed workflow dispatch, provide the exact version already
 committed to `main` and the required confirmation value. Do not publish package
 workspaces directly from a development machine.

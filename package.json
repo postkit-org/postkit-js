@@ -50,6 +50,7 @@
     "examples:check": "npm exec nx run @postkit/astro:build-fixture && tsc --project examples/tsconfig.json --noEmit && node examples/unfurl-server/smoke.mjs",
     "yalc:publish": "npm run build && node tools/yalc-public-packages.mjs publish",
     "yalc:push": "npm run build && node tools/yalc-public-packages.mjs push",
+    "yalc:test": "node --test tools/yalc-package-closure.test.mjs",
     "site:dev": "npm run docs:generate && nx dev site",
     "site:build": "npm run docs:generate && nx build site",
     "site:check": "npm run docs:generate && nx run-many -t lint build --projects=site",
