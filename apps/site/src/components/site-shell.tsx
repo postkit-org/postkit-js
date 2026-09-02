@@ -58,6 +58,10 @@ export function SiteShell({ children }: SiteShellProps) {
                     <ChakraLink
                       asChild
                       color="blackAlpha.700"
+                      display={{
+                        base: item.href === '/' ? 'none' : 'inline-flex',
+                        sm: 'inline-flex',
+                      }}
                       fontSize="sm"
                       fontWeight="600"
                       key={item.href}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title description">
+  <title id="title">Abstract PostKit editorial artwork</title>
+  <desc id="description">Layered green shapes and fine black lines on a warm paper background.</desc>
+  <rect width="1200" height="675" fill="#e9e4d7"/>
+  <circle cx="920" cy="90" r="330" fill="#91f2ad"/>
+  <circle cx="920" cy="90" r="205" fill="#34d673"/>
+  <path d="M-80 570C170 420 310 390 510 455s375 100 770-120v340H-80Z" fill="#101c19"/>
+  <path d="M-60 500C180 355 360 340 545 405s390 82 720-110" fill="none" stroke="#101c19" stroke-width="5"/>
+  <path d="M80 115h380M80 155h270M80 195h325" stroke="#101c19" stroke-width="12" stroke-linecap="round"/>
+  <rect x="80" y="255" width="270" height="12" rx="6" fill="#101c19" opacity=".32"/>
+  <rect x="80" y="292" width="390" height="12" rx="6" fill="#101c19" opacity=".2"/>
+</svg>
