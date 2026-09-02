@@ -211,10 +211,10 @@ each component, its plain-Markdown directive, child mode, and prop schema.
 Editors and other authoring tools can use this manifest without importing the
 React renderer.
 
-The catalog below is generated from the same declaration source consumed by
-renderers and editor integrations.
+The public component explorer is generated from that same declaration source,
+so it stays aligned with the renderer and editor integrations.
 
-<ComponentCatalog />
+[Browse live previews, variants, sizes, syntax, and props →](/components)
 
 ## Markdown and MDX
 
