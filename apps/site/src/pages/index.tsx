@@ -113,13 +113,7 @@ export default function IndexPage({
                   <NextLink href="/docs/getting-started">Get started</NextLink>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <a
-                    href="https://github.com/postkit-org/postkit-js"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    View on GitHub
-                  </a>
+                  <NextLink href="/components">Explore components</NextLink>
                 </Button>
               </Flex>
             </Stack>
