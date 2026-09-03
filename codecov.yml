@@ -13,6 +13,10 @@ coverage:
 
 component_management:
   individual_components:
+    - component_id: core
+      name: '@postkit/core'
+      paths:
+        - packages/core/**
     - component_id: unfurl
       name: '@postkit/unfurl'
       paths:
@@ -21,6 +25,14 @@ component_management:
       name: '@postkit/react'
       paths:
         - packages/react/**
+    - component_id: email
+      name: '@postkit/email'
+      paths:
+        - packages/email/**
+    - component_id: shiki
+      name: '@postkit/shiki'
+      paths:
+        - packages/shiki/**
     - component_id: next
       name: '@postkit/next'
       paths:
