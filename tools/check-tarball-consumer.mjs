@@ -82,6 +82,7 @@ try {
   run(npmCommand, [
     'install',
     '--ignore-scripts',
+    '--no-audit',
     '--package-lock=false',
     '--prefer-offline',
     '--cache',
