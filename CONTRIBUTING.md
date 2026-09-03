@@ -58,8 +58,10 @@ complete set:
 
 ```sh
 npx yalc add \
+  @postkit/core \
   @postkit/unfurl \
   @postkit/react \
+  @postkit/email \
   @postkit/shiki \
   @postkit/next \
   @postkit/react-router \

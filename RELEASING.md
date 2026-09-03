@@ -7,15 +7,14 @@ single versioned release and publishes them in dependency order.
 ## Before creating a release
 
 1. Update every public package to the intended version.
-2. Add a changelog entry under `apps/site/content/changelog/`.
+2. Add a changelog entry under `libs/content/changelog/`.
 3. Run `npm run verify:release`.
-4. Run `npm run site:check`.
-5. Merge the release commit into `main`.
-6. Create a tag in the form `v<version>` from that commit.
+4. Merge the release commit into `main`.
+5. Create a tag in the form `v<version>` from that commit.
 
-The release gate checks formatting, builds, lint, tests, typechecking, the Astro
-production fixture, npm tarball contents, dependency order, and runtime and
-TypeScript imports from a clean consumer.
+The release gate checks formatting, builds, lint, tests, coverage, typechecking,
+the documentation site, the Astro production fixture, npm tarball contents,
+dependency order, and runtime and TypeScript imports from a clean consumer.
 
 ## GitHub environment
 

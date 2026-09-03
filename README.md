@@ -82,9 +82,11 @@ HTML, Markdown, MDX, JSON, or structured declarations
           Rendered article output
 ```
 
-Postkit owns the portable content contract and default presentation. The
-application still owns its outer layout, Chakra system, routing policy, asset
-pipeline, secrets, and server-side unfurling service.
+Postkit owns the portable content contract and structural presentation. Its
+React renderer inherits the host Chakra system by default; applications can opt
+into `postkitDefaultTheme` for Postkit's standalone visual preset. The
+application still owns its outer layout, routing policy, asset pipeline,
+secrets, and server-side unfurling service.
 
 `@postkit/unfurl` is deliberately separate from rendering. It normalizes remote
 metadata behind a server or build-time boundary; components consume the
@@ -102,7 +104,7 @@ normalized result without receiving provider credentials.
 - [Agent documentation index](apps/site/public/llms.txt)
 - [Contributing](CONTRIBUTING.md)
 - [Release process](RELEASING.md)
-- [Changelog](apps/site/content/changelog)
+- [Changelog](libs/content/changelog)
 
 The documentation site and generated component catalog live in `apps/site`.
 Package READMEs remain self-contained because npm renders the README from each
