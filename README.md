@@ -124,7 +124,7 @@ Postkit is available under the [MIT License](LICENSE).
 | Integration     | Supported range |
 | --------------- | --------------- |
 | React           | 19              |
-| Chakra UI       | `^3.36.0`       |
+| Chakra UI       | `>=3.29.0 <4`   |
 | Shiki           | `^4.3.1`        |
 | Next.js         | `>=15 <17`      |
 | React Router    | `>=7 <8`        |

@@ -225,6 +225,20 @@ describe('Postkit theme', () => {
     expect(siteSystem.token('fonts.mono')).toBe('"Site Mono", monospace');
   });
 
+  it('normalizes font-family fallback arrays for Chakra 3.x tokens', () => {
+    const system = createPostkitSystem({
+      theme: createPostkitTheme({
+        typography: {
+          body: ['Inter', 'sans-serif'],
+          heading: ['Newsreader', 'serif'],
+        },
+      }),
+    });
+
+    expect(system.token('fonts.body')).toBe('Inter, sans-serif');
+    expect(system.token('fonts.heading')).toBe('Newsreader, serif');
+  });
+
   it('layers site-wide rich-component styles before context overrides', () => {
     const siteSystem = createPostkitSystem({
       system: defaultSystem,

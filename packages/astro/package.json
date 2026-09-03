@@ -61,7 +61,7 @@
     "@astrojs/markdown-remark": ">=6 <8",
     "@astrojs/mdx": ">=6 <8",
     "@astrojs/react": ">=4 <7",
-    "@chakra-ui/react": "^3.36.0",
+    "@chakra-ui/react": ">=3.29.0 <4",
     "@postkit/react": "0.1.1",
     "astro": ">=6.4 <8",
     "react": "^19.1.0",

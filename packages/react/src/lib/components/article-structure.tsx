@@ -400,7 +400,9 @@ export function Tabs({
     <ChakraTabs.Root
       {...tabsRootProps}
       value={selected}
-      onValueChange={({ value: nextValue }) => setSelected(nextValue)}
+      onValueChange={({ value: nextValue }: { value: string }) =>
+        setSelected(nextValue)
+      }
       size={size ?? 'md'}
       variant={variant ?? 'outline'}
       data-postkit-component="Tabs"

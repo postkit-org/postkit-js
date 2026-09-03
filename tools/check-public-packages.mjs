@@ -11,6 +11,7 @@ const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
 const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
 const requiredKeywords = ['postkit', 'publishing', 'typescript'];
+const chakraPeerRange = '>=3.29.0 <4';
 const nxConfiguration = readJson(join(workspaceRoot, 'nx.json'));
 const publishIndex = new Map(
   publicPackages.map((packageName, index) => [packageName, index]),
@@ -114,6 +115,16 @@ for (const packageName of publicPackages) {
         fail(`${dependencyName} must precede ${packageName} in publish order.`);
       }
     }
+  }
+
+  if (
+    manifest.peerDependencies?.['@chakra-ui/react'] &&
+    manifest.peerDependencies['@chakra-ui/react'] !== chakraPeerRange
+  ) {
+    fail(
+      `${packageName} must support @chakra-ui/react ${chakraPeerRange}, ` +
+        `received ${manifest.peerDependencies['@chakra-ui/react']}.`,
+    );
   }
 }
 

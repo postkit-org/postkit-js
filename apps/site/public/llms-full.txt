@@ -666,7 +666,7 @@ those package conventions.
 | Integration     | Supported range | Rendering notes                                                            |
 | --------------- | --------------- | -------------------------------------------------------------------------- |
 | React           | React 19        | Chakra-backed components render on the server and client                   |
-| Chakra UI       | `^3.36.0`       | The host may provide a `SystemContext`; PostKit layers its recipes over it |
+| Chakra UI       | `>=3.29.0 <4`   | The host may provide a `SystemContext`; PostKit layers its recipes over it |
 | Shiki           | `^4.3.1`        | Optional lazy highlighting through `@postkit/shiki`                        |
 | Next.js         | `>=15 <17`      | Uses the native MDX component map and `next/link`                          |
 | React Router    | `>=7 <8`        | The article must render beneath a router provider                          |
@@ -1151,7 +1151,7 @@ npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
 
 Supported peer versions:
 
-- Chakra UI 3.36 or newer within the 3.x line
+- Chakra UI 3.29 or newer within the 3.x line
 - React 19
 
 The package is ESM-only and includes TypeScript declarations.

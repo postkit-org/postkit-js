@@ -446,7 +446,9 @@ export function CodeGroup({
     <ChakraTabs.Root
       {...tabsRootProps}
       value={String(selected)}
-      onValueChange={({ value: nextValue }) => setSelected(Number(nextValue))}
+      onValueChange={({ value: nextValue }: { value: string }) =>
+        setSelected(Number(nextValue))
+      }
       size={size ?? 'md'}
       variant={variant ?? 'outline'}
       data-postkit-component="CodeGroup"

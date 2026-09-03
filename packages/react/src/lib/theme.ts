@@ -261,16 +261,19 @@ export function createPostkitTheme(
   overrides: PostkitThemeOverrides,
 ): SystemConfig {
   const slotRecipes: Record<string, SlotRecipeConfig> = {};
-  const fonts: Record<string, { value: PostkitFontFamily }> = {};
+  const fonts: Record<string, { value: string }> = {};
+
+  const fontFamilyValue = (value: PostkitFontFamily): string =>
+    typeof value === 'string' ? value : value.join(', ');
 
   if (overrides.typography?.body) {
-    fonts.body = { value: overrides.typography.body };
+    fonts.body = { value: fontFamilyValue(overrides.typography.body) };
   }
   if (overrides.typography?.heading) {
-    fonts.heading = { value: overrides.typography.heading };
+    fonts.heading = { value: fontFamilyValue(overrides.typography.heading) };
   }
   if (overrides.typography?.mono) {
-    fonts.mono = { value: overrides.typography.mono };
+    fonts.mono = { value: fontFamilyValue(overrides.typography.mono) };
   }
 
   if (overrides.audienceBoundary) {

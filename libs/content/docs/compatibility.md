@@ -16,7 +16,7 @@ those package conventions.
 | Integration     | Supported range | Rendering notes                                                            |
 | --------------- | --------------- | -------------------------------------------------------------------------- |
 | React           | React 19        | Chakra-backed components render on the server and client                   |
-| Chakra UI       | `^3.36.0`       | The host may provide a `SystemContext`; PostKit layers its recipes over it |
+| Chakra UI       | `>=3.29.0 <4`   | The host may provide a `SystemContext`; PostKit layers its recipes over it |
 | Shiki           | `^4.3.1`        | Optional lazy highlighting through `@postkit/shiki`                        |
 | Next.js         | `>=15 <17`      | Uses the native MDX component map and `next/link`                          |
 | React Router    | `>=7 <8`        | The article must render beneath a router provider                          |

@@ -21,7 +21,7 @@ npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
 
 Supported peer versions:
 
-- Chakra UI 3.36 or newer within the 3.x line
+- Chakra UI 3.29 or newer within the 3.x line
 - React 19
 
 The package is ESM-only and includes TypeScript declarations.
