@@ -24,7 +24,12 @@ function run(command, args, cwd = consumerRoot) {
 }
 
 try {
-  const dependencies = {};
+  const dependencies = {
+    '@chakra-ui/react': '3.29.0',
+    '@emotion/react': '11.14.0',
+    react: '19.1.0',
+    'react-dom': '19.1.0',
+  };
   for (const packageName of publicPackages) {
     const result = spawnSync(
       npmCommand,
@@ -87,7 +92,21 @@ try {
 
   writeFileSync(
     join(consumerRoot, 'smoke.mjs'),
-    `const packages = await Promise.all([
+    `import { readFile } from 'node:fs/promises';
+
+const chakraManifest = JSON.parse(
+  await readFile(
+    new URL('./node_modules/@chakra-ui/react/package.json', import.meta.url),
+    'utf8',
+  ),
+);
+if (chakraManifest.version !== '3.29.0') {
+  throw new Error(
+    \`Expected the minimum supported Chakra UI 3.29.0, received \${chakraManifest.version}.\`,
+  );
+}
+
+const packages = await Promise.all([
   import('@postkit/core'),
   import('@postkit/unfurl'),
   import('@postkit/react'),
@@ -104,7 +123,7 @@ try {
 if (packages.some((entry) => Object.keys(entry).length === 0)) {
   throw new Error('A PostKit package exported no public members.');
 }
-console.log('PostKit tarball runtime entry points loaded.');
+console.log('PostKit tarball runtime entry points loaded with Chakra UI 3.29.0.');
 `,
   );
   run(process.execPath, ['smoke.mjs']);
