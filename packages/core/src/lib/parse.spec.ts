@@ -128,4 +128,204 @@ describe('Postkit document parsing', () => {
       parsePostkitJson({ type: 'document', version: 99, children: [] }),
     ).toThrow(/version 1/);
   });
+
+  it('dispatches supported input formats and rejects invalid dispatch input', () => {
+    expect(parsePostkit('<p>HTML</p>', { format: 'html' }).children[0]).toEqual(
+      expect.objectContaining({ type: 'element', name: 'p' }),
+    );
+    expect(
+      parsePostkit('**Markdown**', { format: 'markdown' }).children[0],
+    ).toEqual(expect.objectContaining({ type: 'element', name: 'p' }));
+    expect(() => parsePostkit({}, { format: 'html' })).toThrow(
+      /HTML input must be a string/,
+    );
+    expect(() => parsePostkit({}, { format: 'markdown' })).toThrow(
+      /Markdown and MDX input must be strings/,
+    );
+    expect(() =>
+      parsePostkit('', {
+        format: 'rss' as never,
+      }),
+    ).toThrow(/Unsupported Postkit input format/);
+  });
+
+  it('validates every JSON node and value boundary', () => {
+    const document = parsePostkitJson({
+      type: 'document',
+      version: POSTKIT_DOCUMENT_VERSION,
+      children: [
+        { type: 'text', value: 'Intro' },
+        {
+          type: 'element',
+          name: 'ol',
+          attributes: {
+            start: 2,
+            reversed: true,
+            tokens: ['one', 2],
+          },
+          children: [],
+        },
+        {
+          type: 'component',
+          name: 'Chart',
+          props: {
+            legend: true,
+            values: [1, 2],
+            options: { compact: false },
+          },
+          children: [],
+        },
+      ],
+    });
+
+    expect(document.children).toHaveLength(3);
+    expect(() => parsePostkitJson('{')).toThrow(/Invalid Postkit JSON/);
+
+    const invalidChildren = [
+      null,
+      { type: 'text', value: 1 },
+      { type: 'element', name: '', children: [] },
+      { type: 'element', name: 'p', children: 'invalid' },
+      {
+        type: 'element',
+        name: 'p',
+        attributes: { value: { nested: true } },
+        children: [],
+      },
+      {
+        type: 'element',
+        name: 'p',
+        attributes: { value: ['valid', false] },
+        children: [],
+      },
+      { type: 'component', name: '', children: [] },
+      {
+        type: 'component',
+        name: 'Chart',
+        props: { value: Number.NaN },
+        children: [],
+      },
+      { type: 'unknown', children: [] },
+    ];
+
+    for (const child of invalidChildren) {
+      expect(() =>
+        parsePostkitJson({
+          type: 'document',
+          version: POSTKIT_DOCUMENT_VERSION,
+          children: [child],
+        }),
+      ).toThrow(PostkitParseError);
+    }
+  });
+
+  it('normalizes extended Markdown and safe MDX syntax', () => {
+    const document = parsePostkitMarkdown(`
+# Heading
+
+> **Strong**, *emphasized*, ~~deleted~~, and \`inline\`\\
+> next line
+
+---
+
+3. Third
+4. Fourth
+
+[Link](https://example.com "Title") and ![Alt](image.png "Image")
+
+<mark>HTML</mark>
+    `);
+    const serialized = JSON.stringify(document);
+
+    for (const name of [
+      'blockquote',
+      'strong',
+      'em',
+      'del',
+      'code',
+      'br',
+      'hr',
+      'ol',
+      'a',
+      'img',
+      'mark',
+    ]) {
+      expect(serialized).toContain(`"name":"${name}"`);
+    }
+    expect(serialized).toContain('"start":3');
+
+    const mdx = parsePostkitMarkdown(
+      '<section open data-postkit-hidden="ignored">Body</section>\n\n<Allowed enabled />\n\n<Denied />',
+      {
+        mdx: true,
+        allowComponent: (name) => name === 'Allowed',
+      },
+    );
+    const serializedMdx = JSON.stringify(mdx);
+    expect(serializedMdx).toContain('"name":"section"');
+    expect(serializedMdx).toContain('"open":true');
+    expect(mdx.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'component',
+          name: 'Allowed',
+          props: { enabled: true },
+        }),
+      ]),
+    );
+    expect(serializedMdx).not.toContain('Denied');
+    expect(() =>
+      parsePostkitMarkdown('<Allowed {...props} />', { mdx: true }),
+    ).toThrow(/spread attributes/);
+    expect(() =>
+      parsePostkitMarkdown('export const value = 1', { mdx: true }),
+    ).toThrow(/Executable MDX expressions/);
+  });
+
+  it('applies HTML element, component, URL, and annotation policies', () => {
+    const document = parsePostkitHtml(
+      `
+      <custom-element><b>Unwrapped</b></custom-element>
+      <drop-me>Removed</drop-me>
+      <safe-extra id="kept">Allowed</safe-extra>
+      <a href="mailto:hello@example.com">Mail</a>
+      <img src="data:text/html,bad" alt="Bad source">
+      <div
+        data-postkit-component="Callout"
+        data-postkit-prop-count="2"
+        data-postkit-prop-enabled="true"
+        data-postkit-prop-empty="null"
+        data-postkit-props='{"nested":{"safe":true}}'
+      >Annotated</div>
+      <div data-postkit-component="Blocked">Plain content</div>
+    `,
+      {
+        unknownElements: 'drop',
+        allowedElements: ['safe-extra'],
+        allowComponent: (name) => name !== 'Blocked',
+      },
+    );
+    const serialized = JSON.stringify(document);
+
+    expect(serialized).not.toContain('Unwrapped');
+    expect(serialized).not.toContain('Removed');
+    expect(serialized).not.toContain('data:text/html');
+    expect(serialized).toContain('safe-extra');
+    expect(serialized).toContain('mailto:hello@example.com');
+    expect(document.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'component',
+          name: 'Callout',
+          props: {
+            count: 2,
+            enabled: true,
+            empty: null,
+            nested: { safe: true },
+          },
+        }),
+      ]),
+    );
+    expect(serialized).not.toContain('"name":"Blocked"');
+  });
 });

@@ -1,4 +1,6 @@
 import {
+  POSTKIT_DOCUMENT_VERSION,
+  PostkitParseError,
   createPostkitDocument,
   parsePostkit,
   parsePostkitHtml,
@@ -134,5 +136,258 @@ const article = true
         ]),
       ),
     ).not.toContain('<script');
+  });
+
+  it('serializes HTML options, safe attributes, and component carriers', () => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'DIV',
+        attributes: {
+          hidden: false,
+          open: true,
+          colSpan: 2,
+          className: ['article', 'featured'],
+          href: 'java\nscript:bad()',
+          style: 'color:red',
+          onClick: 'bad()',
+        },
+        children: [{ type: 'text', value: '<safe & escaped>' }],
+      },
+      {
+        type: 'element',
+        name: 'img',
+        attributes: { src: 'https://example.com/image.png', alt: 'Image' },
+        children: [],
+      },
+      {
+        type: 'component',
+        name: 'Callout',
+        children: [{ type: 'text', value: 'Notice' }],
+      },
+    ]);
+
+    const html = serializePostkitHtml(document, {
+      annotations: false,
+      documentElement: 'article',
+      componentElement: (node) => (node.name === 'Callout' ? 'aside' : 'div'),
+    });
+
+    expect(html).toBe(
+      '<article><div open colspan="2" className="article featured">&lt;safe &amp; escaped&gt;</div>' +
+        '<img src="https://example.com/image.png" alt="Image"><aside>Notice</aside></article>',
+    );
+    expect(() =>
+      serializePostkitHtml(
+        createPostkitDocument([
+          { type: 'component', name: 'invalid-name', children: [] },
+        ]),
+      ),
+    ).toThrow(/Invalid Postkit component name/);
+    expect(() =>
+      serializePostkitHtml(document, { componentElement: () => 'script' }),
+    ).toThrow(/Unsafe HTML element/);
+  });
+
+  it('serializes the complete Markdown block and inline vocabulary', () => {
+    const document = createPostkitDocument([
+      { type: 'text', value: 'Escaped * text' },
+      {
+        type: 'element',
+        name: 'h3',
+        children: [{ type: 'text', value: 'Heading' }],
+      },
+      {
+        type: 'element',
+        name: 'blockquote',
+        children: [
+          {
+            type: 'element',
+            name: 'p',
+            children: [
+              {
+                type: 'element',
+                name: 'strong',
+                children: [{ type: 'text', value: 'Strong' }],
+              },
+              { type: 'text', value: ' and ' },
+              {
+                type: 'element',
+                name: 'em',
+                children: [{ type: 'text', value: 'emphasis' }],
+              },
+              { type: 'text', value: ' with ' },
+              {
+                type: 'element',
+                name: 'del',
+                children: [{ type: 'text', value: 'deletion' }],
+              },
+              { type: 'text', value: ' and ' },
+              {
+                type: 'element',
+                name: 'code',
+                children: [{ type: 'text', value: '`tick`' }],
+              },
+              { type: 'element', name: 'br', children: [] },
+              {
+                type: 'element',
+                name: 'a',
+                attributes: {
+                  href: 'https://example.com/a)b',
+                  title: 'A "title"',
+                },
+                children: [{ type: 'text', value: 'Link' }],
+              },
+              { type: 'text', value: ' ' },
+              {
+                type: 'element',
+                name: 'img',
+                attributes: {
+                  src: '/image).png',
+                  alt: 'Alt]',
+                  title: 'Image',
+                },
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+      { type: 'element', name: 'hr', children: [] },
+      {
+        type: 'element',
+        name: 'ol',
+        attributes: { start: 4 },
+        children: [
+          {
+            type: 'element',
+            name: 'li',
+            children: [
+              {
+                type: 'element',
+                name: 'p',
+                children: [{ type: 'text', value: 'First\ncontinued' }],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'element',
+        name: 'pre',
+        children: [{ type: 'text', value: '```nested\n' }],
+      },
+      {
+        type: 'element',
+        name: 'details',
+        children: [{ type: 'text', value: 'Fallback' }],
+      },
+      {
+        type: 'component',
+        name: 'Callout',
+        children: [{ type: 'text', value: 'Portable' }],
+      },
+    ]);
+
+    const markdown = serializePostkitMarkdown(document);
+    expect(markdown).toContain('Escaped \\* text');
+    expect(markdown).toContain('### Heading');
+    expect(markdown).toContain('> **Strong** and *emphasis*');
+    expect(markdown).toContain('~~deletion~~');
+    expect(markdown).toContain('`` `tick` ``');
+    expect(markdown).toContain(
+      '[Link](https://example.com/a\\)b "A \\"title\\"")',
+    );
+    expect(markdown).toContain('![Alt\\]](/image\\).png "Image")');
+    expect(markdown).toContain('4. First');
+    expect(markdown).toContain('````\n```nested');
+    expect(markdown).toContain('<details');
+    expect(markdown).toContain('data-postkit-component="Callout"');
+    expect(serializePostkitMdx(document)).toContain('<Callout>');
+    expect(serializePostkitMarkdown(createPostkitDocument())).toBe('');
+  });
+
+  it('handles sparse tables and missing inline link or image destinations', () => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'p',
+        children: [
+          {
+            type: 'element',
+            name: 'a',
+            children: [{ type: 'text', value: 'Unlinked' }],
+          },
+          { type: 'element', name: 'img', children: [] },
+        ],
+      },
+      { type: 'element', name: 'table', children: [] },
+      {
+        type: 'element',
+        name: 'table',
+        children: [
+          {
+            type: 'element',
+            name: 'tr',
+            children: [
+              {
+                type: 'element',
+                name: 'th',
+                children: [{ type: 'text', value: 'Name' }],
+              },
+              {
+                type: 'element',
+                name: 'th',
+                children: [{ type: 'text', value: 'Value' }],
+              },
+            ],
+          },
+          {
+            type: 'element',
+            name: 'tr',
+            children: [
+              {
+                type: 'element',
+                name: 'td',
+                children: [{ type: 'text', value: 'Only one' }],
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+
+    const markdown = serializePostkitMarkdown(document);
+    expect(markdown).toContain('Unlinked');
+    expect(markdown).toContain('| Name | Value |');
+    expect(markdown).toContain('| Only one |  |');
+  });
+
+  it('validates documents and dispatches every output format', () => {
+    const document = parsePostkitMarkdown('# Article');
+    expect(serializePostkit(document, { format: 'html' })).toContain('<h1');
+    expect(serializePostkit(document, { format: 'json' })).toContain(
+      `"version":${POSTKIT_DOCUMENT_VERSION}`,
+    );
+    expect(serializePostkit(document, { format: 'mdx' })).toContain(
+      '# Article',
+    );
+    expect(() =>
+      serializePostkit(document, { format: 'rss' as never }),
+    ).toThrow(/Unsupported Postkit output format/);
+    expect(() =>
+      serializePostkitJson({
+        type: 'document',
+        version: 2,
+        children: [],
+      } as unknown as Parameters<typeof serializePostkitJson>[0]),
+    ).toThrow(PostkitParseError);
+    expect(() =>
+      serializePostkitMdx(
+        createPostkitDocument([
+          { type: 'component', name: 'invalid-name', children: [] },
+        ]),
+      ),
+    ).toThrow(/Invalid Postkit component name/);
   });
 });
