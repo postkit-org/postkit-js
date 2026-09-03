@@ -1,6 +1,6 @@
 {
   "name": "@postkit/react",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Chakra-based React components and Markdown tooling for articles",
   "keywords": [
     "postkit",
@@ -65,8 +65,8 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/core": "0.1.1",
-    "@postkit/unfurl": "0.1.1",
+    "@postkit/core": "0.2.0",
+    "@postkit/unfurl": "0.2.0",
     "remark-directive": "^4.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
