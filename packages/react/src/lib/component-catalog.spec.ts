@@ -3,6 +3,7 @@ import {
   postkitComponentCatalog,
 } from './component-catalog.js';
 import { postkitDeclarationManifest } from './declarations.js';
+import { vi } from 'vitest';
 
 describe('Postkit component catalog', () => {
   it('enriches every portable declaration', () => {
@@ -39,5 +40,98 @@ describe('Postkit component catalog', () => {
     expect(postkitComponentCatalog.components.Video.support.astro).toBe(
       'static',
     );
+  });
+
+  it('generates examples for every required prop kind', async () => {
+    vi.resetModules();
+    vi.doMock('./declarations.js', () => ({
+      postkitDeclarationManifest: {
+        version: 7,
+        components: {
+          Audio: {
+            name: 'Audio',
+            directive: 'postkit-audio',
+            description: 'Catalog fixture.',
+            childMode: 'none',
+            directiveRemarkPlugins: ['directives', 'postkit'],
+            props: {
+              enabled: {
+                kind: 'boolean',
+                required: true,
+                description: 'Boolean fixture.',
+              },
+              tone: {
+                kind: 'enum',
+                required: true,
+                values: ['note'],
+                description: 'Enum fixture.',
+              },
+              emptyTone: {
+                kind: 'enum',
+                required: true,
+                description: 'Empty enum fixture.',
+              },
+              metadata: {
+                kind: 'json',
+                required: true,
+                description: 'JSON fixture.',
+              },
+              count: {
+                kind: 'number',
+                required: true,
+                description: 'Number fixture.',
+              },
+              title: {
+                kind: 'string',
+                required: true,
+                description: 'String fixture.',
+              },
+            },
+          },
+        },
+      },
+    }));
+
+    const { postkitComponentCatalog: fixtureCatalog } =
+      await import('./component-catalog.js');
+    expect(fixtureCatalog.components.Audio.example.props).toEqual({
+      enabled: true,
+      tone: 'note',
+      emptyTone: '',
+      metadata: {},
+      count: 1,
+      title: 'audio example',
+    });
+    expect(fixtureCatalog.components.Audio.example.jsx).toContain('enabled');
+    expect(fixtureCatalog.components.Audio.example.jsx).toContain('count={1}');
+
+    vi.doUnmock('./declarations.js');
+    vi.resetModules();
+  });
+
+  it('rejects declarations without a catalog category', async () => {
+    vi.resetModules();
+    vi.doMock('./declarations.js', () => ({
+      postkitDeclarationManifest: {
+        version: 7,
+        components: {
+          Unknown: {
+            name: 'Unknown',
+            directive: 'postkit-unknown',
+            description: 'Invalid catalog fixture.',
+            childMode: 'none',
+            directiveRemarkPlugins: [],
+            props: {},
+          },
+        },
+      },
+    }));
+
+    await expect(import('./component-catalog.js')).rejects.toThrow(
+      'PostKit component "Unknown" has no catalog category.',
+    );
+
+    vi.doUnmock('./declarations.js');
+    vi.resetModules();
   });
 });

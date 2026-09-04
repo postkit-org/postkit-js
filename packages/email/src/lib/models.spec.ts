@@ -38,6 +38,7 @@ describe('email render models', () => {
   });
 
   it('accepts only positive finite legacy image dimensions', () => {
+    expect(numericEmailDimension(undefined)).toBeUndefined();
     expect(numericEmailDimension('640px')).toBe(640);
     expect(numericEmailDimension(320.8)).toBe(320);
     expect(numericEmailDimension(0)).toBeUndefined();

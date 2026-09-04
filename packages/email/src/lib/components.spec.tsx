@@ -124,4 +124,71 @@ describe('@postkit/email components', () => {
       'Video',
     ]);
   });
+
+  it('renders optional call-to-action content independently', async () => {
+    const childrenOnly = await render(
+      <CallToAction
+        eyebrow="New"
+        title="Child content"
+        primaryLabel="Read"
+        primaryHref="https://example.com/read"
+      >
+        Authored content.
+      </CallToAction>,
+    );
+    const secondaryOnly = await render(
+      <CallToAction
+        title="Secondary action"
+        secondaryLabel="Browse"
+        secondaryHref="https://example.com/browse"
+      />,
+    );
+    const minimal = await render(<CallToAction title="No actions" />);
+
+    expect(childrenOnly).toContain('New');
+    expect(childrenOnly).toContain('Authored content.');
+    expect(childrenOnly).toContain('https://example.com/read');
+    expect(secondaryOnly).toContain('https://example.com/browse');
+    expect(secondaryOnly).not.toContain('<p');
+    expect(minimal).not.toContain('<a');
+  });
+
+  it('renders linked and minimal figure variants', async () => {
+    const linked = await render(
+      <Figure
+        src="https://images.example/linked.png"
+        alt="Linked"
+        href="https://example.com/chart"
+        credit="Example Studio"
+        creditHref="https://example.com/studio"
+      />,
+    );
+    const plainCredit = await render(
+      <Figure
+        src="https://images.example/plain.png"
+        alt="Plain"
+        credit="Example Studio"
+      />,
+    );
+
+    expect(linked).toContain('href="https://example.com/chart"');
+    expect(linked).toContain('href="https://example.com/studio"');
+    expect(linked).toContain('width="100%"');
+    expect(linked).not.toContain('Revenue increased.');
+    expect(plainCredit).toContain('Example Studio');
+    expect(plainCredit).not.toContain('href="https://example.com/studio"');
+  });
+
+  it('renders media without optional captions or posters', async () => {
+    const html = await render(
+      <>
+        <Audio src="https://media.example/audio.mp3" title="Audio only" />
+        <Video src="https://media.example/video.mp4" title="Video only" />
+      </>,
+    );
+
+    expect(html).toContain('Audio only');
+    expect(html).toContain('Video only');
+    expect(html).not.toContain('<img');
+  });
 });

@@ -390,4 +390,55 @@ const article = true
       ),
     ).toThrow(/Invalid Postkit component name/);
   });
+
+  it('serializes inline component and semantic fallback branches', () => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'p',
+        children: [
+          { type: 'text', value: 'Before ' },
+          {
+            type: 'component',
+            name: 'Badge',
+            children: [{ type: 'text', value: 'portable' }],
+          },
+          { type: 'text', value: ' and ' },
+          {
+            type: 'element',
+            name: 'mark',
+            children: [{ type: 'text', value: 'highlighted' }],
+          },
+          { type: 'text', value: ' with ' },
+          {
+            type: 'element',
+            name: 'code',
+            children: [
+              {
+                type: 'element',
+                name: 'strong',
+                children: [{ type: 'text', value: 'ending`' }],
+              },
+            ],
+          },
+          { type: 'text', value: ' ' },
+          {
+            type: 'element',
+            name: 'img',
+            attributes: { src: '/plain.png' },
+            children: [],
+          },
+        ],
+      },
+    ]);
+
+    const markdown = serializePostkitMarkdown(document);
+    const mdx = serializePostkitMdx(document);
+    expect(markdown).toContain('data-postkit-component="Badge"');
+    expect(mdx).toContain('<Badge>');
+    expect(markdown).toContain('<mark data-postkit-node="mark"');
+    expect(markdown).toContain('>highlighted</mark>');
+    expect(markdown).toContain('`` ending` ``');
+    expect(markdown).toContain('![](/plain.png)');
+  });
 });

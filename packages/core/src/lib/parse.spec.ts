@@ -328,4 +328,101 @@ describe('Postkit document parsing', () => {
     );
     expect(serialized).not.toContain('"name":"Blocked"');
   });
+
+  it('preserves readable HTML fallbacks and alternate annotations safely', () => {
+    const overflowingNumber = '9'.repeat(400);
+    const document = parsePostkitHtml(`
+      <!-- comments do not enter the portable document -->
+      <unknown-wrapper>Readable fallback</unknown-wrapper>
+      <a href="tel:+15551234567" rel="nofollow sponsored">Call</a>
+      <a href="https://example.com/article">Secure link</a>
+      <img src="/relative-image.png" alt="Relative image">
+      <div data-postkit-component="Callout">No props</div>
+      <div
+        data-postkit-node="Nested.Card"
+        data-postkit-props='{"__proto__":"ignored","constructor":"ignored","prototype":"ignored","kept":1}'
+        data-postkit-prop-enabled="false"
+        data-postkit-prop-huge="${overflowingNumber}"
+      >Annotated</div>
+      <div data-postkit-component="Callout" data-postkit-props="not-json">Malformed hint</div>
+    `);
+
+    const serialized = JSON.stringify(document);
+    expect(serialized).toContain('Readable fallback');
+    expect(serialized).toContain('tel:+15551234567');
+    expect(serialized).toContain('nofollow');
+    expect(serialized).toContain('/relative-image.png');
+    expect(document.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'component',
+          name: 'Callout',
+          children: [{ type: 'text', value: 'No props' }],
+        }),
+        expect.objectContaining({
+          type: 'component',
+          name: 'Nested.Card',
+          props: expect.objectContaining({
+            enabled: false,
+            kept: 1,
+          }),
+        }),
+      ]),
+    );
+    expect(serialized).not.toContain('"constructor":"ignored"');
+    expect(serialized).not.toContain('"prototype":"ignored"');
+  });
+
+  it('reconstructs safe Markdown and MDX fallback forms', () => {
+    const markdown = parsePostkitMarkdown(`
+\`\`\`
+plain fence
+\`\`\`
+
+- First paragraph
+
+  Second paragraph
+
+| Header |
+| --- |
+
+[Reference][postkit]
+
+[postkit]: https://example.com
+    `);
+    const serializedMarkdown = JSON.stringify(markdown);
+    expect(serializedMarkdown).toContain('plain fence');
+    expect(serializedMarkdown).toContain('"spread":true');
+    expect(serializedMarkdown).toContain('"name":"table"');
+    expect(serializedMarkdown).toContain('Reference');
+
+    const mdx = parsePostkitMarkdown(
+      `
+<>Fragment content</>
+
+<section data-postkit-props='{"count":2,"enabled":false,"label":"safe","nested":{"kept":true}}' />
+
+<Allowed />
+
+<Allowed constructor="ignored" data-postkit-props="42" />
+      `,
+      { mdx: true },
+    );
+    const serializedMdx = JSON.stringify(mdx);
+    expect(serializedMdx).toContain('Fragment content');
+    expect(serializedMdx).toContain('"count":2');
+    expect(serializedMdx).toContain('"enabled":false');
+    expect(serializedMdx).toContain('"label":"safe"');
+    expect(serializedMdx).not.toContain('"nested"');
+    expect(serializedMdx).not.toContain('constructor');
+    expect(mdx.children).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'component',
+          name: 'Allowed',
+          children: [],
+        }),
+      ]),
+    );
+  });
 });

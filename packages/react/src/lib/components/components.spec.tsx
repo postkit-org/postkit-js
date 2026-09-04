@@ -867,4 +867,63 @@ describe('Postkit article components', () => {
     expect(markup).toContain('var(--chakra-colors-red-500)');
     expect(unstyledMarkup).toMatch(/<figure[^>]*class="postkit-audio__root"/);
   });
+
+  it('renders alternate article structure branches', () => {
+    const callouts = render(
+      <>
+        <Callout tone="tip" unstyled>
+          Tip
+        </Callout>
+        <Callout tone="caution">Caution</Callout>
+        <Callout tone="important">Important</Callout>
+        <Callout tone={'unknown' as never}>Fallback</Callout>
+      </>,
+    );
+    const gallery = render(
+      <Gallery
+        description="Supporting gallery copy."
+        items={[
+          {
+            src: '/linked.jpg',
+            alt: '',
+            href: '/full-size.jpg',
+          },
+        ]}
+        unstyled
+      />,
+    );
+    const disclosure = render(
+      <Disclosure summary="Details" unstyled>
+        Expanded content.
+      </Disclosure>,
+    );
+    const steps = render(<Steps items={[]} unstyled />);
+    const cards = render(
+      <CardGrid
+        title="Resources"
+        description="Choose a guide."
+        items={[
+          {
+            title: 'Visual guide',
+            image: { src: '/guide.jpg', alt: 'Guide cover' },
+            meta: 'PDF',
+          },
+        ]}
+        unstyled
+      />,
+    );
+
+    expect(callouts).toContain('data-postkit-tone="tip"');
+    expect(callouts).toContain('data-postkit-tone="caution"');
+    expect(callouts).toContain('data-postkit-tone="important"');
+    expect(callouts).toContain('data-postkit-tone="note"');
+    expect(gallery).toContain('Supporting gallery copy.');
+    expect(gallery).toContain('aria-label="Open image"');
+    expect(disclosure).toContain('Expanded content.');
+    expect(steps).toContain('<ol');
+    expect(cards).toContain('/guide.jpg');
+    expect(cards).toContain('Choose a guide.');
+    expect(cards).toContain('PDF');
+    expect(cards).not.toContain('Learn more');
+  });
 });
