@@ -10,4 +10,5 @@ runNpm(['run', 'docs:check']);
 runNpm(['run', 'package:check']);
 runNpm(['run', 'consumer:check']);
 runNpm(['run', 'yalc:test']);
+runNpm(['run', 'release:test']);
 runNpm(['run', 'site:check']);

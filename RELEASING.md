@@ -48,7 +48,9 @@ Packages are published in dependency order:
 5. Framework adapters
 
 Before mutating the registry, the workflow checks each requested package and
-version. A partially completed publication can be rerun when every package
+version. Local packing completes before timed registry requests start, so
+packing cannot block those requests past their deadlines. The entire integrity
+plan must pass before publishing begins. A partially completed publication can be rerun when every package
 already on npm has the same integrity as the local release tarball.
 
 ## Local yalc consumers
