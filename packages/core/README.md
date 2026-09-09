@@ -26,6 +26,10 @@ event handlers, unsafe URLs, and MDX expressions.
 HTML serialization normalizes and allowlists semantic attributes. URL attributes
 must be strings with safe schemes; arrays cannot bypass URL validation.
 
+Reference links and images resolve their Markdown definitions. Mixed inline HTML
+is parsed as a complete stream, retaining Markdown formatting between tags and
+passing the resulting tree through the HTML safety filter.
+
 Annotated HTML preserves Postkit component names and JSON-compatible props in
 `data-postkit-*` attributes. Serialization does not add a document wrapper by
 default; request one with `documentElement` when a transport needs a single

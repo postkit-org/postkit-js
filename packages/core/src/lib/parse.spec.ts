@@ -8,6 +8,54 @@ import {
 } from '../index.js';
 
 describe('Postkit document parsing', () => {
+  it('keeps Markdown phrasing inside its enclosing inline HTML', () => {
+    expect(parsePostkitMarkdown('Hello <strong>bold</strong> world.')).toEqual(
+      parsePostkitHtml('<p>Hello <strong>bold</strong> world.</p>'),
+    );
+    expect(
+      parsePostkitMarkdown(
+        'Hi <span>**bold** and [link][ref] and `<b>`</span>.\n\n[ref]: /read',
+      ),
+    ).toEqual(
+      parsePostkitHtml(
+        '<p>Hi <span><strong>bold</strong> and <a href="/read">link</a> and <code>&lt;b&gt;</code></span>.</p>',
+      ),
+    );
+  });
+
+  it('repairs unmatched inline tags and ignores comments without losing text', () => {
+    expect(parsePostkitMarkdown('Hi <em>there')).toEqual(
+      parsePostkitHtml('<p>Hi <em>there</em></p>'),
+    );
+    expect(parsePostkitMarkdown('Hi <!-- comment -->there')).toEqual(
+      parsePostkitHtml('<p>Hi there</p>'),
+    );
+  });
+
+  it('sanitizes the complete mixed HTML stream', () => {
+    const document = parsePostkitMarkdown(
+      'Before <script>bad()</script><span onclick="bad()">**safe**</span><a href="javascript:bad()">link</a> after.',
+    );
+    const output = JSON.stringify(document);
+    expect(output).not.toContain('bad()');
+    expect(output).not.toContain('onclick');
+    expect(output).toContain('"name":"strong"');
+    expect(output).toContain('safe');
+  });
+
+  it('keeps nested portable components while honoring the component allowlist', () => {
+    const source =
+      '<span>**<i data-postkit-component="Callout" data-postkit-prop-title="Notice">body</i>**</span>';
+    expect(JSON.stringify(parsePostkitMarkdown(source))).toContain(
+      '"type":"component","name":"Callout"',
+    );
+    expect(
+      JSON.stringify(
+        parsePostkitMarkdown(source, { allowComponent: () => false }),
+      ),
+    ).not.toContain('"type":"component"');
+  });
+
   it.each([false, true])(
     'resolves reference links and images (mdx=%s)',
     (mdx) => {

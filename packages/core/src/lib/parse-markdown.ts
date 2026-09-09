@@ -3,6 +3,8 @@ import { gfmFromMarkdown } from 'mdast-util-gfm';
 import { mdxFromMarkdown } from 'mdast-util-mdx';
 import { gfm } from 'micromark-extension-gfm';
 import { mdxjs } from 'micromark-extension-mdxjs';
+import { raw } from 'hast-util-raw';
+import type { ElementContent, Nodes as HastNode, RootContent } from 'hast';
 
 import {
   createPostkitDocument,
@@ -12,7 +14,7 @@ import {
   type PostkitNode,
 } from './document.js';
 import { PostkitParseError } from './parse-error.js';
-import { parsePostkitHtml } from './parse-html.js';
+import { normalizePostkitHtmlTree, parsePostkitHtml } from './parse-html.js';
 
 export interface ParsePostkitMarkdownOptions {
   /** Parse MDX component syntax while continuing to reject executable expressions. */
@@ -136,7 +138,46 @@ function convertChildren(
   children: readonly SyntaxNode[] | undefined,
   options: ConversionOptions,
 ): PostkitNode[] {
+  if (children?.some((child) => child.type === 'html')) {
+    // Parse a complete sibling stream so opening/closing raw tags retain the
+    // Markdown text, emphasis, links, and code between them.
+    const nodes = children.flatMap((child): HastNode[] =>
+      child.type === 'html'
+        ? [{ type: 'raw', value: child.value ?? '' } as unknown as HastNode]
+        : convertNode(child, options).map(toHast),
+    );
+    const tree = raw(
+      { type: 'root', children: nodes as RootContent[] },
+      { passThrough: ['postkitNode'] },
+    );
+    return [
+      ...normalizePostkitHtmlTree(tree, {
+        allowComponent: options.allowComponent,
+      }).children,
+    ];
+  }
   return (children ?? []).flatMap((child) => convertNode(child, options));
+}
+
+function toHast(node: PostkitNode): HastNode {
+  if (node.type === 'text') return { type: 'text', value: node.value };
+  if (node.type === 'component') {
+    return {
+      type: 'postkitNode',
+      data: { postkitNode: node },
+    } as unknown as HastNode;
+  }
+  return {
+    type: 'element',
+    tagName: node.name,
+    properties: Object.fromEntries(
+      Object.entries(node.attributes ?? {}).map(([name, value]) => [
+        name,
+        typeof value === 'object' ? [...value] : value,
+      ]),
+    ),
+    children: node.children.map(toHast) as ElementContent[],
+  };
 }
 
 function convertTableRow(
@@ -261,7 +302,9 @@ function convertNode(
     case 'tableCell':
       return [element('td', children())];
     case 'html':
-      return parsePostkitHtml(node.value ?? '').children.slice();
+      return parsePostkitHtml(node.value ?? '', {
+        allowComponent: options.allowComponent,
+      }).children.slice();
     case 'mdxJsxFlowElement':
     case 'mdxJsxTextElement': {
       if (!node.name) return children();

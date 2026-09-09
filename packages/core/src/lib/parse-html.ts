@@ -112,9 +112,11 @@ const allowedProperties = new Set([
   'id',
   'kind',
   'label',
+  'language',
   'loading',
   'loop',
   'muted',
+  'meta',
   'open',
   'poster',
   'preload',
@@ -124,6 +126,7 @@ const allowedProperties = new Set([
   'scope',
   'sizes',
   'span',
+  'spread',
   'src',
   'srcSet',
   'start',
@@ -260,7 +263,19 @@ function convertChildren(
   options: ParsePostkitHtmlOptions,
   allowed: ReadonlySet<string>,
 ): PostkitNode[] {
-  return children.flatMap((child) => convertNode(child, options, allowed));
+  const result: PostkitNode[] = [];
+  for (const child of children.flatMap((node) =>
+    convertNode(node, options, allowed),
+  )) {
+    const previous = result.at(-1);
+    if (child.type === 'text' && previous?.type === 'text') {
+      result[result.length - 1] = {
+        type: 'text',
+        value: previous.value + child.value,
+      };
+    } else result.push(child);
+  }
+  return result;
 }
 
 function convertElement(
@@ -325,6 +340,10 @@ function convertNode(
   options: ParsePostkitHtmlOptions,
   allowed: ReadonlySet<string>,
 ): PostkitNode[] {
+  // Internal hast-util-raw pass-through nodes cannot be forged by authored
+  // HTML: HTML attributes become `properties`, never HAST `data`.
+  if (node.data && 'postkitNode' in node.data)
+    return [node.data.postkitNode as PostkitNode];
   if (node.type === 'text') return [{ type: 'text', value: node.value }];
   if (node.type === 'element') return convertElement(node, options, allowed);
   if ('children' in node && Array.isArray(node.children)) {
@@ -337,12 +356,20 @@ export function parsePostkitHtml(
   source: string,
   options: ParsePostkitHtmlOptions = {},
 ): PostkitDocument {
+  return normalizePostkitHtmlTree(
+    fromHtml(source, { fragment: true }),
+    options,
+  );
+}
+
+/** @internal Normalize a parsed tree through the same HTML trust boundary. */
+export function normalizePostkitHtmlTree(
+  root: HastNode,
+  options: ParsePostkitHtmlOptions = {},
+): PostkitDocument {
   const allowed = new Set([
     ...defaultAllowedElements,
     ...(options.allowedElements ?? []).map((name) => name.toLowerCase()),
   ]);
-  const root = fromHtml(source, { fragment: true });
-  return createPostkitDocument(
-    convertChildren(root.children, options, allowed),
-  );
+  return createPostkitDocument(convertNode(root, options, allowed));
 }
