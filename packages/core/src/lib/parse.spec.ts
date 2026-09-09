@@ -8,6 +8,67 @@ import {
 } from '../index.js';
 
 describe('Postkit document parsing', () => {
+  it.each([false, true])(
+    'resolves reference links and images (mdx=%s)',
+    (mdx) => {
+      const document = parsePostkitMarkdown(
+        '[**Docs**][GUIDE] ![Logo][asset]\n\n[guide]: /docs "Guide title"\n[asset]: /logo.png "Logo title"',
+        { mdx },
+      );
+      expect(document.children).toEqual([
+        {
+          type: 'element',
+          name: 'p',
+          children: [
+            {
+              type: 'element',
+              name: 'a',
+              attributes: { href: '/docs', title: 'Guide title' },
+              children: [
+                {
+                  type: 'element',
+                  name: 'strong',
+                  children: [{ type: 'text', value: 'Docs' }],
+                },
+              ],
+            },
+            { type: 'text', value: ' ' },
+            {
+              type: 'element',
+              name: 'img',
+              attributes: {
+                src: '/logo.png',
+                alt: 'Logo',
+                title: 'Logo title',
+              },
+              children: [],
+            },
+          ],
+        },
+      ]);
+    },
+  );
+
+  it('resolves collapsed and shortcut references with first-definition precedence', () => {
+    const document = parsePostkitMarkdown(
+      '[guide][] [guide] ![logo][] ![logo]\n\n> [guide]: /first\n\n[guide]: /second\n[logo]: /logo.png',
+    );
+    const output = JSON.stringify(document);
+    expect(output.match(/"href":"\/first"/g)).toHaveLength(2);
+    expect(output.match(/"src":"\/logo.png"/g)).toHaveLength(2);
+    expect(output).not.toContain('/second');
+  });
+
+  it('leaves unresolved reference syntax readable', () => {
+    expect(parsePostkitMarkdown('[missing] ![missing]').children).toEqual([
+      {
+        type: 'element',
+        name: 'p',
+        children: [{ type: 'text', value: '[missing] ![missing]' }],
+      },
+    ]);
+  });
+
   it('normalizes safe semantic HTML and strips presentation and executable markup', () => {
     const document = parsePostkitHtml(`
       <article class="feed-theme" style="color:red">

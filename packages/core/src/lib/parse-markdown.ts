@@ -23,6 +23,7 @@ export interface ParsePostkitMarkdownOptions {
 
 interface SyntaxNode {
   readonly type: string;
+  readonly identifier?: string;
   readonly children?: readonly SyntaxNode[];
   readonly value?: string;
   readonly depth?: number;
@@ -38,6 +39,10 @@ interface SyntaxNode {
   readonly align?: readonly (string | null)[];
   readonly name?: string | null;
   readonly attributes?: readonly MdxAttribute[];
+}
+
+interface ConversionOptions extends ParsePostkitMarkdownOptions {
+  readonly definitions: ReadonlyMap<string, SyntaxNode>;
 }
 
 interface MdxAttribute {
@@ -129,14 +134,14 @@ function mdxProps(
 
 function convertChildren(
   children: readonly SyntaxNode[] | undefined,
-  options: ParsePostkitMarkdownOptions,
+  options: ConversionOptions,
 ): PostkitNode[] {
   return (children ?? []).flatMap((child) => convertNode(child, options));
 }
 
 function convertTableRow(
   node: SyntaxNode,
-  options: ParsePostkitMarkdownOptions,
+  options: ConversionOptions,
   cellName: 'td' | 'th',
 ): PostkitNode {
   return element(
@@ -149,10 +154,26 @@ function convertTableRow(
 
 function convertNode(
   node: SyntaxNode,
-  options: ParsePostkitMarkdownOptions,
+  options: ConversionOptions,
 ): PostkitNode[] {
   const children = () => convertChildren(node.children, options);
   switch (node.type) {
+    case 'definition':
+      return [];
+    case 'linkReference':
+    case 'imageReference': {
+      const definition = options.definitions.get(node.identifier ?? '');
+      if (!definition) return children();
+      return convertNode(
+        {
+          ...node,
+          type: node.type === 'linkReference' ? 'link' : 'image',
+          url: definition.url,
+          title: definition.title,
+        },
+        options,
+      );
+    }
     case 'root':
       return children();
     case 'text':
@@ -293,5 +314,21 @@ export function parsePostkitMarkdown(
     extensions: [gfm(), ...(mdx ? [mdxjs()] : [])],
     mdastExtensions: [gfmFromMarkdown(), ...(mdx ? [mdxFromMarkdown()] : [])],
   }) as SyntaxNode;
-  return createPostkitDocument(convertChildren(root.children, options));
+  // mdast normalizes reference identifiers. Definitions may follow their uses
+  // or live inside containers; CommonMark gives the first definition priority.
+  const definitions = new Map<string, SyntaxNode>();
+  const collectDefinitions = (node: SyntaxNode) => {
+    if (
+      node.type === 'definition' &&
+      node.identifier &&
+      !definitions.has(node.identifier)
+    ) {
+      definitions.set(node.identifier, node);
+    }
+    node.children?.forEach(collectDefinitions);
+  };
+  collectDefinitions(root);
+  return createPostkitDocument(
+    convertChildren(root.children, { ...options, definitions }),
+  );
 }
