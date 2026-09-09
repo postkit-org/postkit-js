@@ -4,4 +4,4 @@ import { Poll } from '../lib/react-bridges';
 type Props = PollProps;
 const props = Astro.props;
 ---
-<Poll {...props} />
+<Poll {...props} client:visible />

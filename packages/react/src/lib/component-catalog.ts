@@ -102,7 +102,6 @@ const clientComponents = new Set<PostkitComponentName>([
   'Carousel',
   'CodeBlock',
   'CodeGroup',
-  'Disclosure',
   'NewsletterSignup',
   'Poll',
   'ShareActions',
@@ -110,6 +109,7 @@ const clientComponents = new Set<PostkitComponentName>([
 ]);
 const nativeControlComponents = new Set<PostkitComponentName>([
   'Audio',
+  'Disclosure',
   'Video',
 ]);
 const resolverComponents = new Set<PostkitComponentName>([
@@ -118,10 +118,14 @@ const resolverComponents = new Set<PostkitComponentName>([
 ]);
 const astroHydratedComponents = new Set<PostkitComponentName>([
   'Carousel',
+  'CodeBlock',
+  'CodeGroup',
   'LinkPreview',
   'NewsletterSignup',
+  'Poll',
   'ShareActions',
   'SocialPost',
+  'Tabs',
 ]);
 
 function words(value: string): string[] {

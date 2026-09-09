@@ -68,6 +68,7 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.2",
     "@astrojs/markdown-remark": "^7.2.1",
     "@astrojs/mdx": "^7.0.3",
     "@astrojs/react": "^6.0.1",

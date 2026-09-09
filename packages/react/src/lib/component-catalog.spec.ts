@@ -26,6 +26,14 @@ describe('Postkit component catalog', () => {
   });
 
   it('publishes render and resolver requirements', () => {
+    for (const name of ['Tabs', 'CodeBlock', 'CodeGroup', 'Poll'] as const) {
+      expect(postkitComponentCatalog.components[name].support.astro).toBe(
+        'hydrated',
+      );
+    }
+    expect(postkitComponentCatalog.components.Disclosure.runtime).toBe(
+      'native-controls',
+    );
     expect(postkitComponentCatalog.components.Figure.runtime).toBe('static');
     expect(postkitComponentCatalog.components.Audio.runtime).toBe(
       'native-controls',

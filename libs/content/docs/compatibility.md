@@ -39,9 +39,10 @@ The package manifests are authoritative for exact peer dependency ranges.
 | Shiki syntax highlighting      | Lazy client runtime beneath `PostkitProvider`                |
 | Email rendering                | Build or server rendering with Chakra Email primitives       |
 
-Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
-visible Astro islands. Other current Astro bridges render statically; Audio and
-Video retain native browser controls.
+Carousel, CodeBlock, CodeGroup, LinkPreview, NewsletterSignup, Poll, ShareActions,
+SocialPost, and Tabs hydrate as visible Astro islands. Other current Astro
+bridges render statically; Audio, Video, and Disclosure retain native browser
+controls.
 
 ## Repository tooling
 

@@ -689,9 +689,10 @@ The package manifests are authoritative for exact peer dependency ranges.
 | Shiki syntax highlighting      | Lazy client runtime beneath `PostkitProvider`                |
 | Email rendering                | Build or server rendering with Chakra Email primitives       |
 
-Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost hydrate as
-visible Astro islands. Other current Astro bridges render statically; Audio and
-Video retain native browser controls.
+Carousel, CodeBlock, CodeGroup, LinkPreview, NewsletterSignup, Poll, ShareActions,
+SocialPost, and Tabs hydrate as visible Astro islands. Other current Astro
+bridges render statically; Audio, Video, and Disclosure retain native browser
+controls.
 
 ## Repository tooling
 
@@ -1210,6 +1211,11 @@ survive without creating arbitrary DOM tags. The renderer emits versioned
 `data-postkit-*` annotations by default, and the HTML parser recognizes those
 annotations when rendered output needs to become a Postkit document again.
 Set `annotate={false}` only when reconstruction is not needed.
+
+Portable attributes are allowlisted content metadata, not Chakra configuration.
+The renderer strips polymorphic props (`as`, `asChild`), raw HTML, handlers, and
+host styling controls. Apply intentional styling and behavior through trusted
+component overrides or `wrapperProps`, never through feed annotations.
 
 ## Quick start
 
@@ -2613,10 +2619,15 @@ export const articleComponents = createPostkitAstroComponents({
 
 Audio and Video use native browser controls, while AppearsOn, Figure, and the
 current Chart renderer are static, so Astro emits them without a client
-runtime. Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost
+runtime. Disclosure also works natively without hydration. Carousel, CodeBlock,
+CodeGroup, LinkPreview, NewsletterSignup, Poll, ShareActions, SocialPost, and Tabs
 use `client:visible` and hydrate only when they approach the viewport. This
 keeps forms, sharing, runtime link resolution, and consent-gated embeds
 interactive without shipping a page-wide React root.
+
+Poll selections are local unless the host supplies persistence. Host callbacks
+such as `onVote` belong inside a hydrated React wrapper; functions cannot be
+serialized as props across an Astro island boundary.
 
 Prefer the `items` declaration for carousels in portable Markdown. Rich MDX
 children cross an Astro-to-React slot boundary and should be reserved for

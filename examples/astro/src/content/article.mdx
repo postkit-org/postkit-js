@@ -1,5 +1,29 @@
 # A portable PostKit article
 
+<Tabs
+  items={[
+    { label: 'First', content: 'First panel' },
+    { label: 'Second', content: 'Second panel' },
+  ]}
+/>
+
+<CodeBlock code="const answer = 42" language="js" />
+
+<CodeGroup
+  items={[
+    { label: 'JavaScript', code: 'first()', language: 'js' },
+    { label: 'TypeScript', code: 'second()', language: 'ts' },
+  ]}
+/>
+
+<Poll
+  question="Which guide next?"
+  options={[
+    { id: 'first', label: 'First guide' },
+    { id: 'second', label: 'Second guide' },
+  ]}
+/>
+
 <AuthorCard
   name="Ada Lovelace"
   role="Contributing editor"

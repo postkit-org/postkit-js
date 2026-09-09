@@ -139,10 +139,15 @@ export const articleComponents = createPostkitAstroComponents({
 
 Audio and Video use native browser controls, while AppearsOn, Figure, and the
 current Chart renderer are static, so Astro emits them without a client
-runtime. Carousel, LinkPreview, NewsletterSignup, ShareActions, and SocialPost
+runtime. Disclosure also works natively without hydration. Carousel, CodeBlock,
+CodeGroup, LinkPreview, NewsletterSignup, Poll, ShareActions, SocialPost, and Tabs
 use `client:visible` and hydrate only when they approach the viewport. This
 keeps forms, sharing, runtime link resolution, and consent-gated embeds
 interactive without shipping a page-wide React root.
+
+Poll selections are local unless the host supplies persistence. Host callbacks
+such as `onVote` belong inside a hydrated React wrapper; functions cannot be
+serialized as props across an Astro island boundary.
 
 Prefer the `items` declaration for carousels in portable Markdown. Rich MDX
 children cross an Astro-to-React slot boundary and should be reserved for

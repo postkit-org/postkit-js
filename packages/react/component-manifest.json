@@ -208,7 +208,7 @@
         "directive": ":::postkit-disclosure{summary=\"Example\"}\nExample content.\n:::"
       },
       "preview": { "kind": "live", "label": "Disclosure component preview" },
-      "runtime": "client",
+      "runtime": "native-controls",
       "stability": "initial",
       "support": {
         "react": "supported",
@@ -368,7 +368,7 @@
       "stability": "initial",
       "support": {
         "react": "supported",
-        "astro": "static",
+        "astro": "hydrated",
         "email": "not-defined"
       }
     },
@@ -459,7 +459,7 @@
       "stability": "initial",
       "support": {
         "react": "supported",
-        "astro": "static",
+        "astro": "hydrated",
         "email": "not-defined"
       }
     },
@@ -517,7 +517,7 @@
       "stability": "initial",
       "support": {
         "react": "supported",
-        "astro": "static",
+        "astro": "hydrated",
         "email": "not-defined"
       }
     },
@@ -994,7 +994,7 @@
       "stability": "initial",
       "support": {
         "react": "supported",
-        "astro": "static",
+        "astro": "hydrated",
         "email": "not-defined"
       }
     },
