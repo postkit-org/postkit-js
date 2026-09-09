@@ -14,6 +14,82 @@ function render(renderer: React.ReactNode): string {
 }
 
 describe('DocumentRenderer', () => {
+  it.each([
+    '<p as="script" src="https://example.test/payload.js" />',
+    '<div as="iframe" srcDoc="&lt;script>alert(1)&lt;/script>" />',
+  ])(
+    'does not allow MDX attributes to change the rendered element: %s',
+    (source) => {
+      const markup = render(
+        <DocumentRenderer document={parsePostkit(source, { format: 'mdx' })} />,
+      );
+      expect(markup).not.toMatch(/<(script|iframe)\b|srcDoc=/i);
+    },
+  );
+
+  it('filters polymorphism from feed annotations and preserves safe content', () => {
+    const document = parsePostkitHtml(`<div data-postkit-component="Prose"
+      data-postkit-props='{"as":"script","asChild":true,"src":"https://example.test/payload.js","srcDoc":"unsafe","position":"fixed","title":"Safe"}'>Readable</div>`);
+    const markup = render(<DocumentRenderer document={document} />);
+    expect(markup).not.toMatch(/<script\b|srcDoc=|asChild|position:fixed/i);
+    expect(markup).toContain('Readable');
+    expect(markup).toContain('title="Safe"');
+  });
+
+  it('allowlists JSON element attributes without losing semantic metadata', () => {
+    const document = parsePostkit(
+      {
+        type: 'document',
+        version: 1,
+        children: [
+          {
+            type: 'element',
+            name: 'a',
+            attributes: {
+              as: 'iframe',
+              asChild: true,
+              srcDoc: 'unsafe',
+              HREF: 'javascript:bad()',
+              href: ['javascript:bad()'],
+              position: 'fixed',
+              title: 'Safe',
+              'aria-label': 'Article',
+            },
+            children: [{ type: 'text', value: 'Read' }],
+          },
+        ],
+      },
+      { format: 'json' },
+    );
+    const markup = render(<DocumentRenderer document={document} />);
+    expect(markup).not.toMatch(/<iframe\b|srcDoc=|javascript:|position:fixed/i);
+    expect(markup).toContain('title="Safe"');
+    expect(markup).toContain('aria-label="Article"');
+  });
+
+  it.each(['constructor', '__proto__', 'toString'])(
+    'does not invoke inherited registry members: %s',
+    (name) => {
+      const document = parsePostkit(
+        {
+          type: 'document',
+          version: 1,
+          children: [
+            {
+              type: 'component',
+              name,
+              children: [{ type: 'text', value: 'Fallback' }],
+            },
+          ],
+        },
+        { format: 'json' },
+      );
+      expect(render(<DocumentRenderer document={document} />)).toContain(
+        'Fallback',
+      );
+    },
+  );
+
   it('maps semantic HTML through Chakra-backed prose primitives', () => {
     const document = parsePostkitHtml(`
       <article>

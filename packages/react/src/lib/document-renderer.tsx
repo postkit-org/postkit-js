@@ -87,15 +87,67 @@ export interface DocumentRendererProps {
 }
 
 const blockedComponentProps = new Set([
+  'as',
+  'aschild',
+  '__proto__',
+  'constructor',
+  'prototype',
   'children',
-  'className',
+  'classname',
   'css',
-  'dangerouslySetInnerHTML',
+  'dangerouslysetinnerhtml',
   'ref',
-  'rootProps',
-  'slotStyles',
+  'rootprops',
+  'slotstyles',
+  'srcdoc',
   'style',
 ]);
+
+// Portable attributes are content, not Chakra's polymorphic or styling API.
+const elementAttributes = new Set([
+  'alt',
+  'checked',
+  'cite',
+  'colSpan',
+  'controls',
+  'dateTime',
+  'disabled',
+  'height',
+  'href',
+  'id',
+  'kind',
+  'label',
+  'language',
+  'loading',
+  'loop',
+  'meta',
+  'muted',
+  'open',
+  'poster',
+  'preload',
+  'rel',
+  'reversed',
+  'role',
+  'rowSpan',
+  'scope',
+  'sizes',
+  'span',
+  'src',
+  'srcSet',
+  'start',
+  'title',
+  'type',
+  'width',
+]);
+
+function isElementAttribute(name: string): boolean {
+  return elementAttributes.has(name) || /^aria-[a-z-]+$/.test(name);
+}
+
+function isBlockedProp(name: string): boolean {
+  const normalized = name.toLowerCase();
+  return blockedComponentProps.has(normalized) || normalized.startsWith('on');
+}
 
 const voidElementNames = new Set([
   'area',
@@ -125,15 +177,26 @@ function safePortableUrl(value: string): boolean {
 
 const omittedJsonValue = Symbol('omittedPostkitJsonValue');
 
+function safeSourceSet(value: PostkitJsonValue): boolean {
+  return (
+    typeof value === 'string' &&
+    value.split(',').every((candidate) => {
+      const url = candidate.trim().split(/\s+/)[0];
+      return !!url && safePortableUrl(url);
+    })
+  );
+}
+
 function safeJsonProp(
   value: PostkitJsonValue,
   name?: string,
 ): PostkitJsonValue | typeof omittedJsonValue {
+  if (name?.toLowerCase() === 'srcset' && !safeSourceSet(value))
+    return omittedJsonValue;
   if (
-    typeof value === 'string' &&
     name &&
     /(?:href|poster|src|url)$/i.test(name) &&
-    !safePortableUrl(value)
+    (typeof value !== 'string' || !safePortableUrl(value))
   ) {
     return omittedJsonValue;
   }
@@ -146,10 +209,7 @@ function safeJsonProp(
   if (value === null || typeof value !== 'object') return value;
   return Object.fromEntries(
     Object.entries(value).flatMap(([childName, childValue]) => {
-      if (
-        blockedComponentProps.has(childName) ||
-        childName.toLowerCase().startsWith('on')
-      ) {
+      if (isBlockedProp(childName)) {
         return [];
       }
       const safe = safeJsonProp(childValue, childName);
@@ -160,13 +220,11 @@ function safeJsonProp(
 
 function safeComponentProps(
   props: Readonly<Record<string, PostkitJsonValue>> | undefined,
+  semantic = false,
 ): Record<string, PostkitJsonValue> {
   return Object.fromEntries(
     Object.entries(props ?? {}).flatMap(([name, value]) => {
-      if (
-        blockedComponentProps.has(name) ||
-        name.toLowerCase().startsWith('on')
-      ) {
+      if (isBlockedProp(name) || (semantic && !isElementAttribute(name))) {
         return [];
       }
       const safe = safeJsonProp(value, name);
@@ -178,7 +236,7 @@ function safeComponentProps(
 function annotationProps(
   node: PostkitComponentNode,
 ): Readonly<Record<string, unknown>> {
-  const props = safeComponentProps(node.props);
+  const props = safeComponentProps(node.props, isSemanticComponent(node.name));
   return {
     'data-postkit-component': node.name,
     'data-postkit-version': POSTKIT_DOCUMENT_VERSION,
@@ -201,19 +259,14 @@ function renderChildren(
 function elementProps(node: PostkitElementNode, annotate: boolean) {
   const attributes = Object.fromEntries(
     Object.entries(node.attributes ?? {}).filter(([name, value]) => {
-      if (
-        blockedComponentProps.has(name) ||
-        name.toLowerCase().startsWith('on')
-      ) {
+      if (!isElementAttribute(name)) {
         return false;
       }
+      if (name === 'srcSet') return safeSourceSet(value);
       if (
-        ['action', 'cite', 'formAction', 'href', 'poster', 'src'].includes(
-          name,
-        ) &&
-        typeof value === 'string'
+        ['action', 'cite', 'formAction', 'href', 'poster', 'src'].includes(name)
       ) {
-        return safePortableUrl(value);
+        return typeof value === 'string' && safePortableUrl(value);
       }
       return true;
     }),
@@ -244,12 +297,22 @@ interface RenderContext {
   readonly annotate: boolean;
 }
 
+function isSemanticComponent(name: string): boolean {
+  return name === 'Prose' || /^[a-z]/.test(name);
+}
+
+function registeredComponent(context: RenderContext, name: string) {
+  return Object.hasOwn(context.components, name)
+    ? context.components[name]
+    : undefined;
+}
+
 function renderElement(
   node: PostkitElementNode,
   context: RenderContext,
   path: string,
 ): ReactElement | ReactNode[] | null {
-  const Component = context.components[node.name];
+  const Component = registeredComponent(context, node.name);
   const children = renderChildren(node.children, context, path);
   if (!Component) {
     return context.unknownElements === 'drop' ? null : children;
@@ -278,12 +341,12 @@ function renderComponent(
   context: RenderContext,
   path: string,
 ): ReactElement | ReactNode[] | null {
-  const Component = context.components[node.name];
+  const Component = registeredComponent(context, node.name);
   const children = renderChildren(node.children, context, path);
   if (!Component) {
     return context.unknownComponents === 'drop' ? null : children;
   }
-  const props = safeComponentProps(node.props);
+  const props = safeComponentProps(node.props, isSemanticComponent(node.name));
   const annotations = context.annotate ? annotationProps(node) : {};
   return createElement(
     Component,

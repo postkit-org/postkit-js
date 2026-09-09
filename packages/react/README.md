@@ -81,6 +81,11 @@ survive without creating arbitrary DOM tags. The renderer emits versioned
 annotations when rendered output needs to become a Postkit document again.
 Set `annotate={false}` only when reconstruction is not needed.
 
+Portable attributes are allowlisted content metadata, not Chakra configuration.
+The renderer strips polymorphic props (`as`, `asChild`), raw HTML, handlers, and
+host styling controls. Apply intentional styling and behavior through trusted
+component overrides or `wrapperProps`, never through feed annotations.
+
 ## Quick start
 
 Mount `PostkitProvider` near the application root. It owns the Chakra provider,
