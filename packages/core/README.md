@@ -23,6 +23,9 @@ event handlers, unsafe URLs, and MDX expressions.
 - `parsePostkitJson(source)` validates the versioned document format.
 - `serializePostkit(document, { format })` writes HTML, Markdown, MDX, or JSON.
 
+HTML serialization normalizes and allowlists semantic attributes. URL attributes
+must be strings with safe schemes; arrays cannot bypass URL validation.
+
 Annotated HTML preserves Postkit component names and JSON-compatible props in
 `data-postkit-*` attributes. Serialization does not add a document wrapper by
 default; request one with `documentElement` when a transport needs a single

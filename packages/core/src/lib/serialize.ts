@@ -69,12 +69,52 @@ const unsafeElements = new Set([
 ]);
 
 const htmlAttributeNames: Readonly<Record<string, string>> = {
+  classname: 'class',
   colSpan: 'colspan',
   dateTime: 'datetime',
   formAction: 'formaction',
   rowSpan: 'rowspan',
   srcSet: 'srcset',
 };
+
+const allowedHtmlAttributes = new Set([
+  'alt',
+  'checked',
+  'cite',
+  'class',
+  'colspan',
+  'controls',
+  'datetime',
+  'disabled',
+  'height',
+  'hidden',
+  'href',
+  'id',
+  'kind',
+  'label',
+  'language',
+  'loading',
+  'loop',
+  'meta',
+  'muted',
+  'open',
+  'poster',
+  'preload',
+  'rel',
+  'reversed',
+  'role',
+  'rowspan',
+  'scope',
+  'sizes',
+  'span',
+  'src',
+  'srcset',
+  'start',
+  'title',
+  'type',
+  'value',
+  'width',
+]);
 
 function assertDocument(document: PostkitDocument): void {
   if (
@@ -110,12 +150,25 @@ function escapeAttribute(value: string): string {
   return escapeHtml(value).replaceAll('"', '&quot;');
 }
 
-function safeUrlAttribute(name: string, value: string): boolean {
-  if (
-    !['action', 'cite', 'formAction', 'href', 'poster', 'src'].includes(name)
-  ) {
-    return true;
+function safeUrlAttribute(name: string, value: PostkitAttributeValue): boolean {
+  if (name === 'srcset') {
+    return (
+      typeof value === 'string' &&
+      value.split(',').every((candidate) => {
+        const [url, ...descriptors] = candidate.trim().split(/\s+/);
+        return (
+          !!url &&
+          safeUrlAttribute('src', url) &&
+          descriptors.length <= 1 &&
+          descriptors.every((descriptor) =>
+            /^(?:\d+(?:\.\d+)?x|\d+w)$/.test(descriptor),
+          )
+        );
+      })
+    );
   }
+  if (!['cite', 'href', 'poster', 'src'].includes(name)) return true;
+  if (typeof value !== 'string') return false;
   const normalized = [...value.trim()]
     .filter((character) => character.charCodeAt(0) > 0x20)
     .join('')
@@ -128,18 +181,15 @@ function serializeAttribute(
   name: string,
   value: PostkitAttributeValue,
 ): string {
+  const normalized = name.toLowerCase();
+  const htmlName = htmlAttributeNames[normalized] ?? normalized;
   if (
-    !/^[A-Za-z_:][A-Za-z0-9:._-]*$/.test(name) ||
-    name === 'children' ||
-    name === 'dangerouslySetInnerHTML' ||
-    name === 'style' ||
-    name.toLowerCase().startsWith('on') ||
-    name.toLowerCase().startsWith('data-postkit')
+    (!allowedHtmlAttributes.has(htmlName) &&
+      !/^aria-[a-z-]+$/.test(htmlName)) ||
+    !safeUrlAttribute(htmlName, value)
   ) {
     return '';
   }
-  if (typeof value === 'string' && !safeUrlAttribute(name, value)) return '';
-  const htmlName = htmlAttributeNames[name] ?? name;
   if (value === false) return '';
   if (value === true) return ` ${htmlName}`;
   const serialized = Array.isArray(value) ? value.join(' ') : String(value);

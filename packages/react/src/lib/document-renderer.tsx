@@ -181,8 +181,15 @@ function safeSourceSet(value: PostkitJsonValue): boolean {
   return (
     typeof value === 'string' &&
     value.split(',').every((candidate) => {
-      const url = candidate.trim().split(/\s+/)[0];
-      return !!url && safePortableUrl(url);
+      const [url, ...descriptors] = candidate.trim().split(/\s+/);
+      return (
+        !!url &&
+        safePortableUrl(url) &&
+        descriptors.length <= 1 &&
+        descriptors.every((descriptor) =>
+          /^(?:\d+(?:\.\d+)?x|\d+w)$/.test(descriptor),
+        )
+      );
     })
   );
 }

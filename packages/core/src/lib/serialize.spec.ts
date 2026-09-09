@@ -13,6 +13,53 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
+  it.each(['href', 'HREF', 'Href', 'src', 'SRC', 'poster', 'cite', 'srcSet'])(
+    'rejects executable and non-string URL attributes: %s',
+    (name) => {
+      for (const value of [
+        'java\tscript:bad()',
+        ['javascript:bad()'],
+        true,
+        42,
+      ]) {
+        const document = createPostkitDocument([
+          {
+            type: 'element',
+            name: 'a',
+            attributes: { [name]: value },
+            children: [],
+          },
+        ]);
+        expect(serializePostkitHtml(document, { annotations: false })).toBe(
+          '<a></a>',
+        );
+      }
+    },
+  );
+
+  it('normalizes safe HTML attributes and removes unknown capabilities', () => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'img',
+        attributes: {
+          SRC: '/image.png',
+          srcSet: '/small.png 1x, https://example.test/large.png 2x',
+          ALT: 'Safe',
+          className: ['article', 'media'],
+          STYLE: 'position:fixed',
+          AS: 'script',
+          srcDoc: '<script>bad()</script>',
+          'xlink:href': 'javascript:bad()',
+        },
+        children: [],
+      },
+    ]);
+    expect(serializePostkitHtml(document, { annotations: false })).toBe(
+      '<img src="/image.png" srcset="/small.png 1x, https://example.test/large.png 2x" alt="Safe" class="article media">',
+    );
+  });
+
   it.each([
     '{globalThis.executed = true}',
     'export const value = 1',
@@ -224,7 +271,7 @@ const article = true
     });
 
     expect(html).toBe(
-      '<article><div open colspan="2" className="article featured">&lt;safe &amp; escaped&gt;</div>' +
+      '<article><div open colspan="2" class="article featured">&lt;safe &amp; escaped&gt;</div>' +
         '<img src="https://example.com/image.png" alt="Image"><aside>Notice</aside></article>',
     );
     expect(() =>
