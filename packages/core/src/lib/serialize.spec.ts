@@ -13,6 +13,56 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
+  it.each([
+    '{globalThis.executed = true}',
+    'export const value = 1',
+    'import data from "./private.js"',
+    'Text with {braces}, & entities and &#123;literal entities&#125;.',
+  ])('keeps HTML text literal in MDX: %s', (text) => {
+    const document = createPostkitDocument([
+      { type: 'element', name: 'p', children: [{ type: 'text', value: text }] },
+    ]);
+    const mdx = serializePostkitMdx(document);
+    expect(parsePostkit(mdx, { format: 'mdx' })).toEqual(document);
+  });
+
+  it('escapes expressions in semantic HTML fallbacks and component children', () => {
+    const document = parsePostkitHtml(
+      '<details><summary>{title}</summary><p>{body}</p><hr></details>',
+    );
+    expect(() =>
+      parsePostkit(serializePostkitMdx(document), { format: 'mdx' }),
+    ).not.toThrow();
+    const component = createPostkitDocument([
+      {
+        type: 'component',
+        name: 'Callout',
+        children: [{ type: 'text', value: '{danger()}' }],
+      },
+    ]);
+    expect(serializePostkitMdx(component)).toContain('&#123;danger()&#125;');
+  });
+
+  it('cannot break out of indented code fences or injected fence metadata', () => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'pre',
+        children: [
+          {
+            type: 'element',
+            name: 'code',
+            attributes: { language: 'js', meta: '\n```\n{danger()}\n```' },
+            children: [{ type: 'text', value: '   ```\n{danger()}\n' }],
+          },
+        ],
+      },
+    ]);
+    const mdx = serializePostkitMdx(document);
+    expect(parsePostkit(mdx, { format: 'mdx' }).children).toHaveLength(1);
+    expect(mdx).toContain('````');
+  });
+
   it('round-trips semantic and component nodes through annotated HTML', () => {
     const document = createPostkitDocument([
       {

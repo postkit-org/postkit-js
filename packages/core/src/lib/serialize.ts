@@ -7,6 +7,7 @@ import {
   type PostkitNode,
 } from './document.js';
 import { PostkitParseError } from './parse-error.js';
+import { parsePostkitMarkdown } from './parse-markdown.js';
 
 export type PostkitOutputFormat = 'html' | 'json' | 'markdown' | 'mdx';
 
@@ -165,8 +166,10 @@ function componentElement(
 function serializeHtmlNode(
   node: PostkitNode,
   options: SerializePostkitHtmlOptions,
+  mdx = false,
 ): string {
-  if (node.type === 'text') return escapeHtml(node.value);
+  if (node.type === 'text')
+    return mdx ? escapeMdxText(escapeHtml(node.value)) : escapeHtml(node.value);
   if (node.type === 'component') {
     if (!/^[A-Z][A-Za-z0-9.]*$/.test(node.name)) {
       throw new PostkitParseError(
@@ -184,7 +187,7 @@ function serializeHtmlNode(
               : ''
           }`;
     return `<${name}${annotations}>${node.children
-      .map((child) => serializeHtmlNode(child, options))
+      .map((child) => serializeHtmlNode(child, options, mdx))
       .join('')}</${name}>`;
   }
   const name = safeElementName(node.name);
@@ -193,9 +196,10 @@ function serializeHtmlNode(
       ? ''
       : ` data-postkit-node="${name}" data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"`;
   const opening = `<${name}${serializeAttributes(node.attributes)}${annotations}>`;
-  if (voidElements.has(name)) return opening;
+  if (voidElements.has(name))
+    return mdx ? `${opening.slice(0, -1)} />` : opening;
   return `${opening}${node.children
-    .map((child) => serializeHtmlNode(child, options))
+    .map((child) => serializeHtmlNode(child, options, mdx))
     .join('')}</${name}>`;
 }
 
@@ -237,8 +241,25 @@ function textContent(nodes: readonly PostkitNode[]): string {
     .join('');
 }
 
-function escapeMarkdown(value: string): string {
-  return value.replace(/([\\`*_[\]<>])/g, '\\$1');
+function escapeMdxText(value: string): string {
+  return value
+    .replaceAll('{', '&#123;')
+    .replaceAll('}', '&#125;')
+    .replace(
+      /^(\s*)(import|export)(?=\s|$)/gm,
+      (_, space: string, keyword: string) =>
+        `${space}&#${keyword.charCodeAt(0)};${keyword.slice(1)}`,
+    );
+}
+
+function escapeMarkdown(
+  value: string,
+  options: SerializePostkitMarkdownOptions,
+): string {
+  const escaped = value.replace(/([\\`*_[\]<>])/g, '\\$1');
+  return options.mdx
+    ? escapeMdxText(escaped.replaceAll('&', '&amp;'))
+    : escaped;
 }
 
 function inlineCode(value: string): string {
@@ -254,6 +275,7 @@ function inlineCode(value: string): string {
 function mdxComponent(
   node: PostkitComponentNode,
   options: SerializePostkitMarkdownOptions,
+  inline = false,
 ): string {
   if (!/^[A-Z][A-Za-z0-9.]*$/.test(node.name)) {
     throw new PostkitParseError(
@@ -266,6 +288,9 @@ function mdxComponent(
       ? ` data-postkit-props="${escapeAttribute(JSON.stringify(node.props))}"`
       : '';
   if (node.children.length === 0) return `<${node.name}${props} />`;
+  if (inline) {
+    return `<${node.name}${props}>${node.children.map((child) => serializeInlineNode(child, options)).join('')}</${node.name}>`;
+  }
   const children = serializeMarkdownNodes(node.children, options).trim();
   return `<${node.name}${props}>\n\n${children}\n\n</${node.name}>`;
 }
@@ -274,19 +299,23 @@ function htmlFallback(
   node: PostkitNode,
   options: SerializePostkitMarkdownOptions,
 ): string {
-  return serializeHtmlNode(node, {
-    annotations: options.annotations,
-  });
+  return serializeHtmlNode(
+    node,
+    {
+      annotations: options.annotations,
+    },
+    options.mdx,
+  );
 }
 
 function serializeInlineNode(
   node: PostkitNode,
   options: SerializePostkitMarkdownOptions,
 ): string {
-  if (node.type === 'text') return escapeMarkdown(node.value);
+  if (node.type === 'text') return escapeMarkdown(node.value, options);
   if (node.type === 'component') {
     return options.mdx
-      ? mdxComponent(node, options)
+      ? mdxComponent(node, options, true)
       : htmlFallback(node, options);
   }
   const children = () =>
@@ -316,7 +345,7 @@ function serializeInlineNode(
       const alt = node.attributes?.['alt'];
       const title = node.attributes?.['title'];
       if (typeof src !== 'string') return '';
-      return `![${typeof alt === 'string' ? alt.replaceAll(']', '\\]') : ''}](${src.replaceAll(')', '\\)')}${
+      return `![${typeof alt === 'string' ? (options.mdx ? escapeMarkdown(alt, options) : alt.replaceAll(']', '\\]')) : ''}](${src.replaceAll(')', '\\)')}${
         typeof title === 'string' ? ` "${title.replaceAll('"', '\\"')}"` : ''
       })`;
     }
@@ -386,7 +415,7 @@ function serializeTable(
           .map((child) => serializeInlineNode(child, options))
           .join('')
           .replaceAll('|', '\\|')
-          .replaceAll('\n', '<br>'),
+          .replaceAll('\n', options.mdx ? '<br />' : '<br>'),
       ),
   );
   if (rows.length === 0) return '';
@@ -411,14 +440,15 @@ function serializeCodeBlock(node: PostkitElementNode): string {
   const value = textContent(codeNode?.children ?? node.children);
   const longest = Math.max(
     0,
-    ...[...value.matchAll(/^`+/gm)].map((match) => match[0].length),
+    ...[...value.matchAll(/`+/g)].map((match) => match[0].length),
   );
   const fence = '`'.repeat(Math.max(3, longest + 1));
   const language = codeNode?.attributes?.['language'];
   const meta = codeNode?.attributes?.['meta'];
   const info = [language, meta]
     .filter((item): item is string => typeof item === 'string')
-    .join(' ');
+    .join(' ')
+    .replace(/[\r\n`]/g, ' ');
   return `${fence}${info}\n${value.replace(/\n$/, '')}\n${fence}`;
 }
 
@@ -426,7 +456,7 @@ function serializeBlockNode(
   node: PostkitNode,
   options: SerializePostkitMarkdownOptions,
 ): string {
-  if (node.type === 'text') return escapeMarkdown(node.value);
+  if (node.type === 'text') return escapeMarkdown(node.value, options);
   if (node.type === 'component') {
     return options.mdx
       ? mdxComponent(node, options)
@@ -477,6 +507,9 @@ export function serializePostkitMarkdown(
 ): string {
   assertDocument(document);
   const content = serializeMarkdownNodes(document.children, options).trimEnd();
+  // Fail closed if a future serializer branch accidentally emits executable
+  // syntax. The safe parser rejects expressions, spreads, and ESM everywhere.
+  if (options.mdx) parsePostkitMarkdown(content, { mdx: true });
   return content.length > 0 ? `${content}\n` : '';
 }
 

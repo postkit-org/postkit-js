@@ -41,6 +41,11 @@ Plain Markdown uses annotated HTML fallbacks for structures Markdown cannot
 represent. MDX output uses literal component tags and serialized data props;
 it never emits JavaScript expressions.
 
+MDX serialization escapes literal braces and ESM-like text, keeps code fences
+isolated, and validates the generated syntax with the non-executable parser.
+Unrepresentable or executable output fails closed rather than returning unsafe
+MDX for a downstream compiler.
+
 Documents use an explicit `version` so future schema changes can be migrated
 without guessing which representation a consumer received.
 
