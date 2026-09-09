@@ -8,6 +8,19 @@ import {
 } from '../index.js';
 
 describe('Postkit document parsing', () => {
+  it('preserves Markdown task state and code metadata beside raw HTML blocks', () => {
+    const source =
+      '- [ ] Todo\n\n- [x] Done\n\n3. Third\n\n```ts title="sample.ts"\nconst value = 1\n```';
+    const expected = parsePostkitMarkdown(source);
+    const mixed = parsePostkitMarkdown(`${source}\n\n<div>tail</div>`);
+    expect(mixed.children.slice(0, -1)).toEqual(expected.children);
+    expect(mixed.children.at(-1)).toEqual({
+      type: 'element',
+      name: 'div',
+      children: [{ type: 'text', value: 'tail' }],
+    });
+  });
+
   it('keeps Markdown phrasing inside its enclosing inline HTML', () => {
     expect(parsePostkitMarkdown('Hello <strong>bold</strong> world.')).toEqual(
       parsePostkitHtml('<p>Hello <strong>bold</strong> world.</p>'),

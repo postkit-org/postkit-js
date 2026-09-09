@@ -4,7 +4,7 @@ import { mdxFromMarkdown } from 'mdast-util-mdx';
 import { gfm } from 'micromark-extension-gfm';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { raw } from 'hast-util-raw';
-import type { ElementContent, Nodes as HastNode, RootContent } from 'hast';
+import type { Nodes as HastNode, RootContent } from 'hast';
 
 import {
   createPostkitDocument,
@@ -161,23 +161,13 @@ function convertChildren(
 
 function toHast(node: PostkitNode): HastNode {
   if (node.type === 'text') return { type: 'text', value: node.value };
-  if (node.type === 'component') {
-    return {
-      type: 'postkitNode',
-      data: { postkitNode: node },
-    } as unknown as HastNode;
-  }
+  // These nodes have already been converted (including any nested raw HTML).
+  // Re-tokenizing them as HTML would coerce portable metadata such as
+  // checked:false and spread:true into absent or empty HTML attributes.
   return {
-    type: 'element',
-    tagName: node.name,
-    properties: Object.fromEntries(
-      Object.entries(node.attributes ?? {}).map(([name, value]) => [
-        name,
-        typeof value === 'object' ? [...value] : value,
-      ]),
-    ),
-    children: node.children.map(toHast) as ElementContent[],
-  };
+    type: 'postkitNode',
+    data: { postkitNode: node },
+  } as unknown as HastNode;
 }
 
 function convertTableRow(
