@@ -38,7 +38,12 @@ describe('interactive Astro React bridges', () => {
           .getAttribute('aria-selected'),
       ).toBe('true'),
     );
-    expect(screen.getByRole('tabpanel').textContent).toContain('Second panel');
+    // Selection updates before the outgoing panel's presence transition ends.
+    await waitFor(() =>
+      expect(screen.getByRole('tabpanel').textContent).toContain(
+        'Second panel',
+      ),
+    );
   });
 
   it('switches code examples after hydration', async () => {
@@ -58,7 +63,9 @@ describe('interactive Astro React bridges', () => {
           .getAttribute('aria-selected'),
       ).toBe('true'),
     );
-    expect(screen.getByRole('tabpanel').textContent).toContain('second()');
+    await waitFor(() =>
+      expect(screen.getByRole('tabpanel').textContent).toContain('second()'),
+    );
   });
 
   it('copies code and shows confirmation after hydration', async () => {
