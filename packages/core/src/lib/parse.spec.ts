@@ -8,6 +8,40 @@ import {
 } from '../index.js';
 
 describe('Postkit document parsing', () => {
+  it.each([false, true])(
+    'preserves unsupported footnote syntax literally (mdx=%s)',
+    (mdx) => {
+      const document = parsePostkitMarkdown(
+        'Hello[^A], again[^A].\n\n[^A]: A **formatted** note.\n    Continued.',
+        { mdx },
+      );
+      expect(document.children[0]).toEqual({
+        type: 'element',
+        name: 'p',
+        children: [
+          { type: 'text', value: 'Hello' },
+          { type: 'text', value: '[^A]' },
+          { type: 'text', value: ', again' },
+          { type: 'text', value: '[^A]' },
+          { type: 'text', value: '.' },
+        ],
+      });
+      expect(document.children[1]).toEqual({
+        type: 'element',
+        name: 'p',
+        children: [
+          {
+            type: 'text',
+            value: '[^A]: A **formatted** note.\n    Continued.',
+          },
+        ],
+      });
+      expect(() =>
+        parsePostkitMarkdown('Hello[^a].\n\n[^a]: {unsafe()}', { mdx: true }),
+      ).toThrow(/Executable MDX/);
+    },
+  );
+
   it('recognizes conventional task HTML without consuming nested or unrelated inputs', () => {
     const document = parsePostkitHtml(
       '<ul><li><p><input type="checkbox" disabled> Todo</p></li><li><p><input type="checkbox" checked disabled> Done</p></li></ul>',

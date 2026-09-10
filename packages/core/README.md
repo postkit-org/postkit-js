@@ -17,7 +17,9 @@ event handlers, unsafe URLs, and MDX expressions.
 ## Formats
 
 - `parsePostkitHtml(source)` normalizes untrusted HTML into semantic nodes.
-- `parsePostkitMarkdown(source)` supports CommonMark and GFM.
+- `parsePostkitMarkdown(source)` supports CommonMark and GFM lists, tables,
+  autolinks, and strikethrough. Footnote references and definitions are preserved
+  as literal text, not converted into linked footnotes.
 - `parsePostkit(source, { format: 'mdx' })` supports literal MDX components and
   rejects expressions, spread props, imports, and exports.
 - `parsePostkitJson(source)` validates the versioned document format.
@@ -29,6 +31,12 @@ must be strings with safe schemes; arrays cannot bypass URL validation.
 Reference links and images resolve their Markdown definitions. Mixed inline HTML
 is parsed as a complete stream, retaining Markdown formatting between tags and
 passing the resulting tree through the HTML safety filter.
+
+Markdown export escapes literal block markers, entities, and link/image
+destinations so text and URLs retain their meaning when reparsed. Task items
+export as disabled HTML checkboxes; HTML import recognizes leading checkboxes
+inside list items (including paragraph-wrapped GFM output) and recovers both
+checked and unchecked state.
 
 Annotated HTML preserves Postkit component names and JSON-compatible props in
 `data-postkit-*` attributes. Serialization does not add a document wrapper by

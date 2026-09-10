@@ -25,6 +25,10 @@ export interface ParsePostkitMarkdownOptions {
 
 interface SyntaxNode {
   readonly type: string;
+  readonly position?: {
+    readonly start: { readonly offset?: number };
+    readonly end: { readonly offset?: number };
+  };
   readonly identifier?: string;
   readonly children?: readonly SyntaxNode[];
   readonly value?: string;
@@ -45,6 +49,7 @@ interface SyntaxNode {
 
 interface ConversionOptions extends ParsePostkitMarkdownOptions {
   readonly definitions: ReadonlyMap<string, SyntaxNode>;
+  readonly source: string;
 }
 
 interface MdxAttribute {
@@ -189,6 +194,20 @@ function convertNode(
 ): PostkitNode[] {
   const children = () => convertChildren(node.children, options);
   switch (node.type) {
+    case 'footnoteReference':
+    case 'footnoteDefinition': {
+      // Footnotes are not yet part of the portable semantic vocabulary.
+      // Preserve the exact authored syntax, including labels and multiline
+      // definitions, rather than dropping references or unwrapping bodies.
+      // Still visit children so executable MDX cannot bypass validation.
+      children();
+      const value = options.source.slice(
+        node.position?.start.offset,
+        node.position?.end.offset,
+      );
+      const text: PostkitNode = { type: 'text', value };
+      return [node.type === 'footnoteDefinition' ? element('p', [text]) : text];
+    }
     case 'definition':
       return [];
     case 'linkReference':
@@ -362,6 +381,6 @@ export function parsePostkitMarkdown(
   };
   collectDefinitions(root);
   return createPostkitDocument(
-    convertChildren(root.children, { ...options, definitions }),
+    convertChildren(root.children, { ...options, definitions, source }),
   );
 }

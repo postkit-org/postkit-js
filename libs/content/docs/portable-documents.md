@@ -27,6 +27,12 @@ handlers, presentation attributes, and executable URLs. The safe MDX parser
 accepts literal component tags but rejects expressions, spread props, imports,
 and exports. JSON input must match the current versioned document schema.
 
+Task lists retain checked and unchecked state through HTML using disabled
+checkboxes. Markdown exports escape literal block markers, entities, and link
+destinations to preserve their meaning. Footnotes are currently a literal-text
+fallback: both references and definitions remain visible, but Postkit does not
+generate linked footnote sections or backlinks.
+
 ## Render through Chakra
 
 `@postkit/react/document` supplies `DocumentRenderer`. Semantic input is mapped

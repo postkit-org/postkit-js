@@ -13,6 +13,24 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
+  it('keeps footnote references and definitions visible across output formats', () => {
+    const document = parsePostkitMarkdown('Hello[^a].\n\n[^a]: Note text.');
+    const html = serializePostkitHtml(document, { annotations: false });
+    expect(html).toBe('<p>Hello[^a].</p><p>[^a]: Note text.</p>');
+    for (const mdx of [false, true]) {
+      const recovered = parsePostkitMarkdown(
+        serializePostkitMarkdown(document, { mdx }),
+        { mdx },
+      );
+      expect(serializePostkitHtml(recovered, { annotations: false })).toBe(
+        html,
+      );
+    }
+    expect(
+      serializePostkitHtml(parsePostkitHtml(html), { annotations: false }),
+    ).toBe(html);
+  });
+
   it.each([false, true])(
     'round-trips checked and unchecked tasks through HTML (annotations=%s)',
     (annotations) => {
