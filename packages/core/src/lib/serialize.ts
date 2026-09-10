@@ -391,8 +391,8 @@ function serializeInlineNode(
       const href = node.attributes?.['href'];
       const title = node.attributes?.['title'];
       if (typeof href !== 'string') return children();
-      return `[${children()}](${href.replaceAll(')', '\\)')}${
-        typeof title === 'string' ? ` "${title.replaceAll('"', '\\"')}"` : ''
+      return `[${children()}](${escapeMarkdownDestination(href)}${
+        typeof title === 'string' ? ` "${escapeMarkdownTitle(title)}"` : ''
       })`;
     }
     case 'img': {
@@ -400,8 +400,8 @@ function serializeInlineNode(
       const alt = node.attributes?.['alt'];
       const title = node.attributes?.['title'];
       if (typeof src !== 'string') return '';
-      return `![${typeof alt === 'string' ? (options.mdx ? escapeMarkdown(alt, options) : alt.replaceAll(']', '\\]')) : ''}](${src.replaceAll(')', '\\)')}${
-        typeof title === 'string' ? ` "${title.replaceAll('"', '\\"')}"` : ''
+      return `![${typeof alt === 'string' ? escapeMarkdown(alt, options) : ''}](${escapeMarkdownDestination(src)}${
+        typeof title === 'string' ? ` "${escapeMarkdownTitle(title)}"` : ''
       })`;
     }
     case 'br':
@@ -409,6 +409,20 @@ function serializeInlineNode(
     default:
       return htmlFallback(node, options);
   }
+}
+
+function escapeMarkdownDestination(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replace(/([\\()<>])/g, '\\$1')
+    .replace(/\s/g, (character) => `&#${character.charCodeAt(0)};`);
+}
+
+function escapeMarkdownTitle(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replace(/([\\"])/g, '\\$1')
+    .replace(/[\r\n]/g, (character) => `&#${character.charCodeAt(0)};`);
 }
 
 function serializeList(

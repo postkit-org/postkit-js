@@ -14,6 +14,44 @@ import {
 
 describe('Postkit document serialization', () => {
   it.each([
+    'https://example.com/a(b)',
+    '/nested((image)).png',
+    '/unmatched(open',
+    '/back\\slash).png',
+    '/with spaces/image.png',
+    '/angle<value>.png',
+    '/query?literal=&copy;&next=1',
+  ])('round-trips link and image destinations: %s', (url) => {
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'p',
+        children: [
+          {
+            type: 'element',
+            name: 'a',
+            attributes: { href: url, title: 'A "title" with \\ and &copy;' },
+            children: [{ type: 'text', value: 'Link' }],
+          },
+          {
+            type: 'element',
+            name: 'img',
+            attributes: { src: url, alt: 'Alt [text] &copy;', title: 'Image' },
+            children: [],
+          },
+        ],
+      },
+    ]);
+    for (const mdx of [false, true]) {
+      expect(
+        parsePostkitMarkdown(serializePostkitMarkdown(document, { mdx }), {
+          mdx,
+        }),
+      ).toEqual(document);
+    }
+  });
+
+  it.each([
     '# Literal heading',
     '1. Literal text',
     '- Literal dash',
