@@ -13,6 +13,27 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
+  it.each([
+    '# Literal heading',
+    '1. Literal text',
+    '- Literal dash',
+    '+ Literal plus',
+    'Title\n===',
+    'Text\n---',
+    '~~Not deleted~~',
+    '&copy; and &#123;literal entities&#125;',
+    '    Not an indented code block',
+    'First\n# Not a heading',
+  ])('preserves literal paragraph text in Markdown and MDX: %s', (value) => {
+    const document = createPostkitDocument([
+      { type: 'element', name: 'p', children: [{ type: 'text', value }] },
+    ]);
+    for (const mdx of [false, true]) {
+      const output = serializePostkitMarkdown(document, { mdx });
+      expect(parsePostkitMarkdown(output, { mdx })).toEqual(document);
+    }
+  });
+
   it.each(['href', 'HREF', 'Href', 'src', 'SRC', 'poster', 'cite', 'srcSet'])(
     'rejects executable and non-string URL attributes: %s',
     (name) => {

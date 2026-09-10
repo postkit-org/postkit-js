@@ -306,10 +306,15 @@ function escapeMarkdown(
   value: string,
   options: SerializePostkitMarkdownOptions,
 ): string {
-  const escaped = value.replace(/([\\`*_[\]<>])/g, '\\$1');
-  return options.mdx
-    ? escapeMdxText(escaped.replaceAll('&', '&amp;'))
-    : escaped;
+  // Escape text independently of its neighbors: a text node may begin a
+  // block, follow a line break, or sit beside another inline node.
+  const escaped = value
+    .replaceAll('&', '&amp;')
+    .replace(/([\\`*_[\]<>#+.!~|=-])/g, '\\$1')
+    .replace(/^(?: {4,}| *\t)[ \t]*/gm, (space) =>
+      [...space].map((character) => `&#${character.charCodeAt(0)};`).join(''),
+    );
+  return options.mdx ? escapeMdxText(escaped) : escaped;
 }
 
 function inlineCode(value: string): string {
