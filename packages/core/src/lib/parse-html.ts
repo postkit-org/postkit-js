@@ -324,15 +324,50 @@ function convertElement(
   if (!allowed.has(name)) {
     return options.unknownElements === 'drop' ? [] : children;
   }
-  const attributes = normalizeAttributes(node.properties);
+  const task = name === 'li' ? extractTaskCheckbox(children) : undefined;
+  const attributes = task
+    ? { ...normalizeAttributes(node.properties), checked: task.checked }
+    : normalizeAttributes(node.properties);
   return [
     {
       type: 'element',
       name,
       ...(attributes ? { attributes } : {}),
-      children,
+      children: task?.children ?? children,
     },
   ];
+}
+
+function extractTaskCheckbox(
+  children: readonly PostkitNode[],
+): { checked: boolean; children: PostkitNode[] } | undefined {
+  const index = children.findIndex(
+    (child) => child.type !== 'text' || child.value.trim() !== '',
+  );
+  const first = children[index];
+  if (first?.type !== 'element') return undefined;
+  if (first.name === 'p') {
+    const task = extractTaskCheckbox(first.children);
+    return task
+      ? {
+          checked: task.checked,
+          children: [
+            ...children.slice(0, index),
+            { ...first, children: task.children },
+            ...children.slice(index + 1),
+          ],
+        }
+      : undefined;
+  }
+  if (first.name !== 'input' || first.attributes?.['type'] !== 'checkbox')
+    return undefined;
+  const rest = children.slice(index + 1);
+  // Conventional GFM HTML places a single separator after the checkbox.
+  if (rest[0]?.type === 'text') {
+    rest[0] = { ...rest[0], value: rest[0].value.replace(/^ /, '') };
+    if (!rest[0].value) rest.shift();
+  }
+  return { checked: first.attributes['checked'] === true, children: rest };
 }
 
 function convertNode(

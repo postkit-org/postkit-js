@@ -241,14 +241,40 @@ function serializeHtmlNode(
       .join('')}</${name}>`;
   }
   const name = safeElementName(node.name);
+  const checked = name === 'li' ? node.attributes?.['checked'] : undefined;
+  const isTask = typeof checked === 'boolean';
+  const attributes = isTask
+    ? Object.fromEntries(
+        Object.entries(node.attributes ?? {}).filter(
+          ([key]) => key !== 'checked',
+        ),
+      )
+    : node.attributes;
   const annotations =
     options.annotations === false
       ? ''
       : ` data-postkit-node="${name}" data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"`;
-  const opening = `<${name}${serializeAttributes(node.attributes)}${annotations}>`;
+  const opening = `<${name}${serializeAttributes(attributes)}${annotations}>`;
   if (voidElements.has(name))
     return mdx ? `${opening.slice(0, -1)} />` : opening;
-  return `${opening}${node.children
+  const checkbox = isTask
+    ? serializeHtmlNode(
+        {
+          type: 'element',
+          name: 'input',
+          attributes: {
+            type: 'checkbox',
+            checked,
+            disabled: true,
+            'aria-label': checked ? 'Completed' : 'Not completed',
+          },
+          children: [],
+        },
+        { annotations: false },
+        mdx,
+      )
+    : '';
+  return `${opening}${checkbox}${node.children
     .map((child) => serializeHtmlNode(child, options, mdx))
     .join('')}</${name}>`;
 }

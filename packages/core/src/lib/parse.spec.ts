@@ -8,6 +8,20 @@ import {
 } from '../index.js';
 
 describe('Postkit document parsing', () => {
+  it('recognizes conventional task HTML without consuming nested or unrelated inputs', () => {
+    const document = parsePostkitHtml(
+      '<ul><li><p><input type="checkbox" disabled> Todo</p></li><li><p><input type="checkbox" checked disabled> Done</p></li></ul>',
+    );
+    expect(document).toEqual(parsePostkitMarkdown('- [ ] Todo\n- [x] Done'));
+    const ordinary = parsePostkitHtml(
+      '<ul><li><p>Before <input type="checkbox"></p><ul><li><input type="checkbox">Nested</li></ul></li></ul>',
+    );
+    const list = ordinary.children[0];
+    if (list?.type !== 'element') throw new Error('Expected list');
+    expect(list.children[0]).not.toHaveProperty('attributes.checked');
+    expect(JSON.stringify(ordinary)).toContain('"name":"input"');
+  });
+
   it('preserves Markdown task state and code metadata beside raw HTML blocks', () => {
     const source =
       '- [ ] Todo\n\n- [x] Done\n\n3. Third\n\n```ts title="sample.ts"\nconst value = 1\n```';

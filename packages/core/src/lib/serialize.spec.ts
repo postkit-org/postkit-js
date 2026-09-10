@@ -13,6 +13,22 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
+  it.each([false, true])(
+    'round-trips checked and unchecked tasks through HTML (annotations=%s)',
+    (annotations) => {
+      const source = '- [ ] Todo\n- [x] Done\n- Ordinary item';
+      const document = parsePostkitMarkdown(source);
+      const html = serializePostkitHtml(document, { annotations });
+      expect(html).toContain('<input type="checkbox" disabled');
+      expect(html).toContain('<input type="checkbox" checked disabled');
+      expect(html).not.toMatch(/<li[^>]* checked/);
+      expect(parsePostkitHtml(html)).toEqual(document);
+      expect(serializePostkitMarkdown(parsePostkitHtml(html))).toBe(
+        `${source}\n`,
+      );
+    },
+  );
+
   it.each([
     'https://example.com/a(b)',
     '/nested((image)).png',
