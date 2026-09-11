@@ -11,7 +11,7 @@
     "@postkit/next": "0.2.0",
     "@postkit/react": "0.2.0",
     "@postkit/shiki": "0.2.0",
-    "next": "^16.1.6",
+    "next": "^16.3.3",
     "next-mdx-remote": "^6.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
