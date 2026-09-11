@@ -33,9 +33,7 @@ export const postkitCarouselRecipe = defineSlotRecipe({
       maxHeight: '32rem',
       objectFit: 'cover',
     },
-    title: {
-      fontWeight: 'semibold',
-    },
+    title: {},
     description: {
       color: 'fg.muted',
     },
@@ -62,7 +60,6 @@ export const postkitCarouselRecipe = defineSlotRecipe({
       sm: {
         root: { borderRadius: 'md' },
         content: { padding: '3' },
-        title: { fontSize: 'md' },
         description: { fontSize: 'sm', marginTop: '1' },
         controls: { gap: '2', padding: '2' },
         previousTrigger: { fontSize: 'xs' },
@@ -73,7 +70,6 @@ export const postkitCarouselRecipe = defineSlotRecipe({
       md: {
         root: { borderRadius: 'xl' },
         content: { padding: '4' },
-        title: { fontSize: 'lg' },
         description: { fontSize: 'md', marginTop: '1' },
         controls: { gap: '3', padding: '3' },
         previousTrigger: { fontSize: 'sm' },
@@ -84,7 +80,6 @@ export const postkitCarouselRecipe = defineSlotRecipe({
       lg: {
         root: { borderRadius: '2xl' },
         content: { padding: '5' },
-        title: { fontSize: 'xl' },
         description: { fontSize: 'lg', marginTop: '2' },
         controls: { gap: '4', padding: '4' },
         previousTrigger: { fontSize: 'md' },

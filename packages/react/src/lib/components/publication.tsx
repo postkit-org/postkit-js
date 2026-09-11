@@ -1,11 +1,20 @@
 'use client';
 
 import {
+  Alert,
+  Blockquote,
   Box,
+  Button,
+  Card,
+  Heading,
   Image,
   Link,
+  List,
+  Progress,
+  RatingGroup,
+  Stat as ChakraStat,
+  Table,
   Text,
-  chakra,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
@@ -41,9 +50,7 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
-
-const OptionButton = chakra('button');
-const TableHeader = chakra('th');
+import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -54,14 +61,14 @@ function rootParts(rootProps?: BoxProps) {
   return { rootCss: css, rootClassName: className, restRootProps: rest };
 }
 
-export type PostkitPullQuoteProps = {
+export type PullQuoteProps = {
   readonly quote: string;
   readonly attribution?: string;
   readonly cite?: string;
 } & SharedRootProps<PostkitPullQuoteSlot> &
   RecipeVariantProps<typeof postkitPullQuoteRecipe> &
   UnstyledProp;
-export function PostkitPullQuote({
+export function PullQuote({
   quote,
   attribution,
   cite,
@@ -70,7 +77,7 @@ export function PostkitPullQuote({
   size,
   variant,
   unstyled,
-}: PostkitPullQuoteProps) {
+}: PullQuoteProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.pullQuote,
     postkitPullQuoteRecipe,
@@ -80,30 +87,24 @@ export function PostkitPullQuote({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
-      as="figure"
+    <Blockquote.Root
       data-postkit-component="PullQuote"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        aria-hidden="true"
+      <Blockquote.Icon
         className={recipe.classNameMap.mark}
         css={[styles.mark, slotStyles?.mark]}
-      >
-        “
-      </Box>
-      <Box
-        as="blockquote"
+      />
+      <Blockquote.Content
         className={recipe.classNameMap.quote}
         css={[styles.quote, slotStyles?.quote]}
       >
         {quote}
-      </Box>
+      </Blockquote.Content>
       {attribution || cite ? (
-        <Box
-          as="figcaption"
+        <Blockquote.Caption
           className={recipe.classNameMap.attribution}
           css={[styles.attribution, slotStyles?.attribution]}
         >
@@ -117,13 +118,13 @@ export function PostkitPullQuote({
               {attribution ? ` — ${cite}` : cite}
             </Box>
           ) : null}
-        </Box>
+        </Blockquote.Caption>
       ) : null}
-    </Box>
+    </Blockquote.Root>
   );
 }
 
-export type PostkitKeyTakeawayProps = {
+export type KeyTakeawayProps = {
   readonly title?: string;
   readonly eyebrow?: string;
   readonly items?: string | readonly string[];
@@ -131,7 +132,7 @@ export type PostkitKeyTakeawayProps = {
 } & SharedRootProps<PostkitKeyTakeawaySlot> &
   RecipeVariantProps<typeof postkitKeyTakeawayRecipe> &
   UnstyledProp;
-export function PostkitKeyTakeaway({
+export function KeyTakeaway({
   title = 'Key takeaway',
   eyebrow,
   items: value = [],
@@ -141,7 +142,7 @@ export function PostkitKeyTakeaway({
   size,
   variant,
   unstyled,
-}: PostkitKeyTakeawayProps) {
+}: KeyTakeawayProps) {
   const items = parseJsonProp<string>(value, 'KeyTakeaway items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.keyTakeaway,
@@ -152,58 +153,68 @@ export function PostkitKeyTakeaway({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Alert.Root
       as="aside"
+      status="info"
       data-postkit-component="KeyTakeaway"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {eyebrow ? (
-        <Text
-          className={recipe.classNameMap.eyebrow}
-          css={[styles.eyebrow, slotStyles?.eyebrow]}
-        >
-          {eyebrow}
-        </Text>
-      ) : null}
-      <Text
-        className={recipe.classNameMap.title}
-        css={[styles.title, slotStyles?.title]}
-      >
-        {title}
-      </Text>
-      {children ? (
-        <Box
-          className={recipe.classNameMap.body}
-          css={[styles.body, slotStyles?.body]}
-        >
-          {children}
-        </Box>
-      ) : null}
-      {items.length ? (
-        <Box
-          as="ul"
-          className={recipe.classNameMap.list}
-          css={[styles.list, slotStyles?.list]}
-        >
-          {items.map((item, index) => (
-            <Box
-              as="li"
-              className={recipe.classNameMap.item}
-              css={[styles.item, slotStyles?.item]}
-              key={`${item}-${index}`}
-            >
-              {item}
-            </Box>
-          ))}
-        </Box>
-      ) : null}
-    </Box>
+      <Alert.Content>
+        {eyebrow ? (
+          <Text
+            className={recipe.classNameMap.eyebrow}
+            css={[styles.eyebrow, slotStyles?.eyebrow]}
+          >
+            {eyebrow}
+          </Text>
+        ) : null}
+        <Alert.Title asChild>
+          <Heading
+            as="p"
+            size={postkitHeadingSize(size, {
+              sm: 'lg',
+              md: 'xl',
+              lg: '2xl',
+            })}
+            className={recipe.classNameMap.title}
+            css={[styles.title, slotStyles?.title]}
+          >
+            {title}
+          </Heading>
+        </Alert.Title>
+        {children ? (
+          <Alert.Description
+            className={recipe.classNameMap.body}
+            css={[styles.body, slotStyles?.body]}
+          >
+            {children}
+          </Alert.Description>
+        ) : null}
+        {items.length ? (
+          <List.Root
+            as="ul"
+            className={recipe.classNameMap.list}
+            css={[styles.list, slotStyles?.list]}
+          >
+            {items.map((item, index) => (
+              <List.Item
+                className={recipe.classNameMap.item}
+                css={[styles.item, slotStyles?.item]}
+                key={`${item}-${index}`}
+              >
+                {item}
+              </List.Item>
+            ))}
+          </List.Root>
+        ) : null}
+      </Alert.Content>
+    </Alert.Root>
   );
 }
 
-export type PostkitStatProps = {
+export type StatProps = {
   readonly value: string | number;
   readonly label: string;
   readonly trend?: string;
@@ -211,7 +222,7 @@ export type PostkitStatProps = {
 } & SharedRootProps<PostkitStatSlot> &
   RecipeVariantProps<typeof postkitStatRecipe> &
   UnstyledProp;
-export function PostkitStat({
+export function Stat({
   value,
   label,
   trend,
@@ -221,7 +232,7 @@ export function PostkitStat({
   size,
   variant,
   unstyled,
-}: PostkitStatProps) {
+}: StatProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.stat,
     postkitStatRecipe,
@@ -230,58 +241,63 @@ export function PostkitStat({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const statRootProps = restRootProps as Omit<
+    ChakraStat.RootProps,
+    'children' | 'size'
+  >;
   return (
-    <Box
+    <ChakraStat.Root
+      size={size ?? 'md'}
       data-postkit-component="Stat"
-      {...restRootProps}
+      {...statRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <ChakraStat.ValueText
         className={recipe.classNameMap.value}
         css={[styles.value, slotStyles?.value]}
       >
         {value}
-      </Text>
-      <Text
+      </ChakraStat.ValueText>
+      <ChakraStat.Label
         className={recipe.classNameMap.label}
         css={[styles.label, slotStyles?.label]}
       >
         {label}
-      </Text>
+      </ChakraStat.Label>
       {trend ? (
-        <Text
+        <ChakraStat.HelpText
           className={recipe.classNameMap.trend}
           css={[styles.trend, slotStyles?.trend]}
         >
           {trend}
-        </Text>
+        </ChakraStat.HelpText>
       ) : null}
       {description ? (
-        <Text
+        <ChakraStat.HelpText
           className={recipe.classNameMap.description}
           css={[styles.description, slotStyles?.description]}
         >
           {description}
-        </Text>
+        </ChakraStat.HelpText>
       ) : null}
-    </Box>
+    </ChakraStat.Root>
   );
 }
 
-export interface PostkitComparisonItem {
+export interface ComparisonItem {
   readonly label: string;
   readonly values: readonly (string | number | boolean | null)[];
 }
-export type PostkitComparisonProps = {
+export type ComparisonProps = {
   readonly columns: string | readonly string[];
-  readonly items: string | readonly PostkitComparisonItem[];
+  readonly items: string | readonly ComparisonItem[];
   readonly title?: string;
   readonly description?: string;
 } & SharedRootProps<PostkitComparisonSlot> &
   RecipeVariantProps<typeof postkitComparisonRecipe> &
   UnstyledProp;
-export function PostkitComparison({
+export function Comparison({
   columns: columnsValue,
   items: itemsValue,
   title,
@@ -291,12 +307,9 @@ export function PostkitComparison({
   size,
   variant,
   unstyled,
-}: PostkitComparisonProps) {
+}: ComparisonProps) {
   const columns = parseJsonProp<string>(columnsValue, 'Comparison columns');
-  const items = parseJsonProp<PostkitComparisonItem>(
-    itemsValue,
-    'Comparison items',
-  );
+  const items = parseJsonProp<ComparisonItem>(itemsValue, 'Comparison items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.comparison,
     postkitComparisonRecipe,
@@ -315,12 +328,18 @@ export function PostkitComparison({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {title ? (
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'lg',
+            md: 'xl',
+            lg: '2xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
       ) : null}
       {description ? (
         <Text
@@ -334,86 +353,81 @@ export function PostkitComparison({
         className={recipe.classNameMap.scroller}
         css={[styles.scroller, slotStyles?.scroller]}
       >
-        <Box
-          as="table"
+        <Table.Root
+          size={size ?? 'md'}
           className={recipe.classNameMap.table}
           css={[styles.table, slotStyles?.table]}
         >
-          <Box
-            as="thead"
+          <Table.Header
             className={recipe.classNameMap.head}
             css={[styles.head, slotStyles?.head]}
           >
-            <Box as="tr">
-              <Box
-                as="th"
+            <Table.Row>
+              <Table.ColumnHeader
                 className={recipe.classNameMap.header}
                 css={[styles.header, slotStyles?.header]}
               >
                 Feature
-              </Box>
+              </Table.ColumnHeader>
               {columns.map((column) => (
-                <Box
-                  as="th"
+                <Table.ColumnHeader
                   className={recipe.classNameMap.header}
                   css={[styles.header, slotStyles?.header]}
                   key={column}
                 >
                   {column}
-                </Box>
+                </Table.ColumnHeader>
               ))}
-            </Box>
-          </Box>
-          <Box as="tbody">
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {items.map((item) => (
-              <Box
-                as="tr"
+              <Table.Row
                 className={recipe.classNameMap.row}
                 css={[styles.row, slotStyles?.row]}
                 key={item.label}
               >
-                <TableHeader
+                <Table.ColumnHeader
                   scope="row"
                   className={recipe.classNameMap.label}
                   css={[styles.label, slotStyles?.label]}
                 >
                   {item.label}
-                </TableHeader>
+                </Table.ColumnHeader>
                 {columns.map((_, index) => (
-                  <Box
-                    as="td"
+                  <Table.Cell
                     className={recipe.classNameMap.value}
                     css={[styles.value, slotStyles?.value]}
                     key={index}
                   >
                     {displayValue(item.values[index])}
-                  </Box>
+                  </Table.Cell>
                 ))}
-              </Box>
+              </Table.Row>
             ))}
-          </Box>
-        </Box>
+          </Table.Body>
+        </Table.Root>
       </Box>
     </Box>
   );
 }
 
-export interface PostkitPollOption {
+export interface PollOption {
   readonly id: string;
   readonly label: string;
   readonly votes?: number;
 }
-export type PostkitPollProps = {
+export type PollProps = {
   readonly question: string;
   readonly description?: string;
-  readonly options: string | readonly PostkitPollOption[];
+  readonly options: string | readonly PollOption[];
   readonly totalVotes?: number | string;
   readonly selectedId?: string;
-  readonly onVote?: (option: PostkitPollOption) => void | Promise<void>;
+  readonly onVote?: (option: PollOption) => void | Promise<void>;
 } & SharedRootProps<PostkitPollSlot> &
   RecipeVariantProps<typeof postkitPollRecipe> &
   UnstyledProp;
-export function PostkitPoll({
+export function Poll({
   question,
   description,
   options: value,
@@ -425,8 +439,8 @@ export function PostkitPoll({
   size,
   variant,
   unstyled,
-}: PostkitPollProps) {
-  const options = parseJsonProp<PostkitPollOption>(value, 'Poll options');
+}: PollProps) {
+  const options = parseJsonProp<PollOption>(value, 'Poll options');
   const [selection, setSelection] = useState(selectedId);
   const total =
     Number(totalVotes) ||
@@ -439,7 +453,7 @@ export function PostkitPoll({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
-  const vote = (option: PostkitPollOption) => {
+  const vote = (option: PollOption) => {
     setSelection(option.id);
     void onVote?.(option);
   };
@@ -450,12 +464,18 @@ export function PostkitPoll({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, {
+          sm: 'lg',
+          md: 'xl',
+          lg: '2xl',
+        })}
         className={recipe.classNameMap.question}
         css={[styles.question, slotStyles?.question]}
       >
         {question}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           className={recipe.classNameMap.description}
@@ -474,8 +494,10 @@ export function PostkitPoll({
           const percentage =
             total > 0 ? Math.round(((option.votes ?? 0) / total) * 100) : 0;
           return (
-            <OptionButton
+            <Button
               type="button"
+              size={size ?? 'md'}
+              variant="outline"
               aria-pressed={selection === option.id}
               onClick={() => vote(option)}
               className={recipe.classNameMap.option}
@@ -498,17 +520,20 @@ export function PostkitPoll({
                 ) : null}
               </Box>
               {total ? (
-                <Box
-                  aria-hidden="true"
-                  className={recipe.classNameMap.bar}
-                  css={[
-                    styles.bar,
-                    { width: `${percentage}%` },
-                    slotStyles?.bar,
-                  ]}
-                />
+                <Progress.Root
+                  value={percentage}
+                  size="xs"
+                  aria-label={`${option.label}: ${percentage}%`}
+                >
+                  <Progress.Track>
+                    <Progress.Range
+                      className={recipe.classNameMap.bar}
+                      css={[styles.bar, slotStyles?.bar]}
+                    />
+                  </Progress.Track>
+                </Progress.Root>
               ) : null}
-            </OptionButton>
+            </Button>
           );
         })}
       </Box>
@@ -527,7 +552,7 @@ export function PostkitPoll({
   );
 }
 
-export type PostkitProductCardProps = {
+export type ProductCardProps = {
   readonly title: string;
   readonly description?: string;
   readonly href: string;
@@ -541,7 +566,7 @@ export type PostkitProductCardProps = {
 } & SharedRootProps<PostkitProductCardSlot> &
   RecipeVariantProps<typeof postkitProductCardRecipe> &
   UnstyledProp;
-export function PostkitProductCard({
+export function ProductCard({
   title,
   description,
   href,
@@ -557,7 +582,7 @@ export function PostkitProductCard({
   size,
   variant,
   unstyled,
-}: PostkitProductCardProps) {
+}: ProductCardProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.productCard,
     postkitProductCardRecipe,
@@ -567,7 +592,7 @@ export function PostkitProductCard({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="ProductCard"
       {...restRootProps}
@@ -583,7 +608,7 @@ export function PostkitProductCard({
           css={[styles.image, slotStyles?.image]}
         />
       ) : null}
-      <Box
+      <Card.Body
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
@@ -595,12 +620,18 @@ export function PostkitProductCard({
             {badge}
           </Text>
         ) : null}
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'lg',
+            md: 'xl',
+            lg: '2xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
         {description ? (
           <Text
             className={recipe.classNameMap.description}
@@ -610,15 +641,19 @@ export function PostkitProductCard({
           </Text>
         ) : null}
         {rating ? (
-          <Text
+          <RatingGroup.Root
+            count={5}
+            value={Number(rating)}
+            allowHalf
+            readOnly
             aria-label={`${rating} out of 5 stars`}
             className={recipe.classNameMap.rating}
             css={[styles.rating, slotStyles?.rating]}
           >
-            ★ {rating}
-          </Text>
+            <RatingGroup.Control />
+          </RatingGroup.Root>
         ) : null}
-        <Box
+        <Card.Footer
           className={recipe.classNameMap.footer}
           css={[styles.footer, slotStyles?.footer]}
         >
@@ -632,33 +667,36 @@ export function PostkitProductCard({
           ) : (
             <span />
           )}
-          <Link
-            href={href}
-            rel={rel}
+          <Button
+            asChild
+            size={size ?? 'md'}
+            variant="solid"
             className={recipe.classNameMap.action}
             css={[styles.action, slotStyles?.action]}
           >
-            {actionLabel}
-          </Link>
-        </Box>
-      </Box>
-    </Box>
+            <Link href={href} rel={rel}>
+              {actionLabel}
+            </Link>
+          </Button>
+        </Card.Footer>
+      </Card.Body>
+    </Card.Root>
   );
 }
 
-export interface PostkitRelatedContentItem {
+export interface RelatedContentItem {
   readonly title: string;
   readonly href: string;
   readonly description?: string;
   readonly meta?: string;
 }
-export type PostkitRelatedContentProps = {
-  readonly items: string | readonly PostkitRelatedContentItem[];
+export type RelatedContentProps = {
+  readonly items: string | readonly RelatedContentItem[];
   readonly title?: string;
 } & SharedRootProps<PostkitRelatedContentSlot> &
   RecipeVariantProps<typeof postkitRelatedContentRecipe> &
   UnstyledProp;
-export function PostkitRelatedContent({
+export function RelatedContent({
   items: value,
   title = 'Related content',
   rootProps,
@@ -666,8 +704,8 @@ export function PostkitRelatedContent({
   size,
   variant,
   unstyled,
-}: PostkitRelatedContentProps) {
-  const items = parseJsonProp<PostkitRelatedContentItem>(
+}: RelatedContentProps) {
+  const items = parseJsonProp<RelatedContentItem>(
     value,
     'RelatedContent items',
   );
@@ -680,27 +718,33 @@ export function PostkitRelatedContent({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="aside"
       data-postkit-component="RelatedContent"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, {
+          sm: 'md',
+          md: 'lg',
+          lg: 'xl',
+        })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
-      <Box
+      </Heading>
+      <List.Root
         as="ul"
+        variant="plain"
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item) => (
-          <Box
-            as="li"
+          <List.Item
             className={recipe.classNameMap.item}
             css={[styles.item, slotStyles?.item]}
             key={item.href}
@@ -710,12 +754,18 @@ export function PostkitRelatedContent({
               className={recipe.classNameMap.link}
               css={[styles.link, slotStyles?.link]}
             >
-              <Text
+              <Heading
+                as="p"
+                size={postkitHeadingSize(size, {
+                  sm: 'sm',
+                  md: 'md',
+                  lg: 'lg',
+                })}
                 className={recipe.classNameMap.itemTitle}
                 css={[styles.itemTitle, slotStyles?.itemTitle]}
               >
                 {item.title}
-              </Text>
+              </Heading>
               {item.description ? (
                 <Text
                   className={recipe.classNameMap.description}
@@ -733,41 +783,39 @@ export function PostkitRelatedContent({
                 </Text>
               ) : null}
             </Link>
-          </Box>
+          </List.Item>
         ))}
-      </Box>
-    </Box>
+      </List.Root>
+    </Card.Root>
   );
 }
 
-export interface PostkitSeriesLink {
+export interface SeriesLink {
   readonly title: string;
   readonly href: string;
 }
-export type PostkitSeriesNavigationProps = {
+export type SeriesNavigationProps = {
   readonly title: string;
   readonly current?: number | string;
   readonly total?: number | string;
-  readonly previous?: PostkitSeriesLink | string;
-  readonly next?: PostkitSeriesLink | string;
+  readonly previous?: SeriesLink | string;
+  readonly next?: SeriesLink | string;
 } & SharedRootProps<PostkitSeriesNavigationSlot> &
   RecipeVariantProps<typeof postkitSeriesNavigationRecipe> &
   UnstyledProp;
-function parseSeriesLink(
-  value?: PostkitSeriesLink | string,
-): PostkitSeriesLink | undefined {
+function parseSeriesLink(value?: SeriesLink | string): SeriesLink | undefined {
   if (value === undefined) return undefined;
   if (typeof value !== 'string') return value;
   if (!value) return undefined;
   try {
-    return JSON.parse(value) as PostkitSeriesLink;
+    return JSON.parse(value) as SeriesLink;
   } catch {
     throw new TypeError(
       'Postkit SeriesNavigation links must contain valid JSON.',
     );
   }
 }
-export function PostkitSeriesNavigation({
+export function SeriesNavigation({
   title,
   current,
   total,
@@ -778,7 +826,7 @@ export function PostkitSeriesNavigation({
   size,
   variant,
   unstyled,
-}: PostkitSeriesNavigationProps) {
+}: SeriesNavigationProps) {
   const previous = parseSeriesLink(previousValue);
   const next = parseSeriesLink(nextValue);
   const recipe = usePostkitSlotRecipe(
@@ -790,7 +838,7 @@ export function PostkitSeriesNavigation({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const renderLink = (
-    link: PostkitSeriesLink | undefined,
+    link: SeriesLink | undefined,
     direction: 'Previous' | 'Next',
   ) =>
     link ? (
@@ -806,12 +854,18 @@ export function PostkitSeriesNavigation({
         >
           {direction}
         </Text>
-        <Text
+        <Heading
+          as="span"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.linkTitle}
           css={[styles.linkTitle, slotStyles?.linkTitle]}
         >
           {link.title}
-        </Text>
+        </Heading>
       </Link>
     ) : (
       <span />
@@ -829,12 +883,18 @@ export function PostkitSeriesNavigation({
         className={recipe.classNameMap.header}
         css={[styles.header, slotStyles?.header]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
         {current && total ? (
           <Text
             className={recipe.classNameMap.position}
@@ -855,7 +915,7 @@ export function PostkitSeriesNavigation({
   );
 }
 
-export type PostkitSponsorBlockProps = {
+export type SponsorBlockProps = {
   readonly name: string;
   readonly message?: string;
   readonly href?: string;
@@ -866,7 +926,7 @@ export type PostkitSponsorBlockProps = {
 } & SharedRootProps<PostkitSponsorBlockSlot> &
   RecipeVariantProps<typeof postkitSponsorBlockRecipe> &
   UnstyledProp;
-export function PostkitSponsorBlock({
+export function SponsorBlock({
   name,
   message,
   href,
@@ -879,7 +939,7 @@ export function PostkitSponsorBlock({
   size,
   variant,
   unstyled,
-}: PostkitSponsorBlockProps) {
+}: SponsorBlockProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.sponsorBlock,
     postkitSponsorBlockRecipe,
@@ -889,7 +949,7 @@ export function PostkitSponsorBlock({
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Card.Root
       as="aside"
       aria-label={`${disclosure} by ${name}`}
       data-postkit-component="SponsorBlock"
@@ -915,12 +975,18 @@ export function PostkitSponsorBlock({
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.name}
           css={[styles.name, slotStyles?.name]}
         >
           {name}
-        </Text>
+        </Heading>
         {message ? (
           <Text
             className={recipe.classNameMap.message}
@@ -930,21 +996,24 @@ export function PostkitSponsorBlock({
           </Text>
         ) : null}
         {href ? (
-          <Link
-            href={href}
-            rel="sponsored"
+          <Button
+            asChild
+            size={size ?? 'md'}
+            variant="outline"
             className={recipe.classNameMap.action}
             css={[styles.action, slotStyles?.action]}
           >
-            {actionLabel}
-          </Link>
+            <Link href={href} rel="sponsored">
+              {actionLabel}
+            </Link>
+          </Button>
         ) : null}
       </Box>
-    </Box>
+    </Card.Root>
   );
 }
 
-export type PostkitAudienceBoundaryProps = {
+export type AudienceBoundaryProps = {
   readonly audience: string;
   readonly children?: ReactNode;
   readonly fallback?: ReactNode;
@@ -953,7 +1022,7 @@ export type PostkitAudienceBoundaryProps = {
 } & SharedRootProps<PostkitAudienceBoundarySlot> &
   RecipeVariantProps<typeof postkitAudienceBoundaryRecipe> &
   UnstyledProp;
-export function PostkitAudienceBoundary({
+export function AudienceBoundary({
   audience,
   children,
   fallback = 'This section is available to a different audience.',
@@ -964,7 +1033,7 @@ export function PostkitAudienceBoundary({
   size,
   variant,
   unstyled,
-}: PostkitAudienceBoundaryProps) {
+}: AudienceBoundaryProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.audienceBoundary,
     postkitAudienceBoundaryRecipe,

@@ -26,7 +26,7 @@ export const postkitCallToActionRecipe = defineSlotRecipe({
       letterSpacing: 'wide',
       textTransform: 'uppercase',
     },
-    title: { color: 'fg', fontWeight: 'bold', letterSpacing: 'tight' },
+    title: {},
     body: { color: 'fg.muted' },
     actions: { display: 'flex', flexWrap: 'wrap' },
     primaryAction: {
@@ -58,7 +58,6 @@ export const postkitCallToActionRecipe = defineSlotRecipe({
       sm: {
         root: { gap: '4', padding: '4' },
         content: { gap: '1.5' },
-        title: { fontSize: 'xl' },
         body: { fontSize: 'sm' },
         actions: { gap: '2' },
         primaryAction: { minHeight: '9', paddingInline: '3', fontSize: 'sm' },
@@ -67,7 +66,6 @@ export const postkitCallToActionRecipe = defineSlotRecipe({
       md: {
         root: { gap: '5', padding: '6' },
         content: { gap: '2' },
-        title: { fontSize: '2xl' },
         body: { fontSize: 'md' },
         actions: { gap: '3' },
         primaryAction: { minHeight: '10', paddingInline: '4', fontSize: 'md' },
@@ -80,7 +78,6 @@ export const postkitCallToActionRecipe = defineSlotRecipe({
       lg: {
         root: { gap: '6', padding: '8' },
         content: { gap: '3' },
-        title: { fontSize: '3xl' },
         body: { fontSize: 'lg' },
         actions: { gap: '4' },
         primaryAction: { minHeight: '12', paddingInline: '5', fontSize: 'lg' },

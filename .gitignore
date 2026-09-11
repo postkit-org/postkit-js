@@ -4,6 +4,7 @@
 dist
 tmp
 out-tsc
+test-output
 .astro
 
 # dependencies
@@ -54,4 +55,6 @@ vitest.config.*.timestamp*
 
 # Next.js
 .next
+.content-collections
 out
+/apps/site/public/api/

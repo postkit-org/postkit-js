@@ -23,7 +23,7 @@ export const postkitNewsletterSignupRecipe = defineSlotRecipe({
   base: {
     root: { display: 'grid' },
     content: { display: 'grid' },
-    title: { color: 'fg', fontWeight: 'bold', letterSpacing: 'tight' },
+    title: {},
     description: { color: 'fg.muted' },
     form: { display: 'grid' },
     label: { color: 'fg', fontSize: 'sm', fontWeight: 'medium' },
@@ -59,7 +59,6 @@ export const postkitNewsletterSignupRecipe = defineSlotRecipe({
       sm: {
         root: { gap: '4', padding: '4' },
         content: { gap: '1.5' },
-        title: { fontSize: 'lg' },
         description: { fontSize: 'sm' },
         form: { gap: '2' },
         fields: { gap: '2' },
@@ -69,7 +68,6 @@ export const postkitNewsletterSignupRecipe = defineSlotRecipe({
       md: {
         root: { gap: '5', padding: '6' },
         content: { gap: '2' },
-        title: { fontSize: 'xl' },
         description: { fontSize: 'md' },
         form: { gap: '3' },
         fields: { gap: '3' },
@@ -79,7 +77,6 @@ export const postkitNewsletterSignupRecipe = defineSlotRecipe({
       lg: {
         root: { gap: '6', padding: '8' },
         content: { gap: '3' },
-        title: { fontSize: '2xl' },
         description: { fontSize: 'lg' },
         form: { gap: '4' },
         fields: { gap: '4' },

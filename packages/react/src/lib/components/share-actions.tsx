@@ -24,7 +24,7 @@ import {
 import type { PostkitShareRequest } from '../social-services.js';
 import { postkitRecipeKeys } from '../theme.js';
 
-export type PostkitShareActionsProps = {
+export type ShareActionsProps = {
   readonly url: string;
   readonly title?: string;
   readonly text?: string;
@@ -46,7 +46,7 @@ async function copyUrl(url: string): Promise<void> {
   await navigator.clipboard.writeText(url);
 }
 
-export function PostkitShareActions({
+export function ShareActions({
   url,
   title,
   text,
@@ -59,7 +59,7 @@ export function PostkitShareActions({
   size,
   variant,
   unstyled,
-}: PostkitShareActionsProps) {
+}: ShareActionsProps) {
   const services = parseJsonProp<string>(
     servicesValue,
     'ShareActions services',

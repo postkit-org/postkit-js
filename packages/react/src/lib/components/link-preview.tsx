@@ -6,10 +6,13 @@ import type {
   ResolvedLinkPreview,
 } from '@postkit/unfurl';
 import {
+  AspectRatio,
   Box,
   Button,
+  Card,
   chakra,
   Flex,
+  Heading,
   Image,
   Link,
   Text,
@@ -20,10 +23,10 @@ import {
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { usePostkit } from '../provider.js';
-import { PostkitAudio } from './audio.js';
-import { PostkitCarousel } from './carousel.js';
-import { PostkitSocialPost } from './social-post.js';
-import { PostkitVideo } from './video.js';
+import { Audio } from './audio.js';
+import { Carousel } from './carousel.js';
+import { SocialPost } from './social-post.js';
+import { Video } from './video.js';
 import {
   postkitLinkPreviewRecipe,
   type PostkitLinkPreviewSlot,
@@ -34,17 +37,19 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
 const LinkPreviewIframe = chakra('iframe');
 
-export type PostkitLinkPreviewPresentation =
+export type LinkPreviewPresentation =
   'auto' | 'card' | 'embed' | 'inline' | 'media';
 
-export type PostkitLinkPreviewProps = {
+export type LinkPreviewProps = {
   readonly href: string;
   readonly metadata?: string | ResolvedLinkPreview;
   readonly children?: ReactNode;
-  readonly presentation?: PostkitLinkPreviewPresentation;
+  readonly presentation?: LinkPreviewPresentation;
   readonly images?: 'carousel' | 'first' | 'none';
   readonly media?: 'audio' | 'auto' | 'video';
   readonly activation?: 'click' | 'immediate';
@@ -103,9 +108,9 @@ function withImageOverride(
 }
 
 function requestedPresentation(
-  presentation: PostkitLinkPreviewPresentation,
+  presentation: LinkPreviewPresentation,
   metadata: ResolvedLinkPreview | undefined,
-): Exclude<PostkitLinkPreviewPresentation, 'auto'> {
+): Exclude<LinkPreviewPresentation, 'auto'> {
   if (presentation !== 'auto') return presentation;
   if (
     (metadata?.video?.length ?? 0) > 0 ||
@@ -130,7 +135,7 @@ function selectedMedia(
   return undefined;
 }
 
-export function PostkitLinkPreview({
+export function LinkPreview({
   href,
   metadata: metadataValue,
   children,
@@ -152,7 +157,7 @@ export function PostkitLinkPreview({
   size,
   variant,
   unstyled,
-}: PostkitLinkPreviewProps) {
+}: LinkPreviewProps) {
   const suppliedMetadata = useMemo(
     () => parseMetadata(metadataValue),
     [metadataValue],
@@ -251,7 +256,7 @@ export function PostkitLinkPreview({
 
   if (presentation === 'auto' && metadata?.social) {
     return (
-      <PostkitSocialPost
+      <SocialPost
         href={href}
         metadata={metadata}
         provider={provider}
@@ -290,7 +295,7 @@ export function PostkitLinkPreview({
   }
 
   const siteContent = (
-    <Box
+    <Card.Body
       className={recipe.classNameMap.content}
       css={[styles.content, slotStyles?.content]}
     >
@@ -315,13 +320,14 @@ export function PostkitLinkPreview({
           {siteName}
         </Text>
       </Flex>
-      <Text
+      <Heading
         as="h3"
+        size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title ?? domain}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           className={recipe.classNameMap.description}
@@ -336,7 +342,7 @@ export function PostkitLinkPreview({
       >
         {domain}
       </Text>
-    </Box>
+    </Card.Body>
   );
 
   let primaryContent: ReactNode;
@@ -347,7 +353,7 @@ export function PostkitLinkPreview({
         css={[styles.mediaPlayer, slotStyles?.mediaPlayer]}
       >
         {mediaItem.kind === 'video' ? (
-          <PostkitVideo
+          <Video
             src={mediaItem.item.src}
             title={title ?? `Video from ${siteName}`}
             poster={mediaItem.item.poster ?? availableImages[0]?.src}
@@ -360,7 +366,7 @@ export function PostkitLinkPreview({
             variant={variant}
           />
         ) : (
-          <PostkitAudio
+          <Audio
             src={mediaItem.item.src}
             title={title ?? `Audio from ${siteName}`}
             size={size}
@@ -376,15 +382,10 @@ export function PostkitLinkPreview({
     embed.type !== 'photo'
   ) {
     primaryContent = (
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(embed.aspectRatio)}
         className={recipe.classNameMap.embedFrame}
-        css={[
-          styles.embedFrame,
-          embed.aspectRatio
-            ? { aspectRatio: String(embed.aspectRatio) }
-            : undefined,
-          slotStyles?.embedFrame,
-        ]}
+        css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
         {embedActive ? (
           <LinkPreviewIframe
@@ -427,7 +428,7 @@ export function PostkitLinkPreview({
             </Button>
           </Box>
         )}
-      </Box>
+      </AspectRatio>
     );
   } else {
     const shownImages =
@@ -442,7 +443,7 @@ export function PostkitLinkPreview({
           className={recipe.classNameMap.carousel}
           css={[styles.carousel, slotStyles?.carousel]}
         >
-          <PostkitCarousel
+          <Carousel
             label={`${title ?? siteName} images`}
             size={size}
             variant="plain"
@@ -477,7 +478,7 @@ export function PostkitLinkPreview({
   }
 
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="LinkPreview"
       data-postkit-presentation={resolvedPresentation}
@@ -496,6 +497,6 @@ export function PostkitLinkPreview({
       >
         {siteContent}
       </Link>
-    </Box>
+    </Card.Root>
   );
 }

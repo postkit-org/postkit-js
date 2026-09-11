@@ -1,7 +1,7 @@
 ---
-import type { PostkitCalloutProps } from '@postkit/react';
-import { PostkitAstroCallout } from '../lib/react-bridges';
-type Props = PostkitCalloutProps;
+import type { CalloutProps } from '@postkit/react';
+import { Callout } from '../lib/react-bridges';
+type Props = CalloutProps;
 const props = Astro.props;
 ---
-<PostkitAstroCallout {...props}><slot /></PostkitAstroCallout>
+<Callout {...props}><slot /></Callout>

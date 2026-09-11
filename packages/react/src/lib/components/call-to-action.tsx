@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Button,
   Heading,
   Link,
   Text,
@@ -21,8 +22,9 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
-export type PostkitCallToActionProps = {
+export type CallToActionProps = {
   readonly title: string;
   readonly eyebrow?: string;
   readonly description?: string;
@@ -36,7 +38,7 @@ export type PostkitCallToActionProps = {
 } & RecipeVariantProps<typeof postkitCallToActionRecipe> &
   UnstyledProp;
 
-export function PostkitCallToAction({
+export function CallToAction({
   title,
   eyebrow,
   description,
@@ -51,7 +53,7 @@ export function PostkitCallToAction({
   size,
   variant,
   unstyled,
-}: PostkitCallToActionProps) {
+}: CallToActionProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.callToAction,
     postkitCallToActionRecipe,
@@ -89,6 +91,11 @@ export function PostkitCallToAction({
         ) : null}
         <Heading
           as="h2"
+          size={postkitHeadingSize(size, {
+            sm: 'xl',
+            md: '2xl',
+            lg: '3xl',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
@@ -109,22 +116,26 @@ export function PostkitCallToAction({
           css={[styles.actions, slotStyles?.actions]}
         >
           {primaryLabel && primaryHref ? (
-            <Link
-              href={primaryHref}
+            <Button
+              asChild
+              size={size ?? 'md'}
+              variant="solid"
               className={recipe.classNameMap.primaryAction}
               css={[styles.primaryAction, slotStyles?.primaryAction]}
             >
-              {primaryLabel}
-            </Link>
+              <Link href={primaryHref}>{primaryLabel}</Link>
+            </Button>
           ) : null}
           {secondaryLabel && secondaryHref ? (
-            <Link
-              href={secondaryHref}
+            <Button
+              asChild
+              size={size ?? 'md'}
+              variant="outline"
               className={recipe.classNameMap.secondaryAction}
               css={[styles.secondaryAction, slotStyles?.secondaryAction]}
             >
-              {secondaryLabel}
-            </Link>
+              <Link href={secondaryHref}>{secondaryLabel}</Link>
+            </Button>
           ) : null}
         </Box>
       ) : null}

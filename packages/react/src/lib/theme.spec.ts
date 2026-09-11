@@ -3,12 +3,22 @@ import { createSystem, defaultConfig, defaultSystem } from '@chakra-ui/react';
 import {
   createPostkitSystem,
   createPostkitTheme,
+  postkitDefaultTheme,
   postkitRecipeKeys,
+  type PostkitThemeOverrides,
 } from './theme.js';
 
 describe('Postkit theme', () => {
-  it('registers every component under a stable Chakra slot-recipe key', () => {
+  it('leaves Postkit presentation recipes opt-in', () => {
     const system = createPostkitSystem();
+
+    for (const key of Object.values(postkitRecipeKeys)) {
+      expect(system.isSlotRecipe(key)).toBe(false);
+    }
+  });
+
+  it('registers every component under a stable Chakra slot-recipe key', () => {
+    const system = createPostkitSystem({ preset: postkitDefaultTheme });
 
     expect(Object.values(postkitRecipeKeys)).toHaveLength(35);
     for (const key of Object.values(postkitRecipeKeys)) {
@@ -17,16 +27,17 @@ describe('Postkit theme', () => {
   });
 
   it('merges component-specific overrides after Postkit defaults', () => {
-    const system = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         audio: {
           base: {
             root: { boxShadow: 'md' },
           },
         },
       }),
-    );
+    });
     const recipe = system.getSlotRecipe(postkitRecipeKeys.audio) as {
       readonly base?: {
         readonly root?: {
@@ -42,34 +53,91 @@ describe('Postkit theme', () => {
     });
   });
 
+  it('accepts host Chakra values without narrowing them to recipe literals', () => {
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
+        codeBlock: {
+          variants: {
+            variant: {
+              outline: {
+                root: { borderColor: 'whiteAlpha.200' },
+              },
+            },
+          },
+        },
+      }),
+    });
+    const recipe = system.getSlotRecipe(postkitRecipeKeys.codeBlock) as {
+      readonly variants?: {
+        readonly variant?: {
+          readonly outline?: {
+            readonly root?: { readonly borderColor?: string };
+          };
+        };
+      };
+    };
+
+    expect(recipe.variants?.variant?.outline?.root?.borderColor).toBe(
+      'whiteAlpha.200',
+    );
+  });
+
+  it('keeps recipe slot and variant dimension names explicit', () => {
+    const overrides: PostkitThemeOverrides = {
+      codeBlock: {
+        base: {
+          // @ts-expect-error Invalid CodeBlock slot.
+          toolbar: {},
+        },
+        variants: {
+          // @ts-expect-error Invalid CodeBlock variant dimension.
+          density: {},
+        },
+      },
+    };
+
+    expect(overrides.codeBlock).toBeDefined();
+  });
+
   it('exposes typed prose slots for Markdown typography', () => {
-    const system = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const system = createPostkitSystem({
+      system: defaultSystem,
+      theme: createPostkitTheme({
         prose: {
           base: {
+            root: {
+              '--postkit-prose-flow-space': 'var(--chakra-spacing-5)',
+            },
             h1: { color: 'purple.500' },
             h2: { letterSpacing: 'wide' },
             code: { borderWidth: '1px' },
           },
         },
       }),
-    );
+    });
     const recipe = system.getSlotRecipe(postkitRecipeKeys.prose) as {
       readonly base?: {
+        readonly root?: {
+          readonly '--postkit-prose-flow-space'?: string;
+        };
         readonly h1?: { readonly color?: string };
         readonly h2?: { readonly letterSpacing?: string };
         readonly code?: { readonly borderWidth?: string };
       };
     };
 
+    expect(recipe.base?.root?.['--postkit-prose-flow-space']).toBe(
+      'var(--chakra-spacing-5)',
+    );
     expect(recipe.base?.h1?.color).toBe('purple.500');
     expect(recipe.base?.h2?.letterSpacing).toBe('wide');
     expect(recipe.base?.code?.borderWidth).toBe('1px');
   });
 
   it('assigns body, heading, and mono roles across Postkit recipes', () => {
-    const system = createPostkitSystem();
+    const system = createPostkitSystem({ preset: postkitDefaultTheme });
     const prose = system.getSlotRecipe(postkitRecipeKeys.prose) as {
       readonly base?: Record<string, { readonly fontFamily?: string }>;
     };
@@ -90,13 +158,13 @@ describe('Postkit theme', () => {
     }
 
     expect(prose.base?.root?.fontFamily).toBe('body');
-    expect(prose.base?.h1?.fontFamily).toBe('heading');
-    expect(prose.base?.h6?.fontFamily).toBe('heading');
+    expect(prose.base?.h1?.fontFamily).toBeUndefined();
+    expect(prose.base?.h6?.fontFamily).toBeUndefined();
     expect(prose.base?.code?.fontFamily).toBe('mono');
     expect(prose.base?.pre?.fontFamily).toBe('mono');
 
     expect(callToAction.base?.root?.fontFamily).toBe('body');
-    expect(callToAction.base?.title?.fontFamily).toBe('heading');
+    expect(callToAction.base?.title?.fontFamily).toBeUndefined();
     expect(terminal.base?.root?.fontFamily).toBe('body');
     expect(terminal.base?.title?.fontFamily).toBe('mono');
     expect(terminal.base?.body?.fontFamily).toBe('mono');
@@ -105,9 +173,10 @@ describe('Postkit theme', () => {
   });
 
   it('configures each font role through either Postkit or Chakra tokens', () => {
-    const contextSystem = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const contextSystem = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         typography: {
           body: '"Postkit Body", sans-serif',
           heading: '"Postkit Heading", serif',
@@ -119,7 +188,7 @@ describe('Postkit theme', () => {
           },
         },
       }),
-    );
+    });
     const siteSystem = createPostkitSystem(
       createSystem(defaultConfig, {
         theme: {
@@ -148,7 +217,7 @@ describe('Postkit theme', () => {
     expect(contextSystem.token('fonts.mono')).toBe('"Postkit Mono", monospace');
     expect(contextProse.base?.root?.fontFamily).toBe('body');
     expect(contextProse.base?.h1?.fontFamily).toBe('display');
-    expect(contextProse.base?.h2?.fontFamily).toBe('heading');
+    expect(contextProse.base?.h2?.fontFamily).toBeUndefined();
     expect(contextProse.base?.code?.fontFamily).toBe('mono');
 
     expect(siteSystem.token('fonts.body')).toBe('"Site Body", sans-serif');
@@ -156,10 +225,25 @@ describe('Postkit theme', () => {
     expect(siteSystem.token('fonts.mono')).toBe('"Site Mono", monospace');
   });
 
+  it('normalizes font-family fallback arrays for Chakra 3.x tokens', () => {
+    const system = createPostkitSystem({
+      theme: createPostkitTheme({
+        typography: {
+          body: ['Inter', 'sans-serif'],
+          heading: ['Newsreader', 'serif'],
+        },
+      }),
+    });
+
+    expect(system.token('fonts.body')).toBe('Inter, sans-serif');
+    expect(system.token('fonts.heading')).toBe('Newsreader, serif');
+  });
+
   it('layers site-wide rich-component styles before context overrides', () => {
-    const siteSystem = createPostkitSystem(
-      defaultSystem,
-      createPostkitTheme({
+    const siteSystem = createPostkitSystem({
+      system: defaultSystem,
+      preset: postkitDefaultTheme,
+      theme: createPostkitTheme({
         carousel: {
           base: {
             root: {
@@ -169,7 +253,7 @@ describe('Postkit theme', () => {
           },
         },
       }),
-    );
+    });
     const contextSystem = createPostkitSystem(
       siteSystem,
       createPostkitTheme({

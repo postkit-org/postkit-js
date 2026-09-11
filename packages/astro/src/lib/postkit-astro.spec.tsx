@@ -5,12 +5,7 @@ import {
 } from './components.js';
 import { POSTKIT_ASTRO_SYSTEM_ID, postkitAstro } from './integration.js';
 import { createPostkitAstroMdxOptions } from './mdx-options.js';
-import {
-  PostkitAstroAudio,
-  PostkitAstroCallToAction,
-  PostkitAstroFigure,
-  PostkitAstroSocialPost,
-} from './react-bridges.js';
+import { Audio, CallToAction, Figure, SocialPost } from './react-bridges.js';
 
 describe('Postkit Astro adapter', () => {
   it('provides Postkit components while preserving site overrides', () => {
@@ -54,18 +49,14 @@ describe('Postkit Astro adapter', () => {
 
   it('renders React bridges beneath the themed Postkit provider', () => {
     const markup = renderToStaticMarkup(
-      <PostkitAstroAudio
-        src="/episode.mp3"
-        title="Episode"
-        caption="Recorded live."
-      />,
+      <Audio src="/episode.mp3" title="Episode" caption="Recorded live." />,
     );
 
     expect(markup).toContain('data-postkit-component="Audio"');
     expect(markup).toContain('Recorded live.');
 
     const ctaMarkup = renderToStaticMarkup(
-      <PostkitAstroCallToAction
+      <CallToAction
         title="Read the field guide"
         primaryLabel="Open guide"
         primaryHref="/guide"
@@ -75,7 +66,7 @@ describe('Postkit Astro adapter', () => {
     expect(ctaMarkup).toContain('Read the field guide');
 
     const figureMarkup = renderToStaticMarkup(
-      <PostkitAstroFigure
+      <Figure
         src="/photo.jpg"
         alt="A field at sunrise"
         caption="First light."
@@ -85,7 +76,7 @@ describe('Postkit Astro adapter', () => {
     expect(figureMarkup).toContain('First light.');
 
     const socialMarkup = renderToStaticMarkup(
-      <PostkitAstroSocialPost
+      <SocialPost
         href="https://social.example/post/1"
         service="linegraph"
         authorName="Ada"

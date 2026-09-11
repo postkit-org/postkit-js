@@ -1,9 +1,9 @@
 ---
-import type { PostkitShareActionsProps } from '@postkit/react';
-import { PostkitAstroShareActions } from '../lib/react-bridges';
+import type { ShareActionsProps } from '@postkit/react';
+import { ShareActions } from '../lib/react-bridges';
 
-type Props = PostkitShareActionsProps;
+type Props = ShareActionsProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroShareActions {...props} client:visible />
+<ShareActions {...props} client:visible />

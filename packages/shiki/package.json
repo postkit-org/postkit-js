@@ -1,0 +1,62 @@
+{
+  "name": "@postkit/shiki",
+  "version": "0.2.0",
+  "description": "A lazy Shiki syntax-highlighting adapter for Postkit and Chakra CodeBlock",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "typescript",
+    "shiki",
+    "syntax-highlighting",
+    "code-block",
+    "chakra-ui",
+    "markdown",
+    "mdx"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/shiki"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/shiki#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:adapter"
+    ]
+  },
+  "dependencies": {
+    "shiki": "^4.3.1",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": ">=3.29.0 <4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

@@ -6,7 +6,7 @@ import {
 
 describe('Postkit declaration manifest', () => {
   it('publishes stable names and directives for the initial article components', () => {
-    expect(POSTKIT_DECLARATION_VERSION).toBe(6);
+    expect(POSTKIT_DECLARATION_VERSION).toBe(7);
     expect(postkitDeclarationManifest.id).toBe('postkit.article');
     expect(
       Object.values(postkitDeclarationManifest.components).map(

@@ -9,6 +9,7 @@ export default [
       '**/dist',
       '**/build',
       '**/.astro',
+      '**/.content-collections',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
     ],

@@ -24,7 +24,12 @@ function run(command, args, cwd = consumerRoot) {
 }
 
 try {
-  const dependencies = {};
+  const dependencies = {
+    '@chakra-ui/react': '3.29.0',
+    '@emotion/react': '11.14.0',
+    react: '19.1.0',
+    'react-dom': '19.1.0',
+  };
   for (const packageName of publicPackages) {
     const result = spawnSync(
       npmCommand,
@@ -77,6 +82,7 @@ try {
   run(npmCommand, [
     'install',
     '--ignore-scripts',
+    '--no-audit',
     '--package-lock=false',
     '--prefer-offline',
     '--cache',
@@ -87,9 +93,29 @@ try {
 
   writeFileSync(
     join(consumerRoot, 'smoke.mjs'),
-    `const packages = await Promise.all([
+    `import { readFile } from 'node:fs/promises';
+
+const chakraManifest = JSON.parse(
+  await readFile(
+    new URL('./node_modules/@chakra-ui/react/package.json', import.meta.url),
+    'utf8',
+  ),
+);
+if (chakraManifest.version !== '3.29.0') {
+  throw new Error(
+    \`Expected the minimum supported Chakra UI 3.29.0, received \${chakraManifest.version}.\`,
+  );
+}
+
+const packages = await Promise.all([
+  import('@postkit/core'),
   import('@postkit/unfurl'),
   import('@postkit/react'),
+  import('@postkit/react/theme'),
+  import('@postkit/react/remark'),
+  import('@postkit/react/document'),
+  import('@postkit/email'),
+  import('@postkit/shiki'),
   import('@postkit/next'),
   import('@postkit/react-router'),
   import('@postkit/tanstack-router'),
@@ -98,30 +124,43 @@ try {
 if (packages.some((entry) => Object.keys(entry).length === 0)) {
   throw new Error('A PostKit package exported no public members.');
 }
-console.log('PostKit tarball runtime entry points loaded.');
+console.log('PostKit tarball runtime entry points loaded with Chakra UI 3.29.0.');
 `,
   );
   run(process.execPath, ['smoke.mjs']);
 
   writeFileSync(
     join(consumerRoot, 'consumer.ts'),
-    `import { createLinkResolverRegistry } from '@postkit/unfurl';
+    `import { parsePostkitHtml, serializePostkitJson } from '@postkit/core';
+import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { PostkitProvider } from '@postkit/react';
+import { DocumentRenderer } from '@postkit/react/document';
+import { createPostkitTheme } from '@postkit/react/theme';
+import { remarkPostkit } from '@postkit/react/remark';
+import { PostkitEmailProvider } from '@postkit/email';
+import { createPostkitShikiAdapter } from '@postkit/shiki';
 import { createPostkitNextComponents } from '@postkit/next';
 import { createPostkitReactRouterComponents } from '@postkit/react-router';
 import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router';
 import { postkitAstro } from '@postkit/astro';
 import type { PostkitAstroComponents } from '@postkit/astro/components';
-import type { PostkitAstroAudio } from '@postkit/astro/react';
+import type { Audio } from '@postkit/astro/react';
 
+void parsePostkitHtml;
+void serializePostkitJson;
 void createLinkResolverRegistry;
 void PostkitProvider;
+void DocumentRenderer;
+void createPostkitTheme;
+void remarkPostkit;
+void PostkitEmailProvider;
+void createPostkitShikiAdapter;
 void createPostkitNextComponents;
 void createPostkitReactRouterComponents;
 void createPostkitTanStackRouterComponents;
 void postkitAstro;
 type _AstroComponents = PostkitAstroComponents;
-type _AstroReactBridge = typeof PostkitAstroAudio;
+type _AstroReactBridge = typeof Audio;
 `,
   );
   writeFileSync(

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(
-  new URL('../fixture/dist/index.html', import.meta.url),
+  new URL('../../../examples/astro/dist/index.html', import.meta.url),
   'utf8',
 );
 
@@ -11,11 +11,15 @@ for (const component of [
   'AuthorCard',
   'CallToAction',
   'Carousel',
+  'CodeBlock',
+  'CodeGroup',
   'Chart',
   'LinkPreview',
   'NewsletterSignup',
+  'Poll',
   'ShareActions',
   'SocialPost',
+  'Tabs',
   'Video',
 ]) {
   if (!html.includes(`data-postkit-component="${component}"`)) {
@@ -23,18 +27,32 @@ for (const component of [
   }
 }
 
-const islands = html.match(/<astro-island\b/g) ?? [];
-if (islands.length !== 5) {
+const islands = html.match(/<astro-island\b[^>]*>/g) ?? [];
+const interactive = [
+  'Carousel',
+  'CodeBlock',
+  'CodeGroup',
+  'LinkPreview',
+  'NewsletterSignup',
+  'Poll',
+  'ShareActions',
+  'SocialPost',
+  'Tabs',
+];
+if (islands.length !== interactive.length)
   throw new Error(
-    `Expected five interactive Postkit islands, but found ${islands.length}.`,
+    `Expected ${interactive.length} islands, received ${islands.length}.`,
   );
+for (const name of interactive) {
+  if (
+    !islands.some(
+      (island) =>
+        island.includes(`component-export="${name}"`) &&
+        island.includes('client="visible"'),
+    )
+  ) {
+    throw new Error(`Astro ${name} must hydrate on visibility.`);
+  }
 }
 
-const visibleIslands = html.match(/client="visible"/g) ?? [];
-if (visibleIslands.length !== 5) {
-  throw new Error(
-    `Expected five visible-hydrated islands, but found ${visibleIslands.length}.`,
-  );
-}
-
-process.stdout.write('Postkit Astro fixture verified.\n');
+process.stdout.write('PostKit Astro example verified.\n');

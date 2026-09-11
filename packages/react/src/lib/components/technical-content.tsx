@@ -2,14 +2,22 @@
 
 import {
   Box,
+  Button,
+  Card,
+  CodeBlock as ChakraCodeBlock,
+  Heading,
   Link,
+  List,
+  Portal,
+  Tabs as ChakraTabs,
   Text,
-  chakra,
+  Tooltip,
+  VisuallyHidden,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useId, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -32,8 +40,8 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
-
-const ActionButton = chakra('button');
+import { usePostkit, type PostkitCodeBlockConfig } from '../provider.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -48,12 +56,28 @@ function enabled(value: boolean | string | undefined, fallback = false) {
       : value === 'true';
 }
 
+function configuredValue<Value>(
+  value: Value | undefined,
+  configured: Value | undefined,
+  fallback?: Value,
+): Value | undefined {
+  return value !== undefined
+    ? value
+    : configured !== undefined
+      ? configured
+      : fallback;
+}
+
 function rootParts(rootProps?: BoxProps) {
   const { css, className, ...rest } = rootProps ?? {};
   return { rootCss: css, rootClassName: className, restRootProps: rest };
 }
 
-function highlightedLines(value?: string): Set<number> {
+function slotClassNames(...classNames: Array<string | undefined>) {
+  return classNames.filter(Boolean).join(' ') || undefined;
+}
+
+function highlightedLines(value?: string): number[] {
   const lines = new Set<number>();
   for (const part of value?.split(',') ?? []) {
     const [startValue, endValue] = part.trim().split('-');
@@ -68,10 +92,10 @@ function highlightedLines(value?: string): Set<number> {
       lines.add(line);
     }
   }
-  return lines;
+  return [...lines];
 }
 
-export type PostkitCodeBlockProps = {
+export type CodeBlockProps = {
   readonly code?: string;
   readonly children?: ReactNode;
   readonly language?: string;
@@ -79,20 +103,34 @@ export type PostkitCodeBlockProps = {
   readonly highlightLines?: string;
   readonly lineNumbers?: boolean | string;
   readonly copy?: boolean | string;
+  readonly copyLabel?: ReactNode;
+  readonly copiedLabel?: ReactNode;
+  readonly copyIcon?: ReactNode;
+  readonly copiedIcon?: ReactNode;
+  readonly copyAriaLabel?: string;
+  readonly copyFeedback?: 'inline' | 'tooltip';
+  readonly colorScheme?: PostkitCodeBlockConfig['colorScheme'];
   readonly wrap?: boolean | string;
   readonly maxHeight?: number | string;
 } & SharedRootProps<PostkitCodeBlockSlot> &
   RecipeVariantProps<typeof postkitCodeBlockRecipe> &
   UnstyledProp;
 
-export function PostkitCodeBlock({
+export function CodeBlock({
   code,
   children,
   language,
   filename,
   highlightLines: highlightsValue,
-  lineNumbers = true,
-  copy = true,
+  lineNumbers,
+  copy,
+  copyLabel,
+  copiedLabel,
+  copyIcon,
+  copiedIcon,
+  copyAriaLabel,
+  copyFeedback,
+  colorScheme,
   wrap,
   maxHeight,
   rootProps,
@@ -100,158 +138,281 @@ export function PostkitCodeBlock({
   size,
   variant,
   unstyled,
-}: PostkitCodeBlockProps) {
+}: CodeBlockProps) {
+  const { codeBlock: codeBlockConfig } = usePostkit();
   const source = code ?? (typeof children === 'string' ? children : '');
-  const lines = source.replace(/\n$/, '').split('\n');
   const highlights = highlightedLines(highlightsValue);
-  const [copied, setCopied] = useState(false);
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeBlock,
     postkitCodeBlockRecipe,
+    { fallback: 'recipe' },
+  );
+  const resolvedSize = configuredValue(size, codeBlockConfig.size);
+  const resolvedVariant = configuredValue(variant, codeBlockConfig.variant);
+  const resolvedColorScheme = configuredValue(
+    colorScheme,
+    codeBlockConfig.colorScheme,
   );
   const styles: PostkitSlotStyles<PostkitCodeBlockSlot> = unstyled
     ? {}
-    : recipe({ size, variant });
+    : recipe({ size: resolvedSize, variant: resolvedVariant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
-  const shouldNumber = enabled(lineNumbers, true);
-  const shouldWrap = enabled(wrap);
-
-  const copyCode = async () => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(source);
-      setCopied(true);
-      globalThis.setTimeout(() => setCopied(false), 1600);
-    }
-  };
+  const codeBlockRootProps = restRootProps as Omit<
+    ChakraCodeBlock.RootProps,
+    'children' | 'code' | 'language' | 'meta' | 'size' | 'unstyled'
+  >;
+  const shouldNumber = enabled(
+    configuredValue(lineNumbers, codeBlockConfig.lineNumbers),
+  );
+  const shouldWrap = enabled(configuredValue(wrap, codeBlockConfig.wrap));
+  const shouldCopy =
+    source.trim().length > 0 &&
+    enabled(configuredValue(copy, codeBlockConfig.copy), true);
+  const resolvedCopyLabel = configuredValue(
+    copyLabel,
+    codeBlockConfig.copyLabel,
+    'Copy code',
+  );
+  const resolvedCopiedLabel = configuredValue(
+    copiedLabel,
+    codeBlockConfig.copiedLabel,
+    'Copied',
+  );
+  const resolvedCopyIcon = configuredValue(copyIcon, codeBlockConfig.copyIcon);
+  const resolvedCopiedIcon = configuredValue(
+    copiedIcon,
+    codeBlockConfig.copiedIcon,
+  );
+  const resolvedCopyAriaLabel = configuredValue(
+    copyAriaLabel,
+    codeBlockConfig.copyAriaLabel,
+    'Copy code',
+  );
+  const resolvedCopyFeedback = configuredValue(
+    copyFeedback,
+    codeBlockConfig.copyFeedback,
+    'inline',
+  );
 
   return (
-    <Box
+    <ChakraCodeBlock.Root
       data-postkit-component="CodeBlock"
-      {...restRootProps}
+      {...codeBlockRootProps}
+      code={source}
+      language={language}
+      meta={{
+        highlightLines: highlights,
+        showLineNumbers: shouldNumber,
+        wordWrap: shouldWrap,
+      }}
+      {...(resolvedColorScheme
+        ? { defaultColorScheme: resolvedColorScheme }
+        : {})}
+      size={resolvedSize}
+      unstyled={unstyled}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {filename || language || enabled(copy, true) ? (
-        <Box
+      {filename || language || shouldCopy ? (
+        <ChakraCodeBlock.Header
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          {filename ? (
-            <Text
-              className={recipe.classNameMap.filename}
-              css={[styles.filename, slotStyles?.filename]}
-            >
-              {filename}
-            </Text>
-          ) : (
-            <span />
-          )}
-          {language ? (
-            <Text
-              className={recipe.classNameMap.language}
-              css={[styles.language, slotStyles?.language]}
-            >
-              {language}
-            </Text>
-          ) : null}
-          <Box
-            className={recipe.classNameMap.actions}
-            css={[styles.actions, slotStyles?.actions]}
-          >
-            {enabled(copy, true) ? (
-              <ActionButton
-                type="button"
-                aria-label="Copy code"
-                onClick={() => void copyCode()}
-                className={recipe.classNameMap.button}
-                css={[styles.button, slotStyles?.button]}
-              >
-                {copied ? 'Copied' : 'Copy'}
-              </ActionButton>
-            ) : null}
-          </Box>
-        </Box>
-      ) : null}
-      <Box
-        className={recipe.classNameMap.scroller}
-        css={[
-          styles.scroller,
-          maxHeight ? { maxHeight } : undefined,
-          slotStyles?.scroller,
-        ]}
-      >
-        <Box
-          as="pre"
-          className={recipe.classNameMap.code}
-          css={[
-            styles.code,
-            shouldWrap ? { minWidth: 0 } : undefined,
-            slotStyles?.code,
-          ]}
-        >
-          <Box as="code">
-            {lines.map((line, index) => (
-              <Box
-                as="span"
-                data-highlighted={highlights.has(index + 1) || undefined}
-                className={recipe.classNameMap.line}
-                css={[
-                  styles.line,
-                  highlights.has(index + 1)
-                    ? { background: 'whiteAlpha.100' }
-                    : undefined,
-                  shouldNumber ? undefined : { gridTemplateColumns: '1fr' },
-                  slotStyles?.line,
-                ]}
-                key={index}
-              >
-                {shouldNumber ? (
-                  <Box
-                    as="span"
-                    aria-hidden="true"
-                    className={recipe.classNameMap.lineNumber}
-                    css={[styles.lineNumber, slotStyles?.lineNumber]}
-                  >
-                    {index + 1}
-                  </Box>
-                ) : null}
+          {filename || language ? (
+            <ChakraCodeBlock.Title>
+              {filename ? (
                 <Box
                   as="span"
-                  className={recipe.classNameMap.lineContent}
+                  className={slotClassNames(
+                    recipe.classNameMap.filename,
+                    recipe.classNameMap.title,
+                  )}
                   css={[
-                    styles.lineContent,
-                    shouldWrap
-                      ? { overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }
-                      : undefined,
-                    slotStyles?.lineContent,
+                    styles.filename,
+                    styles.title,
+                    slotStyles?.filename,
+                    slotStyles?.title,
                   ]}
                 >
-                  {line || ' '}
+                  {filename}
                 </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+              ) : null}
+              {language ? (
+                <Text
+                  as="span"
+                  className={recipe.classNameMap.language}
+                  css={[styles.language, slotStyles?.language]}
+                >
+                  {language}
+                </Text>
+              ) : null}
+            </ChakraCodeBlock.Title>
+          ) : null}
+          {shouldCopy ? (
+            <ChakraCodeBlock.Control
+              className={slotClassNames(
+                recipe.classNameMap.actions,
+                recipe.classNameMap.control,
+              )}
+              css={[
+                { marginInlineStart: 'auto' },
+                styles.actions,
+                styles.control,
+                slotStyles?.actions,
+                slotStyles?.control,
+              ]}
+            >
+              <ChakraCodeBlock.Context>
+                {({ clipboard }) => {
+                  const trigger = (
+                    <ChakraCodeBlock.CopyTrigger
+                      asChild
+                      className={slotClassNames(
+                        recipe.classNameMap.button,
+                        recipe.classNameMap.copyTrigger,
+                      )}
+                      css={[
+                        styles.button,
+                        styles.copyTrigger,
+                        slotStyles?.button,
+                        slotStyles?.copyTrigger,
+                      ]}
+                    >
+                      <Button
+                        type="button"
+                        aria-label={resolvedCopyAriaLabel}
+                        size={
+                          resolvedSize === 'lg'
+                            ? 'sm'
+                            : resolvedSize === 'sm'
+                              ? '2xs'
+                              : 'xs'
+                        }
+                        variant="ghost"
+                      >
+                        <ChakraCodeBlock.CopyIndicator
+                          className={recipe.classNameMap.copyIndicator}
+                          aria-live={
+                            resolvedCopyFeedback === 'inline'
+                              ? 'polite'
+                              : undefined
+                          }
+                          css={[
+                            styles.copyIndicator,
+                            slotStyles?.copyIndicator,
+                          ]}
+                          {...(resolvedCopyFeedback === 'tooltip'
+                            ? resolvedCopiedIcon === undefined
+                              ? {}
+                              : { copied: resolvedCopiedIcon }
+                            : {
+                                copied: (
+                                  <>
+                                    {resolvedCopiedIcon}
+                                    {resolvedCopiedLabel}
+                                  </>
+                                ),
+                              })}
+                        >
+                          {resolvedCopyIcon}
+                          {resolvedCopyLabel}
+                        </ChakraCodeBlock.CopyIndicator>
+                      </Button>
+                    </ChakraCodeBlock.CopyTrigger>
+                  );
+
+                  if (resolvedCopyFeedback === 'inline') {
+                    return trigger;
+                  }
+
+                  return (
+                    <>
+                      <Tooltip.Root
+                        open={clipboard.copied}
+                        positioning={{ placement: 'top' }}
+                      >
+                        <Tooltip.Trigger asChild>{trigger}</Tooltip.Trigger>
+                        {resolvedCopiedLabel !== null ? (
+                          <Portal>
+                            <Tooltip.Positioner>
+                              <Tooltip.Content>
+                                {resolvedCopiedLabel}
+                              </Tooltip.Content>
+                            </Tooltip.Positioner>
+                          </Portal>
+                        ) : null}
+                      </Tooltip.Root>
+                      <VisuallyHidden aria-live="polite" aria-atomic="true">
+                        {clipboard.copied ? resolvedCopiedLabel : null}
+                      </VisuallyHidden>
+                    </>
+                  );
+                }}
+              </ChakraCodeBlock.Context>
+            </ChakraCodeBlock.Control>
+          ) : null}
+        </ChakraCodeBlock.Header>
+      ) : null}
+      <ChakraCodeBlock.Content
+        className={slotClassNames(
+          recipe.classNameMap.scroller,
+          recipe.classNameMap.content,
+        )}
+        css={[
+          styles.scroller,
+          styles.content,
+          maxHeight ? { maxHeight } : undefined,
+          slotStyles?.scroller,
+          slotStyles?.content,
+        ]}
+      >
+        <ChakraCodeBlock.Code
+          className={recipe.classNameMap.code}
+          css={[styles.code, slotStyles?.code]}
+        >
+          <ChakraCodeBlock.CodeText
+            className={slotClassNames(
+              recipe.classNameMap.lineContent,
+              recipe.classNameMap.codeText,
+            )}
+            css={[
+              styles.lineContent,
+              styles.codeText,
+              {
+                '& [data-line]': {
+                  ...styles.line,
+                  ...slotStyles?.line,
+                },
+                '& [data-line]::before': {
+                  ...styles.lineNumber,
+                  ...slotStyles?.lineNumber,
+                },
+              },
+              slotStyles?.lineContent,
+              slotStyles?.codeText,
+            ]}
+          />
+        </ChakraCodeBlock.Code>
+      </ChakraCodeBlock.Content>
+    </ChakraCodeBlock.Root>
   );
 }
 
-export interface PostkitCodeGroupItem {
+export interface CodeGroupItem {
   readonly label: string;
   readonly code: string;
   readonly language?: string;
   readonly filename?: string;
 }
-export type PostkitCodeGroupProps = {
-  readonly items: string | readonly PostkitCodeGroupItem[];
+export type CodeGroupProps = {
+  readonly items: string | readonly CodeGroupItem[];
   readonly label?: string;
   readonly initialIndex?: number | string;
 } & SharedRootProps<PostkitCodeGroupSlot> &
   RecipeVariantProps<typeof postkitCodeGroupRecipe> &
   UnstyledProp;
 
-export function PostkitCodeGroup({
+export function CodeGroup({
   items: value,
   label = 'Code examples',
   initialIndex = 0,
@@ -260,76 +421,77 @@ export function PostkitCodeGroup({
   size,
   variant,
   unstyled,
-}: PostkitCodeGroupProps) {
-  const items = parseJsonProp<PostkitCodeGroupItem>(value, 'CodeGroup items');
+}: CodeGroupProps) {
+  const items = parseJsonProp<CodeGroupItem>(value, 'CodeGroup items');
   const requested = Number(initialIndex);
   const [selected, setSelected] = useState(
     Number.isFinite(requested)
       ? Math.max(0, Math.min(items.length - 1, requested))
       : 0,
   );
-  const id = useId();
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.codeGroup,
     postkitCodeGroupRecipe,
+    { fallback: 'recipe' },
   );
   const styles: PostkitSlotStyles<PostkitCodeGroupSlot> = unstyled
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const tabsRootProps = restRootProps as Omit<
+    ChakraTabs.RootProps,
+    'children' | 'onValueChange' | 'size' | 'value' | 'variant'
+  >;
   return (
-    <Box
+    <ChakraTabs.Root
+      {...tabsRootProps}
+      value={String(selected)}
+      onValueChange={({ value: nextValue }: { value: string }) =>
+        setSelected(Number(nextValue))
+      }
+      size={size ?? 'md'}
+      variant={variant ?? 'outline'}
       data-postkit-component="CodeGroup"
-      {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="tablist"
+      <ChakraTabs.List
         aria-label={label}
         className={recipe.classNameMap.tabs}
         css={[styles.tabs, slotStyles?.tabs]}
       >
         {items.map((item, index) => (
-          <ActionButton
-            role="tab"
-            type="button"
-            id={`${id}-tab-${index}`}
-            aria-controls={`${id}-panel-${index}`}
-            aria-selected={selected === index}
-            onClick={() => setSelected(index)}
+          <ChakraTabs.Trigger
+            value={String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
             key={`${item.label}-${index}`}
           >
             {item.label}
-          </ActionButton>
+          </ChakraTabs.Trigger>
         ))}
-      </Box>
+      </ChakraTabs.List>
       {items.map((item, index) => (
-        <Box
-          role="tabpanel"
-          id={`${id}-panel-${index}`}
-          aria-labelledby={`${id}-tab-${index}`}
-          hidden={selected !== index}
+        <ChakraTabs.Content
+          value={String(index)}
           className={recipe.classNameMap.panel}
           css={[styles.panel, slotStyles?.panel]}
           key={`${item.label}-${index}`}
         >
-          <PostkitCodeBlock
+          <CodeBlock
             code={item.code}
             language={item.language}
             filename={item.filename}
             variant="plain"
             size={size}
           />
-        </Box>
+        </ChakraTabs.Content>
       ))}
-    </Box>
+    </ChakraTabs.Root>
   );
 }
 
-export type PostkitTerminalProps = {
+export type TerminalProps = {
   readonly command: string;
   readonly output?: string;
   readonly prompt?: string;
@@ -338,7 +500,7 @@ export type PostkitTerminalProps = {
   RecipeVariantProps<typeof postkitTerminalRecipe> &
   UnstyledProp;
 
-export function PostkitTerminal({
+export function Terminal({
   command,
   output,
   prompt = '$',
@@ -348,10 +510,11 @@ export function PostkitTerminal({
   size,
   variant,
   unstyled,
-}: PostkitTerminalProps) {
+}: TerminalProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.terminal,
     postkitTerminalRecipe,
+    { fallback: 'recipe' },
   );
   const styles: PostkitSlotStyles<PostkitTerminalSlot> = unstyled
     ? {}
@@ -416,14 +579,14 @@ export function PostkitTerminal({
   );
 }
 
-export type PostkitDiffProps = {
+export type DiffProps = {
   readonly diff: string;
   readonly title?: string;
 } & SharedRootProps<PostkitDiffSlot> &
   RecipeVariantProps<typeof postkitDiffRecipe> &
   UnstyledProp;
 
-export function PostkitDiff({
+export function Diff({
   diff,
   title,
   rootProps,
@@ -431,7 +594,7 @@ export function PostkitDiff({
   size,
   variant,
   unstyled,
-}: PostkitDiffProps) {
+}: DiffProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.diff,
     postkitDiffRecipe,
@@ -519,19 +682,19 @@ export function PostkitDiff({
   );
 }
 
-export interface PostkitFileTreeItem {
+export interface FileTreeItem {
   readonly path: string;
   readonly type?: 'file' | 'folder';
   readonly meta?: string;
 }
-export type PostkitFileTreeProps = {
-  readonly items: string | readonly PostkitFileTreeItem[];
+export type FileTreeProps = {
+  readonly items: string | readonly FileTreeItem[];
   readonly title?: string;
 } & SharedRootProps<PostkitFileTreeSlot> &
   RecipeVariantProps<typeof postkitFileTreeRecipe> &
   UnstyledProp;
 
-export function PostkitFileTree({
+export function FileTree({
   items: value,
   title,
   rootProps,
@@ -539,8 +702,8 @@ export function PostkitFileTree({
   size,
   variant,
   unstyled,
-}: PostkitFileTreeProps) {
-  const items = parseJsonProp<PostkitFileTreeItem>(value, 'FileTree items');
+}: FileTreeProps) {
+  const items = parseJsonProp<FileTreeItem>(value, 'FileTree items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.fileTree,
     postkitFileTreeRecipe,
@@ -557,21 +720,27 @@ export function PostkitFileTree({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {title ? (
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.title}
           css={[styles.title, slotStyles?.title]}
         >
           {title}
-        </Text>
+        </Heading>
       ) : null}
-      <Box
+      <List.Root
         as="ul"
+        variant="plain"
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item, index) => (
-          <Box
-            as="li"
+          <List.Item
             className={recipe.classNameMap.item}
             css={[
               styles.item,
@@ -606,14 +775,14 @@ export function PostkitFileTree({
                 {item.meta}
               </Box>
             ) : null}
-          </Box>
+          </List.Item>
         ))}
-      </Box>
+      </List.Root>
     </Box>
   );
 }
 
-export type PostkitFileCardProps = {
+export type FileCardProps = {
   readonly href: string;
   readonly name: string;
   readonly description?: string;
@@ -625,7 +794,7 @@ export type PostkitFileCardProps = {
   RecipeVariantProps<typeof postkitFileCardRecipe> &
   UnstyledProp;
 
-export function PostkitFileCard({
+export function FileCard({
   href,
   name,
   description,
@@ -638,7 +807,7 @@ export function PostkitFileCard({
   size,
   variant,
   unstyled,
-}: PostkitFileCardProps) {
+}: FileCardProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.fileCard,
     postkitFileCardRecipe,
@@ -649,7 +818,7 @@ export function PostkitFileCard({
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const extension = fileType ?? name.split('.').at(-1)?.toUpperCase() ?? 'FILE';
   return (
-    <Box
+    <Card.Root
       data-postkit-component="FileCard"
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
@@ -666,12 +835,18 @@ export function PostkitFileCard({
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
-        <Text
+        <Heading
+          as="p"
+          size={postkitHeadingSize(size, {
+            sm: 'sm',
+            md: 'md',
+            lg: 'lg',
+          })}
           className={recipe.classNameMap.name}
           css={[styles.name, slotStyles?.name]}
         >
           {name}
-        </Text>
+        </Heading>
         {description ? (
           <Text
             className={recipe.classNameMap.description}
@@ -697,6 +872,6 @@ export function PostkitFileCard({
       >
         {actionLabel ?? (enabled(download) ? 'Download' : 'Open')}
       </Link>
-    </Box>
+    </Card.Root>
   );
 }

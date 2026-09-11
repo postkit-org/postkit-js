@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  AspectRatio,
   Box,
   Link,
   Text,
@@ -20,8 +21,9 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
-export interface PostkitVideoTrack {
+export interface VideoTrack {
   readonly src: string;
   readonly srcLang: string;
   readonly label: string;
@@ -29,20 +31,20 @@ export interface PostkitVideoTrack {
   readonly default?: boolean;
 }
 
-export type PostkitVideoProps = {
+export type VideoProps = {
   readonly src: string;
   readonly title: string;
   readonly poster?: string;
   readonly caption?: string;
   readonly aspectRatio?: string;
   readonly preload?: 'auto' | 'metadata' | 'none';
-  readonly tracks?: readonly PostkitVideoTrack[];
+  readonly tracks?: readonly VideoTrack[];
   readonly rootProps?: BoxProps;
   readonly slotStyles?: PostkitSlotStyles<PostkitVideoSlot>;
 } & RecipeVariantProps<typeof postkitVideoRecipe> &
   UnstyledProp;
 
-export function PostkitVideo({
+export function Video({
   src,
   title,
   poster,
@@ -55,7 +57,7 @@ export function PostkitVideo({
   size,
   variant,
   unstyled,
-}: PostkitVideoProps) {
+}: VideoProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.video,
     postkitVideoRecipe,
@@ -77,7 +79,8 @@ export function PostkitVideo({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(aspectRatio)}
         className={recipe.classNameMap.frame}
         css={[styles.frame, slotStyles?.frame]}
       >
@@ -89,7 +92,7 @@ export function PostkitVideo({
           preload={preload}
           controls
           playsInline
-          css={[styles.player, { aspectRatio }, slotStyles?.player]}
+          css={[styles.player, slotStyles?.player]}
         >
           {tracks.map((track) => (
             <track
@@ -109,7 +112,7 @@ export function PostkitVideo({
             Open {title}
           </Link>
         </chakra.video>
-      </Box>
+      </AspectRatio>
       {caption ? (
         <Text
           as="figcaption"

@@ -1,7 +1,21 @@
 {
   "name": "@postkit/react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Chakra-based React components and Markdown tooling for articles",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "markdown",
+    "mdx",
+    "content-components",
+    "article-components",
+    "chakra-ui",
+    "unified",
+    "remark"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -9,7 +23,7 @@
     "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/react#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },
@@ -19,19 +33,40 @@
   "types": "./dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
+    "./component-manifest.json": "./component-manifest.json",
     ".": {
       "@postkit/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./theme": {
+      "@postkit/source": "./src/theme.ts",
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "default": "./dist/theme.js"
+    },
+    "./remark": {
+      "@postkit/source": "./src/remark.ts",
+      "types": "./dist/remark.d.ts",
+      "import": "./dist/remark.js",
+      "default": "./dist/remark.js"
+    },
+    "./document": {
+      "@postkit/source": "./src/document.ts",
+      "types": "./dist/document.d.ts",
+      "import": "./dist/document.js",
+      "default": "./dist/document.js"
     }
   },
   "files": [
     "dist",
+    "component-manifest.json",
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/unfurl": "0.1.0",
+    "@postkit/core": "0.2.0",
+    "@postkit/unfurl": "0.2.0",
     "remark-directive": "^4.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
@@ -39,7 +74,7 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "@chakra-ui/react": "^3.36.0",
+    "@chakra-ui/react": ">=3.29.0 <4",
     "react": "^19.1.0"
   },
   "devDependencies": {

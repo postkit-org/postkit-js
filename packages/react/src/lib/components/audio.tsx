@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Heading,
   Link,
   Text,
   chakra,
@@ -20,8 +21,9 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
-export type PostkitAudioProps = {
+export type AudioProps = {
   readonly src: string;
   readonly title: string;
   readonly caption?: string;
@@ -31,7 +33,7 @@ export type PostkitAudioProps = {
 } & RecipeVariantProps<typeof postkitAudioRecipe> &
   UnstyledProp;
 
-export function PostkitAudio({
+export function Audio({
   src,
   title,
   caption,
@@ -41,7 +43,7 @@ export function PostkitAudio({
   size,
   variant,
   unstyled,
-}: PostkitAudioProps) {
+}: AudioProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.audio,
     postkitAudioRecipe,
@@ -63,12 +65,14 @@ export function PostkitAudio({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
+        as="p"
+        size={postkitHeadingSize(size, { sm: 'sm', md: 'md', lg: 'lg' })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
+      </Heading>
       <chakra.audio
         className={recipe.classNameMap.player}
         src={src}

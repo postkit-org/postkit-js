@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import publicPackages from './public-packages.json' with { type: 'json' };
 import { runNpm } from './release-commands.mjs';
+import { createPublicationPlan } from './publication-plan.mjs';
 
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -69,29 +70,14 @@ async function registryIntegrity(packageName, version) {
   return metadata.dist.integrity;
 }
 
-const plans = await Promise.all(
-  publicPackages.map(async (packageName) => {
+const plans = await createPublicationPlan(publicPackages, {
+  readManifest,
+  pack,
+  registryIntegrity,
+  inspect(packageName) {
     process.stdout.write(`Inspecting ${packageName} release contents...\n`);
-    const manifest = readManifest(packageName);
-    const tarball = pack(packageName);
-    const publishedIntegrity = await registryIntegrity(
-      packageName,
-      manifest.version,
-    );
-    if (publishedIntegrity && publishedIntegrity !== tarball.integrity) {
-      throw new Error(
-        `${packageName}@${manifest.version} already exists with different ` +
-          'contents. Bump every public package version before publishing.',
-      );
-    }
-    return {
-      packageName,
-      version: manifest.version,
-      integrity: tarball.integrity,
-      alreadyPublished: publishedIntegrity === tarball.integrity,
-    };
-  }),
-);
+  },
+});
 
 for (const plan of plans) {
   const label = `${plan.packageName}@${plan.version}`;

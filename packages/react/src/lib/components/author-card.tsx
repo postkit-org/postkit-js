@@ -1,9 +1,12 @@
 'use client';
 
 import {
+  Avatar,
   Box,
-  Image,
+  Card,
+  Heading,
   Link,
+  List,
   Text,
   type BoxProps,
   type RecipeVariantProps,
@@ -22,28 +25,29 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
-export interface PostkitAuthorLink {
+export interface AuthorLink {
   readonly label: string;
   readonly href: string;
   readonly rel?: string;
 }
 
-export type PostkitAuthorCardProps = {
+export type AuthorCardProps = {
   readonly name: string;
   readonly role?: string;
   readonly avatarSrc?: string;
   readonly avatarAlt?: string;
   readonly href?: string;
   readonly bio?: string;
-  readonly links?: string | readonly PostkitAuthorLink[];
+  readonly links?: string | readonly AuthorLink[];
   readonly children?: ReactNode;
   readonly rootProps?: BoxProps;
   readonly slotStyles?: PostkitSlotStyles<PostkitAuthorCardSlot>;
 } & RecipeVariantProps<typeof postkitAuthorCardRecipe> &
   UnstyledProp;
 
-export function PostkitAuthorCard({
+export function AuthorCard({
   name,
   role,
   avatarSrc,
@@ -58,11 +62,8 @@ export function PostkitAuthorCard({
   size,
   variant,
   unstyled,
-}: PostkitAuthorCardProps) {
-  const links = parseJsonProp<PostkitAuthorLink>(
-    linksValue,
-    'AuthorCard links',
-  );
+}: AuthorCardProps) {
+  const links = parseJsonProp<AuthorLink>(linksValue, 'AuthorCard links');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.authorCard,
     postkitAuthorCardRecipe,
@@ -90,7 +91,7 @@ export function PostkitAuthorCard({
   );
 
   return (
-    <Box
+    <Card.Root
       as="aside"
       aria-label={`About ${name}`}
       data-postkit-component="AuthorCard"
@@ -98,25 +99,18 @@ export function PostkitAuthorCard({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      {avatarSrc ? (
-        <Image
-          src={avatarSrc}
-          alt={avatarAlt ?? ''}
-          loading="lazy"
-          decoding="async"
-          className={recipe.classNameMap.avatar}
-          css={[styles.avatar, slotStyles?.avatar]}
-        />
-      ) : (
-        <Box
-          as="span"
-          aria-hidden="true"
-          className={recipe.classNameMap.avatar}
-          css={[styles.avatar, slotStyles?.avatar]}
-        >
-          {name.trim().slice(0, 1).toUpperCase()}
-        </Box>
-      )}
+      <Avatar.Root
+        className={recipe.classNameMap.avatar}
+        css={[styles.avatar, slotStyles?.avatar]}
+      >
+        {avatarSrc ? (
+          <Avatar.Image src={avatarSrc} alt={avatarAlt ?? ''} loading="lazy" />
+        ) : (
+          <Avatar.Fallback name={name}>
+            {name.trim().slice(0, 1).toUpperCase()}
+          </Avatar.Fallback>
+        )}
+      </Avatar.Root>
       <Box
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
@@ -125,13 +119,18 @@ export function PostkitAuthorCard({
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
-          <Text
-            as="span"
+          <Heading
+            as="p"
+            size={postkitHeadingSize(size, {
+              sm: 'sm',
+              md: 'md',
+              lg: 'lg',
+            })}
             className={recipe.classNameMap.name}
             css={[styles.name, slotStyles?.name]}
           >
             {authorName}
-          </Text>
+          </Heading>
           {role ? (
             <Text
               as="span"
@@ -151,14 +150,15 @@ export function PostkitAuthorCard({
           </Box>
         ) : null}
         {links.length ? (
-          <Box
+          <List.Root
             as="ul"
+            variant="plain"
             aria-label={`${name} links`}
             className={recipe.classNameMap.links}
             css={[styles.links, slotStyles?.links]}
           >
             {links.map((link) => (
-              <Box as="li" key={`${link.label}-${link.href}`}>
+              <List.Item key={`${link.label}-${link.href}`}>
                 <Link
                   href={link.href}
                   rel={link.rel}
@@ -167,11 +167,11 @@ export function PostkitAuthorCard({
                 >
                   {link.label}
                 </Link>
-              </Box>
+              </List.Item>
             ))}
-          </Box>
+          </List.Root>
         ) : null}
       </Box>
-    </Box>
+    </Card.Root>
   );
 }

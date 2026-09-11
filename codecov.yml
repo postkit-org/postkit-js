@@ -1,0 +1,51 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+        informational: true
+
+component_management:
+  individual_components:
+    - component_id: core
+      name: '@postkit/core'
+      paths:
+        - packages/core/**
+    - component_id: unfurl
+      name: '@postkit/unfurl'
+      paths:
+        - packages/unfurl/**
+    - component_id: react
+      name: '@postkit/react'
+      paths:
+        - packages/react/**
+    - component_id: email
+      name: '@postkit/email'
+      paths:
+        - packages/email/**
+    - component_id: shiki
+      name: '@postkit/shiki'
+      paths:
+        - packages/shiki/**
+    - component_id: next
+      name: '@postkit/next'
+      paths:
+        - packages/next/**
+    - component_id: react-router
+      name: '@postkit/react-router'
+      paths:
+        - packages/react-router/**
+    - component_id: tanstack-router
+      name: '@postkit/tanstack-router'
+      paths:
+        - packages/tanstack-router/**
+    - component_id: astro
+      name: '@postkit/astro'
+      paths:
+        - packages/astro/**

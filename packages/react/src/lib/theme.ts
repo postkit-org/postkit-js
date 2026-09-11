@@ -8,6 +8,24 @@ import {
   type SystemStyleObject,
 } from '@chakra-ui/react';
 
+import type {
+  PostkitFontFamily,
+  PostkitThemeOverrides,
+} from './theme-contract.js';
+export type {
+  PostkitFontFamily,
+  PostkitRecipeOverride,
+  PostkitThemeCompoundVariant,
+  PostkitThemeOverrides,
+  PostkitThemeSlotMap,
+  PostkitThemeSlotStyles,
+  PostkitThemeStyleObject,
+  PostkitThemeVariantSelection,
+  PostkitThemeVariantMap,
+  PostkitThemeVariantStyles,
+  PostkitTypography,
+} from './theme-contract.js';
+
 import {
   postkitAudioRecipe,
   postkitAudioSlots,
@@ -75,9 +93,7 @@ import {
   postkitVideoSlots,
 } from './recipes/video.recipe.js';
 import {
-  postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
-  postkitCodeGroupRecipe,
   postkitCodeGroupSlots,
   postkitDiffRecipe,
   postkitDiffSlots,
@@ -85,8 +101,10 @@ import {
   postkitFileCardSlots,
   postkitFileTreeRecipe,
   postkitFileTreeSlots,
-  postkitTerminalRecipe,
   postkitTerminalSlots,
+  postkitStandaloneCodeBlockRecipe,
+  postkitStandaloneCodeGroupRecipe,
+  postkitStandaloneTerminalRecipe,
 } from './recipes/technical-content.recipe.js';
 import {
   postkitAudienceBoundaryRecipe,
@@ -152,109 +170,14 @@ export const postkitRecipeKeys = Object.freeze({
 export type PostkitRecipeKey =
   (typeof postkitRecipeKeys)[keyof typeof postkitRecipeKeys];
 
-export type PostkitFontFamily = string | readonly string[];
-
-export interface PostkitTypography {
-  /**
-   * The default font for prose, descriptions, controls, and component copy.
-   * This overrides Chakra's `fonts.body` token.
-   */
-  readonly body?: PostkitFontFamily;
-  /**
-   * The font for prose headings and heading-like rich-component slots.
-   * This overrides Chakra's `fonts.heading` token.
-   */
-  readonly heading?: PostkitFontFamily;
-  /**
-   * The font for inline code, code blocks, terminals, diffs, and file trees.
-   * This overrides Chakra's `fonts.mono` token.
-   */
-  readonly mono?: PostkitFontFamily;
+export interface PostkitSystemOptions {
+  /** The site's Chakra system. Its configuration is layered over the preset. */
+  readonly system?: SystemContext;
+  /** Optional Postkit visual defaults layered beneath the site's system. */
+  readonly preset?: SystemConfig;
+  /** Deliberate contextual overrides layered after the site's system. */
+  readonly theme?: SystemConfig;
 }
-
-type DeepPartial<T> = T extends (...args: never[]) => unknown
-  ? T
-  : T extends readonly unknown[]
-    ? T
-    : T extends object
-      ? { readonly [Key in keyof T]?: DeepPartial<T[Key]> }
-      : T;
-
-type PostkitRecipeOverride<Recipe extends SlotRecipeConfig> = DeepPartial<
-  Omit<Recipe, 'slots'>
->;
-
-export interface PostkitThemeOverrides {
-  /**
-   * Optional font stacks for Postkit's three independent typography roles.
-   * A host can instead configure the matching Chakra font tokens directly.
-   */
-  readonly typography?: PostkitTypography;
-  readonly audienceBoundary?: PostkitRecipeOverride<
-    typeof postkitAudienceBoundaryRecipe
-  >;
-  readonly appearsOn?: PostkitRecipeOverride<typeof postkitAppearsOnRecipe>;
-  readonly audio?: PostkitRecipeOverride<typeof postkitAudioRecipe>;
-  readonly authorCard?: PostkitRecipeOverride<typeof postkitAuthorCardRecipe>;
-  readonly callout?: PostkitRecipeOverride<typeof postkitCalloutRecipe>;
-  readonly callToAction?: PostkitRecipeOverride<
-    typeof postkitCallToActionRecipe
-  >;
-  readonly carousel?: PostkitRecipeOverride<typeof postkitCarouselRecipe>;
-  readonly cardGrid?: PostkitRecipeOverride<typeof postkitCardGridRecipe>;
-  readonly chart?: PostkitRecipeOverride<typeof postkitChartRecipe>;
-  readonly codeBlock?: PostkitRecipeOverride<typeof postkitCodeBlockRecipe>;
-  readonly codeGroup?: PostkitRecipeOverride<typeof postkitCodeGroupRecipe>;
-  readonly comparison?: PostkitRecipeOverride<typeof postkitComparisonRecipe>;
-  readonly diff?: PostkitRecipeOverride<typeof postkitDiffRecipe>;
-  readonly figure?: PostkitRecipeOverride<typeof postkitFigureRecipe>;
-  readonly fileCard?: PostkitRecipeOverride<typeof postkitFileCardRecipe>;
-  readonly fileTree?: PostkitRecipeOverride<typeof postkitFileTreeRecipe>;
-  readonly disclosure?: PostkitRecipeOverride<typeof postkitDisclosureRecipe>;
-  readonly gallery?: PostkitRecipeOverride<typeof postkitGalleryRecipe>;
-  readonly keyTakeaway?: PostkitRecipeOverride<typeof postkitKeyTakeawayRecipe>;
-  readonly linkPreview?: PostkitRecipeOverride<typeof postkitLinkPreviewRecipe>;
-  readonly newsletterSignup?: PostkitRecipeOverride<
-    typeof postkitNewsletterSignupRecipe
-  >;
-  readonly poll?: PostkitRecipeOverride<typeof postkitPollRecipe>;
-  readonly productCard?: PostkitRecipeOverride<typeof postkitProductCardRecipe>;
-  readonly prose?: PostkitRecipeOverride<typeof postkitProseRecipe>;
-  readonly pullQuote?: PostkitRecipeOverride<typeof postkitPullQuoteRecipe>;
-  readonly relatedContent?: PostkitRecipeOverride<
-    typeof postkitRelatedContentRecipe
-  >;
-  readonly shareActions?: PostkitRecipeOverride<
-    typeof postkitShareActionsRecipe
-  >;
-  readonly seriesNavigation?: PostkitRecipeOverride<
-    typeof postkitSeriesNavigationRecipe
-  >;
-  readonly socialPost?: PostkitRecipeOverride<typeof postkitSocialPostRecipe>;
-  readonly steps?: PostkitRecipeOverride<typeof postkitStepsRecipe>;
-  readonly sponsorBlock?: PostkitRecipeOverride<
-    typeof postkitSponsorBlockRecipe
-  >;
-  readonly stat?: PostkitRecipeOverride<typeof postkitStatRecipe>;
-  readonly tabs?: PostkitRecipeOverride<typeof postkitTabsRecipe>;
-  readonly terminal?: PostkitRecipeOverride<typeof postkitTerminalRecipe>;
-  readonly video?: PostkitRecipeOverride<typeof postkitVideoRecipe>;
-}
-
-const postkitHeadingSlots = new Set([
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'title',
-  'cardTitle',
-  'itemTitle',
-  'linkTitle',
-  'question',
-  'summary',
-]);
 
 function withPostkitTypographyDefaults(
   recipes: Record<string, SlotRecipeConfig>,
@@ -265,12 +188,7 @@ function withPostkitTypographyDefaults(
 
       for (const slot of recipe.slots) {
         const styles = base[slot] ?? {};
-        const defaultFontFamily =
-          slot === 'root'
-            ? 'body'
-            : postkitHeadingSlots.has(slot) && styles.fontFamily === undefined
-              ? 'heading'
-              : undefined;
+        const defaultFontFamily = slot === 'root' ? 'body' : undefined;
 
         if (defaultFontFamily) {
           base[slot] = { ...styles, fontFamily: defaultFontFamily };
@@ -298,8 +216,8 @@ export const postkitDefaultTheme = defineConfig({
       [postkitRecipeKeys.cardGrid]: postkitCardGridRecipe,
       [postkitRecipeKeys.carousel]: postkitCarouselRecipe,
       [postkitRecipeKeys.chart]: postkitChartRecipe,
-      [postkitRecipeKeys.codeBlock]: postkitCodeBlockRecipe,
-      [postkitRecipeKeys.codeGroup]: postkitCodeGroupRecipe,
+      [postkitRecipeKeys.codeBlock]: postkitStandaloneCodeBlockRecipe,
+      [postkitRecipeKeys.codeGroup]: postkitStandaloneCodeGroupRecipe,
       [postkitRecipeKeys.comparison]: postkitComparisonRecipe,
       [postkitRecipeKeys.diff]: postkitDiffRecipe,
       [postkitRecipeKeys.figure]: postkitFigureRecipe,
@@ -322,7 +240,7 @@ export const postkitDefaultTheme = defineConfig({
       [postkitRecipeKeys.sponsorBlock]: postkitSponsorBlockRecipe,
       [postkitRecipeKeys.stat]: postkitStatRecipe,
       [postkitRecipeKeys.tabs]: postkitTabsRecipe,
-      [postkitRecipeKeys.terminal]: postkitTerminalRecipe,
+      [postkitRecipeKeys.terminal]: postkitStandaloneTerminalRecipe,
       [postkitRecipeKeys.video]: postkitVideoRecipe,
     }),
   },
@@ -330,7 +248,7 @@ export const postkitDefaultTheme = defineConfig({
 
 function overrideRecipe(
   slots: readonly string[],
-  override: PostkitRecipeOverride<SlotRecipeConfig>,
+  override: object,
 ): SlotRecipeConfig {
   return { slots, ...override } as SlotRecipeConfig;
 }
@@ -343,16 +261,19 @@ export function createPostkitTheme(
   overrides: PostkitThemeOverrides,
 ): SystemConfig {
   const slotRecipes: Record<string, SlotRecipeConfig> = {};
-  const fonts: Record<string, { value: PostkitFontFamily }> = {};
+  const fonts: Record<string, { value: string }> = {};
+
+  const fontFamilyValue = (value: PostkitFontFamily): string =>
+    typeof value === 'string' ? value : value.join(', ');
 
   if (overrides.typography?.body) {
-    fonts.body = { value: overrides.typography.body };
+    fonts.body = { value: fontFamilyValue(overrides.typography.body) };
   }
   if (overrides.typography?.heading) {
-    fonts.heading = { value: overrides.typography.heading };
+    fonts.heading = { value: fontFamilyValue(overrides.typography.heading) };
   }
   if (overrides.typography?.mono) {
-    fonts.mono = { value: overrides.typography.mono };
+    fonts.mono = { value: fontFamilyValue(overrides.typography.mono) };
   }
 
   if (overrides.audienceBoundary) {
@@ -575,17 +496,31 @@ export function createPostkitTheme(
 }
 
 /**
- * Layers an existing Chakra system and optional context overrides over
- * Postkit's defaults. A site system can therefore establish global Postkit
- * styles while a nested PostkitProvider can supply narrower defaults.
+ * Composes an optional Postkit visual preset, a host Chakra system, and
+ * contextual Postkit overrides. Postkit is host-native by default; pass
+ * `postkitDefaultTheme` as `preset` to opt into its standalone appearance.
  */
 export function createPostkitSystem(
-  system: SystemContext = defaultSystem,
-  overrides?: SystemConfig,
+  options?: PostkitSystemOptions,
+): SystemContext;
+/** @deprecated Prefer the options-object overload. */
+export function createPostkitSystem(
+  system?: SystemContext,
+  theme?: SystemConfig,
+): SystemContext;
+export function createPostkitSystem(
+  optionsOrSystem: PostkitSystemOptions | SystemContext = {},
+  legacyTheme?: SystemConfig,
 ): SystemContext {
+  const options: PostkitSystemOptions =
+    '_config' in optionsOrSystem
+      ? { system: optionsOrSystem, theme: legacyTheme }
+      : optionsOrSystem;
+  const system = options.system ?? defaultSystem;
+
   return createSystem(
-    postkitDefaultTheme,
+    ...(options.preset ? [options.preset] : []),
     system._config,
-    ...(overrides ? [overrides] : []),
+    ...(options.theme ? [options.theme] : []),
   );
 }

@@ -1,7 +1,7 @@
 ---
-import type { PostkitGalleryProps } from '@postkit/react';
-import { PostkitAstroGallery } from '../lib/react-bridges';
-type Props = PostkitGalleryProps;
+import type { GalleryProps } from '@postkit/react';
+import { Gallery } from '../lib/react-bridges';
+type Props = GalleryProps;
 const props = Astro.props;
 ---
-<PostkitAstroGallery {...props} />
+<Gallery {...props} />

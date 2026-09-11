@@ -1,0 +1,111 @@
+# A portable PostKit article
+
+<Tabs
+  items={[
+    { label: 'First', content: 'First panel' },
+    { label: 'Second', content: 'Second panel' },
+  ]}
+/>
+
+<CodeBlock code="const answer = 42" language="js" />
+
+<CodeGroup
+  items={[
+    { label: 'JavaScript', code: 'first()', language: 'js' },
+    { label: 'TypeScript', code: 'second()', language: 'ts' },
+  ]}
+/>
+
+<Poll
+  question="Which guide next?"
+  options={[
+    { id: 'first', label: 'First guide' },
+    { id: 'second', label: 'Second guide' },
+  ]}
+/>
+
+<AuthorCard
+  name="Ada Lovelace"
+  role="Contributing editor"
+  bio="Writes about durable publishing."
+/>
+
+<CallToAction
+  title="Read the field guide"
+  primaryLabel="Open guide"
+  primaryHref="/guide"
+/>
+
+<NewsletterSignup
+  title="Get field notes"
+  list="weekly"
+  privacy="Unsubscribe at any time."
+/>
+
+<Audio
+  src="/episode.mp3"
+  title="Field notes, episode 12"
+  caption="Native audio controls."
+/>
+
+<Carousel
+  label="Field-note slides"
+  items={[
+    {
+      title: 'First slide',
+      description: 'Visible immediately.',
+    },
+    {
+      title: 'Second slide',
+      description: 'Hydrated on visibility.',
+    },
+  ]}
+/>
+
+<LinkPreview
+  href="https://example.com/posts/field-notes"
+  title="Field notes"
+  description="Hydrated for runtime resolution and embeds."
+/>
+
+<ShareActions
+  url="https://example.com/posts/field-notes"
+  title="Field notes"
+  services={['copy', 'bluesky']}
+/>
+
+<SocialPost
+  href="https://bsky.app/profile/ada.example/post/field-notes"
+  service="bluesky"
+  authorName="Ada"
+  authorHandle="@ada.example"
+  text="The field notes are live."
+/>
+
+<AppearsOn
+  label="Also published on"
+  items={[
+    {
+      service: 'linegraph',
+      label: 'Linegraph',
+      url: 'https://linegraph.example/posts/field-notes',
+      status: 'published',
+    },
+  ]}
+/>
+
+<Chart
+  title="Field-note readers"
+  data={[
+    { label: 'Jan', readers: 12 },
+    { label: 'Feb', readers: 24 },
+  ]}
+  series={[{ key: 'readers', label: 'Readers' }]}
+  showTable
+/>
+
+<Video
+  src="/interview.mp4"
+  title="Field-notes interview"
+  caption="Native video controls."
+/>

@@ -1,7 +1,18 @@
 {
   "name": "@postkit/astro",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Postkit components and Markdown integration for Astro",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "astro",
+    "markdown",
+    "mdx",
+    "react",
+    "content-components"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -9,7 +20,7 @@
     "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/astro"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/astro#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },
@@ -50,13 +61,14 @@
     "@astrojs/markdown-remark": ">=6 <8",
     "@astrojs/mdx": ">=6 <8",
     "@astrojs/react": ">=4 <7",
-    "@chakra-ui/react": "^3.36.0",
-    "@postkit/react": "0.1.0",
+    "@chakra-ui/react": ">=3.29.0 <4",
+    "@postkit/react": "0.2.0",
     "astro": ">=6.4 <8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.2",
     "@astrojs/markdown-remark": "^7.2.1",
     "@astrojs/mdx": "^7.0.3",
     "@astrojs/react": "^6.0.1",
@@ -99,7 +111,7 @@
         "options": {
           "cwd": "packages/astro",
           "commands": [
-            "astro build --root fixture",
+            "astro build --root ../../examples/astro",
             "node scripts/verify-fixture.mjs"
           ],
           "parallel": false

@@ -1,0 +1,35 @@
+task = []
+
+[workspace]
+name = "postkit-js"
+
+[derive]
+
+[worktree]
+copy = []
+link = []
+setup = []
+
+[tasks]
+
+[[unit]]
+name = "site"
+working_dir = "apps/site"
+command = 'NX_DAEMON=false npx nx run site:dev -- --port "$PORT"'
+package_manager = "npm"
+hostnames = ["postkit.test"]
+mode = "lazy"
+subtype = "app"
+role = "site"
+source = "byo"
+enabled = true
+id = "unt_wks_workspace_users_ryanhefner_code_org_postkit_postkit_js_site"
+
+[unit.runtime]
+kind = "node"
+version = "24.18.0"
+manager = "nvm"
+
+[unit.readiness]
+kind = "http"
+target = "/"

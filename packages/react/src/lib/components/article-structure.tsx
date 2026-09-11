@@ -1,16 +1,21 @@
 'use client';
 
 import {
+  Alert,
   Box,
+  Card,
   chakra,
+  Heading,
   Image,
   Link,
+  List,
+  Tabs as ChakraTabs,
   Text,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useId, useState, type ComponentProps, type ReactNode } from 'react';
+import { useState, type ComponentProps, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -33,10 +38,10 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
 const DisclosureRoot = chakra('details');
 const DisclosureSummary = chakra('summary');
-const TabButton = chakra('button');
 
 type SharedRootProps<Slot extends string> = {
   readonly rootProps?: BoxProps;
@@ -56,7 +61,7 @@ const calloutMarks = {
   caution: '×',
 } as const;
 
-export type PostkitCalloutProps = {
+export type CalloutProps = {
   readonly title?: string;
   readonly children?: ReactNode;
   readonly icon?: ReactNode;
@@ -65,7 +70,7 @@ export type PostkitCalloutProps = {
   RecipeVariantProps<typeof postkitCalloutRecipe> &
   UnstyledProp;
 
-export function PostkitCallout({
+export function Callout({
   title,
   children,
   icon,
@@ -76,7 +81,7 @@ export function PostkitCallout({
   variant,
   tone = 'note',
   unstyled,
-}: PostkitCalloutProps) {
+}: CalloutProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.callout,
     postkitCalloutRecipe,
@@ -88,50 +93,69 @@ export function PostkitCallout({
     typeof tone === 'string' && tone in calloutMarks ? tone : 'note';
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   return (
-    <Box
+    <Alert.Root
       as="aside"
+      status={
+        resolvedTone === 'tip'
+          ? 'success'
+          : resolvedTone === 'warning'
+            ? 'warning'
+            : resolvedTone === 'caution'
+              ? 'error'
+              : resolvedTone === 'important'
+                ? 'neutral'
+                : 'info'
+      }
       data-postkit-component={componentName}
       data-postkit-tone={resolvedTone}
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
+      <Alert.Indicator
         aria-hidden="true"
         className={recipe.classNameMap.icon}
         css={[styles.icon, slotStyles?.icon]}
       >
         {icon ?? calloutMarks[resolvedTone]}
-      </Box>
-      <Box
+      </Alert.Indicator>
+      <Alert.Content
         className={recipe.classNameMap.content}
         css={[styles.content, slotStyles?.content]}
       >
         {title ? (
-          <Text
-            className={recipe.classNameMap.title}
-            css={[styles.title, slotStyles?.title]}
-          >
-            {title}
-          </Text>
+          <Alert.Title asChild>
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
+              className={recipe.classNameMap.title}
+              css={[styles.title, slotStyles?.title]}
+            >
+              {title}
+            </Heading>
+          </Alert.Title>
         ) : null}
-        <Box
+        <Alert.Description
           className={recipe.classNameMap.body}
           css={[styles.body, slotStyles?.body]}
         >
           {children}
-        </Box>
-      </Box>
-    </Box>
+        </Alert.Description>
+      </Alert.Content>
+    </Alert.Root>
   );
 }
 
-export type PostkitAsideProps = PostkitCalloutProps;
-export function PostkitAside(props: PostkitAsideProps) {
-  return <PostkitCallout {...props} componentName="Aside" />;
+export type AsideProps = CalloutProps;
+export function Aside(props: AsideProps) {
+  return <Callout {...props} componentName="Aside" />;
 }
 
-export interface PostkitGalleryItem {
+export interface GalleryItem {
   readonly src: string;
   readonly alt: string;
   readonly caption?: string;
@@ -139,8 +163,8 @@ export interface PostkitGalleryItem {
   readonly width?: number;
   readonly height?: number;
 }
-export type PostkitGalleryProps = {
-  readonly items: string | readonly PostkitGalleryItem[];
+export type GalleryProps = {
+  readonly items: string | readonly GalleryItem[];
   readonly title?: string;
   readonly description?: string;
   readonly columns?: 1 | 2 | 3 | 4;
@@ -148,7 +172,7 @@ export type PostkitGalleryProps = {
   RecipeVariantProps<typeof postkitGalleryRecipe> &
   UnstyledProp;
 
-export function PostkitGallery({
+export function Gallery({
   items: value,
   title,
   description,
@@ -158,8 +182,8 @@ export function PostkitGallery({
   size,
   variant,
   unstyled,
-}: PostkitGalleryProps) {
-  const items = parseJsonProp<PostkitGalleryItem>(value, 'Gallery items');
+}: GalleryProps) {
+  const items = parseJsonProp<GalleryItem>(value, 'Gallery items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.gallery,
     postkitGalleryRecipe,
@@ -181,12 +205,18 @@ export function PostkitGallery({
           css={[styles.header, slotStyles?.header]}
         >
           {title ? (
-            <Text
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
               className={recipe.classNameMap.title}
               css={[styles.title, slotStyles?.title]}
             >
               {title}
-            </Text>
+            </Heading>
           ) : null}
           {description ? (
             <Text
@@ -255,7 +285,7 @@ export function PostkitGallery({
   );
 }
 
-export type PostkitDisclosureProps = {
+export type DisclosureProps = {
   readonly summary: string;
   readonly children?: ReactNode;
   readonly open?: boolean;
@@ -263,7 +293,12 @@ export type PostkitDisclosureProps = {
   RecipeVariantProps<typeof postkitDisclosureRecipe> &
   UnstyledProp;
 
-export function PostkitDisclosure({
+/**
+ * A progressively enhanced disclosure built on native `details` and `summary`.
+ * It intentionally remains native so its toggle behavior works without
+ * client-side JavaScript.
+ */
+export function Disclosure({
   summary,
   children,
   open,
@@ -272,7 +307,7 @@ export function PostkitDisclosure({
   size,
   variant,
   unstyled,
-}: PostkitDisclosureProps) {
+}: DisclosureProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.disclosure,
     postkitDisclosureRecipe,
@@ -317,20 +352,20 @@ export function PostkitDisclosure({
   );
 }
 
-export interface PostkitTabItem {
+export interface TabItem {
   readonly id?: string;
   readonly label: string;
   readonly content: ReactNode;
 }
-export type PostkitTabsProps = {
-  readonly items: string | readonly PostkitTabItem[];
+export type TabsProps = {
+  readonly items: string | readonly TabItem[];
   readonly label?: string;
   readonly initialIndex?: number | string;
 } & SharedRootProps<PostkitTabsSlot> &
   RecipeVariantProps<typeof postkitTabsRecipe> &
   UnstyledProp;
 
-export function PostkitTabs({
+export function Tabs({
   items: value,
   label = 'Tabbed content',
   initialIndex = 0,
@@ -339,17 +374,16 @@ export function PostkitTabs({
   size,
   variant,
   unstyled,
-}: PostkitTabsProps) {
-  const items = parseJsonProp<PostkitTabItem>(value, 'Tabs items');
+}: TabsProps) {
+  const items = parseJsonProp<TabItem>(value, 'Tabs items');
   const requested =
     typeof initialIndex === 'string' ? Number(initialIndex) : initialIndex;
-  const [selected, setSelected] = useState(
-    Math.max(
-      0,
-      Math.min(items.length - 1, Number.isFinite(requested) ? requested : 0),
-    ),
+  const selectedIndex = Math.max(
+    0,
+    Math.min(items.length - 1, Number.isFinite(requested) ? requested : 0),
   );
-  const id = useId();
+  const itemValues = items.map((item, index) => item.id ?? String(index));
+  const [selected, setSelected] = useState(itemValues[selectedIndex] ?? '');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.tabs,
     postkitTabsRecipe,
@@ -358,77 +392,77 @@ export function PostkitTabs({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const tabsRootProps = restRootProps as Omit<
+    ChakraTabs.RootProps,
+    'children' | 'onValueChange' | 'size' | 'value' | 'variant'
+  >;
   return (
-    <Box
+    <ChakraTabs.Root
+      {...tabsRootProps}
+      value={selected}
+      onValueChange={({ value: nextValue }: { value: string }) =>
+        setSelected(nextValue)
+      }
+      size={size ?? 'md'}
+      variant={variant ?? 'outline'}
       data-postkit-component="Tabs"
-      {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="tablist"
+      <ChakraTabs.List
         aria-label={label}
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item, index) => (
-          <TabButton
-            type="button"
-            role="tab"
-            id={`${id}-tab-${index}`}
-            aria-controls={`${id}-panel-${index}`}
-            aria-selected={selected === index}
-            tabIndex={selected === index ? 0 : -1}
-            onClick={() => setSelected(index)}
+          <ChakraTabs.Trigger
+            value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
             key={item.id ?? item.label}
           >
             {item.label}
-          </TabButton>
+          </ChakraTabs.Trigger>
         ))}
-      </Box>
-      <Box
+      </ChakraTabs.List>
+      <ChakraTabs.ContentGroup
         className={recipe.classNameMap.panels}
         css={[styles.panels, slotStyles?.panels]}
       >
         {items.map((item, index) => (
-          <Box
-            role="tabpanel"
-            id={`${id}-panel-${index}`}
-            aria-labelledby={`${id}-tab-${index}`}
-            hidden={selected !== index}
+          <ChakraTabs.Content
+            value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.panel}
             css={[styles.panel, slotStyles?.panel]}
             key={item.id ?? item.label}
           >
             {item.content}
-          </Box>
+          </ChakraTabs.Content>
         ))}
-      </Box>
-    </Box>
+      </ChakraTabs.ContentGroup>
+    </ChakraTabs.Root>
   );
 }
 
-export interface PostkitStepItem {
+export interface StepItem {
   readonly title: string;
   readonly description?: ReactNode;
 }
-export type PostkitStepsProps = {
-  readonly items: string | readonly PostkitStepItem[];
+export type StepsProps = {
+  readonly items: string | readonly StepItem[];
 } & SharedRootProps<PostkitStepsSlot> &
   RecipeVariantProps<typeof postkitStepsRecipe> &
   UnstyledProp;
 
-export function PostkitSteps({
+export function Steps({
   items: value,
   rootProps,
   slotStyles,
   size,
   variant,
   unstyled,
-}: PostkitStepsProps) {
-  const items = parseJsonProp<PostkitStepItem>(value, 'Steps items');
+}: StepsProps) {
+  const items = parseJsonProp<StepItem>(value, 'Steps items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.steps,
     postkitStepsRecipe,
@@ -437,17 +471,21 @@ export function PostkitSteps({
     ? {}
     : recipe({ size, variant });
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
+  const listRootProps = restRootProps as Omit<
+    List.RootProps,
+    'as' | 'children' | 'variant'
+  >;
   return (
-    <Box
+    <List.Root
       as="ol"
+      variant="plain"
       data-postkit-component="Steps"
-      {...restRootProps}
+      {...listRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       {items.map((item, index) => (
-        <Box
-          as="li"
+        <List.Item
           className={recipe.classNameMap.item}
           css={[styles.item, slotStyles?.item]}
           key={`${item.title}-${index}`}
@@ -463,12 +501,18 @@ export function PostkitSteps({
             className={recipe.classNameMap.content}
             css={[styles.content, slotStyles?.content]}
           >
-            <Text
+            <Heading
+              as="p"
+              size={postkitHeadingSize(size, {
+                sm: 'sm',
+                md: 'md',
+                lg: 'lg',
+              })}
               className={recipe.classNameMap.title}
               css={[styles.title, slotStyles?.title]}
             >
               {item.title}
-            </Text>
+            </Heading>
             {item.description ? (
               <Box
                 className={recipe.classNameMap.description}
@@ -478,13 +522,13 @@ export function PostkitSteps({
               </Box>
             ) : null}
           </Box>
-        </Box>
+        </List.Item>
       ))}
-    </Box>
+    </List.Root>
   );
 }
 
-export interface PostkitCardItem {
+export interface CardItem {
   readonly title: string;
   readonly description?: string;
   readonly href?: string;
@@ -492,8 +536,8 @@ export interface PostkitCardItem {
   readonly image?: { readonly src: string; readonly alt: string };
   readonly meta?: string;
 }
-export type PostkitCardGridProps = {
-  readonly items: string | readonly PostkitCardItem[];
+export type CardGridProps = {
+  readonly items: string | readonly CardItem[];
   readonly title?: string;
   readonly description?: string;
   readonly columns?: 1 | 2 | 3 | 4;
@@ -501,7 +545,7 @@ export type PostkitCardGridProps = {
   RecipeVariantProps<typeof postkitCardGridRecipe> &
   UnstyledProp;
 
-export function PostkitCardGrid({
+export function CardGrid({
   items: value,
   title,
   description,
@@ -511,8 +555,8 @@ export function PostkitCardGrid({
   size,
   variant,
   unstyled,
-}: PostkitCardGridProps) {
-  const items = parseJsonProp<PostkitCardItem>(value, 'CardGrid items');
+}: CardGridProps) {
+  const items = parseJsonProp<CardItem>(value, 'CardGrid items');
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.cardGrid,
     postkitCardGridRecipe,
@@ -560,7 +604,7 @@ export function PostkitCardGrid({
         ]}
       >
         {items.map((item, index) => (
-          <Box
+          <Card.Root
             as="article"
             className={recipe.classNameMap.card}
             css={[styles.card, slotStyles?.card]}
@@ -575,16 +619,22 @@ export function PostkitCardGrid({
                 css={[styles.image, slotStyles?.image]}
               />
             ) : null}
-            <Box
+            <Card.Body
               className={recipe.classNameMap.cardBody}
               css={[styles.cardBody, slotStyles?.cardBody]}
             >
-              <Text
+              <Heading
+                as="p"
+                size={postkitHeadingSize(size, {
+                  sm: 'sm',
+                  md: 'md',
+                  lg: 'lg',
+                })}
                 className={recipe.classNameMap.cardTitle}
                 css={[styles.cardTitle, slotStyles?.cardTitle]}
               >
                 {item.title}
-              </Text>
+              </Heading>
               {item.description ? (
                 <Text
                   className={recipe.classNameMap.cardDescription}
@@ -614,8 +664,8 @@ export function PostkitCardGrid({
                   </Box>
                 </Link>
               ) : null}
-            </Box>
-          </Box>
+            </Card.Body>
+          </Card.Root>
         ))}
       </Box>
     </Box>

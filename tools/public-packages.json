@@ -1,6 +1,9 @@
 [
+  "@postkit/core",
   "@postkit/unfurl",
   "@postkit/react",
+  "@postkit/email",
+  "@postkit/shiki",
   "@postkit/next",
   "@postkit/react-router",
   "@postkit/tanstack-router",

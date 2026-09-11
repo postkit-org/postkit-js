@@ -1,0 +1,410 @@
+import { fromHtml } from 'hast-util-from-html';
+import type {
+  Element as HastElement,
+  Nodes as HastNode,
+  Properties as HastProperties,
+} from 'hast';
+
+import {
+  createPostkitDocument,
+  type PostkitAttributeValue,
+  type PostkitDocument,
+  type PostkitJsonValue,
+  type PostkitNode,
+} from './document.js';
+
+export type PostkitUnknownElementBehavior = 'drop' | 'unwrap';
+
+export interface ParsePostkitHtmlOptions {
+  /** Unknown elements are unwrapped by default so their readable content survives. */
+  readonly unknownElements?: PostkitUnknownElementBehavior;
+  /** Additional semantic HTML elements that may survive normalization. */
+  readonly allowedElements?: readonly string[];
+  /** Determines which annotated Postkit component names may enter the document. */
+  readonly allowComponent?: (name: string) => boolean;
+}
+
+const defaultAllowedElements = new Set([
+  'a',
+  'abbr',
+  'article',
+  'aside',
+  'audio',
+  'b',
+  'blockquote',
+  'br',
+  'caption',
+  'code',
+  'dd',
+  'del',
+  'details',
+  'div',
+  'dl',
+  'dt',
+  'em',
+  'figcaption',
+  'figure',
+  'footer',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'header',
+  'hr',
+  'i',
+  'img',
+  'input',
+  'kbd',
+  'li',
+  'main',
+  'mark',
+  'ol',
+  'p',
+  'picture',
+  'pre',
+  's',
+  'section',
+  'small',
+  'source',
+  'span',
+  'strong',
+  'sub',
+  'summary',
+  'sup',
+  'table',
+  'tbody',
+  'td',
+  'tfoot',
+  'th',
+  'thead',
+  'time',
+  'tr',
+  'u',
+  'ul',
+  'video',
+]);
+
+const droppedElements = new Set([
+  'base',
+  'embed',
+  'form',
+  'iframe',
+  'link',
+  'meta',
+  'object',
+  'script',
+  'style',
+  'template',
+]);
+
+const allowedProperties = new Set([
+  'alt',
+  'checked',
+  'cite',
+  'colSpan',
+  'controls',
+  'dateTime',
+  'disabled',
+  'height',
+  'href',
+  'id',
+  'kind',
+  'label',
+  'language',
+  'loading',
+  'loop',
+  'muted',
+  'meta',
+  'open',
+  'poster',
+  'preload',
+  'rel',
+  'reversed',
+  'rowSpan',
+  'scope',
+  'sizes',
+  'span',
+  'spread',
+  'src',
+  'srcSet',
+  'start',
+  'title',
+  'type',
+  'width',
+]);
+
+const componentNamePattern = /^[A-Z][A-Za-z0-9.]*$/;
+
+function propertyString(
+  properties: HastProperties,
+  ...names: string[]
+): string | undefined {
+  for (const name of names) {
+    const value = properties[name];
+    if (typeof value === 'string' && value.length > 0) return value;
+  }
+  return undefined;
+}
+
+function parseAnnotatedValue(value: string): PostkitJsonValue {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  if (value === 'null') return null;
+  if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value)) {
+    const number = Number(value);
+    if (Number.isFinite(number)) return number;
+  }
+  return value;
+}
+
+function annotatedProps(
+  properties: HastProperties,
+): Readonly<Record<string, PostkitJsonValue>> | undefined {
+  const props: Record<string, PostkitJsonValue> = Object.create(null) as Record<
+    string,
+    PostkitJsonValue
+  >;
+  const serialized = propertyString(
+    properties,
+    'dataPostkitProps',
+    'data-postkit-props',
+  );
+  if (serialized) {
+    try {
+      const value = JSON.parse(serialized) as unknown;
+      if (
+        typeof value === 'object' &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        for (const [key, item] of Object.entries(value)) {
+          if (
+            key !== '__proto__' &&
+            key !== 'constructor' &&
+            key !== 'prototype'
+          ) {
+            props[key] = item as PostkitJsonValue;
+          }
+        }
+      }
+    } catch {
+      // Malformed annotations are ignored; readable semantic HTML still parses.
+    }
+  }
+  for (const [key, value] of Object.entries(properties)) {
+    const match = key.match(/^dataPostkitProp([A-Z].*)$/);
+    if (!match || typeof value !== 'string') continue;
+    const suffix = match[1];
+    if (!suffix) continue;
+    const name = `${suffix[0]?.toLowerCase() ?? ''}${suffix.slice(1)}`;
+    if (
+      name === '__proto__' ||
+      name === 'constructor' ||
+      name === 'prototype'
+    ) {
+      continue;
+    }
+    props[name] = parseAnnotatedValue(value);
+  }
+  return Object.keys(props).length > 0 ? props : undefined;
+}
+
+function safeUrl(value: string, property: 'href' | 'src'): boolean {
+  const normalized = [...value.trim()]
+    .filter((character) => character.charCodeAt(0) > 0x20)
+    .join('')
+    .toLowerCase();
+  const scheme = normalized.match(/^([a-z][a-z0-9+.-]*):/)?.[1];
+  if (!scheme) return true;
+  if (scheme === 'http' || scheme === 'https') return true;
+  return property === 'href' && (scheme === 'mailto' || scheme === 'tel');
+}
+
+function normalizeAttributes(
+  properties: HastProperties,
+): Readonly<Record<string, PostkitAttributeValue>> | undefined {
+  const attributes: Record<string, PostkitAttributeValue> = {};
+  for (const [key, value] of Object.entries(properties)) {
+    if (key.startsWith('dataPostkit')) continue;
+    if (key.startsWith('on') || !allowedProperties.has(key)) continue;
+    if (value === null || value === undefined) continue;
+    if (
+      (key === 'href' || key === 'src') &&
+      typeof value === 'string' &&
+      !safeUrl(value, key)
+    ) {
+      continue;
+    }
+    if (
+      typeof value === 'boolean' ||
+      typeof value === 'number' ||
+      typeof value === 'string'
+    ) {
+      attributes[key] = value;
+      continue;
+    }
+    if (
+      Array.isArray(value) &&
+      value.every(
+        (item): item is number | string =>
+          typeof item === 'number' || typeof item === 'string',
+      )
+    ) {
+      attributes[key] = value;
+    }
+  }
+  return Object.keys(attributes).length > 0 ? attributes : undefined;
+}
+
+function convertChildren(
+  children: readonly HastNode[],
+  options: ParsePostkitHtmlOptions,
+  allowed: ReadonlySet<string>,
+): PostkitNode[] {
+  const result: PostkitNode[] = [];
+  for (const child of children.flatMap((node) =>
+    convertNode(node, options, allowed),
+  )) {
+    const previous = result.at(-1);
+    if (child.type === 'text' && previous?.type === 'text') {
+      result[result.length - 1] = {
+        type: 'text',
+        value: previous.value + child.value,
+      };
+    } else result.push(child);
+  }
+  return result;
+}
+
+function convertElement(
+  node: HastElement,
+  options: ParsePostkitHtmlOptions,
+  allowed: ReadonlySet<string>,
+): PostkitNode[] {
+  const children = convertChildren(node.children, options, allowed);
+  if (
+    'dataPostkitDocument' in node.properties ||
+    'data-postkit-document' in node.properties
+  ) {
+    return children;
+  }
+  const componentName = propertyString(
+    node.properties,
+    'dataPostkitComponent',
+    'dataPostkitNode',
+    'data-postkit-component',
+    'data-postkit-node',
+  );
+  if (
+    componentName === 'Prose' &&
+    ('dataPostkitProse' in node.properties ||
+      'data-postkit-prose' in node.properties)
+  ) {
+    return children;
+  }
+  if (
+    componentName &&
+    componentNamePattern.test(componentName) &&
+    (options.allowComponent?.(componentName) ?? true)
+  ) {
+    const props = annotatedProps(node.properties);
+    return [
+      {
+        type: 'component',
+        name: componentName,
+        ...(props ? { props } : {}),
+        children,
+      },
+    ];
+  }
+  const name = node.tagName.toLowerCase();
+  if (droppedElements.has(name)) return [];
+  if (!allowed.has(name)) {
+    return options.unknownElements === 'drop' ? [] : children;
+  }
+  const task = name === 'li' ? extractTaskCheckbox(children) : undefined;
+  const attributes = task
+    ? { ...normalizeAttributes(node.properties), checked: task.checked }
+    : normalizeAttributes(node.properties);
+  return [
+    {
+      type: 'element',
+      name,
+      ...(attributes ? { attributes } : {}),
+      children: task?.children ?? children,
+    },
+  ];
+}
+
+function extractTaskCheckbox(
+  children: readonly PostkitNode[],
+): { checked: boolean; children: PostkitNode[] } | undefined {
+  const index = children.findIndex(
+    (child) => child.type !== 'text' || child.value.trim() !== '',
+  );
+  const first = children[index];
+  if (first?.type !== 'element') return undefined;
+  if (first.name === 'p') {
+    const task = extractTaskCheckbox(first.children);
+    return task
+      ? {
+          checked: task.checked,
+          children: [
+            ...children.slice(0, index),
+            { ...first, children: task.children },
+            ...children.slice(index + 1),
+          ],
+        }
+      : undefined;
+  }
+  if (first.name !== 'input' || first.attributes?.['type'] !== 'checkbox')
+    return undefined;
+  const rest = children.slice(index + 1);
+  // Conventional GFM HTML places a single separator after the checkbox.
+  if (rest[0]?.type === 'text') {
+    rest[0] = { ...rest[0], value: rest[0].value.replace(/^ /, '') };
+    if (!rest[0].value) rest.shift();
+  }
+  return { checked: first.attributes['checked'] === true, children: rest };
+}
+
+function convertNode(
+  node: HastNode,
+  options: ParsePostkitHtmlOptions,
+  allowed: ReadonlySet<string>,
+): PostkitNode[] {
+  // Internal hast-util-raw pass-through nodes cannot be forged by authored
+  // HTML: HTML attributes become `properties`, never HAST `data`.
+  if (node.data && 'postkitNode' in node.data)
+    return [node.data.postkitNode as PostkitNode];
+  if (node.type === 'text') return [{ type: 'text', value: node.value }];
+  if (node.type === 'element') return convertElement(node, options, allowed);
+  if ('children' in node && Array.isArray(node.children)) {
+    return convertChildren(node.children as HastNode[], options, allowed);
+  }
+  return [];
+}
+
+export function parsePostkitHtml(
+  source: string,
+  options: ParsePostkitHtmlOptions = {},
+): PostkitDocument {
+  return normalizePostkitHtmlTree(
+    fromHtml(source, { fragment: true }),
+    options,
+  );
+}
+
+/** @internal Normalize a parsed tree through the same HTML trust boundary. */
+export function normalizePostkitHtmlTree(
+  root: HastNode,
+  options: ParsePostkitHtmlOptions = {},
+): PostkitDocument {
+  const allowed = new Set([
+    ...defaultAllowedElements,
+    ...(options.allowedElements ?? []).map((name) => name.toLowerCase()),
+  ]);
+  return createPostkitDocument(convertNode(root, options, allowed));
+}

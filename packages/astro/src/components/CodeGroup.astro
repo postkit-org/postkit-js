@@ -1,7 +1,7 @@
 ---
-import type { PostkitCodeGroupProps } from '@postkit/react';
-import { PostkitAstroCodeGroup } from '../lib/react-bridges';
-type Props = PostkitCodeGroupProps;
+import type { CodeGroupProps } from '@postkit/react';
+import { CodeGroup } from '../lib/react-bridges';
+type Props = CodeGroupProps;
 const props = Astro.props;
 ---
-<PostkitAstroCodeGroup {...props} />
+<CodeGroup {...props} client:visible />

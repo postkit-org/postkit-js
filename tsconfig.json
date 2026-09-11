@@ -35,6 +35,18 @@
     },
     {
       "path": "./apps/site"
+    },
+    {
+      "path": "./libs/content"
+    },
+    {
+      "path": "./packages/shiki"
+    },
+    {
+      "path": "./packages/email"
+    },
+    {
+      "path": "./packages/core"
     }
   ],
   "compilerOptions": {}

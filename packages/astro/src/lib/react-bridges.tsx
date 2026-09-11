@@ -1,76 +1,76 @@
 import type { SystemContext } from '@chakra-ui/react';
 import {
-  PostkitAppearsOn,
-  PostkitAudienceBoundary,
-  PostkitAside,
-  PostkitAudio,
-  PostkitAuthorCard,
-  PostkitCallToAction,
-  PostkitCallout,
-  PostkitCardGrid,
-  PostkitCarousel,
-  PostkitChart,
-  PostkitCodeBlock,
-  PostkitCodeGroup,
-  PostkitComparison,
-  PostkitDiff,
-  PostkitFigure,
-  PostkitFileCard,
-  PostkitFileTree,
-  PostkitDisclosure,
-  PostkitGallery,
-  PostkitKeyTakeaway,
-  PostkitLinkPreview,
-  PostkitNewsletterSignup,
-  PostkitPoll,
-  PostkitProductCard,
-  PostkitPullQuote,
-  PostkitRelatedContent,
+  AppearsOn as ReactAppearsOn,
+  AudienceBoundary as ReactAudienceBoundary,
+  Aside as ReactAside,
+  Audio as ReactAudio,
+  AuthorCard as ReactAuthorCard,
+  CallToAction as ReactCallToAction,
+  Callout as ReactCallout,
+  CardGrid as ReactCardGrid,
+  Carousel as ReactCarousel,
+  Chart as ReactChart,
+  CodeBlock as ReactCodeBlock,
+  CodeGroup as ReactCodeGroup,
+  Comparison as ReactComparison,
+  Diff as ReactDiff,
+  Figure as ReactFigure,
+  FileCard as ReactFileCard,
+  FileTree as ReactFileTree,
+  Disclosure as ReactDisclosure,
+  Gallery as ReactGallery,
+  KeyTakeaway as ReactKeyTakeaway,
+  LinkPreview as ReactLinkPreview,
+  NewsletterSignup as ReactNewsletterSignup,
+  Poll as ReactPoll,
+  ProductCard as ReactProductCard,
+  PullQuote as ReactPullQuote,
+  RelatedContent as ReactRelatedContent,
   PostkitProvider,
-  PostkitShareActions,
-  PostkitSeriesNavigation,
-  PostkitSocialPost,
-  PostkitSteps,
-  PostkitSponsorBlock,
-  PostkitStat,
-  PostkitTabs,
-  PostkitTerminal,
-  PostkitVideo,
-  type PostkitAppearsOnProps,
-  type PostkitAudienceBoundaryProps,
-  type PostkitAsideProps,
-  type PostkitAudioProps,
-  type PostkitAuthorCardProps,
-  type PostkitCallToActionProps,
-  type PostkitCalloutProps,
-  type PostkitCardGridProps,
-  type PostkitCarouselProps,
-  type PostkitChartProps,
-  type PostkitCodeBlockProps,
-  type PostkitCodeGroupProps,
-  type PostkitComparisonProps,
-  type PostkitDiffProps,
-  type PostkitFigureProps,
-  type PostkitFileCardProps,
-  type PostkitFileTreeProps,
-  type PostkitDisclosureProps,
-  type PostkitGalleryProps,
-  type PostkitKeyTakeawayProps,
-  type PostkitLinkPreviewProps,
-  type PostkitNewsletterSignupProps,
-  type PostkitPollProps,
-  type PostkitProductCardProps,
-  type PostkitPullQuoteProps,
-  type PostkitRelatedContentProps,
-  type PostkitShareActionsProps,
-  type PostkitSeriesNavigationProps,
-  type PostkitSocialPostProps,
-  type PostkitStepsProps,
-  type PostkitSponsorBlockProps,
-  type PostkitStatProps,
-  type PostkitTabsProps,
-  type PostkitTerminalProps,
-  type PostkitVideoProps,
+  ShareActions as ReactShareActions,
+  SeriesNavigation as ReactSeriesNavigation,
+  SocialPost as ReactSocialPost,
+  Steps as ReactSteps,
+  SponsorBlock as ReactSponsorBlock,
+  Stat as ReactStat,
+  Tabs as ReactTabs,
+  Terminal as ReactTerminal,
+  Video as ReactVideo,
+  type AppearsOnProps,
+  type AudienceBoundaryProps,
+  type AsideProps,
+  type AudioProps,
+  type AuthorCardProps,
+  type CallToActionProps,
+  type CalloutProps,
+  type CardGridProps,
+  type CarouselProps,
+  type ChartProps,
+  type CodeBlockProps,
+  type CodeGroupProps,
+  type ComparisonProps,
+  type DiffProps,
+  type FigureProps,
+  type FileCardProps,
+  type FileTreeProps,
+  type DisclosureProps,
+  type GalleryProps,
+  type KeyTakeawayProps,
+  type LinkPreviewProps,
+  type NewsletterSignupProps,
+  type PollProps,
+  type ProductCardProps,
+  type PullQuoteProps,
+  type RelatedContentProps,
+  type ShareActionsProps,
+  type SeriesNavigationProps,
+  type SocialPostProps,
+  type StepsProps,
+  type SponsorBlockProps,
+  type StatProps,
+  type TabsProps,
+  type TerminalProps,
+  type VideoProps,
 } from '@postkit/react';
 import system from 'virtual:postkit/chakra-system';
 import type { ComponentType } from 'react';
@@ -78,7 +78,7 @@ import type { ComponentType } from 'react';
 function withPostkitAstroProvider<TProps extends object>(
   Component: ComponentType<TProps>,
 ) {
-  function PostkitAstroBridge(props: TProps) {
+  function AstroBridge(props: TProps) {
     return (
       <PostkitProvider system={system as SystemContext}>
         <Component {...props} />
@@ -86,83 +86,63 @@ function withPostkitAstroProvider<TProps extends object>(
     );
   }
 
-  PostkitAstroBridge.displayName = `PostkitAstro${Component.displayName ?? Component.name}`;
-  return PostkitAstroBridge;
+  AstroBridge.displayName = Component.displayName ?? Component.name;
+  return AstroBridge;
 }
 
-export const PostkitAstroAudio =
-  withPostkitAstroProvider<PostkitAudioProps>(PostkitAudio);
-export const PostkitAstroAudienceBoundary =
-  withPostkitAstroProvider<PostkitAudienceBoundaryProps>(
-    PostkitAudienceBoundary,
-  );
-export const PostkitAstroAside =
-  withPostkitAstroProvider<PostkitAsideProps>(PostkitAside);
-export const PostkitAstroAuthorCard =
-  withPostkitAstroProvider<PostkitAuthorCardProps>(PostkitAuthorCard);
-export const PostkitAstroCallToAction =
-  withPostkitAstroProvider<PostkitCallToActionProps>(PostkitCallToAction);
-export const PostkitAstroCallout =
-  withPostkitAstroProvider<PostkitCalloutProps>(PostkitCallout);
-export const PostkitAstroCardGrid =
-  withPostkitAstroProvider<PostkitCardGridProps>(PostkitCardGrid);
-export const PostkitAstroAppearsOn =
-  withPostkitAstroProvider<PostkitAppearsOnProps>(PostkitAppearsOn);
-export const PostkitAstroCarousel =
-  withPostkitAstroProvider<PostkitCarouselProps>(PostkitCarousel);
-export const PostkitAstroChart =
-  withPostkitAstroProvider<PostkitChartProps>(PostkitChart);
-export const PostkitAstroCodeBlock =
-  withPostkitAstroProvider<PostkitCodeBlockProps>(PostkitCodeBlock);
-export const PostkitAstroCodeGroup =
-  withPostkitAstroProvider<PostkitCodeGroupProps>(PostkitCodeGroup);
-export const PostkitAstroComparison =
-  withPostkitAstroProvider<PostkitComparisonProps>(PostkitComparison);
-export const PostkitAstroDiff =
-  withPostkitAstroProvider<PostkitDiffProps>(PostkitDiff);
-export const PostkitAstroFigure =
-  withPostkitAstroProvider<PostkitFigureProps>(PostkitFigure);
-export const PostkitAstroFileCard =
-  withPostkitAstroProvider<PostkitFileCardProps>(PostkitFileCard);
-export const PostkitAstroFileTree =
-  withPostkitAstroProvider<PostkitFileTreeProps>(PostkitFileTree);
-export const PostkitAstroDisclosure =
-  withPostkitAstroProvider<PostkitDisclosureProps>(PostkitDisclosure);
-export const PostkitAstroGallery =
-  withPostkitAstroProvider<PostkitGalleryProps>(PostkitGallery);
-export const PostkitAstroKeyTakeaway =
-  withPostkitAstroProvider<PostkitKeyTakeawayProps>(PostkitKeyTakeaway);
-export const PostkitAstroLinkPreview =
-  withPostkitAstroProvider<PostkitLinkPreviewProps>(PostkitLinkPreview);
-export const PostkitAstroNewsletterSignup =
-  withPostkitAstroProvider<PostkitNewsletterSignupProps>(
-    PostkitNewsletterSignup,
-  );
-export const PostkitAstroPoll =
-  withPostkitAstroProvider<PostkitPollProps>(PostkitPoll);
-export const PostkitAstroProductCard =
-  withPostkitAstroProvider<PostkitProductCardProps>(PostkitProductCard);
-export const PostkitAstroPullQuote =
-  withPostkitAstroProvider<PostkitPullQuoteProps>(PostkitPullQuote);
-export const PostkitAstroRelatedContent =
-  withPostkitAstroProvider<PostkitRelatedContentProps>(PostkitRelatedContent);
-export const PostkitAstroShareActions =
-  withPostkitAstroProvider<PostkitShareActionsProps>(PostkitShareActions);
-export const PostkitAstroSeriesNavigation =
-  withPostkitAstroProvider<PostkitSeriesNavigationProps>(
-    PostkitSeriesNavigation,
-  );
-export const PostkitAstroSocialPost =
-  withPostkitAstroProvider<PostkitSocialPostProps>(PostkitSocialPost);
-export const PostkitAstroSteps =
-  withPostkitAstroProvider<PostkitStepsProps>(PostkitSteps);
-export const PostkitAstroSponsorBlock =
-  withPostkitAstroProvider<PostkitSponsorBlockProps>(PostkitSponsorBlock);
-export const PostkitAstroStat =
-  withPostkitAstroProvider<PostkitStatProps>(PostkitStat);
-export const PostkitAstroTabs =
-  withPostkitAstroProvider<PostkitTabsProps>(PostkitTabs);
-export const PostkitAstroTerminal =
-  withPostkitAstroProvider<PostkitTerminalProps>(PostkitTerminal);
-export const PostkitAstroVideo =
-  withPostkitAstroProvider<PostkitVideoProps>(PostkitVideo);
+export const Audio = withPostkitAstroProvider<AudioProps>(ReactAudio);
+export const AudienceBoundary = withPostkitAstroProvider<AudienceBoundaryProps>(
+  ReactAudienceBoundary,
+);
+export const Aside = withPostkitAstroProvider<AsideProps>(ReactAside);
+export const AuthorCard =
+  withPostkitAstroProvider<AuthorCardProps>(ReactAuthorCard);
+export const CallToAction =
+  withPostkitAstroProvider<CallToActionProps>(ReactCallToAction);
+export const Callout = withPostkitAstroProvider<CalloutProps>(ReactCallout);
+export const CardGrid = withPostkitAstroProvider<CardGridProps>(ReactCardGrid);
+export const AppearsOn =
+  withPostkitAstroProvider<AppearsOnProps>(ReactAppearsOn);
+export const Carousel = withPostkitAstroProvider<CarouselProps>(ReactCarousel);
+export const Chart = withPostkitAstroProvider<ChartProps>(ReactChart);
+export const CodeBlock =
+  withPostkitAstroProvider<CodeBlockProps>(ReactCodeBlock);
+export const CodeGroup =
+  withPostkitAstroProvider<CodeGroupProps>(ReactCodeGroup);
+export const Comparison =
+  withPostkitAstroProvider<ComparisonProps>(ReactComparison);
+export const Diff = withPostkitAstroProvider<DiffProps>(ReactDiff);
+export const Figure = withPostkitAstroProvider<FigureProps>(ReactFigure);
+export const FileCard = withPostkitAstroProvider<FileCardProps>(ReactFileCard);
+export const FileTree = withPostkitAstroProvider<FileTreeProps>(ReactFileTree);
+export const Disclosure =
+  withPostkitAstroProvider<DisclosureProps>(ReactDisclosure);
+export const Gallery = withPostkitAstroProvider<GalleryProps>(ReactGallery);
+export const KeyTakeaway =
+  withPostkitAstroProvider<KeyTakeawayProps>(ReactKeyTakeaway);
+export const LinkPreview =
+  withPostkitAstroProvider<LinkPreviewProps>(ReactLinkPreview);
+export const NewsletterSignup = withPostkitAstroProvider<NewsletterSignupProps>(
+  ReactNewsletterSignup,
+);
+export const Poll = withPostkitAstroProvider<PollProps>(ReactPoll);
+export const ProductCard =
+  withPostkitAstroProvider<ProductCardProps>(ReactProductCard);
+export const PullQuote =
+  withPostkitAstroProvider<PullQuoteProps>(ReactPullQuote);
+export const RelatedContent =
+  withPostkitAstroProvider<RelatedContentProps>(ReactRelatedContent);
+export const ShareActions =
+  withPostkitAstroProvider<ShareActionsProps>(ReactShareActions);
+export const SeriesNavigation = withPostkitAstroProvider<SeriesNavigationProps>(
+  ReactSeriesNavigation,
+);
+export const SocialPost =
+  withPostkitAstroProvider<SocialPostProps>(ReactSocialPost);
+export const Steps = withPostkitAstroProvider<StepsProps>(ReactSteps);
+export const SponsorBlock =
+  withPostkitAstroProvider<SponsorBlockProps>(ReactSponsorBlock);
+export const Stat = withPostkitAstroProvider<StatProps>(ReactStat);
+export const Tabs = withPostkitAstroProvider<TabsProps>(ReactTabs);
+export const Terminal = withPostkitAstroProvider<TerminalProps>(ReactTerminal);
+export const Video = withPostkitAstroProvider<VideoProps>(ReactVideo);

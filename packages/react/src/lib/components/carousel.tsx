@@ -3,7 +3,8 @@
 import {
   Box,
   Button,
-  Flex,
+  Carousel as ChakraCarousel,
+  Heading,
   Image,
   Link,
   Text,
@@ -11,7 +12,7 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { Children, type ReactNode, useId, useState } from 'react';
+import { Children, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -24,8 +25,9 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
-export interface PostkitCarouselItem {
+export interface CarouselItem {
   readonly id?: string;
   readonly image?: {
     readonly src: string;
@@ -36,8 +38,8 @@ export interface PostkitCarouselItem {
   readonly href?: string;
 }
 
-export type PostkitCarouselProps = {
-  readonly items?: string | readonly PostkitCarouselItem[];
+export type CarouselProps = {
+  readonly items?: string | readonly CarouselItem[];
   readonly children?: ReactNode;
   readonly label?: string;
   readonly initialIndex?: number | string;
@@ -53,7 +55,8 @@ function parsedInitialIndex(value: number | string | undefined): number {
 }
 
 function itemContent(
-  item: PostkitCarouselItem,
+  item: CarouselItem,
+  size: CarouselProps['size'],
   styles: PostkitSlotStyles<PostkitCarouselSlot>,
   slotStyles: PostkitSlotStyles<PostkitCarouselSlot> | undefined,
   classNames: Partial<Record<PostkitCarouselSlot, string>>,
@@ -74,13 +77,18 @@ function itemContent(
           css={[styles.content, slotStyles?.content]}
         >
           {item.title ? (
-            <Text
+            <Heading
               as="h3"
+              size={postkitHeadingSize(size, {
+                sm: 'md',
+                md: 'lg',
+                lg: 'xl',
+              })}
               className={classNames.title}
               css={[styles.title, slotStyles?.title]}
             >
               {item.title}
-            </Text>
+            </Heading>
           ) : null}
           {item.description ? (
             <Text
@@ -112,7 +120,7 @@ function itemContent(
   );
 }
 
-export function PostkitCarousel({
+export function Carousel({
   items,
   children,
   label = 'Article carousel',
@@ -122,8 +130,7 @@ export function PostkitCarousel({
   size,
   variant,
   unstyled,
-}: PostkitCarouselProps) {
-  const generatedId = useId();
+}: CarouselProps) {
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.carousel,
     postkitCarouselRecipe,
@@ -137,8 +144,8 @@ export function PostkitCarousel({
     ...restRootProps
   } = rootProps ?? {};
   const itemSlides = items
-    ? parseJsonProp<PostkitCarouselItem>(items, 'Carousel items').map((item) =>
-        itemContent(item, styles, slotStyles, recipe.classNameMap),
+    ? parseJsonProp<CarouselItem>(items, 'Carousel items').map((item) =>
+        itemContent(item, size, styles, slotStyles, recipe.classNameMap),
       )
     : [];
   const childSlides = Children.toArray(children);
@@ -147,9 +154,6 @@ export function PostkitCarousel({
     parsedInitialIndex(initialIndex),
     Math.max(0, slides.length - 1),
   );
-  const [selectedIndex, setSelectedIndex] = useState(startingIndex);
-  const boundedIndex = Math.min(selectedIndex, Math.max(0, slides.length - 1));
-  const statusId = `${generatedId}-status`;
 
   if (slides.length === 0) {
     return (
@@ -173,71 +177,64 @@ export function PostkitCarousel({
     );
   }
 
-  const selectPrevious = () => {
-    setSelectedIndex((current) => {
-      const boundedCurrent = Math.min(current, slides.length - 1);
-      return boundedCurrent <= 0 ? slides.length - 1 : boundedCurrent - 1;
-    });
-  };
-  const selectNext = () => {
-    setSelectedIndex((current) => {
-      const boundedCurrent = Math.min(current, slides.length - 1);
-      return boundedCurrent >= slides.length - 1 ? 0 : boundedCurrent + 1;
-    });
-  };
+  const carouselRootProps = restRootProps as Omit<
+    ChakraCarousel.RootProps,
+    'children' | 'defaultPage' | 'slideCount'
+  >;
 
   return (
-    <Box
+    <ChakraCarousel.Root
       data-postkit-component="Carousel"
-      role="region"
-      aria-roledescription="carousel"
       aria-label={label}
-      {...restRootProps}
+      {...carouselRootProps}
+      allowMouseDrag
+      defaultPage={startingIndex}
+      loop
+      slideCount={slides.length}
+      spacing="0px"
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Box
-        role="group"
-        aria-roledescription="slide"
-        aria-label={`${boundedIndex + 1} of ${slides.length}`}
-        className={recipe.classNameMap.slide}
-        css={[styles.slide, slotStyles?.slide]}
-      >
-        {slides[boundedIndex]}
-      </Box>
-      <Flex
+      <ChakraCarousel.ItemGroup>
+        {slides.map((slide, index) => (
+          <ChakraCarousel.Item
+            index={index}
+            className={recipe.classNameMap.slide}
+            css={[styles.slide, slotStyles?.slide]}
+            key={index}
+          >
+            {slide}
+          </ChakraCarousel.Item>
+        ))}
+      </ChakraCarousel.ItemGroup>
+      <ChakraCarousel.Control
         className={recipe.classNameMap.controls}
         css={[styles.controls, slotStyles?.controls]}
       >
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={selectPrevious}
-          aria-describedby={statusId}
+        <ChakraCarousel.PrevTrigger
+          asChild
           className={recipe.classNameMap.previousTrigger}
           css={[styles.previousTrigger, slotStyles?.previousTrigger]}
         >
-          Previous
-        </Button>
-        <Text
-          id={statusId}
+          <Button size="sm" variant="outline">
+            Previous
+          </Button>
+        </ChakraCarousel.PrevTrigger>
+        <ChakraCarousel.ProgressText
           aria-live="polite"
           className={recipe.classNameMap.status}
           css={[styles.status, slotStyles?.status]}
-        >
-          {boundedIndex + 1} / {slides.length}
-        </Text>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={selectNext}
-          aria-describedby={statusId}
+        />
+        <ChakraCarousel.NextTrigger
+          asChild
           className={recipe.classNameMap.nextTrigger}
           css={[styles.nextTrigger, slotStyles?.nextTrigger]}
         >
-          Next
-        </Button>
-      </Flex>
-    </Box>
+          <Button size="sm" variant="outline">
+            Next
+          </Button>
+        </ChakraCarousel.NextTrigger>
+      </ChakraCarousel.Control>
+    </ChakraCarousel.Root>
   );
 }

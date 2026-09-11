@@ -14,6 +14,8 @@ export interface SiteShellProps {
 
 const navigation = [
   { href: '/', label: 'Home' },
+  { href: '/docs', label: 'Docs' },
+  { href: '/components', label: 'Components' },
   { href: '/changelog', label: 'Changelog' },
 ] as const;
 
@@ -49,13 +51,17 @@ export function SiteShell({ children }: SiteShellProps) {
               </NextLink>
             </ChakraLink>
 
-            <Flex align="center" gap={{ base: '4', md: '7' }}>
+            <Flex align="center" gap={{ base: '3', md: '7' }}>
               <Box as="nav" aria-label="Primary">
-                <Flex gap={{ base: '4', md: '6' }}>
+                <Flex gap={{ base: '3', md: '6' }}>
                   {navigation.map((item) => (
                     <ChakraLink
                       asChild
                       color="blackAlpha.700"
+                      display={{
+                        base: item.href === '/' ? 'none' : 'inline-flex',
+                        sm: 'inline-flex',
+                      }}
                       fontSize="sm"
                       fontWeight="600"
                       key={item.href}

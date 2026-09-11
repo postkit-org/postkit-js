@@ -1,7 +1,7 @@
 ---
-import type { PostkitFileCardProps } from '@postkit/react';
-import { PostkitAstroFileCard } from '../lib/react-bridges';
-type Props = PostkitFileCardProps;
+import type { FileCardProps } from '@postkit/react';
+import { FileCard } from '../lib/react-bridges';
+type Props = FileCardProps;
 const props = Astro.props;
 ---
-<PostkitAstroFileCard {...props} />
+<FileCard {...props} />

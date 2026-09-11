@@ -1,0 +1,25 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "jsx": "react-jsx",
+    "lib": ["es2022", "dom"],
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": [
+    "email/**/*.ts",
+    "email/**/*.tsx",
+    "next/**/*.ts",
+    "next/**/*.tsx",
+    "react-router/**/*.ts",
+    "react-router/**/*.tsx",
+    "tanstack-router/**/*.ts",
+    "tanstack-router/**/*.tsx",
+    "unfurl-server/**/*.ts"
+  ]
+}

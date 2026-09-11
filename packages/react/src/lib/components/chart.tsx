@@ -3,6 +3,8 @@
 import {
   Box,
   Flex,
+  Heading,
+  Table,
   Text,
   chakra,
   type BoxProps,
@@ -22,21 +24,22 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { postkitHeadingSize } from './heading-size.js';
 
-export interface PostkitChartDatum {
+export interface ChartDatum {
   readonly label: string;
   readonly [key: string]: string | number;
 }
 
-export interface PostkitChartSeries {
+export interface ChartSeries {
   readonly key: string;
   readonly label?: string;
   readonly color?: string;
 }
 
-export type PostkitChartProps = {
-  readonly data: string | readonly PostkitChartDatum[];
-  readonly series?: string | readonly PostkitChartSeries[];
+export type ChartProps = {
+  readonly data: string | readonly ChartDatum[];
+  readonly series?: string | readonly ChartSeries[];
   readonly title: string;
   readonly description?: string;
   readonly type?: 'bar' | 'line';
@@ -53,14 +56,12 @@ const DEFAULT_COLORS = [
   'var(--chakra-colors-orange-500, #dd6b20)',
 ] as const;
 
-function numericValue(datum: PostkitChartDatum, key: string): number {
+function numericValue(datum: ChartDatum, key: string): number {
   const value = datum[key];
   return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }
 
-function inferredSeries(
-  data: readonly PostkitChartDatum[],
-): PostkitChartSeries[] {
+function inferredSeries(data: readonly ChartDatum[]): ChartSeries[] {
   const first = data[0];
   if (!first) {
     return [];
@@ -75,7 +76,7 @@ function shouldShowTable(value: boolean | string | undefined): boolean {
   return value === true || value === 'true';
 }
 
-export function PostkitChart({
+export function Chart({
   data,
   series,
   title,
@@ -87,7 +88,7 @@ export function PostkitChart({
   size,
   variant,
   unstyled,
-}: PostkitChartProps) {
+}: ChartProps) {
   const titleId = `${useId()}-title`;
   const descriptionId = `${titleId}-description`;
   const recipe = usePostkitSlotRecipe(
@@ -102,9 +103,9 @@ export function PostkitChart({
     className: rootClassName,
     ...restRootProps
   } = rootProps ?? {};
-  const records = parseJsonProp<PostkitChartDatum>(data, 'Chart data');
+  const records = parseJsonProp<ChartDatum>(data, 'Chart data');
   const configuredSeries = series
-    ? parseJsonProp<PostkitChartSeries>(series, 'Chart series')
+    ? parseJsonProp<ChartSeries>(series, 'Chart series')
     : inferredSeries(records);
   const width = 640;
   const height = 320;
@@ -131,14 +132,15 @@ export function PostkitChart({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <Text
+      <Heading
         id={titleId}
         as="h3"
+        size={postkitHeadingSize(size, { sm: 'md', md: 'lg', lg: 'xl' })}
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
         {title}
-      </Text>
+      </Heading>
       {description ? (
         <Text
           id={descriptionId}
@@ -325,54 +327,55 @@ export function PostkitChart({
           className={recipe.classNameMap.tableContainer}
           css={[styles.tableContainer, slotStyles?.tableContainer]}
         >
-          <chakra.table
+          <Table.Root
+            size={size ?? 'md'}
             className={recipe.classNameMap.table}
             css={[styles.table, slotStyles?.table]}
           >
-            <thead>
-              <tr>
-                <chakra.th
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader
                   textAlign="left"
                   className={recipe.classNameMap.headerCell}
                   css={[styles.headerCell, slotStyles?.headerCell]}
                 >
                   Label
-                </chakra.th>
+                </Table.ColumnHeader>
                 {configuredSeries.map((item) => (
-                  <chakra.th
+                  <Table.ColumnHeader
                     key={item.key}
                     textAlign="right"
                     className={recipe.classNameMap.headerCell}
                     css={[styles.headerCell, slotStyles?.headerCell]}
                   >
                     {item.label ?? item.key}
-                  </chakra.th>
+                  </Table.ColumnHeader>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
               {records.map((datum) => (
-                <tr key={datum.label}>
-                  <chakra.th
+                <Table.Row key={datum.label}>
+                  <Table.ColumnHeader
                     scope="row"
                     className={recipe.classNameMap.rowHeader}
                     css={[styles.rowHeader, slotStyles?.rowHeader]}
                   >
                     {datum.label}
-                  </chakra.th>
+                  </Table.ColumnHeader>
                   {configuredSeries.map((item) => (
-                    <chakra.td
+                    <Table.Cell
                       key={item.key}
                       className={recipe.classNameMap.dataCell}
                       css={[styles.dataCell, slotStyles?.dataCell]}
                     >
                       {numericValue(datum, item.key)}
-                    </chakra.td>
+                    </Table.Cell>
                   ))}
-                </tr>
+                </Table.Row>
               ))}
-            </tbody>
-          </chakra.table>
+            </Table.Body>
+          </Table.Root>
         </Box>
       ) : null}
     </Box>

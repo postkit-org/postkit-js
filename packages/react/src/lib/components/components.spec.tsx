@@ -1,83 +1,155 @@
 // @vitest-environment node
 
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import {
+  createSystem,
+  defaultConfig,
+  defaultSystem,
+  defineSlotRecipe,
+} from '@chakra-ui/react';
 import { createPostkitSocialPostSnapshot } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitAppearsOn } from './appears-on.js';
-import { PostkitAudio } from './audio.js';
+import { AppearsOn } from './appears-on.js';
+import { Audio } from './audio.js';
 import {
-  PostkitAside,
-  PostkitCallout,
-  PostkitCardGrid,
-  PostkitDisclosure,
-  PostkitGallery,
-  PostkitSteps,
-  PostkitTabs,
+  Aside,
+  Callout,
+  CardGrid,
+  Disclosure,
+  Gallery,
+  Steps,
+  Tabs,
 } from './article-structure.js';
-import { PostkitAuthorCard } from './author-card.js';
-import { PostkitCallToAction } from './call-to-action.js';
-import { PostkitCarousel } from './carousel.js';
-import { PostkitChart } from './chart.js';
-import { PostkitFigure } from './figure.js';
-import { PostkitLinkPreview } from './link-preview.js';
-import { PostkitNewsletterSignup } from './newsletter-signup.js';
+import { AuthorCard } from './author-card.js';
+import { CallToAction } from './call-to-action.js';
+import { Carousel } from './carousel.js';
+import { Chart } from './chart.js';
+import { Figure } from './figure.js';
+import { LinkPreview } from './link-preview.js';
+import { NewsletterSignup } from './newsletter-signup.js';
 import { PostkitProvider } from '../provider.js';
-import { PostkitShareActions } from './share-actions.js';
-import { PostkitSocialPost } from './social-post.js';
-import { PostkitVideo } from './video.js';
+import { ShareActions } from './share-actions.js';
+import { SocialPost } from './social-post.js';
+import { Video } from './video.js';
 import {
-  PostkitCodeBlock,
-  PostkitCodeGroup,
-  PostkitDiff,
-  PostkitFileCard,
-  PostkitFileTree,
-  PostkitTerminal,
+  CodeBlock,
+  CodeGroup,
+  Diff,
+  FileCard,
+  FileTree,
+  Terminal,
 } from './technical-content.js';
 import {
-  PostkitAudienceBoundary,
-  PostkitComparison,
-  PostkitKeyTakeaway,
-  PostkitPoll,
-  PostkitProductCard,
-  PostkitPullQuote,
-  PostkitRelatedContent,
-  PostkitSeriesNavigation,
-  PostkitSponsorBlock,
-  PostkitStat,
+  AudienceBoundary,
+  Comparison,
+  KeyTakeaway,
+  Poll,
+  ProductCard,
+  PullQuote,
+  RelatedContent,
+  SeriesNavigation,
+  SponsorBlock,
+  Stat,
 } from './publication.js';
 
 function render(component: React.ReactNode): string {
   return renderToStaticMarkup(
-    <ChakraProvider value={defaultSystem}>{component}</ChakraProvider>,
+    <PostkitProvider system={defaultSystem}>{component}</PostkitProvider>,
+  );
+}
+
+function renderWithSystem(
+  component: React.ReactNode,
+  system: Parameters<typeof PostkitProvider>[0]['system'],
+): string {
+  return renderToStaticMarkup(
+    <PostkitProvider system={system}>{component}</PostkitProvider>,
   );
 }
 
 describe('Postkit article components', () => {
+  it('inherits host recipes through composed multipart primitives', () => {
+    const system = createSystem(defaultConfig, {
+      theme: {
+        slotRecipes: {
+          alert: defineSlotRecipe({
+            className: 'host-alert',
+            slots: ['root', 'indicator', 'content', 'title', 'description'],
+          }),
+          avatar: defineSlotRecipe({
+            className: 'host-avatar',
+            slots: ['root', 'image', 'fallback'],
+          }),
+          card: defineSlotRecipe({
+            className: 'host-card',
+            slots: ['root', 'header', 'body', 'footer', 'title', 'description'],
+          }),
+          carousel: defineSlotRecipe({
+            className: 'host-carousel',
+            slots: [
+              'root',
+              'itemGroup',
+              'item',
+              'control',
+              'nextTrigger',
+              'prevTrigger',
+              'progressText',
+            ],
+          }),
+          list: defineSlotRecipe({
+            className: 'host-list',
+            slots: ['root', 'item', 'indicator'],
+          }),
+        },
+      },
+    });
+    const markup = renderWithSystem(
+      <>
+        <AuthorCard name="Ada Lovelace" />
+        <Callout title="Host alert">Host-owned presentation.</Callout>
+        <ProductCard title="Field guide" href="/guide" />
+        <Carousel items={[{ title: 'First' }, { title: 'Second' }]} />
+        <Steps items={[{ title: 'Install' }, { title: 'Render' }]} />
+      </>,
+      system,
+    );
+
+    expect(markup).toContain('host-avatar__root');
+    expect(markup).toContain('host-card__root');
+    expect(markup).toContain('host-card__body');
+    expect(markup).toContain('host-alert__root');
+    expect(markup).toContain('host-alert__content');
+    expect(markup).toContain('host-carousel__root');
+    expect(markup).toContain('host-carousel__item');
+    expect(markup).toContain('host-carousel__control');
+    expect(markup).toContain('host-list__root');
+    expect(markup).toContain('host-list__item');
+  });
+
   it('server-renders publication and audience components', () => {
     const pullQuote = render(
-      <PostkitPullQuote
+      <PullQuote
         quote="Publishing is a process."
         attribution="Ada"
         cite="Field Notes"
       />,
     );
     const takeaway = render(
-      <PostkitKeyTakeaway
+      <KeyTakeaway
         items={['Keep source portable.', 'Preview the destination.']}
       />,
     );
     const stat = render(
-      <PostkitStat value="98%" label="Reader completion" trend="+4%" />,
+      <Stat value="98%" label="Reader completion" trend="+4%" />,
     );
     const comparison = render(
-      <PostkitComparison
+      <Comparison
         columns={['Free', 'Pro']}
         items={[{ label: 'Previews', values: [true, true] }]}
       />,
     );
     const poll = render(
-      <PostkitPoll
+      <Poll
         question="Which format?"
         options={[
           { id: 'md', label: 'Markdown', votes: 8 },
@@ -86,7 +158,7 @@ describe('Postkit article components', () => {
       />,
     );
     const product = render(
-      <PostkitProductCard
+      <ProductCard
         title="Field guide"
         href="/shop/guide"
         price="$20"
@@ -94,12 +166,12 @@ describe('Postkit article components', () => {
       />,
     );
     const related = render(
-      <PostkitRelatedContent
+      <RelatedContent
         items={[{ title: 'Rendering guide', href: '/rendering' }]}
       />,
     );
     const series = render(
-      <PostkitSeriesNavigation
+      <SeriesNavigation
         title="Portable publishing"
         current={2}
         total={4}
@@ -108,37 +180,55 @@ describe('Postkit article components', () => {
       />,
     );
     const sponsor = render(
-      <PostkitSponsorBlock
+      <SponsorBlock
         name="Example"
         message="Supports independent publishing."
         href="https://example.com"
       />,
     );
     const boundary = render(
-      <PostkitAudienceBoundary
+      <AudienceBoundary
         audience="members"
         authorized={false}
         fallback="Members only."
         showLabel
       >
         Protected content.
-      </PostkitAudienceBoundary>,
+      </AudienceBoundary>,
     );
 
     expect(pullQuote).toContain('<blockquote');
     expect(pullQuote).toContain('<cite');
+    expect(pullQuote).toContain('chakra-blockquote__root');
+    expect(pullQuote).toContain('chakra-blockquote__content');
     expect(takeaway).toContain('data-postkit-component="KeyTakeaway"');
+    expect(takeaway).toContain('chakra-list__root');
+    expect(takeaway).toContain('chakra-list__item');
+    expect(takeaway).toContain('chakra-alert__root');
     expect(stat).toContain('98%');
+    expect(stat).toContain('chakra-stat__root');
+    expect(stat).toContain('chakra-stat__valueText');
     expect(comparison).toContain('<table');
+    expect(comparison).toContain('chakra-table__root');
     expect(comparison).toContain('scope="row"');
     expect(poll).toContain('aria-pressed="false"');
+    expect(poll).toContain('chakra-button');
     expect(poll).toContain('80%');
+    expect(poll).toContain('chakra-progress__root');
+    expect(poll).toContain('chakra-progress__range');
     expect(product).toContain('rel="sponsored"');
     expect(product).toContain('4.8 out of 5 stars');
+    expect(product).toContain('chakra-rating-group__root');
+    expect(product).toContain('chakra-card__root');
+    expect(product).toContain('chakra-card__body');
+    expect(product).toContain('chakra-card__footer');
     expect(related).toContain('data-postkit-component="RelatedContent"');
+    expect(related).toContain('chakra-list__root');
+    expect(related).toContain('chakra-card__root');
     expect(series).toContain('rel="prev"');
     expect(series).toContain('rel="next"');
     expect(sponsor).toContain('aria-label="Sponsored by Example"');
+    expect(sponsor).toContain('chakra-card__root');
     expect(boundary).toContain('data-postkit-audience="members"');
     expect(boundary).toContain('Members only.');
     expect(boundary).not.toContain('Protected content.');
@@ -146,7 +236,7 @@ describe('Postkit article components', () => {
 
   it('server-renders technical content and file components', () => {
     const code = render(
-      <PostkitCodeBlock
+      <CodeBlock
         code={'const answer = 42;\nconsole.log(answer);'}
         language="typescript"
         filename="answer.ts"
@@ -154,7 +244,7 @@ describe('Postkit article components', () => {
       />,
     );
     const group = render(
-      <PostkitCodeGroup
+      <CodeGroup
         items={[
           { label: 'npm', code: 'npm install @postkit/react' },
           { label: 'pnpm', code: 'pnpm add @postkit/react' },
@@ -162,16 +252,16 @@ describe('Postkit article components', () => {
       />,
     );
     const terminal = render(
-      <PostkitTerminal command="npm test" output="65 tests passed" />,
+      <Terminal command="npm test" output="65 tests passed" />,
     );
     const diff = render(
-      <PostkitDiff
+      <Diff
         diff={'-const old = true\n+const current = true'}
         title="config.ts"
       />,
     );
     const tree = render(
-      <PostkitFileTree
+      <FileTree
         title="Project"
         items={[
           { path: 'src', type: 'folder' },
@@ -180,7 +270,7 @@ describe('Postkit article components', () => {
       />,
     );
     const file = render(
-      <PostkitFileCard
+      <FileCard
         href="/guide.pdf"
         name="guide.pdf"
         description="The printable field guide."
@@ -189,31 +279,48 @@ describe('Postkit article components', () => {
     );
 
     expect(code).toContain('data-postkit-component="CodeBlock"');
-    expect(code).toContain('data-highlighted="true"');
+    expect(code).toContain('code-block__root');
+    expect(code).toContain('postkit-code-block__title');
+    expect(code).toContain('postkit-code-block__filename');
+    expect(code).toContain('postkit-code-block__control');
+    expect(code).toContain('postkit-code-block__actions');
+    expect(code).toContain('postkit-code-block__copyTrigger');
+    expect(code).toContain('postkit-code-block__button');
+    expect(code).toContain('postkit-code-block__copyIndicator');
+    expect(code).toContain('postkit-code-block__content');
+    expect(code).toContain('postkit-code-block__scroller');
+    expect(code).toContain('postkit-code-block__codeText');
+    expect(code).toContain('postkit-code-block__lineContent');
+    expect(code).toContain('data-highlight=""');
+    expect(code).not.toContain('data-has-line-numbers=""');
     expect(code).toContain('aria-label="Copy code"');
+    expect(code).toContain('chakra-button');
     expect(group).toContain('data-postkit-component="CodeGroup"');
     expect(group).toContain('role="tablist"');
+    expect(group).toContain('chakra-tabs__trigger');
     expect(terminal).toContain('data-postkit-component="Terminal"');
     expect(terminal).toContain('<samp');
     expect(diff).toContain('data-diff="deletion"');
     expect(diff).toContain('data-diff="addition"');
     expect(tree).toContain('data-postkit-component="FileTree"');
+    expect(tree).toContain('chakra-list__root');
+    expect(tree).toContain('chakra-list__item');
+    expect(tree).toContain('chakra-heading');
     expect(tree).toContain('index.ts');
     expect(file).toContain('download=""');
     expect(file).toContain('2.4 MB');
+    expect(file).toContain('chakra-card__root');
   });
 
   it('server-renders foundational article structure components', () => {
     const callout = render(
-      <PostkitCallout title="Heads up" tone="warning">
+      <Callout title="Heads up" tone="warning">
         Back up the vault before continuing.
-      </PostkitCallout>,
+      </Callout>,
     );
-    const aside = render(
-      <PostkitAside title="Context">Related history.</PostkitAside>,
-    );
+    const aside = render(<Aside title="Context">Related history.</Aside>);
     const gallery = render(
-      <PostkitGallery
+      <Gallery
         title="Field work"
         columns={3}
         items={[
@@ -223,12 +330,12 @@ describe('Postkit article components', () => {
       />,
     );
     const disclosure = render(
-      <PostkitDisclosure summary="What is PostKit?" open>
+      <Disclosure summary="What is PostKit?" open>
         Article components for Markdown and MDX.
-      </PostkitDisclosure>,
+      </Disclosure>,
     );
     const tabs = render(
-      <PostkitTabs
+      <Tabs
         label="Install commands"
         items={[
           { label: 'npm', content: 'npm install @postkit/react' },
@@ -237,7 +344,7 @@ describe('Postkit article components', () => {
       />,
     );
     const steps = render(
-      <PostkitSteps
+      <Steps
         items={[
           { title: 'Install', description: 'Add the package.' },
           { title: 'Render', description: 'Map the components.' },
@@ -245,7 +352,7 @@ describe('Postkit article components', () => {
       />,
     );
     const cards = render(
-      <PostkitCardGrid
+      <CardGrid
         columns={2}
         items={[
           {
@@ -259,6 +366,8 @@ describe('Postkit article components', () => {
 
     expect(callout).toContain('data-postkit-component="Callout"');
     expect(callout).toContain('data-postkit-tone="warning"');
+    expect(callout).toContain('chakra-alert__root');
+    expect(callout).toContain('chakra-alert__content');
     expect(aside).toContain('data-postkit-component="Aside"');
     expect(gallery).toContain('data-postkit-component="Gallery"');
     expect(gallery).toContain('<figure');
@@ -267,14 +376,19 @@ describe('Postkit article components', () => {
     expect(disclosure).toContain('<summary');
     expect(tabs).toContain('role="tablist"');
     expect(tabs).toContain('role="tabpanel"');
+    expect(tabs).toContain('chakra-tabs__trigger');
     expect(steps).toContain('<ol');
+    expect(steps).toContain('chakra-list__root');
+    expect(steps).toContain('chakra-list__item');
     expect(cards).toContain('postkit-card-grid__card');
+    expect(cards).toContain('chakra-card__root');
+    expect(cards).toContain('chakra-card__body');
     expect(cards).toContain('href="/guide"');
   });
 
   it('server-renders standard article conversion and identity blocks', () => {
     const author = render(
-      <PostkitAuthorCard
+      <AuthorCard
         name="Ada Lovelace"
         role="Contributing editor"
         avatarSrc="/ada.jpg"
@@ -284,7 +398,7 @@ describe('Postkit article components', () => {
       />,
     );
     const cta = render(
-      <PostkitCallToAction
+      <CallToAction
         eyebrow="Continue reading"
         title="Explore the field guide"
         description="A durable reference for the full workflow."
@@ -301,7 +415,7 @@ describe('Postkit article components', () => {
           hiddenFields: { source: 'postkit' },
         }}
       >
-        <PostkitNewsletterSignup
+        <NewsletterSignup
           title="Get the field notes"
           list="weekly"
           privacy="Unsubscribe at any time."
@@ -313,20 +427,30 @@ describe('Postkit article components', () => {
     expect(author).toContain('aria-label="About Ada Lovelace"');
     expect(author).toContain('rel="author"');
     expect(author).toContain('postkit-author-card__links');
+    expect(author).toContain('chakra-list__root');
+    expect(author).toContain('chakra-heading');
+    expect(author).toContain('chakra-avatar__root');
+    expect(author).toContain('chakra-avatar__image');
+    expect(author).toContain('chakra-card__root');
     expect(cta).toContain('data-postkit-component="CallToAction"');
     expect(cta).toContain('<h2');
     expect(cta).toContain('postkit-call-to-action__primaryAction');
+    expect(cta).toContain('chakra-button');
     expect(newsletter).toContain(
       'action="https://newsletter.example/subscribe"',
     );
     expect(newsletter).toContain('name="list" value="weekly"');
     expect(newsletter).toContain('name="source" value="postkit"');
     expect(newsletter).toContain('data-postkit-configured="true"');
+    expect(newsletter).toContain('chakra-input');
+    expect(newsletter).toContain('chakra-button');
+    expect(newsletter).toContain('chakra-field__root');
+    expect(newsletter).toContain('chakra-field__label');
   });
 
   it('server-renders a labeled carousel from literal JSON', () => {
     const markup = render(
-      <PostkitCarousel
+      <Carousel
         label="Field notes"
         items={JSON.stringify([
           {
@@ -347,6 +471,10 @@ describe('Postkit article components', () => {
     expect(markup).toContain('postkit-carousel__root');
     expect(markup).toContain('postkit-carousel__slide');
     expect(markup).toContain('postkit-carousel__controls');
+    expect(markup).toContain('carousel__root');
+    expect(markup).toContain('carousel__itemGroup');
+    expect(markup).toContain('carousel__item');
+    expect(markup).toContain('carousel__control');
     expect(markup).toContain('aria-roledescription="carousel"');
     expect(markup).toContain('aria-label="Field notes"');
     expect(markup).toContain('alt="A mountain ridge"');
@@ -355,7 +483,7 @@ describe('Postkit article components', () => {
 
   it('server-renders native video and audio controls with fallbacks', () => {
     const video = render(
-      <PostkitVideo
+      <Video
         src="/interview.mp4"
         title="Interview"
         caption="Recorded in New York."
@@ -370,7 +498,7 @@ describe('Postkit article components', () => {
       />,
     );
     const audio = render(
-      <PostkitAudio
+      <Audio
         src="/episode.mp3"
         title="Episode 12"
         caption="A conversation about durable publishing."
@@ -380,6 +508,7 @@ describe('Postkit article components', () => {
     expect(video).toContain('data-postkit-component="Video"');
     expect(video).toContain('postkit-video__frame');
     expect(video).toContain('postkit-video__player');
+    expect(video).toContain('chakra-aspect-ratio');
     expect(video).toContain('<video');
     expect(video).toContain('controls=""');
     expect(video).toContain('srcLang="en"');
@@ -391,7 +520,7 @@ describe('Postkit article components', () => {
 
   it('server-renders an accessible SVG chart and source table', () => {
     const markup = render(
-      <PostkitChart
+      <Chart
         title="Quarterly revenue"
         description="Revenue increased in the second quarter."
         type="line"
@@ -408,13 +537,14 @@ describe('Postkit article components', () => {
     expect(markup).toContain('<svg');
     expect(markup).toContain('role="img"');
     expect(markup).toContain('<table');
+    expect(markup).toContain('chakra-table__root');
     expect(markup).toContain('Quarterly revenue');
     expect(markup).toContain('Q2, Revenue: 18');
   });
 
   it('server-renders a semantic responsive figure with caption and credit', () => {
     const markup = render(
-      <PostkitFigure
+      <Figure
         src="/studio.jpg"
         alt="A recording studio overlooking Manhattan"
         caption="The studio during the final recording session."
@@ -467,14 +597,14 @@ describe('Postkit article components', () => {
       provider: { id: 'opengraphs' },
     } as const;
     const small = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/article"
         metadata={metadata}
         size="sm"
       />,
     );
     const large = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/article"
         metadata={metadata}
         size="lg"
@@ -485,6 +615,8 @@ describe('Postkit article components', () => {
     expect(small).toContain('data-postkit-component="LinkPreview"');
     expect(small).toContain('data-postkit-provider="opengraphs"');
     expect(small).toContain('postkit-link-preview__siteRow');
+    expect(small).toContain('chakra-card__root');
+    expect(small).toContain('chakra-card__body');
     expect(small).toContain('A portable article');
     expect(large).toContain('postkit-link-preview__carousel');
     expect(large).toContain('data-postkit-component="Carousel"');
@@ -493,7 +625,7 @@ describe('Postkit article components', () => {
 
   it('renders native media and click-to-load isolated embeds without injecting provider HTML', () => {
     const media = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://example.com/watch"
         presentation="auto"
         metadata={{
@@ -515,7 +647,7 @@ describe('Postkit article components', () => {
       />,
     );
     const embed = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://video.example.com/watch"
         presentation="embed"
         activation="click"
@@ -553,7 +685,7 @@ describe('Postkit article components', () => {
 
   it('can immediately render a validated iframe source', () => {
     const markup = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://video.example.com/watch"
         presentation="embed"
         activation="immediate"
@@ -577,24 +709,26 @@ describe('Postkit article components', () => {
     expect(markup).toContain('src="https://player.example.com/embed/1"');
     expect(markup).toContain('sandbox="allow-scripts allow-same-origin');
     expect(markup).toContain('loading="lazy"');
+    expect(markup).toContain('chakra-aspect-ratio');
   });
 
   it('renders syndicated destinations and share actions from literal JSON', () => {
     const appearances = render(
-      <PostkitAppearsOn
+      <AppearsOn
         label="Also published on"
         presentation="badges"
         items='[{"service":"bluesky","url":"https://bsky.app/post/1","status":"published"},{"service":"medium","url":"https://medium.com/post/1"}]'
       />,
     );
     const actions = render(
-      <PostkitShareActions
+      <ShareActions
         url="https://example.com/article"
         services='["native","copy","email"]'
       />,
     );
 
     expect(appearances).toContain('data-postkit-component="AppearsOn"');
+    expect(appearances).toContain('chakra-list__root');
     expect(appearances).toContain('rel="syndication"');
     expect(appearances).toContain('Bluesky');
     expect(appearances).toContain('Medium');
@@ -632,7 +766,7 @@ describe('Postkit article components', () => {
       },
     } as const;
     const social = render(
-      <PostkitSocialPost
+      <SocialPost
         href="https://social.example/post/1"
         metadata={metadata}
         branding="full"
@@ -640,7 +774,7 @@ describe('Postkit article components', () => {
       />,
     );
     const delegated = render(
-      <PostkitLinkPreview
+      <LinkPreview
         href="https://social.example/post/1"
         metadata={metadata}
         presentation="auto"
@@ -652,6 +786,7 @@ describe('Postkit article components', () => {
     expect(social).toContain('Ada Example');
     expect(social).toContain('12 likes');
     expect(social).toContain('View original');
+    expect(social).toContain('chakra-card__root');
     expect(delegated).toContain('data-postkit-component="SocialPost"');
     expect(delegated).not.toContain('data-postkit-component="LinkPreview"');
   });
@@ -679,14 +814,14 @@ describe('Postkit article components', () => {
       cacheResult: 'hit',
     });
     const visible = render(
-      <PostkitSocialPost
+      <SocialPost
         href={metadata.url}
         metadata={snapshot}
         resolution="snapshot"
       />,
     );
     const hidden = render(
-      <PostkitSocialPost
+      <SocialPost
         href={metadata.url}
         metadata={JSON.stringify(snapshot)}
         resolution="snapshot"
@@ -708,14 +843,14 @@ describe('Postkit article components', () => {
   });
 
   it('rejects malformed JSON authoring props', () => {
-    expect(() =>
-      render(<PostkitChart title="Broken" data="not-json" />),
-    ).toThrow('Postkit Chart data must contain valid JSON.');
+    expect(() => render(<Chart title="Broken" data="not-json" />)).toThrow(
+      'Postkit Chart data must contain valid JSON.',
+    );
   });
 
   it('accepts recipe variants, an unstyled mode, and per-slot styles', () => {
     const markup = render(
-      <PostkitAudio
+      <Audio
         src="/episode.mp3"
         title="Custom player"
         size="lg"
@@ -725,11 +860,70 @@ describe('Postkit article components', () => {
       />,
     );
     const unstyledMarkup = render(
-      <PostkitAudio src="/episode.mp3" title="Unstyled player" unstyled />,
+      <Audio src="/episode.mp3" title="Unstyled player" unstyled />,
     );
 
     expect(markup).toContain('postkit-audio__root site-audio');
     expect(markup).toContain('var(--chakra-colors-red-500)');
     expect(unstyledMarkup).toMatch(/<figure[^>]*class="postkit-audio__root"/);
+  });
+
+  it('renders alternate article structure branches', () => {
+    const callouts = render(
+      <>
+        <Callout tone="tip" unstyled>
+          Tip
+        </Callout>
+        <Callout tone="caution">Caution</Callout>
+        <Callout tone="important">Important</Callout>
+        <Callout tone={'unknown' as never}>Fallback</Callout>
+      </>,
+    );
+    const gallery = render(
+      <Gallery
+        description="Supporting gallery copy."
+        items={[
+          {
+            src: '/linked.jpg',
+            alt: '',
+            href: '/full-size.jpg',
+          },
+        ]}
+        unstyled
+      />,
+    );
+    const disclosure = render(
+      <Disclosure summary="Details" unstyled>
+        Expanded content.
+      </Disclosure>,
+    );
+    const steps = render(<Steps items={[]} unstyled />);
+    const cards = render(
+      <CardGrid
+        title="Resources"
+        description="Choose a guide."
+        items={[
+          {
+            title: 'Visual guide',
+            image: { src: '/guide.jpg', alt: 'Guide cover' },
+            meta: 'PDF',
+          },
+        ]}
+        unstyled
+      />,
+    );
+
+    expect(callouts).toContain('data-postkit-tone="tip"');
+    expect(callouts).toContain('data-postkit-tone="caution"');
+    expect(callouts).toContain('data-postkit-tone="important"');
+    expect(callouts).toContain('data-postkit-tone="note"');
+    expect(gallery).toContain('Supporting gallery copy.');
+    expect(gallery).toContain('aria-label="Open image"');
+    expect(disclosure).toContain('Expanded content.');
+    expect(steps).toContain('<ol');
+    expect(cards).toContain('/guide.jpg');
+    expect(cards).toContain('Choose a guide.');
+    expect(cards).toContain('PDF');
+    expect(cards).not.toContain('Learn more');
   });
 });

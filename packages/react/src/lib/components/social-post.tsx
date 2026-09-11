@@ -7,8 +7,10 @@ import {
   type ResolvedSocialPost,
 } from '@postkit/unfurl';
 import {
+  AspectRatio,
   Box,
   Button,
+  Card,
   chakra,
   Flex,
   Image,
@@ -31,25 +33,25 @@ import {
   usePostkitSlotRecipe,
 } from '../recipes/types.js';
 import { postkitRecipeKeys } from '../theme.js';
+import { numericAspectRatio } from './aspect-ratio.js';
 
 const SocialPostIframe = chakra('iframe');
 const SocialPostQuote = chakra('blockquote');
 const SocialPostTime = chakra('time');
 
-export type PostkitSocialPostResolution =
-  'live' | 'snapshot' | 'snapshot-fallback';
+export type SocialPostResolution = 'live' | 'snapshot' | 'snapshot-fallback';
 
-export type PostkitSocialPostSnapshotInfo = 'auto' | 'visible' | 'hidden';
+export type SocialPostSnapshotInfo = 'auto' | 'visible' | 'hidden';
 
-export type PostkitSocialPostProps = {
+export type SocialPostProps = {
   readonly href: string;
   readonly metadata?:
     | string
     | PostkitSocialPostSnapshot
     | ResolvedLinkPreview
     | ResolvedSocialPost;
-  readonly resolution?: PostkitSocialPostResolution;
-  readonly snapshotInfo?: PostkitSocialPostSnapshotInfo;
+  readonly resolution?: SocialPostResolution;
+  readonly snapshotInfo?: SocialPostSnapshotInfo;
   readonly provider?: string;
   readonly service?: string;
   readonly authorName?: string;
@@ -66,7 +68,7 @@ export type PostkitSocialPostProps = {
 } & RecipeVariantProps<typeof postkitSocialPostRecipe> &
   UnstyledProp;
 
-function parsedMetadata(value: PostkitSocialPostProps['metadata']): {
+function parsedMetadata(value: SocialPostProps['metadata']): {
   readonly metadata?: ResolvedLinkPreview | ResolvedSocialPost;
   readonly snapshot?: PostkitSocialPostSnapshot;
 } {
@@ -112,7 +114,7 @@ function metricLabel(value: number | undefined, label: string) {
   return value === undefined ? undefined : `${value} ${label}`;
 }
 
-export function PostkitSocialPost({
+export function SocialPost({
   href,
   metadata: metadataValue,
   resolution: resolutionMode = 'snapshot-fallback',
@@ -135,7 +137,7 @@ export function PostkitSocialPost({
   size,
   variant,
   unstyled,
-}: PostkitSocialPostProps) {
+}: SocialPostProps) {
   const parsed = useMemo(() => parsedMetadata(metadataValue), [metadataValue]);
   const supplied = resolutionMode === 'live' ? undefined : parsed.metadata;
   const snapshot = resolutionMode === 'live' ? undefined : parsed.snapshot;
@@ -302,15 +304,10 @@ export function PostkitSocialPost({
   let primaryContent: ReactNode;
   if (resolvedPresentation === 'embed' && embed?.src) {
     primaryContent = (
-      <Box
+      <AspectRatio
+        ratio={numericAspectRatio(embed.aspectRatio)}
         className={recipe.classNameMap.embedFrame}
-        css={[
-          styles.embedFrame,
-          embed.aspectRatio
-            ? { aspectRatio: String(embed.aspectRatio) }
-            : undefined,
-          slotStyles?.embedFrame,
-        ]}
+        css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
         {embedActive ? (
           <SocialPostIframe
@@ -346,7 +343,7 @@ export function PostkitSocialPost({
             </Button>
           </Box>
         )}
-      </Box>
+      </AspectRatio>
     );
   } else {
     primaryContent = (
@@ -505,7 +502,7 @@ export function PostkitSocialPost({
   }
 
   return (
-    <Box
+    <Card.Root
       as="article"
       data-postkit-component="SocialPost"
       data-postkit-provider={provider ?? preview?.provider.id}
@@ -518,6 +515,6 @@ export function PostkitSocialPost({
     >
       {primaryContent}
       {snapshotProvenance}
-    </Box>
+    </Card.Root>
   );
 }

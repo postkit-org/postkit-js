@@ -1,21 +1,66 @@
 {
   "name": "postkit-js",
   "version": "0.0.0",
+  "description": "Portable web and email components, Markdown tooling, link metadata resolvers, and framework adapters",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "content-components",
+    "article-components",
+    "markdown",
+    "mdx",
+    "react",
+    "email",
+    "email-components",
+    "typescript",
+    "nextjs",
+    "astro",
+    "react-router",
+    "tanstack-router",
+    "link-preview",
+    "open-graph",
+    "unfurl"
+  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=11.13 <12"
+  },
+  "packageManager": "npm@11.13.0",
   "scripts": {
     "build": "nx run-many -t build --projects=tag:npm:public",
     "lint": "nx run-many -t lint --projects=tag:npm:public",
     "test": "nx run-many -t test --projects=tag:npm:public",
+    "coverage": "nx run-many -t test --projects=tag:npm:public --coverage",
     "typecheck": "nx run-many -t typecheck --projects=tag:npm:public",
+    "types:performance:check": "npm exec nx build @postkit/react && node tools/check-react-theme-types.mjs",
     "check": "nx run-many -t build lint test typecheck --projects=tag:npm:public",
+    "catalog:generate": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs",
+    "catalog:check": "npm exec nx build @postkit/react && node tools/generate-component-manifest.mjs --check",
+    "docs:api": "typedoc --options typedoc.json",
+    "docs:agents:generate": "node tools/generate-agent-docs.mjs",
+    "docs:generate": "npm run docs:api && npm run docs:agents:generate",
+    "docs:check": "typedoc --options typedoc.json --emit none && node tools/generate-agent-docs.mjs --check",
     "package:check": "node tools/check-public-packages.mjs",
     "consumer:check": "node tools/check-tarball-consumer.mjs",
+    "examples:check": "npm exec nx run @postkit/astro:build-fixture && tsc --project examples/tsconfig.json --noEmit && node examples/unfurl-server/smoke.mjs",
     "yalc:publish": "npm run build && node tools/yalc-public-packages.mjs publish",
     "yalc:push": "npm run build && node tools/yalc-public-packages.mjs push",
-    "site:dev": "nx dev site",
-    "site:build": "nx build site",
-    "site:check": "nx run-many -t lint build --projects=site",
-    "verify:release": "node tools/verify-release.mjs"
+    "yalc:test": "node --test tools/yalc-package-closure.test.mjs",
+    "site:dev": "npm run docs:generate && nx dev site",
+    "site:build": "npm run docs:generate && nx build site",
+    "site:check": "npm run docs:generate && nx run-many -t lint build --projects=site",
+    "verify:release": "node tools/verify-release.mjs",
+    "release:test": "node --test tools/publication-plan.test.mjs"
   },
   "private": true,
   "devDependencies": {
@@ -25,7 +70,7 @@
     "@chakra-ui/react": "^3.36.0",
     "@emotion/react": "^11.14.0",
     "@eslint/js": "^10.0.1",
-    "@next/eslint-plugin-next": "^16.1.6",
+    "@next/eslint-plugin-next": "^16.3.3",
     "@nx/eslint": "23.1.0",
     "@nx/eslint-plugin": "23.1.0",
     "@nx/js": "23.1.0",
@@ -48,10 +93,11 @@
     "astro": "^7.1.3",
     "cookie": "^2.0.1",
     "eslint": "~10.6.0",
+    "gray-matter": "^4.0.3",
     "jiti": "2.4.2",
     "jsdom": "^27.4.0",
     "jsonc-eslint-parser": "^2.1.0",
-    "next": "^16.1.6",
+    "next": "^16.3.3",
     "nx": "23.1.0",
     "prettier": "^3.8.1",
     "react": "19.1.0",
@@ -60,20 +106,25 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "tslib": "^2.3.0",
+    "typedoc": "^0.28.20",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.63.0",
     "verdaccio": "6.4.0",
     "vite": "^8.1.4",
     "vitest": "~4.1.10",
+    "yaml": "^2.9.0",
     "yalc": "1.0.0-pre.53"
   },
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "libs/*"
   ],
   "overrides": {
+    "js-yaml": "4.3.2",
+    "nanoid": "3.3.18",
     "postcss": "8.5.23",
-    "sharp": "0.35.3"
+    "sharp": "0.35.4"
   },
   "nx": {
     "includedScripts": [],

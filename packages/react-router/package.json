@@ -1,7 +1,19 @@
 {
   "name": "@postkit/react-router",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Postkit MDX components and link routing for React Router",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "react-router",
+    "markdown",
+    "mdx",
+    "routing",
+    "content-components"
+  ],
   "license": "MIT",
   "sideEffects": false,
   "repository": {
@@ -9,7 +21,7 @@
     "url": "git+https://github.com/postkit-org/postkit-js.git",
     "directory": "packages/react-router"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/react-router#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },
@@ -35,7 +47,7 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@postkit/react": "0.1.0",
+    "@postkit/react": "0.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": ">=7 <8"

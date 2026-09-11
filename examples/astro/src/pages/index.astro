@@ -1,0 +1,18 @@
+---
+import { postkitAstroComponents } from '@postkit/astro/components';
+import Article from '../content/article.mdx';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>PostKit Astro example</title>
+  </head>
+  <body>
+    <main>
+      <Article components={postkitAstroComponents} />
+    </main>
+  </body>
+</html>

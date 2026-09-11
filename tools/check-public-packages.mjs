@@ -9,8 +9,10 @@ const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const packagesRoot = join(workspaceRoot, 'packages');
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const expectedRepository = 'git+https://github.com/postkit-org/postkit-js.git';
-const expectedHomepage = 'https://github.com/postkit-org/postkit-js#readme';
 const expectedBugs = 'https://github.com/postkit-org/postkit-js/issues';
+const requiredKeywords = ['postkit', 'publishing', 'typescript'];
+const chakraPeerRange = '>=3.29.0 <4';
+const nxConfiguration = readJson(join(workspaceRoot, 'nx.json'));
 const publishIndex = new Map(
   publicPackages.map((packageName, index) => [packageName, index]),
 );
@@ -21,6 +23,18 @@ function readJson(path) {
 
 function fail(message) {
   throw new Error(message);
+}
+
+if (nxConfiguration.release?.projectsRelationship !== 'fixed') {
+  fail('Public PostKit packages must use a fixed Nx release relationship.');
+}
+if (
+  JSON.stringify(nxConfiguration.release?.projects) !==
+  JSON.stringify(publicPackages)
+) {
+  fail(
+    'The Nx release project order must exactly match tools/public-packages.json.',
+  );
 }
 
 const manifests = new Map();
@@ -51,6 +65,17 @@ for (const packageName of publicPackages) {
     fail(`${packageName} is unexpectedly private.`);
   if (manifest.license !== 'MIT')
     fail(`${packageName} must use the MIT license.`);
+  if (
+    !Array.isArray(manifest.keywords) ||
+    requiredKeywords.some((keyword) => !manifest.keywords.includes(keyword)) ||
+    new Set(manifest.keywords).size !== manifest.keywords.length
+  ) {
+    fail(
+      `${packageName} must provide unique npm keywords including ${requiredKeywords.join(
+        ', ',
+      )}.`,
+    );
+  }
   if (manifest.publishConfig?.access !== 'public') {
     fail(`${packageName} must publish with public access.`);
   }
@@ -60,7 +85,8 @@ for (const packageName of publicPackages) {
   if (
     manifest.repository?.url !== expectedRepository ||
     manifest.repository?.directory !== `packages/${directory}` ||
-    manifest.homepage !== expectedHomepage ||
+    manifest.homepage !==
+      `https://github.com/postkit-org/postkit-js/tree/main/packages/${directory}#readme` ||
     manifest.bugs?.url !== expectedBugs
   ) {
     fail(`${packageName} has incomplete repository or support metadata.`);
@@ -89,6 +115,16 @@ for (const packageName of publicPackages) {
         fail(`${dependencyName} must precede ${packageName} in publish order.`);
       }
     }
+  }
+
+  if (
+    manifest.peerDependencies?.['@chakra-ui/react'] &&
+    manifest.peerDependencies['@chakra-ui/react'] !== chakraPeerRange
+  ) {
+    fail(
+      `${packageName} must support @chakra-ui/react ${chakraPeerRange}, ` +
+        `received ${manifest.peerDependencies['@chakra-ui/react']}.`,
+    );
   }
 }
 
@@ -132,6 +168,12 @@ for (const packageName of publicPackages) {
     if (!paths.includes(required)) {
       fail(`${packageName} tarball is missing ${required}.`);
     }
+  }
+  if (
+    packageName === '@postkit/react' &&
+    !paths.includes('component-manifest.json')
+  ) {
+    fail('@postkit/react tarball is missing component-manifest.json.');
   }
   if (!paths.some((path) => path.endsWith('.js'))) {
     fail(`${packageName} tarball has no compiled JavaScript.`);

@@ -1,6 +1,6 @@
 import type { PostkitRemarkPluginId } from './plugin-capabilities.js';
 
-export const POSTKIT_DECLARATION_VERSION = 6 as const;
+export const POSTKIT_DECLARATION_VERSION = 7 as const;
 
 export type PostkitComponentName =
   | 'AppearsOn'
@@ -223,7 +223,7 @@ const technicalDeclarations = {
     name: 'CodeBlock',
     directive: 'postkit-code-block',
     description:
-      'Source code with filenames, line numbers, highlights, copying, and wrapping.',
+      'Source code rendered with Chakra CodeBlock, with adapter-driven syntax highlighting, filenames, line numbers, copying, and wrapping.',
     childMode: 'none',
     directiveRemarkPlugins: ['directives', 'postkit'],
     props: {
@@ -236,6 +236,11 @@ const technicalDeclarations = {
       language: {
         kind: 'string',
         description: 'The syntax-language identifier.',
+      },
+      colorScheme: {
+        kind: 'enum',
+        values: ['light', 'dark'],
+        description: 'The highlighting and semantic-token color scheme.',
       },
       filename: { kind: 'string', description: 'The displayed filename.' },
       highlightLines: {

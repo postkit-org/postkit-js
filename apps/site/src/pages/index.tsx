@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { PostkitCallout, PostkitCodeBlock } from '@postkit/react';
+import { Callout, CodeBlock } from '@postkit/react';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -110,31 +110,26 @@ export default function IndexPage({
               </Text>
               <Flex gap="3" flexWrap="wrap">
                 <Button asChild colorPalette="green" size="lg">
-                  <NextLink href="/changelog">Read the changelog</NextLink>
+                  <NextLink href="/docs/getting-started">Get started</NextLink>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <a
-                    href="https://github.com/postkit-org/postkit-js"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    View on GitHub
-                  </a>
+                  <NextLink href="/components">Explore components</NextLink>
                 </Button>
               </Flex>
             </Stack>
 
             <Box alignSelf="center" minW="0">
-              <PostkitCodeBlock
+              <CodeBlock
                 code={`import {
   PostkitProvider,
-  PostkitCallout,
+  postkitDefaultTheme,
+  Callout,
 } from '@postkit/react';
 
-<PostkitProvider>
-  <PostkitCallout title="Portable by default">
+<PostkitProvider preset={postkitDefaultTheme}>
+  <Callout title="Portable by default">
     Keep the content. Change the renderer.
-  </PostkitCallout>
+  </Callout>
 </PostkitProvider>`}
                 filename="article.tsx"
                 language="tsx"
@@ -185,11 +180,11 @@ export default function IndexPage({
             ))}
           </SimpleGrid>
 
-          <PostkitCallout title="Documentation is coming next" tone="note">
-            The site foundation is ready. The documentation area is being held
-            for the publishing toolchain that will join PostKit in a later
-            release.
-          </PostkitCallout>
+          <Callout title="Documentation" tone="tip">
+            Follow the guided setup, choose a framework adapter, or browse the
+            component and Markdown concepts in the{' '}
+            <NextLink href="/docs">PostKit documentation</NextLink>.
+          </Callout>
 
           {latestEntry ? (
             <Stack gap="6">

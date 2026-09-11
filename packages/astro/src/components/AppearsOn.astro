@@ -1,9 +1,9 @@
 ---
-import type { PostkitAppearsOnProps } from '@postkit/react';
-import { PostkitAstroAppearsOn } from '../lib/react-bridges';
+import type { AppearsOnProps } from '@postkit/react';
+import { AppearsOn } from '../lib/react-bridges';
 
-type Props = PostkitAppearsOnProps;
+type Props = AppearsOnProps;
 const props = Astro.props;
 ---
 
-<PostkitAstroAppearsOn {...props} />
+<AppearsOn {...props} />

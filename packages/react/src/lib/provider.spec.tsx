@@ -8,22 +8,39 @@ import type {
   ResolvedLinkPreview,
 } from '@postkit/unfurl';
 import {
+  type CodeBlockAdapter,
   createSystem,
   defaultConfig,
   useChakraContext,
 } from '@chakra-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { PostkitLinkPreview } from './components/link-preview.js';
-import { PostkitNewsletterSignup } from './components/newsletter-signup.js';
-import { PostkitShareActions } from './components/share-actions.js';
-import { PostkitSocialPost } from './components/social-post.js';
+import { LinkPreview } from './components/link-preview.js';
+import { NewsletterSignup } from './components/newsletter-signup.js';
+import { ShareActions } from './components/share-actions.js';
+import { SocialPost } from './components/social-post.js';
+import { CodeBlock } from './components/technical-content.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
-import { createPostkitTheme, postkitRecipeKeys } from './theme.js';
+import {
+  createPostkitTheme,
+  postkitDefaultTheme,
+  postkitRecipeKeys,
+} from './theme.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);
+globalThis.ResizeObserver ??= class ResizeObserver {
+  disconnect() {
+    return undefined;
+  }
+  observe() {
+    return undefined;
+  }
+  unobserve() {
+    return undefined;
+  }
+};
 
 function result(
   provider: string,
@@ -88,12 +105,249 @@ function ServiceProbe() {
 }
 
 describe('PostkitProvider', () => {
+  it('supplies a host syntax-highlighting adapter to code blocks', () => {
+    const adapter: CodeBlockAdapter = {
+      loadContextSync: () => true,
+      getHighlighter:
+        () =>
+        ({ code, meta }) => ({
+          highlighted: true,
+          code: code
+            .split('\n')
+            .map((line, index) => {
+              const lineNumber = index + 1;
+              const highlighted = meta?.highlightLines?.includes(lineNumber)
+                ? ' data-highlight'
+                : '';
+              return `<span data-line="${lineNumber}"${highlighted}>${line}</span>`;
+            })
+            .join('\n'),
+        }),
+    };
+
+    const { container } = render(
+      <PostkitProvider codeBlockAdapter={adapter}>
+        <CodeBlock
+          code={'const answer = 42;\nconsole.log(answer);'}
+          language="typescript"
+          highlightLines="2"
+        />
+      </PostkitProvider>,
+    );
+
+    expect(container.querySelector('[data-highlight]')?.textContent).toBe(
+      'console.log(answer);',
+    );
+  });
+
+  it('configures accessible code-block copy content for every document', async () => {
+    const writeText = vi.fn(async () => undefined);
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      render(
+        <PostkitProvider
+          codeBlock={{
+            copyAriaLabel: 'Copy snippet',
+            copyIcon: <span data-testid="copy-icon">clipboard</span>,
+            copyLabel: null,
+            copiedIcon: <span data-testid="copied-icon">check</span>,
+            copiedLabel: 'Copied!',
+          }}
+        >
+          <CodeBlock code="const answer = 42;" />
+        </PostkitProvider>,
+      );
+
+      const trigger = screen.getByRole('button', { name: 'Copy snippet' });
+      expect(trigger.textContent).toBe('clipboard');
+
+      fireEvent.click(trigger);
+
+      await waitFor(() => expect(writeText).toHaveBeenCalled());
+      await screen.findByText('Copied!');
+      expect(screen.getByTestId('copied-icon')).toBeTruthy();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: originalClipboard,
+      });
+    }
+  });
+
+  it('can present copied feedback as an icon and tooltip', async () => {
+    const writeText = vi.fn(async () => undefined);
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      render(
+        <PostkitProvider
+          codeBlock={{
+            copyAriaLabel: 'Copy snippet',
+            copyFeedback: 'tooltip',
+            copyIcon: <span data-testid="copy-icon">clipboard</span>,
+            copyLabel: null,
+            copiedLabel: 'Copied!',
+          }}
+        >
+          <CodeBlock code="const answer = 42;" />
+        </PostkitProvider>,
+      );
+
+      const trigger = screen.getByRole('button', { name: 'Copy snippet' });
+      expect(trigger.textContent).toBe('clipboard');
+      expect(screen.queryByRole('tooltip')).toBeNull();
+
+      fireEvent.click(trigger);
+
+      await waitFor(() => expect(writeText).toHaveBeenCalled());
+      expect((await screen.findByRole('tooltip')).textContent).toBe('Copied!');
+      expect(screen.queryByTestId('copy-icon')).toBeNull();
+      expect(trigger.querySelector('svg')).toBeTruthy();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: originalClipboard,
+      });
+    }
+  });
+
+  it('lets an individual code block override provider copy content', () => {
+    render(
+      <PostkitProvider
+        codeBlock={{
+          copyAriaLabel: 'Provider copy',
+          copyIcon: <span>provider icon</span>,
+          copyLabel: 'Provider label',
+        }}
+      >
+        <CodeBlock
+          code="const answer = 42;"
+          copyAriaLabel="Copy this example"
+          copyIcon={null}
+          copyLabel="Duplicate"
+        />
+      </PostkitProvider>,
+    );
+
+    const trigger = screen.getByRole('button', {
+      name: 'Copy this example',
+    });
+    expect(trigger.textContent).toBe('Duplicate');
+  });
+
+  it('resolves code-block behavior from component, provider, then neutral defaults', () => {
+    const providerRender = render(
+      <PostkitProvider
+        codeBlock={{
+          colorScheme: 'light',
+          copy: false,
+          lineNumbers: true,
+          size: 'sm',
+          variant: 'subtle',
+          wrap: true,
+        }}
+      >
+        <CodeBlock code="const answer = 42;" />
+      </PostkitProvider>,
+    );
+
+    const providerRoot = providerRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const providerCode = providerRender.container.querySelector('code');
+    expect(providerRoot?.hasAttribute('data-has-line-numbers')).toBe(true);
+    expect(providerRoot?.classList.contains('light')).toBe(true);
+    expect(providerCode?.hasAttribute('data-word-wrap')).toBe(true);
+    expect(providerRender.queryByRole('button')).toBeNull();
+    providerRender.unmount();
+
+    const componentRender = render(
+      <PostkitProvider
+        codeBlock={{
+          colorScheme: 'light',
+          copy: false,
+          lineNumbers: false,
+          wrap: false,
+        }}
+      >
+        <CodeBlock
+          code="const answer = 42;"
+          colorScheme="dark"
+          copy
+          lineNumbers
+          wrap
+        />
+      </PostkitProvider>,
+    );
+
+    const componentRoot = componentRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const componentCode = componentRender.container.querySelector('code');
+    expect(componentRoot?.hasAttribute('data-has-line-numbers')).toBe(true);
+    expect(componentRoot?.classList.contains('dark')).toBe(true);
+    expect(componentCode?.hasAttribute('data-word-wrap')).toBe(true);
+    expect(
+      componentRender.getByRole('button', { name: 'Copy code' }).textContent,
+    ).toBe('Copy code');
+    componentRender.unmount();
+
+    const defaultRender = render(
+      <PostkitProvider>
+        <CodeBlock code="const answer = 42;" />
+      </PostkitProvider>,
+    );
+    const defaultRoot = defaultRender.container.querySelector(
+      '[data-postkit-component="CodeBlock"]',
+    );
+    const defaultCode = defaultRender.container.querySelector('code');
+    expect(defaultRoot?.hasAttribute('data-has-line-numbers')).toBe(false);
+    expect(defaultCode?.hasAttribute('data-word-wrap')).toBe(false);
+    expect(
+      defaultRender.getByRole('button', { name: 'Copy code' }).textContent,
+    ).toBe('Copy code');
+  });
+
+  it('omits copy controls for empty code and keeps metadata left of controls', () => {
+    const empty = render(
+      <PostkitProvider>
+        <CodeBlock code="   " />
+      </PostkitProvider>,
+    );
+    expect(empty.queryByRole('button')).toBeNull();
+    expect(empty.container.querySelector('header')).toBeNull();
+    empty.unmount();
+
+    const populated = render(
+      <PostkitProvider>
+        <CodeBlock
+          code="const answer = 42;"
+          filename="answer.ts"
+          language="typescript"
+        />
+      </PostkitProvider>,
+    );
+    const header = populated.container.querySelector('header');
+    expect(header?.children).toHaveLength(2);
+    expect(header?.firstElementChild?.textContent).toBe('answer.tstypescript');
+    expect(header?.lastElementChild?.textContent).toBe('Copy code');
+  });
+
   it('resolves missing LinkPreview metadata with a custom callback', async () => {
     const callback = vi.fn(async () => result('site-callback'));
 
     render(
       <PostkitProvider resolver={callback} defaultResolver="site-callback">
-        <PostkitLinkPreview href="https://example.com/article" />
+        <LinkPreview href="https://example.com/article" />
       </PostkitProvider>,
     );
 
@@ -122,11 +376,8 @@ describe('PostkitProvider', () => {
         ]}
         defaultResolver="alternate"
       >
-        <PostkitLinkPreview href="https://example.com/article" />
-        <PostkitLinkPreview
-          href="https://example.com/other"
-          provider="primary"
-        />
+        <LinkPreview href="https://example.com/article" />
+        <LinkPreview href="https://example.com/other" provider="primary" />
       </PostkitProvider>,
     );
 
@@ -141,7 +392,7 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider resolver={callback}>
-        <PostkitLinkPreview
+        <LinkPreview
           href="https://example.com/article"
           metadata={result('authored', 'Authored metadata')}
         />
@@ -165,12 +416,12 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider resolver={callback}>
-        <PostkitSocialPost
+        <SocialPost
           href="https://social.example/frozen"
           metadata={frozen}
           resolution="snapshot"
         />
-        <PostkitSocialPost
+        <SocialPost
           href="https://social.example/live"
           metadata={frozen}
           resolution="live"
@@ -185,7 +436,7 @@ describe('PostkitProvider', () => {
     );
   });
 
-  it('layers Postkit defaults and component overrides over a contextual Chakra theme', () => {
+  it('layers an optional Postkit preset beneath the contextual Chakra theme and overrides', () => {
     const contextualSystem = createSystem(defaultConfig, {
       theme: {
         tokens: {
@@ -199,6 +450,7 @@ describe('PostkitProvider', () => {
     render(
       <PostkitProvider
         system={contextualSystem}
+        preset={postkitDefaultTheme}
         theme={createPostkitTheme({
           linkPreview: {
             base: {
@@ -229,7 +481,7 @@ describe('PostkitProvider', () => {
         }}
         onResolverError={onResolverError}
       >
-        <PostkitLinkPreview href="https://example.com/article" />
+        <LinkPreview href="https://example.com/article" />
       </PostkitProvider>,
     );
 
@@ -278,7 +530,7 @@ describe('PostkitProvider', () => {
           },
         }}
       >
-        <PostkitShareActions
+        <ShareActions
           url="https://example.com/article"
           title="Article"
           services={['linegraph']}
@@ -303,7 +555,7 @@ describe('PostkitProvider', () => {
 
     render(
       <PostkitProvider newsletter={{ subscribe }}>
-        <PostkitNewsletterSignup title="Get new essays" list="essays" />
+        <NewsletterSignup title="Get new essays" list="essays" />
       </PostkitProvider>,
     );
 
@@ -324,7 +576,7 @@ describe('PostkitProvider', () => {
   it('keeps newsletter endpoints host-owned and disables unconfigured forms', () => {
     const { rerender } = render(
       <PostkitProvider>
-        <PostkitNewsletterSignup title="Get new essays" />
+        <NewsletterSignup title="Get new essays" />
       </PostkitProvider>,
     );
 
@@ -343,7 +595,7 @@ describe('PostkitProvider', () => {
           method: 'get',
         }}
       >
-        <PostkitNewsletterSignup title="Get new essays" />
+        <NewsletterSignup title="Get new essays" />
       </PostkitProvider>,
     );
 

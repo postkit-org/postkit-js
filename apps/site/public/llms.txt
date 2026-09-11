@@ -1,0 +1,62 @@
+# PostKit
+
+> Portable article components, Markdown tooling, link metadata resolvers, and framework adapters.
+
+PostKit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.
+
+## Start here
+
+- [Getting started](/docs/getting-started): Install PostKit, mount its provider, and render a first portable article component.
+- [Choosing a package](/docs/choosing-a-package): Match each PostKit package to the rendering environment and integration boundary it owns.
+
+## Concepts
+
+- [Core concepts](/docs/core-concepts): Understand the content contract, renderers, host responsibilities, and resolver boundaries.
+
+## Authoring
+
+- [Components](/docs/components): Learn how PostKit components, declarations, props, and presentation variants work together.
+- [Markdown and MDX](/docs/markdown-and-mdx): Author PostKit declarations in MDX or literal-only plain Markdown directives.
+- [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
+
+## Integration
+
+- [Theming](/docs/theming): Layer PostKit recipes over a Chakra system while preserving the host application's design tokens.
+- [Framework guides](/docs/framework-guides): Connect the portable component map to Next.js, React Router, TanStack Router, or Astro.
+
+## Services
+
+- [Unfurling and oEmbed](/docs/unfurling): Resolve URLs behind a server boundary and render normalized link or social metadata.
+
+## Reference
+
+- [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
+- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating PostKit.
+- [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
+
+## Help
+
+- [Troubleshooting](/docs/troubleshooting): Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
+
+## Packages
+
+- [@postkit/unfurl](https://github.com/postkit-org/postkit-js/tree/main/packages/unfurl): Provider-neutral link metadata resolution for Postkit
+- [@postkit/react](https://github.com/postkit-org/postkit-js/tree/main/packages/react): Chakra-based React components and Markdown tooling for articles
+- [@postkit/shiki](https://github.com/postkit-org/postkit-js/tree/main/packages/shiki): A lazy Shiki syntax-highlighting adapter for Postkit and Chakra CodeBlock
+- [@postkit/next](https://github.com/postkit-org/postkit-js/tree/main/packages/next): Postkit MDX components and link routing for Next.js
+- [@postkit/react-router](https://github.com/postkit-org/postkit-js/tree/main/packages/react-router): Postkit MDX components and link routing for React Router
+- [@postkit/tanstack-router](https://github.com/postkit-org/postkit-js/tree/main/packages/tanstack-router): Postkit MDX components and link routing for TanStack Router
+- [@postkit/astro](https://github.com/postkit-org/postkit-js/tree/main/packages/astro): Postkit components and Markdown integration for Astro
+
+## Machine-readable reference
+
+- [Component manifest](https://unpkg.com/@postkit/react/component-manifest.json): Versioned component names, props, examples, runtime requirements, and renderer support.
+- [TypeScript API model](/api/postkit-api.json): TypeDoc JSON generated from every public package export.
+- [Full documentation context](/llms-full.txt): Guides and package documentation in one text document.
+- [Documentation index](/postkit-docs.json): Structured guide metadata and content.
+
+## Source
+
+- [Repository](https://github.com/postkit-org/postkit-js)
+- [Examples](https://github.com/postkit-org/postkit-js/tree/main/examples)
+

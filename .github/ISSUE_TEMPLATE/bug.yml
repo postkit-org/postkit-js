@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a reproducible problem in a PostKit package or integration.
+title: '[Bug]: '
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve PostKit. Do not include credentials or private provider responses. Report security issues privately through the repository security page.
+  - type: input
+    id: packages
+    attributes:
+      label: Packages and versions
+      description: List every PostKit package involved and its exact version.
+      placeholder: '@postkit/react@0.1.1, @postkit/next@0.1.1'
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Node, browser, framework, React, Chakra, and operating-system versions as applicable.
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Failure phase
+      options:
+        - Build or typecheck
+        - Server rendering
+        - Hydration
+        - Client interaction
+        - Metadata resolution
+        - Package installation or import
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link to a small repository or provide the smallest content and component configuration that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reproduced this with the latest PostKit release.
+          required: true
+        - label: I removed credentials and private content.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

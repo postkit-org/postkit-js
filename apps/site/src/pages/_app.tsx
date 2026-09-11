@@ -3,12 +3,16 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
 import { SiteShell } from '../components/site-shell';
+import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
 import { siteSystem } from '../lib/site-theme';
 import './styles.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
-    <PostkitProvider system={siteSystem}>
+    <PostkitProvider
+      system={siteSystem}
+      codeBlockAdapter={siteCodeBlockAdapter}
+    >
       <Head>
         <meta
           name="description"
