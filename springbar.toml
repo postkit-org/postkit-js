@@ -1,7 +1,7 @@
 task = []
 
 [workspace]
-name = "postkit-js"
+name = "Postkit"
 
 [derive]
 
