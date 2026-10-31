@@ -2,7 +2,7 @@ import {
   createPostkitTheme,
   type PostkitThemeOverrides,
   type PostkitThemeSlotMap,
-} from '@postkit/react/theme';
+} from '@postkit/chakra/theme';
 
 const baseTheme = createPostkitTheme({
   typography: {

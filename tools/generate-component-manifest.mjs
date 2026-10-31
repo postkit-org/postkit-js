@@ -8,11 +8,11 @@ const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const outputPath = join(
   workspaceRoot,
   'packages',
-  'react',
+  'chakra',
   'component-manifest.json',
 );
 const catalogModule = await import(
-  new URL('../packages/react/dist/index.js', import.meta.url)
+  new URL('../packages/chakra/dist/index.js', import.meta.url)
 );
 const output = await format(
   JSON.stringify(catalogModule.postkitComponentCatalog),

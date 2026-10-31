@@ -164,7 +164,7 @@ function sampleString(name: PostkitComponentName, prop: string): string {
     case 'code':
       return "console.log('Hello, PostKit')";
     case 'command':
-      return 'npm install @postkit/react';
+      return 'npm install @postkit/chakra';
     case 'diff':
       return '- before\n+ after';
     case 'href':

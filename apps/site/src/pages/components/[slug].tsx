@@ -11,7 +11,7 @@ import {
   Table,
   Text,
 } from '@chakra-ui/react';
-import { CodeBlock, type PostkitComponentName } from '@postkit/react';
+import { CodeBlock, type PostkitComponentName } from '@postkit/chakra';
 import type {
   GetStaticPaths,
   GetStaticProps,

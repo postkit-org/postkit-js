@@ -110,10 +110,10 @@ if (chakraManifest.version !== '3.29.0') {
 const packages = await Promise.all([
   import('@postkit/core'),
   import('@postkit/unfurl'),
-  import('@postkit/react'),
-  import('@postkit/react/theme'),
-  import('@postkit/react/remark'),
-  import('@postkit/react/document'),
+  import('@postkit/chakra'),
+  import('@postkit/chakra/theme'),
+  import('@postkit/chakra/remark'),
+  import('@postkit/chakra/document'),
   import('@postkit/email'),
   import('@postkit/shiki'),
   import('@postkit/next'),
@@ -133,10 +133,10 @@ console.log('PostKit tarball runtime entry points loaded with Chakra UI 3.29.0.'
     join(consumerRoot, 'consumer.ts'),
     `import { parsePostkitHtml, serializePostkitJson } from '@postkit/core';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
-import { PostkitProvider } from '@postkit/react';
-import { DocumentRenderer } from '@postkit/react/document';
-import { createPostkitTheme } from '@postkit/react/theme';
-import { remarkPostkit } from '@postkit/react/remark';
+import { PostkitProvider } from '@postkit/chakra';
+import { DocumentRenderer } from '@postkit/chakra/document';
+import { createPostkitTheme } from '@postkit/chakra/theme';
+import { remarkPostkit } from '@postkit/chakra/remark';
 import { PostkitEmailProvider } from '@postkit/email';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 import { createPostkitNextComponents } from '@postkit/next';

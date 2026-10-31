@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { Callout, CodeBlock } from '@postkit/react';
+import { Callout, CodeBlock } from '@postkit/chakra';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -124,7 +124,7 @@ export default function IndexPage({
   PostkitProvider,
   postkitDefaultTheme,
   Callout,
-} from '@postkit/react';
+} from '@postkit/chakra';
 
 <PostkitProvider preset={postkitDefaultTheme}>
   <Callout title="Portable by default">

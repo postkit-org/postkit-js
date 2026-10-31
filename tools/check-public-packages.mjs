@@ -170,10 +170,10 @@ for (const packageName of publicPackages) {
     }
   }
   if (
-    packageName === '@postkit/react' &&
+    packageName === '@postkit/chakra' &&
     !paths.includes('component-manifest.json')
   ) {
-    fail('@postkit/react tarball is missing component-manifest.json.');
+    fail('@postkit/chakra tarball is missing component-manifest.json.');
   }
   if (!paths.some((path) => path.endsWith('.js'))) {
     fail(`${packageName} tarball has no compiled JavaScript.`);

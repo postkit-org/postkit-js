@@ -1,4 +1,4 @@
-import { PostkitProvider, type PostkitLinkProps } from '@postkit/react';
+import { PostkitProvider, type PostkitLinkProps } from '@postkit/chakra';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createPostkitTanStackRouterComponents } from './create-postkit-tanstack-router-components.js';
 

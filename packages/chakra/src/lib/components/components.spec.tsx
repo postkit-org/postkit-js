@@ -246,8 +246,8 @@ describe('Postkit article components', () => {
     const group = render(
       <CodeGroup
         items={[
-          { label: 'npm', code: 'npm install @postkit/react' },
-          { label: 'pnpm', code: 'pnpm add @postkit/react' },
+          { label: 'npm', code: 'npm install @postkit/chakra' },
+          { label: 'pnpm', code: 'pnpm add @postkit/chakra' },
         ]}
       />,
     );
@@ -338,8 +338,8 @@ describe('Postkit article components', () => {
       <Tabs
         label="Install commands"
         items={[
-          { label: 'npm', content: 'npm install @postkit/react' },
-          { label: 'pnpm', content: 'pnpm add @postkit/react' },
+          { label: 'npm', content: 'npm install @postkit/chakra' },
+          { label: 'pnpm', content: 'pnpm add @postkit/chakra' },
         ]}
       />,
     );

@@ -4,11 +4,11 @@ import { fileURLToPath } from 'node:url';
 
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const themeDeclaration = readFileSync(
-  new URL('../packages/react/dist/lib/theme.d.ts', import.meta.url),
+  new URL('../packages/chakra/dist/lib/theme.d.ts', import.meta.url),
   'utf8',
 );
 const contractDeclaration = readFileSync(
-  new URL('../packages/react/dist/lib/theme-contract.d.ts', import.meta.url),
+  new URL('../packages/chakra/dist/lib/theme-contract.d.ts', import.meta.url),
   'utf8',
 );
 
@@ -29,7 +29,7 @@ const tscPath = fileURLToPath(
   new URL('../node_modules/typescript/bin/tsc', import.meta.url),
 );
 const fixturePath = fileURLToPath(
-  new URL('./fixtures/react-theme-types/tsconfig.json', import.meta.url),
+  new URL('./fixtures/chakra-theme-types/tsconfig.json', import.meta.url),
 );
 const result = spawnSync(
   process.execPath,

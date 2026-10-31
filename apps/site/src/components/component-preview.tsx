@@ -36,7 +36,7 @@ import {
   Terminal,
   Video,
   type PostkitComponentName,
-} from '@postkit/react';
+} from '@postkit/chakra';
 
 type PreviewSize = 'sm' | 'md' | 'lg';
 type PreviewVariant = 'outline' | 'subtle' | 'plain';
@@ -219,7 +219,7 @@ export function ComponentPreview({
       return (
         <CodeBlock
           {...presentation}
-          code={`import { Callout } from '@postkit/react';\n\nexport function Note() {\n  return <Callout title="Portable">Write once.</Callout>;\n}`}
+          code={`import { Callout } from '@postkit/chakra';\n\nexport function Note() {\n  return <Callout title="Portable">Write once.</Callout>;\n}`}
           filename="note.tsx"
           language="tsx"
           highlightLines="3"
@@ -233,12 +233,12 @@ export function ComponentPreview({
           items={[
             {
               label: 'npm',
-              code: 'npm install @postkit/react',
+              code: 'npm install @postkit/chakra',
               language: 'shell',
             },
             {
               label: 'pnpm',
-              code: 'pnpm add @postkit/react',
+              code: 'pnpm add @postkit/chakra',
               language: 'shell',
             },
           ]}
@@ -534,7 +534,7 @@ export function ComponentPreview({
           {...presentation}
           title="Terminal"
           prompt="$"
-          command="npm install @postkit/react"
+          command="npm install @postkit/chakra"
           output="added 1 package in 842ms"
         />
       );

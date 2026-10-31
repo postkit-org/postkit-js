@@ -3,7 +3,7 @@ import {
   createPostkitMdxComponents,
   type CreatePostkitLinkOptions,
   type PostkitLinkProps,
-} from '@postkit/react';
+} from '@postkit/chakra';
 import type { MDXComponents } from 'mdx/types';
 import { Link, type LinkProps } from 'react-router';
 

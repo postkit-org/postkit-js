@@ -3,7 +3,7 @@ import {
   createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
-} from '@postkit/react';
+} from '@postkit/chakra';
 
 const chakraSystem = createSystem(defaultConfig, {
   globalCss: {

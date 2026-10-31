@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createPublicationPlan } from './publication-plan.mjs';
 
-const packages = ['@postkit/core', '@postkit/react'];
+const packages = ['@postkit/core', '@postkit/chakra'];
 function seams(overrides = {}) {
   return {
     readManifest: () => ({ version: '0.2.0' }),
@@ -29,9 +29,9 @@ test('packs every package before starting timed registry requests', async () => 
   );
   assert.deepEqual(events, [
     'pack:@postkit/core',
-    'pack:@postkit/react',
+    'pack:@postkit/chakra',
     'registry:@postkit/core',
-    'registry:@postkit/react',
+    'registry:@postkit/chakra',
   ]);
   assert.deepEqual(
     plan.map((entry) => entry.packageName),

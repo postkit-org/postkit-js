@@ -67,7 +67,7 @@
     "projects": [
       "@postkit/core",
       "@postkit/unfurl",
-      "@postkit/react",
+      "@postkit/chakra",
       "@postkit/email",
       "@postkit/shiki",
       "@postkit/next",

@@ -71,7 +71,7 @@ import {
   type TabsProps,
   type TerminalProps,
   type VideoProps,
-} from '@postkit/react';
+} from '@postkit/chakra';
 import system from 'virtual:postkit/chakra-system';
 import type { ComponentType } from 'react';
 

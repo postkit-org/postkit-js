@@ -1,4 +1,4 @@
-import { PostkitProvider, type PostkitLinkProps } from '@postkit/react';
+import { PostkitProvider, type PostkitLinkProps } from '@postkit/chakra';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router';
 import { createPostkitReactRouterComponents } from './create-postkit-react-router-components.js';

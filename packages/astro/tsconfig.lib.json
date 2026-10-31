@@ -13,7 +13,7 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.astro"],
   "references": [
     {
-      "path": "../react/tsconfig.lib.json"
+      "path": "../chakra/tsconfig.lib.json"
     }
   ],
   "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]

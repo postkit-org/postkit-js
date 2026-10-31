@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/packages/react',
+  cacheDir: '../../node_modules/.vite/packages/chakra',
   test: {
-    name: '@postkit/react',
+    name: '@postkit/chakra',
     watch: false,
     globals: true,
     environment: 'jsdom',

@@ -1,5 +1,5 @@
 {
-  "name": "@postkit/react",
+  "name": "@postkit/chakra",
   "version": "0.2.0",
   "description": "Chakra-based React components and Markdown tooling for articles",
   "keywords": [
@@ -21,9 +21,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/postkit-org/postkit-js.git",
-    "directory": "packages/react"
+    "directory": "packages/chakra"
   },
-  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/react#readme",
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme",
   "bugs": {
     "url": "https://github.com/postkit-org/postkit-js/issues"
   },
@@ -90,7 +90,7 @@
     "tags": [
       "npm:public",
       "scope:postkit",
-      "layer:react"
+      "layer:chakra"
     ]
   }
 }

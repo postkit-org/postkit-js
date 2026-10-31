@@ -1,4 +1,4 @@
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 import type { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
 

@@ -739,9 +739,9 @@
         "title"
       ],
       "example": {
-        "props": { "command": "npm install @postkit/react" },
-        "jsx": "<Terminal command=\"npm install @postkit/react\" />",
-        "directive": "::postkit-terminal{command=\"npm install @postkit/react\"}"
+        "props": { "command": "npm install @postkit/chakra" },
+        "jsx": "<Terminal command=\"npm install @postkit/chakra\" />",
+        "directive": "::postkit-terminal{command=\"npm install @postkit/chakra\"}"
       },
       "preview": { "kind": "live", "label": "Terminal component preview" },
       "runtime": "static",

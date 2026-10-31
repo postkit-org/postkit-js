@@ -22,9 +22,9 @@ component_management:
       paths:
         - packages/unfurl/**
     - component_id: react
-      name: '@postkit/react'
+      name: '@postkit/chakra'
       paths:
-        - packages/react/**
+        - packages/chakra/**
     - component_id: email
       name: '@postkit/email'
       paths:

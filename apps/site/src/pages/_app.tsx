@@ -1,4 +1,4 @@
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 

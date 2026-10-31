@@ -3,7 +3,7 @@ import {
   type PostkitComponentCatalogEntry,
   type PostkitComponentCategory,
   type PostkitComponentName,
-} from '@postkit/react';
+} from '@postkit/chakra';
 
 export interface ComponentCategoryGroup {
   readonly category: PostkitComponentCategory;

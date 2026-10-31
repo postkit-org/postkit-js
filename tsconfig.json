@@ -7,7 +7,7 @@
       "path": "./packages/unfurl"
     },
     {
-      "path": "./packages/react"
+      "path": "./packages/chakra"
     },
     {
       "path": "./packages/next"

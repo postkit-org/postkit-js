@@ -1,4 +1,4 @@
-import { createPostkitRemarkPlugins } from '@postkit/react';
+import { createPostkitRemarkPlugins } from '@postkit/chakra';
 import { allChangelogEntries } from 'content-collections';
 import { serialize } from 'next-mdx-remote/serialize';
 
