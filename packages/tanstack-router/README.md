@@ -13,14 +13,14 @@ non-default targets as native anchors.
 ## Install
 
 ```sh
-npm install @postkit/tanstack-router @postkit/react @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/tanstack-router @postkit/chakra @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
 
 - TanStack Router 1.x
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -89,7 +89,7 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
   register PostKit slot recipes in the host Chakra system.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [TanStack Router example](../../examples/tanstack-router) is included in the
 repository.

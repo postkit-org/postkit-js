@@ -15,12 +15,12 @@ provides structural content rhythm in either mode.
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import {
   createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
-} from '@postkit/react/theme';
+} from '@postkit/chakra/theme';
 
 const siteSystem = createSystem(defaultConfig, {
   theme: {
@@ -56,9 +56,9 @@ Use content props for semantic variation and theme recipes for persistent visual
 policy. `createPostkitTheme` remains the final, component-scoped override for a
 documentation or editorial subtree.
 
-Import theme-only APIs from `@postkit/react/theme`. This focused entry point
+Import theme-only APIs from `@postkit/chakra/theme`. This focused entry point
 keeps component and Markdown declarations out of shared theme libraries and
-reduces cold TypeScript work. Existing imports from `@postkit/react` remain
+reduces cold TypeScript work. Existing imports from `@postkit/chakra` remain
 supported.
 
 ## Choose a styling mode

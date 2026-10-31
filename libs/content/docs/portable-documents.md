@@ -35,12 +35,12 @@ generate linked footnote sections or backlinks.
 
 ## Render through Chakra
 
-`@postkit/react/document` supplies `DocumentRenderer`. Semantic input is mapped
+`@postkit/chakra/document` supplies `DocumentRenderer`. Semantic input is mapped
 through Postkit's Chakra-backed prose primitives, so the host's Heading, List,
 Table, Image, Code, and other recipes continue to apply.
 
 ```tsx
-import { DocumentRenderer, parsePostkitHtml } from '@postkit/react/document';
+import { DocumentRenderer, parsePostkitHtml } from '@postkit/chakra/document';
 
 const document = parsePostkitHtml(rssItem.content);
 

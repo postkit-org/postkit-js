@@ -5,21 +5,21 @@ PostKit article components, MDX mapping, and internal-link routing for Next.js.
 ## When to use it
 
 Use this adapter when a Next.js application renders Markdown or MDX with
-PostKit. It layers `next/link` over `@postkit/react` while preserving native
+PostKit. It layers `next/link` over `@postkit/chakra` while preserving native
 anchors for external URLs, protocol links, hashes, downloads, and explicit
 non-default targets.
 
 ## Install
 
 ```sh
-npm install @postkit/next @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/next @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
 
 - Next.js 15 or 16
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -38,7 +38,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 Mount `PostkitProvider` in the application's provider tree:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -102,6 +102,6 @@ The returned value is an MDX component map. Components supplied through
 - If a site component is ignored, pass it through `components` in the same map
   supplied to the renderer.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [Next.js adapter example](../../examples/next) is included in the repository.

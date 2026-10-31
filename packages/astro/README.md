@@ -14,7 +14,7 @@ handling to the site.
 ## Install
 
 ```sh
-npm install @postkit/astro @postkit/react
+npm install @postkit/astro @postkit/chakra
 ```
 
 Enable Astro's React and MDX integrations:
@@ -66,7 +66,7 @@ postkitAstro({
 Opt into PostKit's standalone preset from that module when desired:
 
 ```ts
-import { createPostkitSystem, postkitDefaultTheme } from '@postkit/react';
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/chakra';
 
 export default createPostkitSystem({ preset: postkitDefaultTheme });
 ```
@@ -173,6 +173,6 @@ site-owned wrappers that control their hydration behavior.
 - Unexpected client JavaScript: check the hydration policy before wrapping
   static components in a site-owned client island.
 
-See the [`@postkit/react`](../react) guide for the shared component,
+See the [`@postkit/chakra`](../chakra) guide for the shared component,
 declaration, and theming APIs. The complete
 [Astro example](../../examples/astro) is built and inspected in CI.

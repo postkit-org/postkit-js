@@ -43,7 +43,7 @@ Packages are published in dependency order:
 
 1. `@postkit/core`
 2. `@postkit/unfurl`
-3. `@postkit/react`
+3. `@postkit/chakra`
 4. `@postkit/email` and `@postkit/shiki`
 5. Framework adapters
 

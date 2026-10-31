@@ -8,13 +8,13 @@ order: 20
 # Choosing a package
 
 Install the package closest to the application boundary. Framework adapters
-already depend on the React component system and add their native routing
+use the Chakra-based React component system and add their native routing
 behavior.
 
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
 | `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
-| `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
 | `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
 | `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
 | `@postkit/next`            | Next.js MDX and `next/link`                                                           |
@@ -22,6 +22,10 @@ behavior.
 | `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
 | `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
 | `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
+
+`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
+The `@postkit/react` name is reserved for a future generic React renderer without
+a Chakra dependency. The current framework adapters use `@postkit/chakra`.
 
 ## Common combinations
 
@@ -35,7 +39,7 @@ npm install @postkit/core
 A Next.js publishing site commonly uses:
 
 ```sh
-npm install @postkit/next @postkit/react
+npm install @postkit/next @postkit/chakra
 ```
 
 Add `@postkit/unfurl` to the server or build pipeline when the site renders link

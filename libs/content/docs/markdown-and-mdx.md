@@ -53,7 +53,7 @@ Hosts that want syntax highlighting can install `@postkit/shiki`, create its
 lazy adapter once at module scope, and pass it to `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 
 const codeBlockAdapter = createPostkitShikiAdapter();
@@ -132,14 +132,14 @@ literal values rather than arbitrary JavaScript, which keeps the format
 portable and suitable for untrusted authoring environments.
 
 ```ts
-import { createPostkitRemarkPlugins } from '@postkit/react/remark';
+import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
 
 export const markdownOptions = {
   remarkPlugins: createPostkitRemarkPlugins(),
 };
 ```
 
-The focused `@postkit/react/remark` entry point keeps React components and
+The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root
 imports remain supported.
 

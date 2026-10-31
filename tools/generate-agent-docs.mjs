@@ -11,7 +11,7 @@ const publicDirectory = join(workspaceRoot, 'apps', 'site', 'public');
 const repositoryUrl = 'https://github.com/postkit-org/postkit-js';
 const packageDirectories = [
   'unfurl',
-  'react',
+  'chakra',
   'shiki',
   'next',
   'react-router',
@@ -119,7 +119,7 @@ indexLines.push(
   '',
   '## Machine-readable reference',
   '',
-  '- [Component manifest](https://unpkg.com/@postkit/react/component-manifest.json): Versioned component names, props, examples, runtime requirements, and renderer support.',
+  '- [Component manifest](https://unpkg.com/@postkit/chakra/component-manifest.json): Versioned component names, props, examples, runtime requirements, and renderer support.',
   '- [TypeScript API model](/api/postkit-api.json): TypeDoc JSON generated from every public package export.',
   '- [Full documentation context](/llms-full.txt): Guides and package documentation in one text document.',
   '- [Documentation index](/postkit-docs.json): Structured guide metadata and content.',
@@ -177,7 +177,7 @@ const outputs = new Map([
         references: {
           api: '/api/postkit-api.json',
           componentManifest:
-            'https://unpkg.com/@postkit/react/component-manifest.json',
+            'https://unpkg.com/@postkit/chakra/component-manifest.json',
           fullText: '/llms-full.txt',
         },
       },

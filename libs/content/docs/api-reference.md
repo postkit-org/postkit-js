@@ -12,7 +12,7 @@ package.
 
 - [Browse the TypeScript API reference](/api/)
 - [Download the TypeDoc JSON model](/api/postkit-api.json)
-- [Download the component manifest](https://unpkg.com/@postkit/react/component-manifest.json)
+- [Download the component manifest](https://unpkg.com/@postkit/chakra/component-manifest.json)
 
 Use the guides for task-oriented setup and the API reference for exact
 signatures, return types, and exported interfaces. The component manifest is

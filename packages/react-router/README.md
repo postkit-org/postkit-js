@@ -13,14 +13,14 @@ targets as native anchors.
 ## Install
 
 ```sh
-npm install @postkit/react-router @postkit/react @chakra-ui/react @emotion/react react react-dom react-router
+npm install @postkit/react-router @postkit/chakra @chakra-ui/react @emotion/react react react-dom react-router
 ```
 
 Supported peer versions:
 
 - React Router 7
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -35,7 +35,7 @@ export const mdxComponents = createPostkitReactRouterComponents();
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 import { BrowserRouter } from 'react-router';
 
 export function App() {
@@ -94,7 +94,7 @@ export const mdxComponents = createPostkitReactRouterComponents({
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [React Router example](../../examples/react-router) is included in the
 repository.

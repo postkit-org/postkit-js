@@ -41,7 +41,7 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 ## Packages
 
 - [@postkit/unfurl](https://github.com/postkit-org/postkit-js/tree/main/packages/unfurl): Provider-neutral link metadata resolution for Postkit
-- [@postkit/react](https://github.com/postkit-org/postkit-js/tree/main/packages/react): Chakra-based React components and Markdown tooling for articles
+- [@postkit/chakra](https://github.com/postkit-org/postkit-js/tree/main/packages/chakra): Chakra-based React components and Markdown tooling for articles
 - [@postkit/shiki](https://github.com/postkit-org/postkit-js/tree/main/packages/shiki): A lazy Shiki syntax-highlighting adapter for Postkit and Chakra CodeBlock
 - [@postkit/next](https://github.com/postkit-org/postkit-js/tree/main/packages/next): Postkit MDX components and link routing for Next.js
 - [@postkit/react-router](https://github.com/postkit-org/postkit-js/tree/main/packages/react-router): Postkit MDX components and link routing for React Router
@@ -50,7 +50,7 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 
 ## Machine-readable reference
 
-- [Component manifest](https://unpkg.com/@postkit/react/component-manifest.json): Versioned component names, props, examples, runtime requirements, and renderer support.
+- [Component manifest](https://unpkg.com/@postkit/chakra/component-manifest.json): Versioned component names, props, examples, runtime requirements, and renderer support.
 - [TypeScript API model](/api/postkit-api.json): TypeDoc JSON generated from every public package export.
 - [Full documentation context](/llms-full.txt): Guides and package documentation in one text document.
 - [Documentation index](/postkit-docs.json): Structured guide metadata and content.

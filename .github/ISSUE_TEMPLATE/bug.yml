@@ -13,7 +13,7 @@ body:
     attributes:
       label: Packages and versions
       description: List every PostKit package involved and its exact version.
-      placeholder: '@postkit/react@0.1.1, @postkit/next@0.1.1'
+      placeholder: '@postkit/chakra@0.1.1, @postkit/next@0.1.1'
     validations:
       required: true
   - type: textarea

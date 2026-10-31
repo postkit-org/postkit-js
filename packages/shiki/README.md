@@ -2,7 +2,7 @@
 
 `@postkit/shiki` creates a lazy Shiki syntax-highlighting adapter for Postkit's
 Chakra CodeBlock renderer. It includes a practical language and theme preset
-without adding Shiki to `@postkit/react` itself.
+without adding Shiki to `@postkit/chakra` itself.
 
 ## Install
 
@@ -17,7 +17,7 @@ npm install @postkit/shiki @chakra-ui/react
 Create the adapter once at module scope and pass it through `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 
 const codeBlockAdapter = createPostkitShikiAdapter();

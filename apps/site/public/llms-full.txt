@@ -14,14 +14,14 @@ application in control of routing, layout, assets, and remote services.
 ## Install the React package
 
 ```sh
-npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Mount the provider near the article:
 
 ```tsx
-import { Callout, PostkitProvider } from '@postkit/react';
-import { postkitDefaultTheme } from '@postkit/react/theme';
+import { Callout, PostkitProvider } from '@postkit/chakra';
+import { postkitDefaultTheme } from '@postkit/chakra/theme';
 
 export function Article() {
   return (
@@ -48,7 +48,7 @@ its content-specific visual defaults are wanted.
 Use the supplied component map with the application's Markdown or MDX runtime:
 
 ```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
+import { createPostkitMdxComponents } from '@postkit/chakra';
 
 export const mdxComponents = createPostkitMdxComponents();
 ```
@@ -70,13 +70,13 @@ Source: /docs/choosing-a-package
 # Choosing a package
 
 Install the package closest to the application boundary. Framework adapters
-already depend on the React component system and add their native routing
+use the Chakra-based React component system and add their native routing
 behavior.
 
 | Package                    | Choose it for                                                                         |
 | -------------------------- | ------------------------------------------------------------------------------------- |
 | `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
-| `@postkit/react`           | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
 | `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
 | `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
 | `@postkit/next`            | Next.js MDX and `next/link`                                                           |
@@ -84,6 +84,10 @@ behavior.
 | `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
 | `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
 | `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
+
+`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
+The `@postkit/react` name is reserved for a future generic React renderer without
+a Chakra dependency. The current framework adapters use `@postkit/chakra`.
 
 ## Common combinations
 
@@ -97,7 +101,7 @@ npm install @postkit/core
 A Next.js publishing site commonly uses:
 
 ```sh
-npm install @postkit/next @postkit/react
+npm install @postkit/next @postkit/chakra
 ```
 
 Add `@postkit/unfurl` to the server or build pipeline when the site renders link
@@ -268,7 +272,7 @@ Hosts that want syntax highlighting can install `@postkit/shiki`, create its
 lazy adapter once at module scope, and pass it to `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 
 const codeBlockAdapter = createPostkitShikiAdapter();
@@ -347,14 +351,14 @@ literal values rather than arbitrary JavaScript, which keeps the format
 portable and suitable for untrusted authoring environments.
 
 ```ts
-import { createPostkitRemarkPlugins } from '@postkit/react/remark';
+import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
 
 export const markdownOptions = {
   remarkPlugins: createPostkitRemarkPlugins(),
 };
 ```
 
-The focused `@postkit/react/remark` entry point keeps React components and
+The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root
 imports remain supported.
 
@@ -397,12 +401,12 @@ generate linked footnote sections or backlinks.
 
 ## Render through Chakra
 
-`@postkit/react/document` supplies `DocumentRenderer`. Semantic input is mapped
+`@postkit/chakra/document` supplies `DocumentRenderer`. Semantic input is mapped
 through Postkit's Chakra-backed prose primitives, so the host's Heading, List,
 Table, Image, Code, and other recipes continue to apply.
 
 ```tsx
-import { DocumentRenderer, parsePostkitHtml } from '@postkit/react/document';
+import { DocumentRenderer, parsePostkitHtml } from '@postkit/chakra/document';
 
 const document = parsePostkitHtml(rssItem.content);
 
@@ -447,12 +451,12 @@ provides structural content rhythm in either mode.
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import {
   createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
-} from '@postkit/react/theme';
+} from '@postkit/chakra/theme';
 
 const siteSystem = createSystem(defaultConfig, {
   theme: {
@@ -488,9 +492,9 @@ Use content props for semantic variation and theme recipes for persistent visual
 policy. `createPostkitTheme` remains the final, component-scoped override for a
 documentation or editorial subtree.
 
-Import theme-only APIs from `@postkit/react/theme`. This focused entry point
+Import theme-only APIs from `@postkit/chakra/theme`. This focused entry point
 keeps component and Markdown declarations out of shared theme libraries and
-reduces cold TypeScript work. Existing imports from `@postkit/react` remain
+reduces cold TypeScript work. Existing imports from `@postkit/chakra` remain
 supported.
 
 ## Choose a styling mode
@@ -650,7 +654,7 @@ package.
 
 - [Browse the TypeScript API reference](/api/)
 - [Download the TypeDoc JSON model](/api/postkit-api.json)
-- [Download the component manifest](https://unpkg.com/@postkit/react/component-manifest.json)
+- [Download the component manifest](https://unpkg.com/@postkit/chakra/component-manifest.json)
 
 Use the guides for task-oriented setup and the API reference for exact
 signatures, return types, and exported interfaces. The component manifest is
@@ -1128,14 +1132,22 @@ option.
   sanitization boundary but is never injected by PostKit's React renderer.
 
 Use the result with `LinkPreview` or `SocialPost` from
-[`@postkit/react`](../react). The repository includes a checked
+[`@postkit/chakra`](../chakra). The repository includes a checked
 [server resolver example](../../examples/unfurl-server).
 
-## Package: @postkit/react
+## Package: @postkit/chakra
 
-Source: https://github.com/postkit-org/postkit-js/tree/main/packages/react
+Source: https://github.com/postkit-org/postkit-js/tree/main/packages/chakra
 
-# `@postkit/react`
+# `@postkit/chakra`
+
+Postkit's Chakra UI renderer for React. This package was previously named
+`@postkit/react`; the new name reserves `@postkit/react` for a future generic
+React renderer without a Chakra dependency.
+
+To migrate, replace the `@postkit/react` dependency with `@postkit/chakra` and
+update imports, including `/theme`, `/remark`, and `/document`. The component
+API and Chakra peer dependencies are unchanged.
 
 Postkit is a Chakra-based React component library for articles and blog posts.
 It includes accessible carousels, video and audio players, author cards, calls
@@ -1153,7 +1165,7 @@ component system and adds native framework behavior.
 ## Install
 
 ```sh
-npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
@@ -1168,14 +1180,14 @@ The package is ESM-only and includes TypeScript declarations.
 - Chakra-backed article and publishing components
 - `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
 - `createPostkitMdxComponents`
-- `DocumentRenderer` and the `@postkit/react/document` interchange entry point
+- `DocumentRenderer` and the `@postkit/chakra/document` interchange entry point
 - `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
 - `postkitDeclarationManifest` for editor integrations
 - `postkitComponentCatalog` and `component-manifest.json` for component
   discovery
 
-Shared theme libraries should import from `@postkit/react/theme`, and Markdown
-build pipelines can import from `@postkit/react/remark`. These focused entry
+Shared theme libraries should import from `@postkit/chakra/theme`, and Markdown
+build pipelines can import from `@postkit/chakra/remark`. These focused entry
 points avoid loading the root component declaration graph during TypeScript
 checking. The root exports remain available for compatibility.
 
@@ -1183,12 +1195,12 @@ checking. The root exports remain available for compatibility.
 
 ## Render portable documents
 
-`@postkit/react/document` combines the React-independent parser contract from
+`@postkit/chakra/document` combines the React-independent parser contract from
 `@postkit/core` with a Chakra-backed renderer. This is useful for RSS, API, and
 other content whose source format is selected at runtime:
 
 ```tsx
-import { DocumentRenderer, parsePostkit } from '@postkit/react/document';
+import { DocumentRenderer, parsePostkit } from '@postkit/chakra/document';
 
 const document = parsePostkit(feedItem.content, { format: 'html' });
 
@@ -1230,7 +1242,7 @@ uses the host's Chakra system without adding Postkit presentation by default,
 and provides optional link resolution to every `LinkPreview`.
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 
 export function App({ children }: { children: React.ReactNode }) {
   return <PostkitProvider>{children}</PostkitProvider>;
@@ -1263,8 +1275,8 @@ when client-side JavaScript is unavailable.
 For a standalone application, opt into Postkit's visual preset:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
-import { postkitDefaultTheme } from '@postkit/react/theme';
+import { PostkitProvider } from '@postkit/chakra';
+import { postkitDefaultTheme } from '@postkit/chakra/theme';
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
@@ -1287,12 +1299,12 @@ can narrow those defaults within its Postkit context.
 
 ```tsx
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
-import { Carousel, PostkitProvider } from '@postkit/react';
+import { Carousel, PostkitProvider } from '@postkit/chakra';
 import {
   createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
-} from '@postkit/react/theme';
+} from '@postkit/chakra/theme';
 
 const baseSiteSystem = createSystem(defaultConfig, {
   theme: {
@@ -1430,7 +1442,7 @@ outside React.
 Register the component map with the site's MDX runtime:
 
 ```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
+import { createPostkitMdxComponents } from '@postkit/chakra';
 
 export const mdxComponents = createPostkitMdxComponents({
   components: {
@@ -1498,7 +1510,7 @@ rendering works without another dependency. To add syntax highlighting, install
 `@postkit/shiki` and supply its lazy adapter through `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 
 const codeBlockAdapter = createPostkitShikiAdapter();
@@ -1680,7 +1692,7 @@ precedence. Resolve links in a server, build, or trusted editor process with
 `@postkit/unfurl`, then pass the normalized result to the component:
 
 ```tsx
-import { LinkPreview } from '@postkit/react';
+import { LinkPreview } from '@postkit/chakra';
 import {
   createIframelyResolver,
   createLinkResolverRegistry,
@@ -1718,7 +1730,7 @@ callback is useful for calling a same-origin application endpoint without
 shipping provider credentials to the browser:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 
 const resolveLink = async (url, options) => {
   const response = await fetch('/api/unfurl', {
@@ -1900,7 +1912,7 @@ native anchors by default and offers a framework-neutral adapter for client
 routers:
 
 ```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
+import { createPostkitMdxComponents } from '@postkit/chakra';
 import { Link } from 'some-router';
 
 export const mdxComponents = createPostkitMdxComponents({
@@ -1932,7 +1944,7 @@ The base preset includes:
 - Postkit directive-to-component transformation.
 
 ```ts
-import { createPostkitRemarkPlugins } from '@postkit/react/remark';
+import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
 
 export const markdownOptions = {
   remarkPlugins: createPostkitRemarkPlugins(),
@@ -1947,7 +1959,7 @@ import remarkCustomHeading from './remark-custom-heading';
 import {
   createPostkitRemarkPreset,
   type PostkitRemarkPresetOptions,
-} from '@postkit/react/remark';
+} from '@postkit/chakra/remark';
 
 const options: PostkitRemarkPresetOptions = {
   before: [remarkCustomHeading],
@@ -2044,12 +2056,12 @@ import {
   postkitProseRhythm,
   type PostkitAudioSlot,
   type PostkitSlotStyles,
-} from '@postkit/react';
+} from '@postkit/chakra';
 import {
   createPostkitTheme,
   postkitDefaultTheme,
   postkitRecipeKeys,
-} from '@postkit/react/theme';
+} from '@postkit/chakra/theme';
 ```
 
 Stable classes such as `.postkit-audio__root`,
@@ -2096,7 +2108,7 @@ Source: https://github.com/postkit-org/postkit-js/tree/main/packages/shiki
 
 `@postkit/shiki` creates a lazy Shiki syntax-highlighting adapter for Postkit's
 Chakra CodeBlock renderer. It includes a practical language and theme preset
-without adding Shiki to `@postkit/react` itself.
+without adding Shiki to `@postkit/chakra` itself.
 
 ## Install
 
@@ -2111,7 +2123,7 @@ npm install @postkit/shiki @chakra-ui/react
 Create the adapter once at module scope and pass it through `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
+import { PostkitProvider } from '@postkit/chakra';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
 
 const codeBlockAdapter = createPostkitShikiAdapter();
@@ -2174,21 +2186,21 @@ PostKit article components, MDX mapping, and internal-link routing for Next.js.
 ## When to use it
 
 Use this adapter when a Next.js application renders Markdown or MDX with
-PostKit. It layers `next/link` over `@postkit/react` while preserving native
+PostKit. It layers `next/link` over `@postkit/chakra` while preserving native
 anchors for external URLs, protocol links, hashes, downloads, and explicit
 non-default targets.
 
 ## Install
 
 ```sh
-npm install @postkit/next @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/next @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
 
 - Next.js 15 or 16
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -2207,7 +2219,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 Mount `PostkitProvider` in the application's provider tree:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -2271,7 +2283,7 @@ The returned value is an MDX component map. Components supplied through
 - If a site component is ignored, pass it through `components` in the same map
   supplied to the renderer.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [Next.js adapter example](../../examples/next) is included in the repository.
 
@@ -2294,14 +2306,14 @@ targets as native anchors.
 ## Install
 
 ```sh
-npm install @postkit/react-router @postkit/react @chakra-ui/react @emotion/react react react-dom react-router
+npm install @postkit/react-router @postkit/chakra @chakra-ui/react @emotion/react react react-dom react-router
 ```
 
 Supported peer versions:
 
 - React Router 7
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -2316,7 +2328,7 @@ export const mdxComponents = createPostkitReactRouterComponents();
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 import { BrowserRouter } from 'react-router';
 
 export function App() {
@@ -2375,7 +2387,7 @@ export const mdxComponents = createPostkitReactRouterComponents({
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [React Router example](../../examples/react-router) is included in the
 repository.
@@ -2399,14 +2411,14 @@ non-default targets as native anchors.
 ## Install
 
 ```sh
-npm install @postkit/tanstack-router @postkit/react @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/tanstack-router @postkit/chakra @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
 
 - TanStack Router 1.x
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -2475,7 +2487,7 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
   register PostKit slot recipes in the host Chakra system.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [TanStack Router example](../../examples/tanstack-router) is included in the
 repository.
@@ -2500,7 +2512,7 @@ handling to the site.
 ## Install
 
 ```sh
-npm install @postkit/astro @postkit/react
+npm install @postkit/astro @postkit/chakra
 ```
 
 Enable Astro's React and MDX integrations:
@@ -2552,7 +2564,7 @@ postkitAstro({
 Opt into PostKit's standalone preset from that module when desired:
 
 ```ts
-import { createPostkitSystem, postkitDefaultTheme } from '@postkit/react';
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/chakra';
 
 export default createPostkitSystem({ preset: postkitDefaultTheme });
 ```
@@ -2659,7 +2671,7 @@ site-owned wrappers that control their hydration behavior.
 - Unexpected client JavaScript: check the hydration policy before wrapping
   static components in a site-owned client island.
 
-See the [`@postkit/react`](../react) guide for the shared component,
+See the [`@postkit/chakra`](../chakra) guide for the shared component,
 declaration, and theming APIs. The complete
 [Astro example](../../examples/astro) is built and inspected in CI.
 

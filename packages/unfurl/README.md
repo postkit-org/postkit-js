@@ -313,5 +313,5 @@ option.
   sanitization boundary but is never injected by PostKit's React renderer.
 
 Use the result with `LinkPreview` or `SocialPost` from
-[`@postkit/react`](../react). The repository includes a checked
+[`@postkit/chakra`](../chakra). The repository includes a checked
 [server resolver example](../../examples/unfurl-server).

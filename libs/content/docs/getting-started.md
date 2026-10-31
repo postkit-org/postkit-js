@@ -13,14 +13,14 @@ application in control of routing, layout, assets, and remote services.
 ## Install the React package
 
 ```sh
-npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Mount the provider near the article:
 
 ```tsx
-import { Callout, PostkitProvider } from '@postkit/react';
-import { postkitDefaultTheme } from '@postkit/react/theme';
+import { Callout, PostkitProvider } from '@postkit/chakra';
+import { postkitDefaultTheme } from '@postkit/chakra/theme';
 
 export function Article() {
   return (
@@ -47,7 +47,7 @@ its content-specific visual defaults are wanted.
 Use the supplied component map with the application's Markdown or MDX runtime:
 
 ```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
+import { createPostkitMdxComponents } from '@postkit/chakra';
 
 export const mdxComponents = createPostkitMdxComponents();
 ```
