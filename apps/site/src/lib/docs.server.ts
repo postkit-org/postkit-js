@@ -1,9 +1,24 @@
+import { execFileSync } from 'node:child_process';
+
+import {
+  createDocsManifest,
+  type DocsManifest,
+  type DocsPage,
+} from '@chakra-docs/core';
+import type { NextPagesDocsOptions } from '@chakra-docs/next/pages';
 import { createPostkitRemarkPlugins } from '@postkit/chakra';
 import { selectDocsEntries } from '@postkit/content';
 import { allDocsEntries } from 'content-collections';
 import { serialize } from 'next-mdx-remote/serialize';
 
 import type { DocsEntry, DocsEntrySummary } from './docs';
+import {
+  DOCS_BASE_PATH,
+  DOCS_COLLECTION_ID,
+  docsRoute,
+  toDocsHeadings,
+  toDocsNavTree,
+} from './docs-layout';
 import { resolveDocsNavigation, type ResolvedDocsNavigation } from './docs-nav';
 import { extractHeadings } from './headings';
 
@@ -73,4 +88,78 @@ export async function getDocsEntry(slug: string): Promise<DocsEntry> {
     source,
     headings: extractHeadings(entry.content),
   };
+}
+
+let docsManifest: DocsManifest | null = null;
+
+/**
+ * The visible docs as a chakra-docs manifest: one `docs` collection at `/docs`, its pages in
+ * nav order and the nav tree from `docs-nav.ts`. Pages carry their title, summary
+ * (`description`) and `h2`s, not their bodies: bodies render through `MdxContent`.
+ */
+export function getDocsManifest(): DocsManifest {
+  if (docsManifest) return docsManifest;
+
+  const nav = toDocsNavTree(getDocsNavigation());
+  const pages = selectDocsEntries(allDocsEntries, visibility).map(
+    (entry): DocsPage => ({
+      id: entry.slug,
+      collectionId: DOCS_COLLECTION_ID,
+      slug: [entry.slug],
+      path: `${entry.slug}.md`,
+      route: docsRoute(entry.slug),
+      title: entry.title,
+      description: entry.summary,
+      frontmatter: {
+        title: entry.title,
+        description: entry.summary,
+        draft: entry.status === 'draft',
+      },
+      headings: toDocsHeadings(extractHeadings(entry.content)),
+    }),
+  );
+
+  docsManifest = createDocsManifest({
+    collections: [
+      { id: DOCS_COLLECTION_ID, basePath: DOCS_BASE_PATH, pages, nav },
+    ],
+    nav,
+  });
+  return docsManifest;
+}
+
+/** Options for `@chakra-docs/next/pages`' helpers. Drafts follow the site's visibility rule. */
+export function getDocsPagesOptions(): NextPagesDocsOptions {
+  return {
+    manifest: getDocsManifest(),
+    basePath: DOCS_BASE_PATH,
+    includeDrafts: visibility.includeDrafts,
+  };
+}
+
+let shallowClone: boolean | null = null;
+
+/**
+ * When the page's Markdown last changed, from git (`TechArticle.dateModified`, 01 §7), as an
+ * ISO date. `null` when git isn't available or the clone is shallow (a shallow clone would
+ * give every page the same date), so the field is left out rather than wrong.
+ */
+export function getDocsModifiedDate(slug: string): string | null {
+  try {
+    shallowClone ??=
+      execFileSync('git', ['rev-parse', '--is-shallow-repository'], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim() !== 'false';
+    if (shallowClone) return null;
+
+    const date = execFileSync(
+      'git',
+      ['log', '-1', '--format=%cI', '--', `:(top)libs/content/docs/${slug}.md`],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+    ).trim();
+    return date || null;
+  } catch {
+    return null;
+  }
 }

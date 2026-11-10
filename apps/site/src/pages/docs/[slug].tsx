@@ -1,34 +1,56 @@
+import { chakra, Flex, Link as ChakraLink } from '@chakra-ui/react';
+import { DocsArticle, DocsLayout, DocsProvider } from '@chakra-docs/chakra';
 import {
-  Box,
-  Container,
-  Flex,
-  Link as ChakraLink,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+  createGetStaticPaths,
+  createPagesRouterDocProps,
+  serializeNextProps,
+  type NextPagesRouterDocProps,
+} from '@chakra-docs/next/pages';
 import type {
   GetStaticPaths,
   GetStaticProps,
   InferGetStaticPropsType,
 } from 'next';
-import NextLink from 'next/link';
+import { Schema, type SchemaData } from 'react-structured';
 
 import {
+  DocsMenu,
+  DocsPager,
+  DocsSearchField,
+  DocsSinceBadge,
+  siteDocsConfig,
+} from '../../components/docs';
+import {
+  absoluteUrl,
   BreadcrumbJsonLd,
   MdxContent,
   PageMeta,
+  TwoToneHeading,
 } from '../../components/layout';
-import type { DocsEntry, DocsEntrySummary } from '../../lib/docs';
+import type { DocsEntry } from '../../lib/docs';
 import {
-  getDocsEntries,
+  docsEditUrl,
+  docsRoute,
+  docsTitleQuiet,
+  docsTitleStatement,
+  findDocsNavGroup,
+} from '../../lib/docs-layout';
+import {
   getDocsEntry,
+  getDocsModifiedDate,
   getDocsNavigation,
+  getDocsPagesOptions,
 } from '../../lib/docs.server';
 
 interface DocsEntryPageProps {
+  /** chakra-docs' page props: the nav tree and this page (title, summary, `h2`s). */
+  readonly docs: NextPagesRouterDocProps;
+  /** The serialized body and the entry's frontmatter. */
   readonly entry: DocsEntry;
-  readonly previous: DocsEntrySummary | null;
-  readonly next: DocsEntrySummary | null;
+  /** The page's nav group and its first page, for the phone menu and breadcrumbs. */
+  readonly group: { readonly title: string; readonly firstHref: string } | null;
+  /** When the Markdown last changed (git), for `TechArticle.dateModified`. */
+  readonly dateModified: string | null;
 }
 
 interface DocsEntryParams extends Record<string, string> {
@@ -36,13 +58,15 @@ interface DocsEntryParams extends Record<string, string> {
 }
 
 export const getStaticPaths: GetStaticPaths<DocsEntryParams> = async () => {
-  // Reports unresolved nav items as a build warning (PK-035 renders the nav).
+  // Reports unresolved nav items as a build warning.
   getDocsNavigation();
 
+  // chakra-docs' helper yields catch-all params (`['mdx']`); this route is one segment.
+  const { paths, fallback } = createGetStaticPaths(getDocsPagesOptions())();
   return {
-    fallback: false,
-    paths: getDocsEntries().map((entry) => ({
-      params: { slug: entry.slug },
+    fallback,
+    paths: paths.map(({ params }) => ({
+      params: { slug: params.slug.join('/') },
     })),
   };
 };
@@ -51,92 +75,121 @@ export const getStaticProps: GetStaticProps<
   DocsEntryPageProps,
   DocsEntryParams
 > = async ({ params }) => {
-  const entries = getDocsEntries();
   const slug = params?.slug ?? '';
-  const index = entries.findIndex((entry) => entry.slug === slug);
-  if (index < 0) {
+  const docs = createPagesRouterDocProps(
+    getDocsPagesOptions(),
+    docsRoute(slug),
+  );
+  if (!docs) {
     return { notFound: true };
   }
 
   return {
     props: {
+      docs: serializeNextProps(docs),
       entry: await getDocsEntry(slug),
-      previous: entries[index - 1] ?? null,
-      next: entries[index + 1] ?? null,
+      group: findDocsNavGroup(docs.nav, docs.page.route),
+      dateModified: getDocsModifiedDate(slug),
     },
   };
 };
 
+function techArticleData(
+  entry: DocsEntry,
+  dateModified: string | null,
+): SchemaData<'TechArticle'> {
+  return {
+    headline: entry.title,
+    description: entry.summary,
+    url: absoluteUrl(docsRoute(entry.slug)),
+    inLanguage: 'en',
+    ...(entry.since ? { dependencies: `Postkit ${entry.since} or later` } : {}),
+    ...(dateModified ? { dateModified } : {}),
+  };
+}
+
 export default function DocsEntryPage({
+  docs,
   entry,
-  previous,
-  next,
+  group,
+  dateModified,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { nav, page } = docs;
+  const path = page.route;
+
   return (
     <>
-      <PageMeta title={entry.title} description={entry.summary} />
+      <PageMeta
+        title={entry.title}
+        description={entry.summary}
+        path={path}
+        type="article"
+      />
+      <Schema
+        id="techarticle-jsonld"
+        type="TechArticle"
+        data={techArticleData(entry, dateModified)}
+      />
       <BreadcrumbJsonLd
         items={[
           { name: 'Docs', path: '/docs/introduction' },
-          { name: entry.title, path: `/docs/${entry.slug}` },
+          ...(group ? [{ name: group.title, path: group.firstHref }] : []),
+          { name: entry.title, path },
         ]}
       />
 
-      <Container maxW="4xl" paddingBlock={{ base: '12', md: '20' }}>
-        <Stack gap="8">
-          <Flex align="baseline" gap="3" wrap="wrap">
-            <Text
-              color="accent"
-              fontFamily="mono"
-              fontSize="xs"
-              fontWeight="700"
-              letterSpacing="0.1em"
-              textTransform="uppercase"
-            >
-              {entry.category}
-            </Text>
-            {entry.since ? (
-              <Text color="fg.secondary" fontFamily="mono" fontSize="xs">
-                Since {entry.since}
-              </Text>
-            ) : null}
-            {entry.status === 'draft' ? (
-              <Text color="fg.secondary" fontFamily="mono" fontSize="xs">
-                Draft
-              </Text>
-            ) : null}
-          </Flex>
+      <DocsProvider config={siteDocsConfig}>
+        <DocsLayout
+          nav={nav}
+          page={page}
+          headings={page.headings}
+          sidebarContent={<DocsSearchField />}
+          sidebarSlotProps={{ 'aria-label': 'Docs' }}
+          tocSlotProps={{ as: 'nav', 'aria-label': 'On this page' }}
+          mobileNavigation={false}
+          mobileToc={false}
+        >
+          <DocsMenu nav={nav} page={page} group={group?.title ?? null} />
 
-          <MdxContent source={entry.source} />
+          {/* No `page` prop: the header is the two-tone title below, not chakra-docs' h1. */}
+          <DocsArticle>
+            <Flex align="center" gap="10px" wrap="wrap" marginBottom="16px">
+              {group ? (
+                <chakra.p margin="0" fontSize="15px" color="fg.muted">
+                  {group.title}
+                </chakra.p>
+              ) : null}
+              {entry.since ? <DocsSinceBadge since={entry.since} /> : null}
+            </Flex>
+            <TwoToneHeading
+              as="h1"
+              textStyle="pageTitle"
+              fontSize="clamp(40px, 5vw, 64px)"
+              title={docsTitleStatement(entry.title)}
+              quiet={docsTitleQuiet(entry.slug, entry.summary)}
+              marginBottom="24px"
+            />
 
-          <Flex
-            borderTopColor="border"
-            borderTopWidth="1px"
-            gap="6"
-            justify="space-between"
-            paddingTop="8"
-          >
-            <Box>
-              {previous ? (
-                <ChakraLink asChild color="accent" fontWeight="700">
-                  <NextLink href={`/docs/${previous.slug}`}>
-                    ← {previous.title}
-                  </NextLink>
-                </ChakraLink>
-              ) : null}
-            </Box>
-            <Box textAlign="right">
-              {next ? (
-                <ChakraLink asChild color="accent" fontWeight="700">
-                  <NextLink href={`/docs/${next.slug}`}>
-                    {next.title} →
-                  </NextLink>
-                </ChakraLink>
-              ) : null}
-            </Box>
-          </Flex>
-        </Stack>
-      </Container>
+            <MdxContent source={entry.source} />
+
+            <DocsPager nav={nav} page={page} />
+            <chakra.p margin="24px 0 0" fontSize="15px">
+              <ChakraLink
+                href={docsEditUrl(entry.slug)}
+                color="fg.muted"
+                textDecoration="none"
+                _hover={{ color: 'fg' }}
+                _focusVisible={{
+                  outline: '2px solid {colors.accent}',
+                  outlineOffset: '2px',
+                }}
+              >
+                Edit this page on GitHub
+              </ChakraLink>
+            </chakra.p>
+          </DocsArticle>
+        </DocsLayout>
+      </DocsProvider>
     </>
   );
 }

@@ -5,8 +5,6 @@ category: Reference
 order: 8
 ---
 
-# Troubleshooting
-
 ## Components render with only host styling
 
 This is the default. Postkit inherits the host Chakra system and does not apply

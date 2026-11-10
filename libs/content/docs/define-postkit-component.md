@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# definePostkitComponent
-
 `definePostkitComponent` creates a component definition: the framework-free
 contract for its props, its named parts and how it validates. Postkit's own
 components and yours are defined the same way. It lives in

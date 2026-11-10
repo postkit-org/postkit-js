@@ -6,8 +6,6 @@ order: 6
 status: draft
 ---
 
-# Writing in Prismark
-
 {/* TODO(review): Ryan to confirm every Prismark claim on this page before it is published. Sources are 03 D6, D10, §3.1, §3.2, §7 and §7.1. */}
 
 Prismark is an editor that writes the same Markdown your site builds. Writers

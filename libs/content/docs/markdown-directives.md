@@ -5,8 +5,6 @@ category: Writing
 order: 2
 ---
 
-# Markdown directives
-
 Plain Markdown pipelines can use literal-only directives:
 
 ```md

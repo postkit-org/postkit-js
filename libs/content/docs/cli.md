@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# CLI
-
 One small tool for the moments config isn't enough: turning on kits, taking a
 component into your repo, keeping it current, and making your own.
 

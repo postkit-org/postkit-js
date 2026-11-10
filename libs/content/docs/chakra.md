@@ -5,8 +5,6 @@ category: Renderers
 order: 2
 ---
 
-# Chakra
-
 `@postkit/chakra` is the Chakra UI renderer for React. It maps every portable
 declaration to a Chakra-backed component, supplies the Markdown and MDX
 tooling, and ships Postkit's optional visual preset. The framework adapters

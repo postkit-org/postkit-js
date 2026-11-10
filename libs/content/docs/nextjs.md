@@ -5,8 +5,6 @@ category: Frameworks
 order: 1
 ---
 
-# Next.js
-
 `@postkit/next` layers `next/link` over `@postkit/chakra`. Internal links stay
 native to the Next.js router, while external URLs, protocol links, hashes,
 downloads, and explicit non-default targets remain normal anchors.

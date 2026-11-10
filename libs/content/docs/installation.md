@@ -5,8 +5,6 @@ category: Get started
 order: 2
 ---
 
-# Installation
-
 Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
 those package conventions.

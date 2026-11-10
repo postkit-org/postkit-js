@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Kits
-
 A kit is a named set of component definitions. Postkit's 35 components come in
 six kits, and you turn on the ones your writers use. Only those components are
 bundled, validated and described in your manifest.

@@ -5,8 +5,6 @@ category: Frameworks
 order: 2
 ---
 
-# React Router
-
 `@postkit/react-router` routes internal destinations through React Router and
 leaves external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.

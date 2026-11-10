@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Eject
-
 Ejecting is rung 7 of the customization ladder. It copies a component's view
 (and its recipe, for Chakra) into your repo, so you own the source and can
 change anything in it.

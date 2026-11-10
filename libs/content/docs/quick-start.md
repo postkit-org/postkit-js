@@ -5,8 +5,6 @@ category: Get started
 order: 3
 ---
 
-# Quick start
-
 Postkit gives articles a portable component vocabulary while leaving the host
 application in control of routing, layout, assets, and remote services. This
 page assumes the React renderer is installed (see

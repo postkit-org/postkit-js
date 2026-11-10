@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Headless
-
 `@postkit/react` is the headless renderer. Its views emit semantic markup,
 landmarks and ARIA with a name on every part, and nothing else. You bring the
 look with plain CSS, utility classes or any CSS-in-JS. There's no Chakra and no

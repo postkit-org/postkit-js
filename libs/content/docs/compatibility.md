@@ -5,8 +5,6 @@ category: Reference
 order: 6
 ---
 
-# Compatibility and environments
-
 Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
 those package conventions.

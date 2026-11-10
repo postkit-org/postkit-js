@@ -6,8 +6,6 @@ order: 3
 status: published
 ---
 
-# Validation
-
 Postkit checks authored components when a post compiles, so a misspelled prop
 or an impossible value stops the build instead of reaching a reader. This page
 describes what is checked today and what each error means.

@@ -5,8 +5,6 @@ category: Writing
 order: 1
 ---
 
-# MDX
-
 Use JSX declarations in MDX:
 
 ```mdx

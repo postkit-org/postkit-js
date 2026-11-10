@@ -5,8 +5,6 @@ category: Get started
 order: 1
 ---
 
-# Introduction
-
 Postkit is a portable publishing toolkit. It gives articles a shared component
 vocabulary (callouts, figures, code blocks, link previews and more) and keeps
 that vocabulary separate from the application that renders it. Write the

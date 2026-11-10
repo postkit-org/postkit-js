@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Defaults and slots
-
 Defaults and slots are rungs 4 and 5 of the customization ladder. Both keep the
 component's definition, so its directive, validation and manifest entry don't
 change and every existing post keeps working.
