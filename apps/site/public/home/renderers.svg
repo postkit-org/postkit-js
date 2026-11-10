@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="t d">
+  <title id="t">One callout, four renderers</title>
+  <desc id="d">Four panels in a grid. Each shows the callout "Keep the content" as a different renderer draws it: headless with a hairline border, Chakra on a green tint with a tick, email as a table with a green bar, and the editor with the block selected.</desc>
+  <rect width="1200" height="675" fill="#EDEDEB"/>
+  <g font-family="'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <!-- Headless -->
+    <g transform="translate(48 48)">
+      <rect width="534" height="267" rx="22" fill="#FFFFFF"/>
+      <text x="32" y="52" font-size="22" fill="#6E6E73">Headless</text>
+      <rect x="32" y="96" width="470" height="120" rx="16" fill="#FFFFFF" stroke="#E2E2DF" stroke-width="2"/>
+      <circle cx="62" cy="134" r="6" fill="#1D1D1F"/>
+      <rect x="84" y="124" width="196" height="18" rx="9" fill="#1D1D1F"/>
+      <rect x="84" y="160" width="360" height="14" rx="7" fill="#A1A1A6"/>
+    </g>
+    <!-- Chakra -->
+    <g transform="translate(618 48)">
+      <rect width="534" height="267" rx="22" fill="#FFFFFF"/>
+      <text x="32" y="52" font-size="22" fill="#6E6E73">Chakra</text>
+      <rect x="32" y="96" width="470" height="120" rx="16" fill="#E5EFE9"/>
+      <rect x="52" y="122" width="26" height="26" rx="7" fill="#23794A"/>
+      <path d="M58 135l5 5 9-10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="94" y="124" width="196" height="18" rx="9" fill="#1D1D1F"/>
+      <rect x="94" y="160" width="360" height="14" rx="7" fill="#6E8F7B"/>
+    </g>
+    <!-- Email -->
+    <g transform="translate(48 360)">
+      <rect width="534" height="267" rx="22" fill="#FFFFFF"/>
+      <text x="32" y="52" font-size="22" fill="#6E6E73">Email</text>
+      <rect x="32" y="96" width="470" height="120" fill="#F0FFF4"/>
+      <rect x="32" y="96" width="6" height="120" fill="#38A169"/>
+      <rect x="58" y="124" width="196" height="18" rx="2" fill="#1C4532"/>
+      <rect x="58" y="160" width="360" height="14" rx="2" fill="#68A383"/>
+    </g>
+    <!-- Editor -->
+    <g transform="translate(618 360)">
+      <rect width="534" height="267" rx="22" fill="#FFFFFF"/>
+      <text x="32" y="52" font-size="22" fill="#6E6E73">Editor</text>
+      <rect x="24" y="100" width="486" height="128" rx="20" fill="none" stroke="#2F5BE3" stroke-width="3"/>
+      <rect x="24" y="66" width="92" height="28" rx="7" fill="#2F5BE3"/>
+      <text x="38" y="86" font-size="17" fill="#FFFFFF">Callout</text>
+      <rect x="32" y="108" width="470" height="112" rx="14" fill="#FFFFFF"/>
+      <circle cx="62" cy="140" r="6" fill="#2F5BE3"/>
+      <rect x="84" y="130" width="196" height="18" rx="9" fill="#1D1D1F"/>
+      <rect x="84" y="166" width="360" height="14" rx="7" fill="#A1A1A6"/>
+    </g>
+  </g>
+</svg>
