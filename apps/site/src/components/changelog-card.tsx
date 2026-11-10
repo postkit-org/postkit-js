@@ -22,11 +22,11 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
   return (
     <Box
       as="article"
-      bg={featured ? 'postkitInk' : 'whiteAlpha.700'}
-      borderColor={featured ? 'postkitInk' : 'blackAlpha.200'}
+      bg={featured ? 'bg.inverted' : 'bg.subtle'}
+      borderColor={featured ? 'fg' : 'border'}
       borderRadius="2xl"
       borderWidth="1px"
-      color={featured ? 'white' : 'postkitInk'}
+      color={featured ? 'white' : 'fg'}
       padding={{ base: '6', md: featured ? '9' : '7' }}
     >
       <Flex
@@ -40,7 +40,7 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
             {entry.version}
           </Badge>
           <Text
-            color={featured ? 'whiteAlpha.700' : 'blackAlpha.600'}
+            color={featured ? 'fg.inverted' : 'fg.muted'}
             fontFamily="mono"
             fontSize="xs"
           >
@@ -50,7 +50,7 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
         <Flex gap="2" flexWrap="wrap">
           {entry.tags.map((tag) => (
             <Text
-              color={featured ? 'whiteAlpha.600' : 'blackAlpha.500'}
+              color={featured ? 'fg.inverted' : 'fg.quiet'}
               fontFamily="mono"
               fontSize="xs"
               key={tag}
@@ -71,7 +71,7 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
         {entry.title}
       </Heading>
       <Text
-        color={featured ? 'whiteAlpha.800' : 'blackAlpha.700'}
+        color={featured ? 'fg.inverted' : 'fg.secondary'}
         lineHeight="1.7"
         marginTop="3"
         maxW="3xl"
@@ -80,7 +80,7 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
       </Text>
       <ChakraLink
         asChild
-        color={featured ? 'green.200' : 'green.700'}
+        color={featured ? 'fg.inverted' : 'accent'}
         display="inline-flex"
         fontWeight="700"
         marginTop="6"

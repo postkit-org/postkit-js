@@ -47,13 +47,16 @@
   ],
   "references": [
     {
+      "path": "../../libs/site-theme"
+    },
+    {
       "path": "../../packages/shiki"
     },
     {
-      "path": "../../packages/chakra"
+      "path": "../../packages/next"
     },
     {
-      "path": "../../packages/next"
+      "path": "../../packages/chakra"
     },
     {
       "path": "../../libs/content"

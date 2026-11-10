@@ -54,7 +54,7 @@ function sectionHeading(eyebrow: string, title: string, description: string) {
   return (
     <Box maxW="3xl">
       <Text
-        color="green.700"
+        color="accent"
         fontFamily="mono"
         fontSize="xs"
         fontWeight="700"
@@ -73,7 +73,7 @@ function sectionHeading(eyebrow: string, title: string, description: string) {
       >
         {title}
       </Heading>
-      <Text color="blackAlpha.700" lineHeight="1.7" marginTop="3">
+      <Text color="fg.secondary" lineHeight="1.7" marginTop="3">
         {description}
       </Text>
     </Box>
@@ -101,12 +101,12 @@ export default function ComponentPage({
       <Container maxW="7xl" paddingBlock={{ base: '10', md: '16' }}>
         <ChakraLink
           asChild
-          color="blackAlpha.600"
+          color="fg.muted"
           fontFamily="mono"
           fontSize="xs"
           fontWeight="700"
           textDecoration="none"
-          _hover={{ color: 'green.700' }}
+          _hover={{ color: 'accent' }}
         >
           <NextLink href="/components">← All components</NextLink>
         </ChakraLink>
@@ -118,7 +118,7 @@ export default function ComponentPage({
         >
           <Box>
             <Text
-              color="green.700"
+              color="accent"
               fontFamily="mono"
               fontSize="sm"
               fontWeight="700"
@@ -138,7 +138,7 @@ export default function ComponentPage({
               {component.name}
             </Heading>
             <Text
-              color="blackAlpha.700"
+              color="fg.secondary"
               fontSize={{ base: 'lg', md: 'xl' }}
               lineHeight="1.7"
               marginTop="5"
@@ -155,15 +155,15 @@ export default function ComponentPage({
           </Box>
 
           <Box
-            bg="whiteAlpha.600"
-            borderColor="blackAlpha.200"
+            bg="bg.subtle"
+            borderColor="border"
             borderRadius="2xl"
             borderWidth="1px"
             minW="0"
             padding={{ base: '5', md: '8' }}
           >
             <Text
-              color="blackAlpha.500"
+              color="fg.quiet"
               fontFamily="mono"
               fontSize="xs"
               fontWeight="700"
@@ -177,7 +177,7 @@ export default function ComponentPage({
         </SimpleGrid>
       </Container>
 
-      <Box borderBlockColor="blackAlpha.200" borderBlockWidth="1px">
+      <Box borderBlockColor="border" borderBlockWidth="1px">
         <Container maxW="7xl" paddingBlock={{ base: '14', md: '20' }}>
           {sectionHeading(
             'Presentation',
@@ -187,8 +187,8 @@ export default function ComponentPage({
           <SimpleGrid columns={{ base: 1, xl: 3 }} gap="5" marginTop="8">
             {variants.map((variant) => (
               <Box
-                bg="whiteAlpha.400"
-                borderColor="blackAlpha.200"
+                bg="bg.subtle"
+                borderColor="border"
                 borderRadius="xl"
                 borderWidth="1px"
                 key={variant}
@@ -196,7 +196,7 @@ export default function ComponentPage({
                 padding="5"
               >
                 <Text
-                  color="blackAlpha.600"
+                  color="fg.muted"
                   fontFamily="mono"
                   fontSize="xs"
                   fontWeight="700"
@@ -227,7 +227,7 @@ export default function ComponentPage({
             <Stack gap="5" marginTop="8">
               {sizes.map((size) => (
                 <Box
-                  borderColor="blackAlpha.200"
+                  borderColor="border"
                   borderRadius="xl"
                   borderWidth="1px"
                   key={size}
@@ -235,7 +235,7 @@ export default function ComponentPage({
                   padding={{ base: '5', md: '7' }}
                 >
                   <Text
-                    color="blackAlpha.600"
+                    color="fg.muted"
                     fontFamily="mono"
                     fontSize="xs"
                     fontWeight="700"
@@ -282,7 +282,7 @@ export default function ComponentPage({
               'Direct component props take precedence over provider defaults. Presentation props flow through Postkit recipes and the host Chakra theme.',
             )}
             <Box
-              borderColor="blackAlpha.200"
+              borderColor="border"
               borderRadius="xl"
               borderWidth="1px"
               marginTop="8"
@@ -311,7 +311,7 @@ export default function ComponentPage({
                           : prop.kind}
                       </Table.Cell>
                       <Table.Cell>{prop.required ? 'Yes' : 'No'}</Table.Cell>
-                      <Table.Cell color="blackAlpha.700" minW="18rem">
+                      <Table.Cell color="fg.secondary" minW="18rem">
                         {prop.description}
                       </Table.Cell>
                     </Table.Row>
@@ -323,7 +323,7 @@ export default function ComponentPage({
 
           <Flex
             align={{ base: 'stretch', sm: 'center' }}
-            borderTopColor="blackAlpha.200"
+            borderTopColor="border"
             borderTopWidth="1px"
             direction={{ base: 'column', sm: 'row' }}
             gap="3"

@@ -79,7 +79,7 @@ export default function DocsEntryPage({
           <ChakraLink
             alignSelf="flex-start"
             asChild
-            color="green.700"
+            color="accent"
             fontSize="sm"
             fontWeight="700"
             textDecoration="none"
@@ -89,7 +89,7 @@ export default function DocsEntryPage({
 
           <Box>
             <Text
-              color="green.700"
+              color="accent"
               fontFamily="mono"
               fontSize="xs"
               fontWeight="700"
@@ -103,7 +103,7 @@ export default function DocsEntryPage({
           <MDXRemote {...entry.source} components={postkitComponents} />
 
           <Flex
-            borderTopColor="blackAlpha.200"
+            borderTopColor="border"
             borderTopWidth="1px"
             gap="6"
             justify="space-between"
@@ -111,7 +111,7 @@ export default function DocsEntryPage({
           >
             <Box>
               {previous ? (
-                <ChakraLink asChild color="green.700" fontWeight="700">
+                <ChakraLink asChild color="accent" fontWeight="700">
                   <NextLink href={`/docs/${previous.slug}`}>
                     ← {previous.title}
                   </NextLink>
@@ -120,7 +120,7 @@ export default function DocsEntryPage({
             </Box>
             <Box textAlign="right">
               {next ? (
-                <ChakraLink asChild color="green.700" fontWeight="700">
+                <ChakraLink asChild color="accent" fontWeight="700">
                   <NextLink href={`/docs/${next.slug}`}>
                     {next.title} →
                   </NextLink>

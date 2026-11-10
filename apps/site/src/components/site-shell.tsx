@@ -24,19 +24,19 @@ export function SiteShell({ children }: SiteShellProps) {
     <Flex minH="100vh" direction="column">
       <Box
         as="header"
-        bg="rgba(244, 241, 232, 0.88)"
-        borderBottomColor="blackAlpha.200"
+        bg="bg.glass"
+        borderBottomColor="border.header"
         borderBottomWidth="1px"
         position="sticky"
         top="0"
         zIndex="sticky"
-        css={{ backdropFilter: 'blur(18px)' }}
+        css={{ backdropFilter: 'saturate(180%) blur(20px)' }}
       >
         <Container maxW="7xl">
           <Flex align="center" height="16" justify="space-between" gap="6">
             <ChakraLink
               asChild
-              color="postkitInk"
+              color="fg"
               fontFamily="heading"
               fontSize="xl"
               fontWeight="600"
@@ -45,7 +45,7 @@ export function SiteShell({ children }: SiteShellProps) {
             >
               <NextLink href="/">
                 Postkit
-                <Box as="span" color="postkitAccent">
+                <Box as="span" color="accent">
                   .
                 </Box>
               </NextLink>
@@ -57,7 +57,7 @@ export function SiteShell({ children }: SiteShellProps) {
                   {navigation.map((item) => (
                     <ChakraLink
                       asChild
-                      color="blackAlpha.700"
+                      color="fg.secondary"
                       display={{
                         base: item.href === '/' ? 'none' : 'inline-flex',
                         sm: 'inline-flex',
@@ -66,7 +66,7 @@ export function SiteShell({ children }: SiteShellProps) {
                       fontWeight="600"
                       key={item.href}
                       textDecoration="none"
-                      _hover={{ color: 'postkitInk' }}
+                      _hover={{ color: 'fg' }}
                     >
                       <NextLink href={item.href}>{item.label}</NextLink>
                     </ChakraLink>
@@ -97,7 +97,7 @@ export function SiteShell({ children }: SiteShellProps) {
 
       <Box
         as="footer"
-        borderTopColor="blackAlpha.200"
+        borderTopColor="border"
         borderTopWidth="1px"
         paddingBlock="8"
       >
@@ -108,10 +108,10 @@ export function SiteShell({ children }: SiteShellProps) {
             gap="3"
             justify="space-between"
           >
-            <Text color="blackAlpha.600" fontSize="sm">
+            <Text color="fg.muted" fontSize="sm">
               Portable publishing components for the open web.
             </Text>
-            <Text color="blackAlpha.600" fontFamily="mono" fontSize="xs">
+            <Text color="fg.muted" fontFamily="mono" fontSize="xs">
               MIT licensed · Built with Postkit
             </Text>
           </Flex>

@@ -1,2 +1,2 @@
-export * from './lib/theme.js';
-export * from './lib/tokens.js';
+export * from './lib/theme';
+export * from './lib/tokens';

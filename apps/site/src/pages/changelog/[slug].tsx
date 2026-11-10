@@ -70,7 +70,7 @@ export default function ChangelogEntryPage({
           <ChakraLink
             alignSelf="flex-start"
             asChild
-            color="green.700"
+            color="accent"
             fontSize="sm"
             fontWeight="700"
             textDecoration="none"
@@ -83,7 +83,7 @@ export default function ChangelogEntryPage({
               <Badge colorPalette="green" variant="subtle">
                 {entry.version}
               </Badge>
-              <Text color="blackAlpha.600" fontFamily="mono" fontSize="xs">
+              <Text color="fg.muted" fontFamily="mono" fontSize="xs">
                 {formatChangelogDate(entry.date)}
               </Text>
             </Flex>

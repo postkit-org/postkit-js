@@ -58,13 +58,13 @@ export default function IndexPage({
       <Box
         as="section"
         borderBottomWidth="1px"
-        borderColor="blackAlpha.200"
+        borderColor="border"
         overflow="hidden"
         position="relative"
       >
         <Box
           aria-hidden="true"
-          bg="postkitAccent"
+          bg="accent"
           borderRadius="full"
           filter="blur(1px)"
           height={{ base: '18rem', md: '28rem' }}
@@ -100,7 +100,7 @@ export default function IndexPage({
                 Content components that travel well.
               </Heading>
               <Text
-                color="blackAlpha.700"
+                color="fg.secondary"
                 fontSize={{ base: 'lg', md: 'xl' }}
                 lineHeight="1.7"
                 maxW="2xl"
@@ -147,15 +147,15 @@ export default function IndexPage({
             {capabilities.map((capability, index) => (
               <Box
                 as="article"
-                bg="whiteAlpha.700"
-                borderColor="blackAlpha.200"
+                bg="bg.subtle"
+                borderColor="border"
                 borderRadius="2xl"
                 borderWidth="1px"
                 key={capability.title}
                 padding={{ base: '6', md: '7' }}
               >
                 <Text
-                  color="green.700"
+                  color="accent"
                   fontFamily="mono"
                   fontSize="xs"
                   fontWeight="700"
@@ -173,7 +173,7 @@ export default function IndexPage({
                 >
                   {capability.title}
                 </Heading>
-                <Text color="blackAlpha.700" lineHeight="1.7" marginTop="3">
+                <Text color="fg.secondary" lineHeight="1.7" marginTop="3">
                   {capability.copy}
                 </Text>
               </Box>
@@ -196,7 +196,7 @@ export default function IndexPage({
               >
                 <Box>
                   <Text
-                    color="green.700"
+                    color="accent"
                     fontFamily="mono"
                     fontSize="sm"
                     fontWeight="700"

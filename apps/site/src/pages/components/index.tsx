@@ -36,12 +36,12 @@ export default function ComponentsPage() {
         />
       </Head>
 
-      <Box borderBottomColor="blackAlpha.200" borderBottomWidth="1px">
+      <Box borderBottomColor="border" borderBottomWidth="1px">
         <Container maxW="7xl" paddingBlock={{ base: '16', md: '24' }}>
           <SimpleGrid columns={{ base: 1, lg: 2 }} gap="12">
             <Box maxW="3xl">
               <Text
-                color="green.700"
+                color="accent"
                 fontFamily="mono"
                 fontSize="sm"
                 fontWeight="700"
@@ -61,7 +61,7 @@ export default function ComponentsPage() {
                 Publishing primitives, in the open.
               </Heading>
               <Text
-                color="blackAlpha.700"
+                color="fg.secondary"
                 fontSize={{ base: 'lg', md: 'xl' }}
                 lineHeight="1.7"
                 marginTop="5"
@@ -75,7 +75,7 @@ export default function ComponentsPage() {
             <SimpleGrid alignSelf="end" columns={3} gap="3">
               {stats.map((stat) => (
                 <Box
-                  borderColor="blackAlpha.200"
+                  borderColor="border"
                   borderRadius="xl"
                   borderWidth="1px"
                   key={stat.label}
@@ -89,7 +89,7 @@ export default function ComponentsPage() {
                     {stat.value}
                   </Text>
                   <Text
-                    color="blackAlpha.600"
+                    color="fg.muted"
                     fontFamily="mono"
                     fontSize="xs"
                     marginTop="1"
@@ -109,7 +109,7 @@ export default function ComponentsPage() {
             <Box as="section" key={group.category}>
               <Flex
                 align="baseline"
-                borderBottomColor="blackAlpha.200"
+                borderBottomColor="border"
                 borderBottomWidth="1px"
                 justify="space-between"
                 marginBottom="6"
@@ -123,7 +123,7 @@ export default function ComponentsPage() {
                 >
                   {group.category}
                 </Heading>
-                <Text color="blackAlpha.500" fontFamily="mono" fontSize="xs">
+                <Text color="fg.quiet" fontFamily="mono" fontSize="xs">
                   {group.components.length.toString().padStart(2, '0')}
                 </Text>
               </Flex>
@@ -132,8 +132,8 @@ export default function ComponentsPage() {
                 {group.components.map((component) => (
                   <LinkBox
                     as="article"
-                    bg="whiteAlpha.500"
-                    borderColor="blackAlpha.200"
+                    bg="bg.subtle"
+                    borderColor="border"
                     borderRadius="xl"
                     borderWidth="1px"
                     key={component.name}
@@ -141,8 +141,8 @@ export default function ComponentsPage() {
                     padding="6"
                     transition="border-color 160ms ease, transform 160ms ease, background 160ms ease"
                     _hover={{
-                      bg: 'whiteAlpha.800',
-                      borderColor: 'green.500',
+                      bg: 'bg.hover',
+                      borderColor: 'accent',
                       transform: 'translateY(-2px)',
                     }}
                   >
@@ -164,7 +164,7 @@ export default function ComponentsPage() {
                       <Badge variant="subtle">{component.runtime}</Badge>
                     </Flex>
                     <Text
-                      color="blackAlpha.700"
+                      color="fg.secondary"
                       fontSize="sm"
                       lineHeight="1.7"
                       marginTop="4"
@@ -172,7 +172,7 @@ export default function ComponentsPage() {
                       {component.description}
                     </Text>
                     <Text
-                      color="green.700"
+                      color="accent"
                       fontFamily="mono"
                       fontSize="xs"
                       fontWeight="700"

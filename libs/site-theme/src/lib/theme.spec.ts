@@ -1,11 +1,14 @@
-import { gradients, siteConfig, siteSystem } from './theme.js';
-import { tokens } from './tokens.js';
+import { gradients, siteSystem } from './theme';
+import { tokens } from './tokens';
 
-type ModeValue = { value: { base: string; _dark: string } };
+type ModeValue = { value: { _light: string; _dark: string } };
 type TokenTree = { [key: string]: ModeValue | TokenTree };
 
-const semanticColors = siteConfig.theme?.semanticTokens?.colors as TokenTree;
-const semanticShadows = siteConfig.theme?.semanticTokens?.shadows as TokenTree;
+// The merged config (Chakra's defaults + ours) is what the system renders, so test that:
+// a token that only overrode `base` would still show Chakra's `_light` value here.
+const merged = siteSystem._config.theme?.semanticTokens;
+const semanticColors = merged?.colors as TokenTree;
+const semanticShadows = merged?.shadows as TokenTree;
 
 /** Finds `bg.subtle` / `bg` (→ `bg.DEFAULT`) in the nested semantic token tree. */
 function lookup(tree: TokenTree, path: string): ModeValue | undefined {
@@ -35,7 +38,7 @@ describe('site theme', () => {
     'colour %s matches tokens.json in light and dark',
     (name, value) => {
       expect(lookup(semanticColors, name)?.value).toEqual({
-        base: value.light,
+        _light: value.light,
         _dark: value.dark,
       });
     },
@@ -45,11 +48,11 @@ describe('site theme', () => {
     'tone %s and its tint match tokens.json',
     (name, value) => {
       expect(lookup(semanticColors, `tone.${name}`)?.value).toEqual({
-        base: value.light,
+        _light: value.light,
         _dark: value.dark,
       });
       expect(lookup(semanticColors, `tint.${name}`)?.value).toEqual({
-        base: value.tintLight,
+        _light: value.tintLight,
         _dark: value.tintDark,
       });
     },
@@ -60,7 +63,7 @@ describe('site theme', () => {
       if (name.startsWith('$')) continue;
       const { light, dark } = value as { light: string; dark: string };
       expect(lookup(semanticShadows, name)?.value).toEqual({
-        base: light,
+        _light: light,
         _dark: dark,
       });
     }

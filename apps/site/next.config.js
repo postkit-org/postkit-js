@@ -7,7 +7,12 @@ const nextConfig = {
   allowedDevOrigins: ['postkit.test'],
   poweredByHeader: false,
   reactStrictMode: true,
-  transpilePackages: ['@postkit/next', '@postkit/chakra', '@postkit/unfurl'],
+  transpilePackages: [
+    '@postkit/next',
+    '@postkit/chakra',
+    '@postkit/unfurl',
+    '@postkit/site-theme',
+  ],
 };
 
 module.exports = withContentCollections(nextConfig);

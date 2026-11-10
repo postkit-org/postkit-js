@@ -41,7 +41,7 @@ export default function DocsPage({
       <Container maxW="6xl" paddingBlock={{ base: '16', md: '24' }}>
         <Box maxW="3xl">
           <Text
-            color="green.700"
+            color="accent"
             fontFamily="mono"
             fontSize="sm"
             fontWeight="700"
@@ -61,7 +61,7 @@ export default function DocsPage({
             Documentation
           </Heading>
           <Text
-            color="blackAlpha.700"
+            color="fg.secondary"
             fontSize={{ base: 'lg', md: 'xl' }}
             lineHeight="1.7"
             marginTop="5"
@@ -92,14 +92,14 @@ export default function DocsPage({
                   .map((entry) => (
                     <LinkBox
                       as="article"
-                      borderColor="blackAlpha.200"
+                      borderColor="border"
                       borderRadius="xl"
                       borderWidth="1px"
                       key={entry.slug}
                       padding="6"
                       transition="border-color 160ms ease, transform 160ms ease"
                       _hover={{
-                        borderColor: 'green.500',
+                        borderColor: 'accent',
                         transform: 'translateY(-2px)',
                       }}
                     >
@@ -115,11 +115,7 @@ export default function DocsPage({
                           </NextLink>
                         </LinkOverlay>
                       </Heading>
-                      <Text
-                        color="blackAlpha.700"
-                        lineHeight="1.7"
-                        marginTop="3"
-                      >
+                      <Text color="fg.secondary" lineHeight="1.7" marginTop="3">
                         {entry.summary}
                       </Text>
                     </LinkBox>

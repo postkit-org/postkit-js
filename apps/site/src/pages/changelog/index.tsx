@@ -30,7 +30,7 @@ export default function ChangelogPage({
       <Container maxW="5xl" paddingBlock={{ base: '16', md: '24' }}>
         <Box maxW="3xl">
           <Text
-            color="green.700"
+            color="accent"
             fontFamily="mono"
             fontSize="sm"
             fontWeight="700"
@@ -50,7 +50,7 @@ export default function ChangelogPage({
             Changelog
           </Heading>
           <Text
-            color="blackAlpha.700"
+            color="fg.secondary"
             fontSize={{ base: 'lg', md: 'xl' }}
             lineHeight="1.7"
             marginTop="5"

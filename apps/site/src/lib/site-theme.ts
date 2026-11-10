@@ -1,72 +1,25 @@
-import { createSystem, defaultConfig } from '@chakra-ui/react';
 import {
   createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
 } from '@postkit/chakra';
+import { fontStacks, siteSystem as baseSystem } from '@postkit/site-theme';
 
-const chakraSystem = createSystem(defaultConfig, {
-  globalCss: {
-    html: {
-      background: 'postkitPaper',
-      color: 'postkitInk',
-    },
-    body: {
-      background: 'postkitPaper',
-      color: 'postkitInk',
-      fontFamily: 'body',
-      textRendering: 'optimizeLegibility',
-    },
-  },
-  theme: {
-    tokens: {
-      colors: {
-        postkitAccent: { value: '#16845b' },
-        postkitInk: { value: '#142019' },
-        postkitPaper: { value: '#f4f1e8' },
-      },
-    },
-  },
-});
-
+/**
+ * Postkit's components inside the site take the site's fonts. Everything else
+ * (colours, light and dark, type scale, breakpoints) comes from
+ * `@postkit/site-theme`, layered over Postkit's default component theme.
+ */
 const postkitSiteTheme = createPostkitTheme({
   typography: {
-    body: '"Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif',
-    heading: 'Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif',
-    mono: '"SFMono-Regular", "Roboto Mono", Consolas, "Liberation Mono", monospace',
-  },
-  callout: {
-    base: {
-      root: {
-        borderRadius: '2xl',
-      },
-    },
-  },
-  codeBlock: {
-    base: {
-      root: {
-        borderRadius: '2xl',
-      },
-    },
-  },
-  prose: {
-    base: {
-      root: {
-        colorPalette: 'green',
-        fontSize: { base: 'md', md: 'lg' },
-      },
-      h2: {
-        fontWeight: '500',
-      },
-      h3: {
-        fontWeight: '600',
-      },
-    },
+    body: fontStacks.sans,
+    heading: fontStacks.sans,
+    mono: fontStacks.mono,
   },
 });
 
 export const siteSystem = createPostkitSystem({
-  system: chakraSystem,
+  system: baseSystem,
   preset: postkitDefaultTheme,
   theme: postkitSiteTheme,
 });

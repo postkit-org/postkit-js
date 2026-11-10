@@ -3,7 +3,9 @@
 // @chakra-ui/react 3.36.1 on Nov 10, 2026; run `nx typecheck site-theme` again in PK-002.
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 
-const mode = (light: string, dark: string) => ({ value: { base: light, _dark: dark } });
+// Chakra's own semantic tokens use `_light` / `_dark`. Overriding them with `base` alone
+// leaves Chakra's `_light` value in place, so set both conditions explicitly.
+const mode = (light: string, dark: string) => ({ value: { _light: light, _dark: dark } });
 
 export const gradients = {
   brand: 'linear-gradient(90deg, #D4B8FF 0%, #F4A3BE 32%, #FF8B57 64%, #F3C460 100%)',

@@ -17,8 +17,3 @@ body {
 *::after {
   box-sizing: border-box;
 }
-
-::selection {
-  background: #b8e6cf;
-  color: #142019;
-}

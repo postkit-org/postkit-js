@@ -6,8 +6,10 @@
 // fallback, so the stacks still work where those variables aren't set (emails, tests).
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 
+// Chakra's own semantic tokens use `_light` / `_dark`. Overriding them with `base`
+// alone leaves Chakra's `_light` value in place, so set both conditions explicitly.
 const mode = (light: string, dark: string) => ({
-  value: { base: light, _dark: dark },
+  value: { _light: light, _dark: dark },
 });
 
 export const fontStacks = {
