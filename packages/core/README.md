@@ -121,9 +121,26 @@ type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
 - `PostkitPropsOf`, `PostkitSlotOf`, `PostkitThemeVariantOf`,
   `PostkitThemeKeyOf` and `PostkitRecipeKeyOf` derive view props, slot and
   variant unions, and theme and recipe keys from a definition.
+  `PostkitPropsOf` is what a view receives, so a prop with a `default` is
+  non-optional; `PostkitAuthoredPropsOf` is what an author writes, where only
+  `required` props are required.
 - `postkitBuiltInDefinitions` maps each built-in component name to its
   definition, and each definition is also exported on its own, such as
   `calloutDefinition`.
+
+### The component manifest
+
+`createPostkitComponentManifest(components, { renderers })` generates the
+`postkit.component-catalog` v2 manifest for exactly the definitions given:
+v1's fields plus `package`, `kit`, `stability`, `slots`, `variants`, a
+computed `support`, and each prop's `default` and `themeVariant`.
+`createPostkit().manifest()` and `@postkit/chakra/component-manifest.json`
+both use it.
+
+v1 stays readable: `readPostkitComponentManifest(json)` accepts either
+version and returns v2, `isPostkitComponentManifestV1` and
+`isPostkitComponentManifestV2` tell them apart, and
+`mergePostkitComponentManifests` combines manifests.
 
 ## Behaviours
 

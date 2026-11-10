@@ -8,6 +8,8 @@ export {
   definePostkitComponent,
   postkitComponentCategories,
   type AnyPostkitComponentDefinition,
+  type PostkitAuthoredPropsOf,
+  type PostkitAuthoredPropsOfProps,
   type PostkitComponentCategoryId,
   type PostkitComponentChildren,
   type PostkitComponentDefinition,
@@ -15,6 +17,7 @@ export {
   type PostkitComponentExampleDefinition,
   type PostkitComponentRuntime,
   type PostkitComponentStability,
+  type PostkitDefaultedPropNameOf,
   type PostkitPropNameOf,
   type PostkitPropsOf,
   type PostkitPropsOfProps,
@@ -32,7 +35,9 @@ export {
   type PostkitJsonPropDefinition,
   type PostkitNumberPropDefinition,
   type PostkitPropDefinition,
+  type PostkitPropDefaultOf,
   type PostkitPropDefinitionBase,
+  type PostkitPropDefinitionFields,
   type PostkitPropDefinitions,
   type PostkitPropKind,
   type PostkitPropOptions,
@@ -41,3 +46,4 @@ export {
   type PostkitVariantPropOptions,
 } from './props.js';
 export * from './built-ins.js';
+export * from './manifest.js';

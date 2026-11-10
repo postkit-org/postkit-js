@@ -4,6 +4,7 @@ import {
   presentation,
   prop,
   type AnyPostkitComponentDefinition,
+  type PostkitAuthoredPropsOf,
   type PostkitPropNameOf,
   type PostkitPropsOf,
   type PostkitRecipeKeyOf,
@@ -177,18 +178,19 @@ describe('definePostkitComponent', () => {
       PostkitRecipeKeyOf<Callout>
     >().toEqualTypeOf<'postkitCallout'>();
 
+    // Views receive defaulted props as non-optional (03 step 8).
     type Props = PostkitPropsOf<Callout>;
     expectTypeOf<Props['items']>().toEqualTypeOf<readonly string[]>();
-    expectTypeOf<Props['tone']>().toEqualTypeOf<
-      'note' | 'tip' | 'warning' | undefined
-    >();
-    expectTypeOf<Props['size']>().toEqualTypeOf<
-      'sm' | 'md' | 'lg' | undefined
-    >();
+    expectTypeOf<Props['tone']>().toEqualTypeOf<'note' | 'tip' | 'warning'>();
+    expectTypeOf<Props['size']>().toEqualTypeOf<'sm' | 'md' | 'lg'>();
     expectTypeOf<Props['title']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<Props['open']>().toEqualTypeOf<boolean | undefined>();
-    expectTypeOf<{ items: readonly string[] }>().toExtend<Props>();
-    expectTypeOf<{ tone: 'tip' }>().not.toExtend<Props>();
+    type Authored = PostkitAuthoredPropsOf<Callout>;
+    expectTypeOf<Authored['tone']>().toEqualTypeOf<
+      'note' | 'tip' | 'warning' | undefined
+    >();
+    expectTypeOf<{ items: readonly string[] }>().toExtend<Authored>();
+    expectTypeOf<{ tone: 'tip' }>().not.toExtend<Authored>();
 
     expectTypeOf(callout).toExtend<AnyPostkitComponentDefinition>();
   });
