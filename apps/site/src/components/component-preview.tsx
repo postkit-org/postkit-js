@@ -17,6 +17,8 @@ import {
   Figure,
   FileCard,
   FileTree,
+  Footnote,
+  Footnotes,
   Gallery,
   KeyTakeaway,
   LinkPreview,
@@ -487,7 +489,47 @@ export const componentPreviewSamples: Readonly<
       caption: 'A quick tour of the portable publishing contract.',
     },
   },
+  // CompFootnotes: a reference and its note only make sense together, so both previews
+  // render the board's sentence with its two notes (`FootnotesPreview`).
+  Footnote: {
+    props: { marker: 'superscript' },
+    children:
+      'Markdown with directives, or MDX. Both parse to the same portable document.',
+  },
+  Footnotes: {
+    props: { title: 'Notes' },
+  },
 };
+
+const previewNotes = [
+  'Markdown with directives, or MDX. Both parse to the same portable document.',
+  'Headless, Chakra, email or web components, chosen per site rather than per article.',
+] as const;
+
+/**
+ * The board's sentence with two marks, then the list (end placement): the real `Footnote`
+ * and `Footnotes`, with the preview's props on both.
+ */
+function FootnotesPreview(props: Record<string, unknown>) {
+  const shared = { ...props, scope: 'preview', placement: 'end' as const };
+  return (
+    <div>
+      <p>
+        Postkit keeps the article in plain text
+        <Footnote {...shared} index={1} />
+        {' and lets each renderer decide how the notes appear'}
+        <Footnote {...shared} index={2} />.
+      </p>
+      <Footnotes {...shared}>
+        {previewNotes.map((note, position) => (
+          <Footnote key={note} index={position + 1}>
+            <p>{note}</p>
+          </Footnote>
+        ))}
+      </Footnotes>
+    </div>
+  );
+}
 
 type PreviewView = ComponentType<
   Record<string, unknown> & { readonly children?: ReactNode }
@@ -530,6 +572,8 @@ const views = {
   Tabs,
   Terminal,
   Video,
+  Footnote: FootnotesPreview,
+  Footnotes: FootnotesPreview,
 } as unknown as Readonly<Record<PostkitComponentName, PreviewView>>;
 
 export interface ComponentPreviewProps {

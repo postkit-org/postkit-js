@@ -242,8 +242,11 @@ describe('the site feeds, from libs/content', () => {
         const urls = urlsIn(source);
         expect(urls.length).toBeGreaterThan(0);
         for (const url of urls) {
-          // Content may link off-site (GitHub); nothing is relative.
-          expect(url).toMatch(/^https:\/\//);
+          // Content may link off-site (GitHub); nothing is relative except a
+          // footnote's links within its own entry, prefixed by the entry (03 §7.1).
+          expect(url).toMatch(
+            /^(?:https:\/\/|#fn(?:ref)?-[a-z0-9-]+-\d+(?:-\d+)?$)/,
+          );
         }
         expect(source).not.toContain('https://postkit.org');
       }

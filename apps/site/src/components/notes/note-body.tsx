@@ -2,19 +2,9 @@ import { Box, chakra } from '@chakra-ui/react';
 import { Prose, type ProseProps } from '@postkit/chakra';
 import type { MDXComponents } from 'mdx/types';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  type ComponentType,
-  type MouseEvent,
-  type ReactNode,
-} from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 import { MdxContent, PageContainer, siteMdxComponents } from '../layout';
-
-/** Jumps land below the sticky header with room to spare. */
-const JUMP_MARGIN = 'calc({sizes.header} + 24px)';
 
 interface HeadingProps {
   readonly children?: ReactNode;
@@ -72,187 +62,53 @@ const noteComponents: MDXComponents = {
   h2: NoteH2 as MDXComponents['h2'],
 };
 
-/**
- * End-note styles (CompFootnotes, `placement="end"`): accent superscript marks with a 24px
- * tap target, then a 64px rule and a numbered list whose ↩ backlinks return to the mark.
- * They target GFM's footnote markup (`data-footnote-ref`, `section[data-footnotes]`,
- * `data-footnote-backref`), which is what the Postkit preset emits until 03 step 10's
- * `Footnotes` lands.
- */
-const footnoteStyles = {
-  '& sup:has(> a[data-footnote-ref])': { lineHeight: 0 },
-  '& a[data-footnote-ref]': {
-    position: 'relative',
-    // Inline (not inline-block), so the punctuation after a mark never wraps away from it.
-    display: 'inline',
-    paddingInline: '2px',
-    borderRadius: 'xs',
-    color: 'accent',
-    fontSize: '0.68em',
-    fontWeight: 'medium',
-    lineHeight: 1,
-    textDecoration: 'none',
-    scrollMarginTop: JUMP_MARGIN,
-    transitionProperty: 'background-color',
-    transitionDuration: 'hover',
-    transitionTimingFunction: 'ease-out',
-    // The mark is drawn small; its hit area is at least 24×24 (02 §6, WCAG 2.5.8).
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      width: '100%',
-      height: '100%',
-      minWidth: '24px',
-      minHeight: '24px',
-      transform: 'translate(-50%, -50%)',
-    },
-    '&:hover, &:focus-visible': { bg: 'tint.note' },
-  },
-  '& section[data-footnotes]': {
-    marginTop: '64px',
-    '&::before': {
-      content: '""',
-      display: 'block',
-      width: '64px',
-      marginBottom: '16px',
-      borderTopWidth: '1px',
-      borderTopColor: 'border.faint',
-    },
-    // GFM's "Notes" heading: kept for screen readers (the list's label), hidden on screen.
-    '& > h2': { srOnly: true },
-    '& > ol': {
-      counterReset: 'footnote',
-      margin: 0,
-      padding: 0,
-      listStyleType: 'none',
-      fontSize: '15px',
-      lineHeight: '1.55',
-    },
-    '& > ol > li': {
-      counterIncrement: 'footnote',
-      display: 'grid',
-      gridTemplateColumns: '24px minmax(0, 1fr)',
-      columnGap: '4px',
-      margin: '0 -10px',
-      padding: '5px 10px',
-      borderRadius: 'sm',
-      scrollMarginTop: JUMP_MARGIN,
-      transitionProperty: 'background-color',
-      transitionDuration: '1.5s',
-      transitionTimingFunction: 'ease-out',
-      '&::before': {
-        content: 'counter(footnote) "."',
-        color: 'fg.quiet',
-        fontVariantNumeric: 'tabular-nums',
-      },
-      '& > *': { gridColumn: 2, margin: 0, color: 'fg.secondary' },
-      '& > * + *': { marginTop: '8px' },
-      // Jumping to a note tints it; the tint fades over 1.5s (02 §6).
-      '&[data-footnote-jumped]': { bg: 'tint.note', transitionDuration: '0s' },
-      '&:focus': { outline: 'none' },
-      '&:focus-visible': {
-        outline: '2px solid',
-        outlineColor: 'accent',
-        outlineOffset: '2px',
-      },
-    },
-    '& a[data-footnote-backref]': {
-      position: 'relative',
-      display: 'inline-block',
-      // GFM already puts a space before ↩.
-      marginInlineStart: '2px',
-      borderRadius: 'xs',
-      color: 'accent',
-      textDecoration: 'none',
-      lineHeight: 1,
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        width: '24px',
-        height: '24px',
-        transform: 'translate(-50%, -50%)',
-      },
-    },
-  },
-} as const;
-
-/**
- * Footnote jumps move focus, not just the scroll position (02 §6, 01 §13): a mark focuses its
- * note, and ↩ focuses the mark again. Native fragment navigation still does the scrolling
- * and updates the URL; this only follows it with focus and the tint.
- */
-function useFootnoteFocus() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    ref.current
-      ?.querySelectorAll<HTMLElement>('section[data-footnotes] > ol > li')
-      .forEach((note) => {
-        note.tabIndex = -1;
-      });
-  }, []);
-
-  const onClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
-    const link = (event.target as Element).closest<HTMLAnchorElement>(
-      'a[data-footnote-ref], a[data-footnote-backref]',
-    );
-    const hash = link?.getAttribute('href');
-    if (!link || !hash?.startsWith('#')) return;
-
-    const target = document.getElementById(decodeURIComponent(hash.slice(1)));
-    if (!target) return;
-
-    // After the browser has followed the fragment.
-    requestAnimationFrame(() => {
-      target.focus({ preventScroll: true });
-      if (target.matches('li')) {
-        target.setAttribute('data-footnote-jumped', '');
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() =>
-            target.removeAttribute('data-footnote-jumped'),
-          ),
-        );
-      }
-    });
-  }, []);
-
-  return { ref, onClick };
-}
-
 export interface NoteBodyProps {
   readonly source: MDXRemoteSerializeResult;
 }
 
 /**
+ * The site's footnote sizes (01 §5.3, §6.6): from xl (1200px) the sidenotes and Asides sit in
+ * a 192px column 28px right of the text, lined up with the lead image's right edge.
+ */
+const SIDENOTE = '& [data-postkit-component=Sidenote][data-postkit-part=root]';
+
+const sidenoteColumn = {
+  '--postkit-sidenote-width': '{sizes.sidenote}',
+  '--postkit-sidenote-gap': '{sizes.sidenoteGap}',
+  // SiteArticle: margin notes at 13px with an accent number, an accent edge on the note whose
+  // mark is hovered or focused; on phones a 14px note opens on a quiet surface under its line.
+  [SIDENOTE]: { color: 'fg.muted', fontSize: '13px', lineHeight: '1.5' },
+  [`${SIDENOTE}[data-highlighted]`]: { borderInlineStartColor: 'accent' },
+  [`${SIDENOTE}[data-active-placement=inline]`]: {
+    bg: 'bg.subtle',
+    borderRadius: '10px',
+    color: 'fg.secondary',
+    fontSize: '14px',
+    marginTop: '12px',
+  },
+  [`${SIDENOTE} [data-postkit-part=number]`]: {
+    color: 'accent',
+    fontWeight: 'medium',
+  },
+} as const;
+
+/**
  * The article text: a 680px column, centred, in the `prose` type style, rendered through
  * `MdxContent` with the real Postkit components.
  *
- * Footnotes are end notes at every width, and `Aside` is a block in the column: the stated
- * fallback (06 PK-037) until 03 step 10's `Footnotes` gives responsive `placement`.
+ * Footnotes are Postkit's `Footnote` and `Footnotes` (03 §7.1), placed per
+ * `siteFootnoteDefaults`: notes open under their line on phones, close the article from md,
+ * and move into the margin from xl, where `Aside` joins them (D14). The footnotes behaviour
+ * moves focus between marks and notes and tints the note you jumped to.
  */
 export function NoteBody({ source }: NoteBodyProps) {
-  const { ref, onClick } = useFootnoteFocus();
-
   return (
     <PageContainer
       width="prose"
       position="relative"
       paddingTop={{ base: '48px', md: '72px' }}
     >
-      {/* PK-037: sidenotes when 03 step 10 lands. From xl (1200px) the notes and Asides move
-          into a 192px column 28px right of the text ({sizes.sidenote}, {sizes.sidenoteGap}),
-          lined up with the lead image's right edge; this Box is the positioning context. */}
-      <Box
-        ref={ref}
-        onClick={onClick}
-        textStyle="prose"
-        color="fg"
-        css={footnoteStyles}
-      >
+      <Box textStyle="prose" color="fg" css={sidenoteColumn}>
         <MdxContent source={source} components={noteComponents} />
       </Box>
     </PageContainer>

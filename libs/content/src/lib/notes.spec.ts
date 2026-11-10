@@ -162,7 +162,7 @@ describe('authored notes', () => {
     30_000,
   );
 
-  it('compiles GFM footnotes in the first note', async () => {
+  it('compiles the first note’s footnotes to Footnote and Footnotes', async () => {
     const source = readFileSync(
       join(notesDirectory, 'one-article-four-renderers.mdx'),
       'utf8',
@@ -171,7 +171,8 @@ describe('authored notes', () => {
       mdxOptions: { remarkPlugins: createPostkitRemarkPlugins() },
     });
 
-    expect(compiledSource).toContain('data-footnote-ref');
-    expect(compiledSource).toContain('data-footnotes');
+    expect(compiledSource).toContain('_missingMdxReference("Footnote"');
+    expect(compiledSource).toContain('_missingMdxReference("Footnotes"');
+    expect(compiledSource).not.toContain('data-footnote-ref');
   });
 });
