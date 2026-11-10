@@ -60,3 +60,7 @@ export {
   shareActionsBehaviorSpec,
   type ShareActionsBehaviorFixture,
 } from '../share-actions/share-actions.behavior.spec-suite.js';
+export {
+  carouselPeekBehaviorSpec,
+  type CarouselPeekBehaviorFixture,
+} from '../carousel/carousel-peek.behavior.spec-suite.js';

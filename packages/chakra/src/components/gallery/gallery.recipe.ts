@@ -30,6 +30,7 @@ export const postkitGalleryRecipe = defineSlotRecipe({
       width: '100%',
     },
     caption: { color: 'fg.muted', fontSize: 'sm', marginTop: '1.5' },
+    number: { color: 'fg', fontWeight: 'semibold', marginEnd: '0.5em' },
   },
   variants: {
     size: {
@@ -51,6 +52,24 @@ export const postkitGalleryRecipe = defineSlotRecipe({
       },
       plain: {},
     },
+    presentation: {
+      grid: {},
+      // 2–3 related items side by side; a horizontal snap rail on phones.
+      row: {
+        grid: {
+          gridAutoColumns: { base: '80%', sm: 'minmax(0, 1fr)' },
+          gridAutoFlow: 'column',
+          gridTemplateColumns: 'none',
+          overflowX: { base: 'auto', sm: 'visible' },
+          overscrollBehaviorX: 'contain',
+          paddingBottom: { base: '1', sm: '0' },
+          scrollSnapType: { base: 'x mandatory', sm: 'none' },
+          // Focusable so keyboard users can scroll the rail; show where focus is.
+          focusVisibleRing: 'outside',
+        },
+        item: { scrollSnapAlign: 'start' },
+      },
+    },
   },
-  defaultVariants: { size: 'md', variant: 'subtle' },
+  defaultVariants: { size: 'md', variant: 'subtle', presentation: 'grid' },
 });

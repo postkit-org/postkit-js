@@ -46,7 +46,7 @@ describe('headless Carousel', () => {
       ).match(/data-postkit-part="slide"/g),
     ).toHaveLength(2);
     expect(renderToStaticMarkup(<Carousel />)).toBe(
-      '<div role="note" data-postkit-component="Carousel" data-postkit-part="root" data-size="md" data-variant="subtle">' +
+      '<div role="note" data-postkit-component="Carousel" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="slides">' +
         '<p data-postkit-part="emptyState">This carousel does not have any slides.</p></div>',
     );
   });

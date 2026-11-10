@@ -98,7 +98,8 @@
           "values": ["note", "tip", "important", "warning", "caution"],
           "description": "The semantic emphasis of the aside.",
           "default": "note",
-          "themeVariant": true
+          "themeVariant": true,
+          "aliases": ["type"]
         }
       },
       "slots": ["root", "icon", "content", "title", "body"],
@@ -329,6 +330,13 @@
           "description": "The preferred desktop column count.",
           "default": "2",
           "themeVariant": false
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": ["grid", "row"],
+          "description": "grid lays the items out in columns; row sets 2–3 related items side by side, a horizontal snap rail on phones.",
+          "default": "grid",
+          "themeVariant": true
         }
       },
       "slots": [
@@ -340,9 +348,10 @@
         "item",
         "imageLink",
         "image",
-        "caption"
+        "caption",
+        "number"
       ],
-      "variants": ["size", "variant"],
+      "variants": ["size", "variant", "presentation"],
       "category": "Media",
       "kit": "media",
       "package": "@postkit/core",
@@ -354,7 +363,8 @@
         "items",
         "title",
         "description",
-        "columns"
+        "columns",
+        "presentation"
       ],
       "example": {
         "props": { "items": [{ "title": "Example item" }] },
@@ -1334,7 +1344,7 @@
       },
       "preview": { "kind": "live", "label": "Poll component preview" },
       "runtime": "client",
-      "stability": "initial",
+      "stability": "experimental",
       "support": {
         "react": "supported",
         "headless": "supported",
@@ -2322,6 +2332,13 @@
           "kind": "number",
           "description": "The initially visible zero-based item index.",
           "themeVariant": false
+        },
+        "presentation": {
+          "kind": "enum",
+          "values": ["slides", "peek"],
+          "description": "slides shows one item with a position status; peek centres the current item with its neighbours in view, arrows only, and announces its caption. Neither advances on its own.",
+          "default": "slides",
+          "themeVariant": true
         }
       },
       "slots": [
@@ -2336,9 +2353,11 @@
         "previousTrigger",
         "status",
         "nextTrigger",
-        "emptyState"
+        "emptyState",
+        "caption",
+        "number"
       ],
-      "variants": ["size", "variant"],
+      "variants": ["size", "variant", "presentation"],
       "category": "Media",
       "kit": "media",
       "package": "@postkit/core",
@@ -2350,7 +2369,8 @@
         "items",
         "label",
         "initial",
-        "index"
+        "index",
+        "presentation"
       ],
       "example": {
         "props": {},
@@ -2472,7 +2492,7 @@
       },
       "preview": { "kind": "live", "label": "Chart component preview" },
       "runtime": "static",
-      "stability": "initial",
+      "stability": "experimental",
       "support": {
         "react": "supported",
         "headless": "supported",
@@ -2594,7 +2614,8 @@
         "figcaption",
         "caption",
         "credit",
-        "creditLink"
+        "creditLink",
+        "number"
       ],
       "variants": ["size", "variant", "layout"],
       "category": "Media",
@@ -3207,7 +3228,7 @@
       },
       "preview": { "kind": "live", "label": "SocialPost component preview" },
       "runtime": "resolver",
-      "stability": "initial",
+      "stability": "experimental",
       "support": {
         "react": "supported",
         "headless": "supported",
@@ -3271,9 +3292,41 @@
           "description": "Browser preload behavior.",
           "default": "metadata",
           "themeVariant": false
+        },
+        "captions": {
+          "kind": "string",
+          "description": "The captions track (a WebVTT file URL).",
+          "themeVariant": false,
+          "recommended": {
+            "reason": "Add a captions track (a WebVTT file), or mark the video decorative.",
+            "unless": ["decorative", "tracks"]
+          }
+        },
+        "captionsLang": {
+          "kind": "string",
+          "description": "The language of the captions track, such as en.",
+          "themeVariant": false
+        },
+        "duration": {
+          "kind": "string",
+          "description": "The running time, such as 0:24 or 1:02:03, shown with the caption.",
+          "themeVariant": false
+        },
+        "decorative": {
+          "kind": "boolean",
+          "description": "Marks a video without speech or meaningful sound, such as a silent loop, so it needs no captions track.",
+          "themeVariant": false
         }
       },
-      "slots": ["root", "frame", "player", "caption", "fallback"],
+      "slots": [
+        "root",
+        "frame",
+        "player",
+        "caption",
+        "fallback",
+        "duration",
+        "number"
+      ],
       "variants": ["size", "variant"],
       "category": "Media",
       "kit": "media",
@@ -3289,12 +3342,20 @@
         "caption",
         "aspect",
         "ratio",
-        "preload"
+        "preload",
+        "captions",
+        "lang",
+        "duration",
+        "decorative"
       ],
       "example": {
-        "props": { "src": "/media/video.mp4", "title": "video example" },
-        "jsx": "<Video src=\"/media/video.mp4\" title=\"video example\" />",
-        "directive": "::postkit-video{src=\"/media/video.mp4\" title=\"video example\"}"
+        "props": {
+          "src": "/media/video.mp4",
+          "title": "video example",
+          "captions": "/media/video.vtt"
+        },
+        "jsx": "<Video src=\"/media/video.mp4\" title=\"video example\" captions=\"/media/video.vtt\" />",
+        "directive": "::postkit-video{src=\"/media/video.mp4\" title=\"video example\" captions=\"/media/video.vtt\"}"
       },
       "preview": { "kind": "live", "label": "Video component preview" },
       "runtime": "native-controls",
@@ -3305,6 +3366,104 @@
         "chakra": "supported",
         "astro": "static",
         "email": "supported"
+      }
+    },
+    "Device": {
+      "name": "Device",
+      "directive": "postkit-device",
+      "description": "A screenshot in a plain iPhone, iPad or Mac frame drawn with CSS, with an optional caption.",
+      "childMode": "none",
+      "directiveRemarkPlugins": ["directives", "postkit"],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": ["sm", "md", "lg"],
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
+        },
+        "variant": {
+          "kind": "enum",
+          "values": ["outline", "subtle", "plain"],
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
+        },
+        "kind": {
+          "kind": "enum",
+          "values": ["iphone", "ipad", "mac"],
+          "description": "The device frame: iphone (with a notch), ipad, or mac (a laptop with its base).",
+          "default": "iphone",
+          "themeVariant": true
+        },
+        "src": {
+          "kind": "string",
+          "required": true,
+          "description": "The screenshot URL.",
+          "themeVariant": false
+        },
+        "alt": {
+          "kind": "string",
+          "required": true,
+          "description": "Alternative text that describes what the screenshot shows.",
+          "themeVariant": false
+        },
+        "caption": {
+          "kind": "string",
+          "description": "Visible supporting text below the device.",
+          "themeVariant": false
+        }
+      },
+      "slots": [
+        "root",
+        "frame",
+        "notch",
+        "screen",
+        "image",
+        "base",
+        "figcaption",
+        "number",
+        "caption"
+      ],
+      "variants": ["size", "variant", "kind"],
+      "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
+      "keywords": [
+        "device",
+        "media",
+        "size",
+        "variant",
+        "kind",
+        "src",
+        "alt",
+        "caption",
+        "screenshot",
+        "mockup",
+        "iphone",
+        "ipad",
+        "mac",
+        "frame"
+      ],
+      "example": {
+        "props": {
+          "kind": "iphone",
+          "src": "/media/screenshot.png",
+          "alt": "The app’s home screen, listing three projects",
+          "caption": "The companion app on iPhone."
+        },
+        "jsx": "<Device kind=\"iphone\" src=\"/media/screenshot.png\" alt=\"The app’s home screen, listing three projects\" caption=\"The companion app on iPhone.\" />",
+        "directive": "::postkit-device{kind=\"iphone\" src=\"/media/screenshot.png\" alt=\"The app’s home screen, listing three projects\" caption=\"The companion app on iPhone.\"}"
+      },
+      "preview": { "kind": "live", "label": "Device component preview" },
+      "runtime": "static",
+      "stability": "experimental",
+      "support": {
+        "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
+        "astro": "static",
+        "email": "not-defined"
       }
     }
   }

@@ -3,6 +3,8 @@ import {
   type PostkitBuiltInComponentName,
 } from '../components/built-ins.js';
 import type { AnyPostkitComponentDefinition } from '../components/definition.js';
+import { postkitCanonicalProps } from '../components/prop-rules.js';
+import { postkitVideoDuration } from '../components/video/video.duration.js';
 import type {
   PostkitComponentNode,
   PostkitJsonValue,
@@ -539,12 +541,13 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
         const title = field(item, 'title');
         const description = field(item, 'description');
         const href = field(item, 'href');
+        const caption = field(item, 'caption');
         return h(
           'figure',
           'slide',
           null,
           image('media', field(imageItem, 'src'), field(imageItem, 'alt')),
-          title || description || href
+          title || description || href || caption
             ? h(
                 'figcaption',
                 'content',
@@ -567,6 +570,7 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
                 description
                   ? h('p', 'description', null, description)
                   : undefined,
+                caption ? h('p', 'caption', null, caption) : undefined,
               )
             : undefined,
         );
@@ -1459,6 +1463,8 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
     const src = str(props['src']);
     const title = str(props['title']);
     const caption = str(props['caption']);
+    const captions = str(props['captions']);
+    const duration = postkitVideoDuration(str(props['duration']));
     return h(
       'figure',
       'root',
@@ -1474,10 +1480,72 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
               preload: str(props['preload']),
               controls: true,
             },
+            captions
+              ? h('track', undefined, {
+                  kind: 'captions',
+                  src: captions,
+                  srclang: str(props['captionsLang']),
+                  label: 'Captions',
+                  default: true,
+                })
+              : undefined,
             mediaFallback(src, title),
           )
         : undefined,
-      caption ? h('figcaption', 'caption', null, caption) : undefined,
+      caption || duration
+        ? h(
+            'figcaption',
+            'caption',
+            null,
+            caption,
+            caption && duration ? ' ' : undefined,
+            duration
+              ? h(
+                  'time',
+                  'duration',
+                  { datetime: duration.dateTime },
+                  duration.text,
+                )
+              : undefined,
+          )
+        : undefined,
+    );
+  },
+
+  Device: ({ props }) => {
+    const kind = str(props['kind']) ?? 'iphone';
+    const caption = str(props['caption']);
+    return h(
+      'figure',
+      'root',
+      null,
+      h(
+        'div',
+        'frame',
+        null,
+        kind === 'iphone'
+          ? h('span', 'notch', { 'aria-hidden': 'true' })
+          : undefined,
+        h(
+          'div',
+          'screen',
+          null,
+          image(
+            'image',
+            str(props['src']),
+            typeof props['alt'] === 'string' ? props['alt'] : '',
+          ),
+        ),
+      ),
+      kind === 'mac' ? h('span', 'base', { 'aria-hidden': 'true' }) : undefined,
+      caption
+        ? h(
+            'figcaption',
+            'figcaption',
+            null,
+            h('span', 'caption', null, caption),
+          )
+        : undefined,
     );
   },
 };
@@ -1492,7 +1560,7 @@ function withDefaults(
   props: PostkitComponentNode['props'],
 ): Props {
   const resolved: Record<string, PostkitJsonValue | undefined> = {
-    ...props,
+    ...postkitCanonicalProps(definition, props ?? {}),
   };
   for (const [name, prop] of Object.entries(definition.props)) {
     if (resolved[name] === undefined && prop.default !== undefined) {

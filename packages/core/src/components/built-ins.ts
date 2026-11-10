@@ -33,6 +33,7 @@ import { stepsDefinition } from './steps/steps.definition.js';
 import { tabsDefinition } from './tabs/tabs.definition.js';
 import { terminalDefinition } from './terminal/terminal.definition.js';
 import { videoDefinition } from './video/video.definition.js';
+import { deviceDefinition } from './device/device.definition.js';
 
 export {
   appearsOnDefinition,
@@ -70,11 +71,13 @@ export {
   tabsDefinition,
   terminalDefinition,
   videoDefinition,
+  deviceDefinition,
 };
 
 /**
  * Postkit's built-in component definitions, keyed by name. The key order is
- * the 0.2 catalog order, which the v1 manifest keeps.
+ * the 0.2 catalog order, which the v1 manifest keeps; components added since
+ * (Device, 0.3) follow it.
  */
 export const postkitBuiltInDefinitions = Object.freeze({
   Aside: asideDefinition,
@@ -112,6 +115,7 @@ export const postkitBuiltInDefinitions = Object.freeze({
   ShareActions: shareActionsDefinition,
   SocialPost: socialPostDefinition,
   Video: videoDefinition,
+  Device: deviceDefinition,
 });
 
 /** The name of a built-in Postkit component. */

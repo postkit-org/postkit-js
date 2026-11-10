@@ -20,7 +20,7 @@ describe('Postkit theme', () => {
   it('registers every component under a stable Chakra slot-recipe key', () => {
     const system = createPostkitSystem({ preset: postkitDefaultTheme });
 
-    expect(Object.values(postkitRecipeKeys)).toHaveLength(35);
+    expect(Object.values(postkitRecipeKeys)).toHaveLength(36);
     for (const key of Object.values(postkitRecipeKeys)) {
       expect(system.isSlotRecipe(key)).toBe(true);
     }

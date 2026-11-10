@@ -62,6 +62,7 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 - [Carousel](/components/carousel): A keyboard-operable image and content carousel.
 - [Figure](/components/figure): A responsive image with an optional caption and attribution.
 - [Video](/components/video): A responsive HTML video player with caption support.
+- [Device](/components/device): A screenshot in a plain iPhone, iPad or Mac frame drawn with CSS, with an optional caption.
 
 ### Technical content
 

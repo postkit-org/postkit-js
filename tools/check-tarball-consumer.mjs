@@ -224,9 +224,9 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
   const { article, technical, media } = await import('@postkit/react/kits');
   const { chakra, postkitDefaultTheme } = await import('@postkit/chakra');
 
-  const deviceDefinition = definePostkitComponent({
-    name: 'Device',
-    directive: 'postkit-device',
+  const showcaseDefinition = definePostkitComponent({
+    name: 'Showcase',
+    directive: 'postkit-showcase',
     category: 'media',
     description: 'A screenshot framed in a device.',
     props: {
@@ -239,7 +239,7 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
     },
     slots: ['root', 'screen'],
   });
-  const Device = postkitView(deviceDefinition, ({ props, part }) =>
+  const Showcase = postkitView(showcaseDefinition, ({ props, part }) =>
     createElement(
       'figure',
       part('root'),
@@ -252,8 +252,8 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
     const postkit = createPostkit({
       renderer,
       kits: [article, technical, media],
-      components: [{ definition: deviceDefinition, view: Device }],
-      defaults: { Callout: { variant: 'plain' }, Device: { frame: 'laptop' } },
+      components: [{ definition: showcaseDefinition, view: Showcase }],
+      defaults: { Callout: { variant: 'plain' }, Showcase: { frame: 'laptop' } },
     });
     const { Callout, Figure, Tabs } = postkit.mdxComponents;
     const markup = renderToStaticMarkup(
@@ -262,7 +262,7 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
         renderer ? { preset: postkitDefaultTheme } : {},
         createElement(Callout, { tone: 'tip' }, 'Body'),
         createElement(Callout, { variant: 'outline' }, 'Authored'),
-        createElement(postkit.mdxComponents.Device, { src: '/phone.png' }),
+        createElement(postkit.mdxComponents.Showcase, { src: '/phone.png' }),
         createElement(Figure, { src: '/a.png', alt: '' }),
         renderer
           ? createElement(Tabs, { items: [{ label: 'One', content: 'First' }] })
@@ -272,7 +272,7 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
     for (const expected of [
       'data-variant="plain"',
       'data-variant="outline"',
-      'data-postkit-component="Device"',
+      'data-postkit-component="Showcase"',
       'data-frame="laptop"',
       'data-postkit-component="Figure"',
     ]) {
@@ -285,7 +285,7 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
       JSON.parse(JSON.stringify(postkit.manifest())),
     );
     const names = Object.keys(manifest.components);
-    if (!names.includes('Device') || !names.includes('Callout') || names.includes('Poll')) {
+    if (!names.includes('Showcase') || !names.includes('Callout') || names.includes('Poll')) {
       throw new Error(\`createPostkit (\${label}) manifest has the wrong set: \${names.join(', ')}.\`);
     }
     // Every built-in has a headless view since 03 step 6, so Tabs is in both sets.
@@ -299,12 +299,12 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
     const tree = {
       type: 'root',
       children: [
-        { type: 'leafDirective', name: 'postkit-device', attributes: { src: '/p.png' }, children: [] },
+        { type: 'leafDirective', name: 'postkit-showcase', attributes: { src: '/p.png' }, children: [] },
       ],
     };
     remarkPostkit(postkitOptions)(tree);
-    if (tree.children[0].name !== 'Device') {
-      throw new Error(\`createPostkit (\${label}) remark plugin did not transform Device.\`);
+    if (tree.children[0].name !== 'Showcase') {
+      throw new Error(\`createPostkit (\${label}) remark plugin did not transform Showcase.\`);
     }
     let failed = false;
     try {
@@ -386,25 +386,25 @@ const _resolvedCalloutProps: PostkitPropsOf<typeof calloutDefinition> = {
 void _resolvedCalloutProps;
 
 // 03 step 8: 3 kits + one custom component, in both renderers.
-const deviceDefinition = definePostkitComponent({
-  name: 'Device',
-  directive: 'postkit-device',
+const showcaseDefinition = definePostkitComponent({
+  name: 'Showcase',
+  directive: 'postkit-showcase',
   category: 'media',
   description: 'A screenshot framed in a device.',
   props: { src: prop.string('The screenshot.', { required: true }) },
   slots: ['root'],
 });
-const Device = postkitView(deviceDefinition, () => null);
+const Showcase = postkitView(showcaseDefinition, () => null);
 const headlessSite = createHeadlessPostkit({
   kits: [articleKit, technical, media],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
   defaults: { Callout: { variant: 'plain' } },
-  overrides: { Callout: { slots: { icon: Device } } },
+  overrides: { Callout: { slots: { icon: Showcase } } },
 });
 const chakraSite = createPostkit({
   renderer: chakra,
   kits: [article, technical, media],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
   defaults: { Figure: { layout: 'wide' } },
   link: { linkProps: { prefetch: false } },
 });

@@ -10,7 +10,7 @@ import {
   type UnstyledProp,
 } from '@chakra-ui/react';
 import { figureDefinition } from '@postkit/core/components';
-import { postkitImageDimension } from '@postkit/react';
+import { postkitImageDimension, usePostkitFigureNumber } from '@postkit/react';
 
 import type { PostkitSlotStyles } from '../../lib/recipes/types.js';
 import { postkitChakraView } from '../../lib/view.js';
@@ -47,6 +47,7 @@ export const Figure = postkitChakraView<typeof figureDefinition, FigureProps>(
   postkitFigureRecipe,
   ({ props, part }) => {
     const { src, alt, caption, credit, creditHref, href, aspectRatio } = props;
+    const figure = usePostkitFigureNumber();
     const media = (
       <Box
         {...part('media', {
@@ -84,8 +85,13 @@ export const Figure = postkitChakraView<typeof figureDefinition, FigureProps>(
         ) : (
           media
         )}
-        {caption || credit ? (
+        {caption || credit || figure ? (
           <Box as="figcaption" {...part('figcaption')}>
+            {figure ? (
+              <Text as="span" {...part('number')}>
+                {figure.label()}
+              </Text>
+            ) : null}
             {caption ? (
               <Text as="span" {...part('caption')}>
                 {caption}

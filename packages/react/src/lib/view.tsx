@@ -1,8 +1,9 @@
-import type {
-  AnyPostkitComponentDefinition,
-  PostkitAuthoredPropsOf,
-  PostkitDefaultedPropNameOf,
-  PostkitSlotOf,
+import {
+  postkitCanonicalProps,
+  type AnyPostkitComponentDefinition,
+  type PostkitAuthoredPropsOf,
+  type PostkitDefaultedPropNameOf,
+  type PostkitSlotOf,
 } from '@postkit/core/components';
 import type {
   CSSProperties,
@@ -165,8 +166,10 @@ export function postkitView<
   options: PostkitViewOptions = {},
 ): PostkitViewComponent<Definition, Props> {
   function PostkitView(props: Props) {
-    const { classNames, slotStyles, rootProps, unstyled, ...authored } =
+    const { classNames, slotStyles, rootProps, unstyled, ...aliased } =
       props as Props & PostkitViewOwnProps<string>;
+    // Aliases (Callout's `type`) become their props before anything reads them.
+    const authored = postkitCanonicalProps(definition, aliased);
     const config = usePostkitComponentConfig(definition.name);
     const { props: resolved, state } = resolvePostkitViewState(
       definition,

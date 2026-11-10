@@ -2,11 +2,11 @@ import { Box, chakra, defineSlotRecipe } from '@chakra-ui/react';
 import { postkitChakraView } from '@postkit/chakra';
 import { postkitView } from '@postkit/react';
 
-import { deviceDefinition } from '../component-definition/device.definition';
+import { showcaseDefinition } from '../component-definition/showcase.definition';
 
 /** The headless view: anatomy only, styled by the site's CSS. */
-export const HeadlessDevice = postkitView(
-  deviceDefinition,
+export const HeadlessShowcase = postkitView(
+  showcaseDefinition,
   ({ props, part }) => (
     <figure {...part('root')}>
       <div {...part('frame')}>
@@ -29,7 +29,7 @@ export const HeadlessDevice = postkitView(
 /** The Chakra recipe, slots typed from the definition's anatomy. */
 export const deviceRecipe = defineSlotRecipe({
   className: 'site-device',
-  slots: [...deviceDefinition.slots],
+  slots: [...showcaseDefinition.slots],
   base: {
     root: { display: 'grid', gap: '3', marginBlock: '8' },
     frame: { borderRadius: '2xl', borderWidth: '1px', overflow: 'hidden' },
@@ -48,8 +48,8 @@ export const deviceRecipe = defineSlotRecipe({
 });
 
 /** The Chakra view: the same definition, plus the recipe. */
-export const ChakraDevice = postkitChakraView(
-  deviceDefinition,
+export const ChakraShowcase = postkitChakraView(
+  showcaseDefinition,
   deviceRecipe,
   ({ props, part }) => (
     <Box as="figure" {...part('root')}>

@@ -34,11 +34,12 @@ import { Poll } from '../components/poll/poll.js';
 import { ShareActions } from '../components/share-actions/share-actions.js';
 import { SocialPost } from '../components/social-post/social-post.js';
 import { Tabs } from '../components/tabs/tabs.js';
+import { Device } from '../components/device/device.js';
 
 /**
  * The headless views `@postkit/react` exports, keyed by component name. The
  * manifest's computed `support.headless` and the headless renderer read it,
- * so add a view here when it ships. All 35 built-ins have one (`chakraOnly` is empty).
+ * so add a view here when it ships. Every built-in has one (`chakraOnly` is empty).
  */
 export const postkitHeadlessViews: Readonly<
   Record<string, PostkitAnyComponent>
@@ -78,4 +79,5 @@ export const postkitHeadlessViews: Readonly<
   Tabs,
   Figure,
   Video,
+  Device,
 });

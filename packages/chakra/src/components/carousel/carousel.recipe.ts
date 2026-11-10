@@ -43,6 +43,16 @@ export const postkitCarouselRecipe = defineSlotRecipe({
     emptyState: {
       color: 'fg.muted',
     },
+    caption: {
+      color: 'fg.muted',
+      fontSize: 'sm',
+      marginTop: '2',
+    },
+    number: {
+      color: 'fg',
+      fontWeight: 'semibold',
+      marginEnd: '0.5em',
+    },
   },
   variants: {
     size: {
@@ -88,9 +98,48 @@ export const postkitCarouselRecipe = defineSlotRecipe({
       },
       plain: {},
     },
+    presentation: {
+      slides: {},
+      // The current item centred, its neighbours at 35%, arrows only.
+      peek: {
+        root: {
+          background: 'transparent',
+          borderWidth: '0',
+          borderRadius: '0',
+        },
+        slide: {
+          minHeight: '0',
+          transition: 'opacity 200ms ease',
+          _motionReduce: { transition: 'none' },
+          '&[aria-hidden="true"]': { opacity: 0.35 },
+        },
+        media: {
+          aspectRatio: { base: '4 / 3', sm: '16 / 9' },
+          borderRadius: 'lg',
+          height: 'auto',
+          maxHeight: 'none',
+        },
+        content: { paddingX: '0' },
+        controls: {
+          alignItems: 'flex-start',
+          background: 'transparent',
+          borderTopWidth: '0',
+          justifyContent: 'flex-end',
+          paddingX: '12%',
+        },
+        caption: { flex: '1', marginTop: '0', minHeight: '2.75rem' },
+        previousTrigger: {
+          height: '2.75rem',
+          minWidth: '2.75rem',
+          padding: '0',
+        },
+        nextTrigger: { height: '2.75rem', minWidth: '2.75rem', padding: '0' },
+      },
+    },
   },
   defaultVariants: {
     size: 'md',
     variant: 'subtle',
+    presentation: 'slides',
   },
 });

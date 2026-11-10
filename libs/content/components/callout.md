@@ -35,7 +35,12 @@ related:
 Writers use it however they already write.
 
 Both forms validate against the same definition. A tone that doesn't exist
-fails the build with the file and line. Writing in Prismark? The callout
+fails the build with the file and line.
+
+`type` is accepted as an alias for `tone`, so content written for other
+callout syntaxes (such as Prismark vaults) works unchanged:
+`:::postkit-callout{type="warning"}` is the same as `tone="warning"`. `tone`
+is the documented prop, and it wins when both are set. Writing in Prismark? The callout
 renders inline and its props open in the Components panel. See
 [Writing with directives](/docs/markdown-directives).
 

@@ -350,6 +350,18 @@ export function definePostkitComponent<
       fail(name, `prop "${propName}" must be built with the prop builders.`);
     }
   }
+  const aliased = new Set<string>();
+  for (const [propName, prop] of Object.entries(props)) {
+    for (const alias of prop.aliases ?? []) {
+      if (Object.hasOwn(props, alias) || aliased.has(alias)) {
+        fail(
+          name,
+          `the alias "${alias}" of "${propName}" is already a prop or alias.`,
+        );
+      }
+      aliased.add(alias);
+    }
+  }
 
   const slots = definition.slots;
   if (!Array.isArray(slots) || !slots.includes('root')) {

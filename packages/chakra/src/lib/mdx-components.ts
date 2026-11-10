@@ -9,6 +9,7 @@ import { NewsletterSignup } from '../components/newsletter-signup/newsletter-sig
 import { ShareActions } from '../components/share-actions/share-actions.js';
 import { SocialPost } from '../components/social-post/social-post.js';
 import { Video } from '../components/video/video.js';
+import { Device } from '../components/device/device.js';
 import { Figure } from '../components/figure/figure.js';
 import {
   createPostkitProseLink,
@@ -81,6 +82,7 @@ export type PostkitMdxComponents = ProseComponents & {
   readonly Tabs: typeof Tabs;
   readonly Terminal: typeof Terminal;
   readonly Video: typeof Video;
+  readonly Device: typeof Device;
 };
 
 export const postkitMdxComponents: PostkitMdxComponents = Object.freeze({
@@ -120,6 +122,7 @@ export const postkitMdxComponents: PostkitMdxComponents = Object.freeze({
   Tabs: Tabs,
   Terminal: Terminal,
   Video: Video,
+  Device: Device,
 });
 
 export interface CreatePostkitMdxComponentsOptions<

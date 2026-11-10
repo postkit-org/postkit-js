@@ -41,6 +41,7 @@ export {
   type PostkitPropDefinitions,
   type PostkitPropKind,
   type PostkitPropOptions,
+  type PostkitPropRecommendation,
   type PostkitPropValueOf,
   type PostkitStringPropDefinition,
   type PostkitVariantPropOptions,
@@ -48,3 +49,5 @@ export {
 export * from './built-ins.js';
 export * from './manifest.js';
 export * from './email.js';
+export * from './prop-rules.js';
+export * from './video/video.duration.js';

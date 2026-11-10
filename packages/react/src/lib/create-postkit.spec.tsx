@@ -25,9 +25,9 @@ import {
 import { createPostkit, postkitHeadlessRenderer } from './create-postkit.js';
 import { postkitView } from './view.js';
 
-const deviceDefinition = definePostkitComponent({
-  name: 'Device',
-  directive: 'postkit-device',
+const showcaseDefinition = definePostkitComponent({
+  name: 'Showcase',
+  directive: 'postkit-showcase',
   category: 'media',
   description: 'A screenshot framed in a device.',
   stability: 'experimental',
@@ -44,7 +44,7 @@ const deviceDefinition = definePostkitComponent({
   slots: ['root', 'screen', 'caption'],
 });
 
-const Device = postkitView(deviceDefinition, ({ props, part }) => (
+const Showcase = postkitView(showcaseDefinition, ({ props, part }) => (
   <figure {...part('root')}>
     <img {...part('screen')} src={props.src} alt="" />
     {props.caption ? (
@@ -92,7 +92,7 @@ describe('kits', () => {
     expect(article.definitions).toContain(calloutDefinition);
     expect(
       postkitKits.flatMap((kit) => kit.definitions).map(({ name }) => name),
-    ).toHaveLength(35);
+    ).toHaveLength(36);
     for (const kit of postkitKits) {
       expect(kit.package).toBe('@postkit/core');
       expect(Object.isFrozen(kit.definitions)).toBe(true);
@@ -105,16 +105,16 @@ describe('createPostkit', () => {
     const postkit = createPostkit({
       kits: [article, technical, media],
       exclude: ['Gallery'],
-      components: [{ definition: deviceDefinition, view: Device }],
+      components: [{ definition: showcaseDefinition, view: Showcase }],
     });
     const names = postkit.definitions.map(({ name }) => name);
 
     expect(names).toContain('Callout');
     expect(names).toContain('Figure');
-    expect(names).toContain('Device');
+    expect(names).toContain('Showcase');
     expect(names).not.toContain('Gallery');
     expect(names).not.toContain('RelatedContent');
-    expect(postkit.mdxComponents['Device']).toBe(Device);
+    expect(postkit.mdxComponents['Showcase']).toBe(Showcase);
     expect(postkit.mdxComponents['RelatedContent']).toBeUndefined();
     expect(postkit.mdxComponents['a']).toBeDefined();
     expect(postkit.renderer).toBe(postkitHeadlessRenderer);
@@ -185,16 +185,16 @@ describe('createPostkit', () => {
   it('validates directives against the enabled set', () => {
     const postkit = createPostkit({
       kits: [article],
-      components: [{ definition: deviceDefinition, view: Device }],
+      components: [{ definition: showcaseDefinition, view: Showcase }],
     });
 
     const tree = compile(
       postkit.remarkPlugins,
-      '::postkit-device{src="/phone.png" frame="laptop"}',
+      '::postkit-showcase{src="/phone.png" frame="laptop"}',
     );
     expect(tree.children[0]).toMatchObject({
       type: 'mdxJsxFlowElement',
-      name: 'Device',
+      name: 'Showcase',
     });
 
     expect(() =>
@@ -225,7 +225,11 @@ describe('createPostkit', () => {
       kits: [article, discovery],
       exclude: ['Aside'],
       components: [
-        { definition: deviceDefinition, view: Device, package: '@acme/device' },
+        {
+          definition: showcaseDefinition,
+          view: Showcase,
+          package: '@acme/showcase',
+        },
       ],
     }).manifest();
 
@@ -239,13 +243,15 @@ describe('createPostkit', () => {
       package: '@postkit/core',
       support: { react: 'supported', headless: 'supported' },
     });
-    expect(manifest.components['Device']).toMatchObject({
+    expect(manifest.components['Showcase']).toMatchObject({
       kit: null,
-      package: '@acme/device',
+      package: '@acme/showcase',
       stability: 'experimental',
       support: { headless: 'supported' },
     });
-    expect(manifest.components['Device'].support).not.toHaveProperty('chakra');
+    expect(manifest.components['Showcase'].support).not.toHaveProperty(
+      'chakra',
+    );
   });
 
   it('rejects configuration that names nothing it enabled', () => {
@@ -273,13 +279,13 @@ describe('createPostkit', () => {
     expect(() =>
       createPostkit({
         kits: [article],
-        overrides: { Callout: { slots: { badge: Device } as never } },
+        overrides: { Callout: { slots: { badge: Showcase } as never } },
       }),
     ).toThrow('overrides.Callout.slots: Callout has no "badge" part.');
     expect(() =>
       createPostkit({
         kits: [article],
-        components: [{ definition: calloutDefinition, view: Device }],
+        components: [{ definition: calloutDefinition, view: Showcase }],
       }),
     ).toThrow('components: Callout is already enabled.');
   });
@@ -296,7 +302,7 @@ describe('createPostkit', () => {
       createPostkit({
         kits: [article],
         // @ts-expect-error Callout has no `badge` part.
-        overrides: { Callout: { slots: { badge: Device } } },
+        overrides: { Callout: { slots: { badge: Showcase } } },
       }),
     ).toThrow(TypeError);
   });

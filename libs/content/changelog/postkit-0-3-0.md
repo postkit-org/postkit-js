@@ -39,6 +39,18 @@ deliberate break before 1.0.
   `--postkit-*` tokens.
 - `renderEmail()` in `@postkit/email`, which turns a Markdown, MDX or
   `@postkit/core` document into email HTML and plain text.
+- `Device`, a screenshot in a plain iPhone, iPad or Mac frame drawn with CSS
+  (`kind`, `src`, `alt`, `caption`). It's experimental.
+- `Carousel` `presentation="peek"`: the current item centred with its
+  neighbours faded either side, arrows only, and its caption announced to
+  screen readers. Like every carousel, it never advances on its own.
+- `Gallery` `presentation="row"`: two or three related pictures side by side,
+  which become a swipeable rail on phones.
+- `Video` `captions` (a WebVTT track), `captionsLang`, `duration` and
+  `decorative`.
+- Figure numbering: `<PostkitProvider figures="numbered">` labels figures,
+  videos and devices "Fig. 1", "Fig. 2"…, and the items of a carousel or
+  gallery "Fig. 3", "Fig. 3b", "Fig. 3c".
 
 ## Changed
 
@@ -52,7 +64,13 @@ deliberate break before 1.0.
   look.
 - Email support is computed from what the email renderer exports, and every
   component declares an email fallback.
-- Callout accepts `type` as an alias for `tone` in directives.
+- Callout accepts `type` as an alias for `tone`, in directives and in MDX.
+  `tone` stays the documented prop, and wins if both are set.
+- A `Video` without a captions track now gets a warning, in development and in
+  your build output, unless you mark it `decorative`. It never fails the
+  build, even in strict mode, so this isn't a breaking change.
+- Poll, Chart and SocialPost are marked experimental in the component
+  manifest until they've been reviewed.
 
 ## Removed
 

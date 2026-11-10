@@ -28,6 +28,16 @@ export const postkitVideoRecipe = defineSlotRecipe({
     caption: {
       color: 'fg.muted',
     },
+    number: {
+      color: 'fg',
+      fontWeight: 'semibold',
+      marginEnd: '0.5em',
+    },
+    duration: {
+      fontVariantNumeric: 'tabular-nums',
+      marginStart: '0.5em',
+      '&:first-child': { marginStart: '0' },
+    },
     fallback: {
       // Rendered inside the letterboxed frame, so it uses the frame's text colour.
       color: 'fg.onLetterbox',

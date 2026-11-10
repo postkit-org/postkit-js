@@ -6,11 +6,13 @@ import {
   Image,
   Link,
   Text,
+  chakra,
   type BoxProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
 import { galleryDefinition } from '@postkit/core/components';
+import { usePostkitFigureNumber } from '@postkit/react';
 
 import { postkitHeadingSize } from '../../lib/components/heading-size.js';
 import { parseJsonProp } from '../../lib/json-props.js';
@@ -47,8 +49,10 @@ export const Gallery = postkitChakraView<
   typeof galleryDefinition,
   GalleryProps
 >(galleryDefinition, postkitGalleryRecipe, ({ props, variants, part }) => {
-  const { title, description, columns } = props;
+  const { title, description, columns, presentation } = props;
   const items = parseJsonProp<GalleryItem>(props.items, 'Gallery items');
+  const figure = usePostkitFigureNumber();
+  const row = presentation === 'row';
   return (
     <Box {...part('root')}>
       {title || description ? (
@@ -71,7 +75,12 @@ export const Gallery = postkitChakraView<
           ) : null}
         </Box>
       ) : null}
-      <Box {...part('grid', { css: { '--postkit-gallery-columns': columns } })}>
+      <Box
+        {...part('grid', { css: { '--postkit-gallery-columns': columns } })}
+        {...(row
+          ? { role: 'group', 'aria-label': title ?? 'Images', tabIndex: 0 }
+          : undefined)}
+      >
         {items.map((item, index) => {
           const image = (
             <Image
@@ -97,8 +106,13 @@ export const Gallery = postkitChakraView<
               ) : (
                 image
               )}
-              {item.caption ? (
+              {item.caption || figure ? (
                 <Box as="figcaption" {...part('caption')}>
+                  {figure ? (
+                    <chakra.span {...part('number')}>
+                      {figure.label(index)}
+                    </chakra.span>
+                  ) : null}
                   {item.caption}
                 </Box>
               ) : null}

@@ -300,6 +300,15 @@ const fixtures: Record<string, PostkitComponentNode> = {
     title: 'Demo',
     poster: '/media/demo.jpg',
     caption: 'A two-minute demo.',
+    captions: '/media/demo.vtt',
+    captionsLang: 'en',
+    duration: '2:04',
+  }),
+  Device: component('Device', {
+    kind: 'iphone',
+    src: '/media/home.png',
+    alt: 'The home screen',
+    caption: 'The companion app.',
   }),
 };
 

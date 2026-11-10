@@ -7,10 +7,11 @@ import {
   type SlotRecipeConfig,
   type SystemStyleObject,
 } from '@chakra-ui/react';
-import type {
-  AnyPostkitComponentDefinition,
-  PostkitAuthoredPropsOf,
-  PostkitSlotOf,
+import {
+  postkitCanonicalProps,
+  type AnyPostkitComponentDefinition,
+  type PostkitAuthoredPropsOf,
+  type PostkitSlotOf,
 } from '@postkit/core/components';
 import {
   applyPostkitSlotOverrides,
@@ -170,8 +171,10 @@ export function postkitChakraView<
   const recipeKey = options.recipeKey ?? `postkit${definition.name}`;
 
   function PostkitChakraView(props: Props) {
-    const { classNames, slotStyles, rootProps, unstyled, ...authored } =
+    const { classNames, slotStyles, rootProps, unstyled, ...aliased } =
       props as Props & PostkitChakraViewOwnProps<string>;
+    // Aliases (Callout's `type`) become their props before anything reads them.
+    const authored = postkitCanonicalProps(definition, aliased);
     const config = usePostkitComponentConfig(definition.name);
     const siteDefaults = config?.defaults;
     warnPostkitProps(definition, { ...siteDefaults, ...authored });

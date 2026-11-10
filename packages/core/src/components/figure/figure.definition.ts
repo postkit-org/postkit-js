@@ -48,6 +48,7 @@ export const figureDefinition = definePostkitComponent({
     'caption',
     'credit',
     'creditLink',
+    'number',
   ],
   example: {
     props: { src: '/media/example.jpg', alt: 'A descriptive example' },

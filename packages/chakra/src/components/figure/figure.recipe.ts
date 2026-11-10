@@ -35,6 +35,13 @@ export const postkitFigureRecipe = defineSlotRecipe({
     },
     caption: {
       display: 'block',
+      // After a figure number ("Fig. 1"), the caption runs on.
+      '[data-postkit-part="number"] + &': { display: 'inline' },
+    },
+    number: {
+      color: 'fg',
+      fontWeight: 'semibold',
+      marginEnd: '0.5em',
     },
     // The credit takes the caption's `fg.muted`. Dimming it further dropped it
     // below 4.5:1 on the subtle surface.

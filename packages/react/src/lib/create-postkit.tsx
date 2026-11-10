@@ -19,6 +19,10 @@ import {
   type PostkitComponentConfig,
   type PostkitConfig,
 } from './config.js';
+import {
+  PostkitFiguresProvider,
+  type PostkitFiguresProviderProps,
+} from './figures.js';
 import { postkitHeadlessViews } from './headless-views.js';
 import {
   createPostkitLink,
@@ -38,6 +42,7 @@ import type { PostkitKit } from '../kits/kit.js';
 // The rest of the `createPostkit` surface, re-exported from the package root
 // through this module.
 export * from './config.js';
+export * from './figures.js';
 export * from './headless-views.js';
 export * from './link.js';
 export * from './slot-overrides.js';
@@ -175,9 +180,15 @@ export interface CreatePostkitOptions<ProviderProps extends object = object> {
   readonly remark?: CreatePostkitRemarkOptions;
 }
 
-/** The props of `createPostkit().Provider`: the renderer's, plus children. */
+/**
+ * The props of `createPostkit().Provider`: the renderer's, plus children and
+ * figure numbering (`figures="numbered"`, `figureLabel`).
+ */
 export type PostkitProviderPropsOf<ProviderProps extends object> =
-  ProviderProps & { readonly children?: ReactNode };
+  ProviderProps &
+    Pick<PostkitFiguresProviderProps, 'figureLabel' | 'figures'> & {
+      readonly children?: ReactNode;
+    };
 
 /** What {@link createPostkit} returns. */
 export interface Postkit<ProviderProps extends object = object> {
@@ -427,7 +438,7 @@ function unavailableView(name: string, reason: string): PostkitAnyComponent {
  *   renderer: chakra,
  *   kits: [article, technical, media],
  *   exclude: ['Poll'],
- *   components: [{ definition: deviceDefinition, view: Device }],
+ *   components: [{ definition: showcaseDefinition, view: Showcase }],
  *   defaults: { Callout: { variant: 'plain' } },
  *   overrides: { Callout: { slots: { icon: InkMark } } },
  * });
@@ -542,10 +553,18 @@ export function createPostkit<ProviderProps extends object = object>(
 
   const RendererProvider = renderer.Provider;
   function PostkitProvider(props: PostkitProviderPropsOf<ProviderProps>) {
-    const { children, ...rendererProps } = props;
-    const content = (
+    const { children, figures, figureLabel, ...rendererProps } = props;
+    const configured = (
       <PostkitConfigProvider value={config}>{children}</PostkitConfigProvider>
     );
+    const content =
+      figures === undefined ? (
+        configured
+      ) : (
+        <PostkitFiguresProvider figures={figures} figureLabel={figureLabel}>
+          {configured}
+        </PostkitFiguresProvider>
+      );
     if (!RendererProvider) return content;
     return (
       <RendererProvider

@@ -3,8 +3,8 @@ import { chakra, postkitDefaultTheme } from '@postkit/chakra';
 import { createPostkit } from '@postkit/next';
 import { article, media, technical } from '@postkit/react/kits';
 
-import { deviceDefinition } from '../component-definition/device.definition';
-import { ChakraDevice } from './device';
+import { showcaseDefinition } from '../component-definition/showcase.definition';
+import { ChakraShowcase } from './showcase';
 
 const siteSystem = createSystem(defaultConfig);
 
@@ -17,22 +17,22 @@ export const postkit = createPostkit({
   renderer: chakra,
   kits: [article, technical, media],
   exclude: ['Poll'],
-  components: [{ definition: deviceDefinition, view: ChakraDevice }],
+  components: [{ definition: showcaseDefinition, view: ChakraShowcase }],
   defaults: {
     Callout: { variant: 'plain' },
     Figure: { layout: 'wide' },
-    Device: { frame: 'laptop' },
+    Showcase: { frame: 'laptop' },
   },
   link: { linkProps: { prefetch: false } },
 });
 
 export function ChakraArticle({ children }: { readonly children: string }) {
-  const { Callout, Device, Tabs } = postkit.mdxComponents;
+  const { Callout, Showcase, Tabs } = postkit.mdxComponents;
   return (
     <postkit.Provider system={siteSystem} preset={postkitDefaultTheme}>
       <article>
         <Callout tone="tip">{children}</Callout>
-        <Device screens={[{ src: '/media/editor.png', alt: 'The editor' }]} />
+        <Showcase screens={[{ src: '/media/editor.png', alt: 'The editor' }]} />
         <Tabs items={[{ label: 'One', content: 'First' }]} />
       </article>
     </postkit.Provider>

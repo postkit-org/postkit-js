@@ -22,12 +22,20 @@ export interface CarouselBehaviorOptions {
   readonly onPageChange?: carousel.Props['onPageChange'];
   /** Overrides for Zag's accessible labels and progress text. */
   readonly translations?: Partial<carousel.IntlTranslations>;
+  /**
+   * `slides` (the default) shows one slide at a time; `peek` centres it with
+   * its neighbours partly in view ({@link postkitCarouselPeekConfig}).
+   */
+  readonly presentation?: CarouselPresentation;
 }
+
+/** How a carousel lays out its slides: the `Carousel` `presentation` prop. */
+export type CarouselPresentation = 'peek' | 'slides';
 
 /**
  * How Postkit configures the carousel, matching `@postkit/chakra`'s
  * `Carousel`: one slide per page, no gap, wrapping at both ends, and mouse
- * dragging. Peek presentation is a later step.
+ * dragging. {@link postkitCarouselPeekConfig} is the peek presentation.
  */
 export const postkitCarouselConfig = Object.freeze({
   slidesPerPage: 1,
@@ -36,12 +44,35 @@ export const postkitCarouselConfig = Object.freeze({
   allowMouseDrag: true,
 } as const);
 
+/**
+ * The `peek` presentation (03 §7, from Commune's entry hero): the current
+ * slide centred, its neighbours partly in view either side (views fade them
+ * to 35%), wrapping arrows, and no autoplay. Slides snap to the centre; pass
+ * {@link carouselItemSnapAlign} to `getItemProps`.
+ */
+export const postkitCarouselPeekConfig = Object.freeze({
+  slidesPerPage: 1,
+  spacing: '16px',
+  padding: '12%',
+  loop: true,
+  allowMouseDrag: true,
+} as const);
+
+/** Where a slide snaps for a presentation: `center` for peek. */
+export function carouselItemSnapAlign(
+  presentation: CarouselPresentation | undefined,
+): 'center' | 'start' {
+  return presentation === 'peek' ? 'center' : 'start';
+}
+
 /** Zag carousel props for Postkit's configuration. */
 export function carouselProps(
   options: CarouselBehaviorOptions,
 ): carousel.Props {
   return {
-    ...postkitCarouselConfig,
+    ...(options.presentation === 'peek'
+      ? postkitCarouselPeekConfig
+      : postkitCarouselConfig),
     id: options.id,
     slideCount: options.slideCount,
     defaultPage: clampIndex(options.initialIndex, options.slideCount),

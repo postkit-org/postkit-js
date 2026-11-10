@@ -1,5 +1,6 @@
 import { figureDefinition, type PostkitSlotOf } from '@postkit/core/components';
 
+import { usePostkitFigureNumber } from '../../lib/figures.js';
 import { postkitView, type PostkitViewProps } from '../../lib/view.js';
 
 export type FigureSlot = PostkitSlotOf<typeof figureDefinition>;
@@ -25,7 +26,8 @@ export function postkitImageDimension(
 
 /**
  * A responsive image with an optional caption and credit: headless markup
- * only. `aspectRatio`, `objectFit` and `objectPosition` apply as inline
+ * only. Beneath `figures="numbered"`, its number ("Fig. 1") leads the
+ * caption. `aspectRatio`, `objectFit` and `objectPosition` apply as inline
  * styles, since they are content, not theme.
  */
 export const Figure = postkitView<typeof figureDefinition, FigureProps>(
@@ -42,6 +44,7 @@ export const Figure = postkitView<typeof figureDefinition, FigureProps>(
       objectFit,
       objectPosition,
     } = props;
+    const figure = usePostkitFigureNumber();
     const media = (
       <div
         {...part('media', { style: aspectRatio ? { aspectRatio } : undefined })}
@@ -79,8 +82,9 @@ export const Figure = postkitView<typeof figureDefinition, FigureProps>(
         ) : (
           media
         )}
-        {caption || credit ? (
+        {caption || credit || figure ? (
           <figcaption {...part('figcaption')}>
+            {figure ? <span {...part('number')}>{figure.label()}</span> : null}
             {caption ? <span {...part('caption')}>{caption}</span> : null}
             {credit ? (
               <span {...part('credit')}>

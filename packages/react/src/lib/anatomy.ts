@@ -1,6 +1,7 @@
-import type {
-  AnyPostkitComponentDefinition,
-  PostkitPropDefinition,
+import {
+  postkitPropAdvisories,
+  type AnyPostkitComponentDefinition,
+  type PostkitPropDefinition,
 } from '@postkit/core/components';
 
 /**
@@ -220,15 +221,19 @@ export function validatePostkitProps(
 const reported = new Set<string>();
 
 /**
- * In development, warns once per problem {@link validatePostkitProps} finds.
- * Does nothing in production.
+ * In development, warns once per problem {@link validatePostkitProps} finds,
+ * and once per recommended prop that is missing (`postkitPropAdvisories`,
+ * such as a Video without captions, D20). Does nothing in production.
  */
 export function warnPostkitProps(
   definition: AnyPostkitComponentDefinition,
   props: Readonly<Record<string, unknown>>,
 ): void {
   if (!isPostkitDevelopment()) return;
-  for (const problem of validatePostkitProps(definition, props)) {
+  for (const problem of [
+    ...validatePostkitProps(definition, props),
+    ...postkitPropAdvisories(definition, props),
+  ]) {
     if (reported.has(problem)) continue;
     reported.add(problem);
     console.warn(`Postkit ${problem}`);

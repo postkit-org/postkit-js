@@ -1,0 +1,128 @@
+/* Device: a screenshot in a plain, CSS-drawn frame (rounded bezel, notch for iphone, base for mac). */
+@scope ([data-postkit-component='Device']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    /* A quiet, monochrome frame: a surface-coloured bezel with a hairline edge. */
+    --postkit-device-bezel: var(--postkit-color-surface-emphasized);
+    --postkit-device-edge: var(--postkit-color-border);
+    --postkit-device-width: 17rem;
+    --postkit-device-padding: 0.625rem;
+    --postkit-device-radius: 2.75rem;
+    --postkit-device-screen-radius: calc(
+      var(--postkit-device-radius) - var(--postkit-device-padding)
+    );
+    --postkit-device-aspect: 9 / 19.5;
+    display: grid;
+    /* One column that can shrink, so a wide frame scales down on phones. */
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    margin: 0;
+    min-width: 0;
+  }
+  :where(:scope[data-kind='ipad']) {
+    --postkit-device-width: 26rem;
+    --postkit-device-padding: 0.875rem;
+    --postkit-device-radius: 1.75rem;
+    --postkit-device-aspect: 3 / 4;
+  }
+  :where(:scope[data-kind='mac']) {
+    --postkit-device-width: 38rem;
+    --postkit-device-padding: 0.625rem;
+    --postkit-device-radius: 1rem;
+    --postkit-device-screen-radius: 0.25rem;
+    --postkit-device-aspect: 16 / 10;
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-device-width-scale: 0.75;
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-device-width-scale: 1.25;
+  }
+
+  :where([data-postkit-part='frame']) {
+    background: var(--postkit-device-bezel);
+    border-radius: var(--postkit-device-radius);
+    box-shadow: 0 0 0 var(--postkit-border-width) var(--postkit-device-edge);
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: var(--postkit-device-padding);
+    position: relative;
+    width: calc(
+      var(--postkit-device-width) * var(--postkit-device-width-scale, 1)
+    );
+  }
+  :where(:scope[data-kind='mac'] [data-postkit-part='frame']) {
+    border-end-end-radius: 0;
+    border-end-start-radius: 0;
+    padding-block-end: calc(var(--postkit-device-padding) * 1.75);
+  }
+  :where([data-postkit-part='screen']) {
+    aspect-ratio: var(--postkit-device-aspect);
+    background: var(--postkit-color-bg);
+    border-radius: var(--postkit-device-screen-radius);
+    overflow: hidden;
+  }
+  :where([data-postkit-part='image']) {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    width: 100%;
+  }
+  :where([data-postkit-part='notch']) {
+    background: var(--postkit-device-bezel);
+    border-radius: var(--postkit-radius-full);
+    height: 1.375rem;
+    inset-block-start: calc(var(--postkit-device-padding) + 0.5rem);
+    inset-inline-start: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 30%;
+    z-index: 1;
+  }
+  :where([data-postkit-part='base']) {
+    background: var(--postkit-color-surface);
+    border: var(--postkit-border-width) solid var(--postkit-device-edge);
+    border-end-end-radius: var(--postkit-radius-xl);
+    border-end-start-radius: var(--postkit-radius-xl);
+    box-sizing: border-box;
+    display: block;
+    height: 0.875rem;
+    max-width: 100%;
+    width: calc(
+      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) *
+        1.16
+    );
+  }
+  :where([data-postkit-part='figcaption']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-3);
+    max-width: calc(
+      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) *
+        1.16
+    );
+    text-align: center;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='figcaption']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='figcaption']) {
+    font-size: var(--postkit-text-md);
+  }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-6) var(--postkit-space-4);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-6) var(--postkit-space-4);
+  }
+}

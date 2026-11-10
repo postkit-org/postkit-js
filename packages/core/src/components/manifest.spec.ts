@@ -82,6 +82,7 @@ describe('component manifest v2', () => {
       description: 'The semantic emphasis of the aside.',
       default: 'note',
       themeVariant: true,
+      aliases: ['type'],
     });
     expect(callout.props['title']).toEqual({
       kind: 'string',

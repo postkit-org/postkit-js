@@ -103,6 +103,10 @@ import {
   postkitVideoSlots,
 } from '../components/video/video.recipe.js';
 import {
+  postkitDeviceRecipe,
+  postkitDeviceSlots,
+} from '../components/device/device.recipe.js';
+import {
   postkitCodeBlockSlots,
   postkitStandaloneCodeBlockRecipe,
 } from '../components/code-block/code-block.recipe.js';
@@ -203,6 +207,7 @@ export const postkitRecipeKeys = Object.freeze({
   tabs: 'postkitTabs',
   terminal: 'postkitTerminal',
   video: 'postkitVideo',
+  device: 'postkitDevice',
 } as const);
 
 export type PostkitRecipeKey =
@@ -362,6 +367,7 @@ export const postkitDefaultTheme = defineConfig({
       [postkitRecipeKeys.tabs]: postkitTabsRecipe,
       [postkitRecipeKeys.terminal]: postkitStandaloneTerminalRecipe,
       [postkitRecipeKeys.video]: postkitVideoRecipe,
+      [postkitRecipeKeys.device]: postkitDeviceRecipe,
     }),
   },
 });
@@ -604,6 +610,12 @@ export function createPostkitTheme(
     slotRecipes[postkitRecipeKeys.video] = overrideRecipe(
       postkitVideoSlots,
       overrides.video,
+    );
+  }
+  if (overrides.device) {
+    slotRecipes[postkitRecipeKeys.device] = overrideRecipe(
+      postkitDeviceSlots,
+      overrides.device,
     );
   }
 

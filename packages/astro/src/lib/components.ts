@@ -12,6 +12,7 @@ import Chart from '../components/Chart.astro';
 import CodeBlock from '../components/CodeBlock.astro';
 import CodeGroup from '../components/CodeGroup.astro';
 import Comparison from '../components/Comparison.astro';
+import Device from '../components/Device.astro';
 import Diff from '../components/Diff.astro';
 import Disclosure from '../components/Disclosure.astro';
 import Figure from '../components/Figure.astro';
@@ -49,6 +50,7 @@ export interface PostkitAstroComponents {
   readonly CodeBlock: typeof CodeBlock;
   readonly CodeGroup: typeof CodeGroup;
   readonly Comparison: typeof Comparison;
+  readonly Device: typeof Device;
   readonly Diff: typeof Diff;
   readonly Disclosure: typeof Disclosure;
   readonly Figure: typeof Figure;
@@ -87,6 +89,7 @@ export const postkitAstroComponents: PostkitAstroComponents = Object.freeze({
   CodeBlock,
   CodeGroup,
   Comparison,
+  Device,
   Diff,
   Disclosure,
   Figure,

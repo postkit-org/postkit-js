@@ -9,15 +9,15 @@ import {
   type PostkitThemeVariantOf,
 } from '@postkit/core/components';
 
-interface DeviceScreen {
+interface ShowcaseScreen {
   readonly src: string;
   readonly alt: string;
 }
 
 /** A host-defined component, defined the same way as Postkit's built-ins. */
-export const deviceDefinition = definePostkitComponent({
-  name: 'Device',
-  directive: 'postkit-device',
+export const showcaseDefinition = definePostkitComponent({
+  name: 'Showcase',
+  directive: 'postkit-showcase',
   category: 'media',
   description: 'A screenshot framed in a phone or laptop.',
   runtime: 'static',
@@ -29,7 +29,7 @@ export const deviceDefinition = definePostkitComponent({
       default: 'phone',
       themeVariant: true,
     }),
-    screens: prop.json<readonly DeviceScreen[]>(
+    screens: prop.json<readonly ShowcaseScreen[]>(
       'A JSON array of screenshots.',
       { required: true },
     ),
@@ -46,15 +46,15 @@ export const deviceDefinition = definePostkitComponent({
 });
 
 /** Authored props: `screens` is required, everything else optional. */
-export type DeviceProps = PostkitAuthoredPropsOf<typeof deviceDefinition>;
+export type ShowcaseProps = PostkitAuthoredPropsOf<typeof showcaseDefinition>;
 /** Props as the view receives them: defaulted props (`frame`) are set. */
-export type ResolvedDeviceProps = PostkitPropsOf<typeof deviceDefinition>;
+export type ResolvedShowcaseProps = PostkitPropsOf<typeof showcaseDefinition>;
 /** 'root' | 'frame' | 'screen' | 'caption' */
-export type DeviceSlot = PostkitSlotOf<typeof deviceDefinition>;
+export type ShowcaseSlot = PostkitSlotOf<typeof showcaseDefinition>;
 /** 'size' | 'variant' | 'frame' */
-export type DeviceVariant = PostkitThemeVariantOf<typeof deviceDefinition>;
+export type ShowcaseVariant = PostkitThemeVariantOf<typeof showcaseDefinition>;
 
-export const exampleProps: DeviceProps = {
+export const exampleProps: ShowcaseProps = {
   screens: [{ src: '/media/home.png', alt: 'The home screen' }],
   frame: 'phone',
 };

@@ -1,5 +1,7 @@
 import {
   postkitBuiltInDefinitions,
+  postkitPropAdvisories,
+  postkitPropAliases,
   type AnyPostkitComponentDefinition,
   type PostkitBuiltInComponentName,
 } from '@postkit/core/components';
@@ -75,6 +77,9 @@ export interface RemarkPostkitOptions {
    * (`file.messages`): unknown directives and components render as before
    * and unknown props are dropped. Invalid values and missing required props
    * fail in both modes.
+   *
+   * A missing recommended prop (a `Video` without `captions`, unless it is
+   * `decorative`) is a warning in both modes and never fails (D20).
    */
   readonly strict?: boolean;
   /**
@@ -111,6 +116,8 @@ interface ResolvedOptions {
   readonly byDirective: ReadonlyMap<string, PostkitComponentDeclaration>;
   /** Enabled component names. */
   readonly names: ReadonlySet<string>;
+  /** Enabled definitions by component name. */
+  readonly byName: ReadonlyMap<string, PostkitComponentDeclaration>;
   /** Unavailable components' reasons by directive, lower-cased name and name. */
   readonly unavailable: ReadonlyMap<string, string>;
 }
@@ -265,8 +272,21 @@ function validateAttributes(
   context: TransformContext,
 ): Record<string, DirectiveAttributeValue> {
   const validated: Record<string, DirectiveAttributeValue> = {};
+  const aliases = postkitPropAliases(declaration);
 
-  for (const [name, value] of Object.entries(attributes)) {
+  for (const [authoredName, value] of Object.entries(attributes)) {
+    // An alias (Callout's `type`, D6) stands for its prop; the prop wins.
+    const target = aliases.get(authoredName);
+    if (target !== undefined && Object.hasOwn(attributes, target)) {
+      warn(
+        context,
+        node,
+        'duplicate-prop',
+        `${declaration.name} sets both "${target}" and its alias "${authoredName}"; "${authoredName}" was ignored.`,
+      );
+      continue;
+    }
+    const name = target ?? authoredName;
     const prop = declaration.props[name];
     if (!prop) {
       const reason = `Unknown ${declaration.name} prop "${name}" in Postkit directive.`;
@@ -301,7 +321,66 @@ function validateAttributes(
     }
   }
 
+  // A bare boolean attribute (`{decorative}`) is set.
+  const present = new Set(
+    Object.entries(validated)
+      .filter(
+        ([name, value]) =>
+          declaration.props[name]?.kind === 'boolean' &&
+          (value === null || value === ''),
+      )
+      .map(([name]) => name),
+  );
+  advise(
+    context,
+    node,
+    postkitPropAdvisories(declaration, validated, { present }),
+  );
+
   return validated;
+}
+
+/** Reports missing recommended props: warnings in every mode, never failures. */
+function advise(
+  context: Pick<TransformContext, 'file'>,
+  node: PostkitDirectiveNode,
+  advisories: readonly string[],
+): void {
+  for (const advisory of advisories) {
+    warn(context, node, 'recommended-prop', `Postkit ${advisory}`);
+  }
+}
+
+/** Checks an enabled MDX component's literal attributes for advisories. */
+function checkMdxAdvisories(
+  node: PostkitDirectiveNode,
+  definition: PostkitComponentDeclaration,
+  context: TransformContext,
+): void {
+  const attributes = Array.isArray(node.attributes) ? node.attributes : [];
+  // A spread (`{...props}`) could set anything: nothing to report.
+  if (attributes.some((attribute) => attribute.type !== 'mdxJsxAttribute')) {
+    return;
+  }
+  const props: Record<string, unknown> = {};
+  const present = new Set<string>();
+  for (const attribute of attributes) {
+    const name = attribute.name;
+    if (!name) continue;
+    const value = attribute.value as unknown;
+    if (value === null || value === undefined) {
+      present.add(name);
+    } else if (typeof value === 'string') {
+      props[name] = value;
+    } else {
+      // An expression: set, unless it is literally `false`, `null` or `undefined`.
+      const source = String((value as { value?: unknown }).value ?? '').trim();
+      if (!['false', 'null', 'undefined', ''].includes(source)) {
+        present.add(name);
+      }
+    }
+  }
+  advise(context, node, postkitPropAdvisories(definition, props, { present }));
 }
 
 function mdxAttributes(
@@ -495,6 +574,11 @@ function checkMdxComponent(
   context: TransformContext,
 ): void {
   const name = node.name;
+  const definition = name ? context.options.byName.get(name) : undefined;
+  if (definition && !context.boundNames.has(definition.name)) {
+    checkMdxAdvisories(node, definition, context);
+    return;
+  }
   if (
     !name ||
     !/^[A-Z]/.test(name) ||
@@ -722,6 +806,9 @@ export function remarkPostkit(options: RemarkPostkitOptions = {}) {
         ? builtInsByDirective
         : byDirective(definitions),
     names: new Set(definitions.map((definition) => definition.name)),
+    byName: new Map(
+      definitions.map((definition) => [definition.name, definition]),
+    ),
     unavailable,
   };
 

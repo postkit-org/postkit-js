@@ -23,9 +23,37 @@ export const videoDefinition = definePostkitComponent({
       description: 'Browser preload behavior.',
       default: 'metadata',
     }),
+    captions: prop.string('The captions track (a WebVTT file URL).', {
+      recommended: {
+        reason:
+          'Add a captions track (a WebVTT file), or mark the video decorative.',
+        unless: ['decorative', 'tracks'],
+      },
+    }),
+    captionsLang: prop.string(
+      'The language of the captions track, such as en.',
+    ),
+    duration: prop.string(
+      'The running time, such as 0:24 or 1:02:03, shown with the caption.',
+    ),
+    decorative: prop.boolean(
+      'Marks a video without speech or meaningful sound, such as a silent loop, so it needs no captions track.',
+    ),
   },
-  slots: ['root', 'frame', 'player', 'caption', 'fallback'],
+  slots: [
+    'root',
+    'frame',
+    'player',
+    'caption',
+    'fallback',
+    'duration',
+    'number',
+  ],
   example: {
-    props: { src: '/media/video.mp4', title: 'video example' },
+    props: {
+      src: '/media/video.mp4',
+      title: 'video example',
+      captions: '/media/video.vtt',
+    },
   },
 });
