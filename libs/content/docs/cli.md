@@ -17,12 +17,15 @@ The CLI is `@postkit/cli`, and its command is `postkit`. It depends only on
 npm install --save-dev @postkit/cli
 ```
 
-{/* TODO(0.3.0): confirm the install story. `npx postkit` without a local install would resolve the unscoped "postkit" package, not @postkit/cli. */}
+Once it's installed, `npx postkit` runs your project's copy. To try it without
+installing, use the package name: `npx @postkit/cli eject figure`. A bare
+`npx postkit` outside a project would look for a different, unscoped package.
 
 ## Commands
 
 ```sh
 npx postkit --help
+npx postkit eject --help
 ```
 
 | Command            | What it does                                      | Example                    |
@@ -33,7 +36,54 @@ npx postkit --help
 | `postkit new`      | Scaffold a component of your own                  | `npx postkit new device`   |
 | `postkit manifest` | Write the catalog for editors like Prismark       | `npx postkit manifest`     |
 
-{/* TODO(0.3.0): confirm `add` and `manifest` options (which config file `add` edits; where `manifest` writes). */}
+Names work in any case: `figure`, `Figure`, `code-block` and `CodeBlock` all
+work.
+
+## Your config
+
+Every command that needs your `createPostkit` config finds it the same way:
+
+1. `--config <file>`, if you pass it.
+2. `postkit.config.ts` (or `.mts`, `.js`, `.mjs`) in the current directory,
+   then in the project root (the nearest `package.json`). It exports your
+   `createPostkit` result as `default` or `postkit`:
+
+   ```ts
+   // postkit.config.ts
+   export { postkit as default } from './lib/postkit';
+   ```
+
+3. Otherwise, the one file in your project that calls `createPostkit(`. If
+   there's more than one, the CLI stops and asks for `--config`.
+
+`add` and `eject` edit the file that calls `createPostkit({ … })`, following
+`postkit.config.ts` to it. They only change what they can read with
+certainty: a single call with an object literal, array literals for `kits`,
+`components` and `exclude`, and an object literal for `overrides`. Anything
+else, such as kits built in a function or options spread from another
+object, is left alone, and the CLI prints the exact lines to add instead.
+
+## postkit add
+
+```sh
+npx postkit add media
+npx postkit add poll
+```
+
+```text
+✓ lib/postkit.ts   kits += media
+✓ lib/postkit.ts   components += Poll
+```
+
+A kit name (`article`, `technical`, `media`, `discovery`, `engagement`,
+`publishing`) is imported from `@postkit/react/kits` and added to `kits`. A
+built-in component whose kit is already on is taken out of `exclude`;
+otherwise its definition and your renderer's view are added to `components`.
+
+| Flag        | Default    | Meaning                               |
+| ----------- | ---------- | ------------------------------------- |
+| `--config`  | discovered | The config file                       |
+| `--dry-run` | `false`    | Print the change as a diff, unwritten |
 
 ## postkit eject
 
@@ -46,21 +96,26 @@ npx postkit eject figure --renderer chakra --to libs/postkit
 ```
 
 ```text
-✓ libs/postkit/figure/figure.tsx
 ✓ libs/postkit/figure/figure.recipe.ts
-✓ lib/postkit.ts   overrides.Figure.view → ./figure
+✓ libs/postkit/figure/figure.tsx
+✓ .postkit-eject.json   Figure @ @postkit/chakra 0.3.0
+✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
 
-Still bound to figureDefinition from @postkit/core.
-Run `postkit diff figure` after upgrading.
+Still bound to Figure's definition from @postkit/core/components.
+Run `postkit diff figure` after upgrading @postkit/chakra.
 ```
 
-| Flag         | Default       | Meaning                             |
-| ------------ | ------------- | ----------------------------------- |
-| `--renderer` | from config   | `headless` or `chakra`              |
-| `--to`       | `src/postkit` | Where the files go                  |
-| `--dry-run`  | `false`       | Show the files without writing them |
+| Flag            | Default       | Meaning                               |
+| --------------- | ------------- | ------------------------------------- |
+| `--renderer`    | from config   | `headless` or `chakra`                |
+| `--to`          | `src/postkit` | Where the component's folder goes     |
+| `--dry-run`     | `false`       | Show the files and config change only |
+| `--force`       | `false`       | Overwrite files that already exist    |
+| `--no-register` | registers     | Leave your config alone               |
 
-See [Eject](/docs/eject) for when to use it.
+"From config" means `chakra` when your config passes `renderer: chakra` from
+`@postkit/chakra`, and `headless` when it has no renderer. See
+[Eject](/docs/eject) for when to use it.
 
 ## postkit diff
 
@@ -72,32 +127,62 @@ npx postkit diff figure
 ```
 
 ```text
-figure.tsx   0.3.0 → 0.3.2
-+ loading={priority ? "eager" : "lazy"}
-- loading="lazy"
+Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
+--- a/figure.tsx	@postkit/chakra@0.3.0
++++ b/figure.tsx	@postkit/chakra@0.3.2
+@@ -54,7 +54,7 @@
+-          loading={props.loading}
++          loading={props.priority ? 'eager' : props.loading}
 
-1 change. Your edits are kept.
+1 file changed upstream. Your copy wasn't changed.
+Your edits: figure.recipe.ts.
 ```
+
+Without a name, it checks every component in `.postkit-eject.json`.
+
+| Flag          | Meaning                                                         |
+| ------------- | --------------------------------------------------------------- |
+| `--accept`    | Record the installed version as your new base, once you're done |
+| `--exit-code` | Exit with 1 when upstream changed, for CI                       |
 
 ## postkit new
 
-Scaffold a component with its definition, headless view, styles and tests. It
-gets a Markdown directive, validation and a manifest entry for free.
+Scaffold a component with its definition, headless view and styles. It gets a
+Markdown directive, validation and a manifest entry for free.
 
 ```sh
 npx postkit new device
 ```
 
 ```text
-✓ device/device.definition.ts
-✓ device/device.tsx
-✓ device/device.css
-✓ device/device.behavior.spec.ts
+✓ src/postkit/device/device.definition.ts
+✓ src/postkit/device/device.tsx
+✓ src/postkit/device/device.css
 
-Use it as <Device /> or :::postkit-device in Markdown.
+Register it with createPostkit({ components }) in lib/postkit.ts:
+…
+Use it as <Device /> in MDX or :::postkit-device in Markdown.
 ```
 
-In an Nx workspace, `nx g @postkit/nx:component device` does the same with
-your generators' conventions. See [New components](/docs/new-components).
+| Flag                 | Default             | Meaning                                      |
+| -------------------- | ------------------- | -------------------------------------------- |
+| `--to`               | `src/postkit`       | Where the component's folder goes            |
+| `--chakra`           | `false`             | Also a Chakra view and slot recipe           |
+| `--spec`             | `false`             | A spec per view (Vitest)                     |
+| `--category`         | `article-structure` | The catalog category                         |
+| `--directive`        | `postkit-<name>`    | The Markdown directive                       |
+| `--description`      |                     | The one line editors and the catalog show    |
+| `--import-extension` | `none`              | `js` for Node's `nodenext` module resolution |
 
-{/* TODO(0.3.0): the eject and new flag defaults and outputs above are from the SiteDocsCLI board; spec 03 only gives `npx postkit eject figure --renderer chakra --to libs/postkit` and `npx postkit new device`. Confirm against @postkit/cli. */}
+In an Nx workspace, `nx g @postkit/nx:component device` writes the same files
+from the same templates. See [New components](/docs/new-components).
+
+## postkit manifest
+
+```sh
+npx postkit manifest --out public/postkit-manifest.json
+```
+
+Loads your config (TypeScript and TSX work) and writes the v2 manifest of
+exactly the components it enables, yours included, to stdout or `--out`. It's
+the same JSON as `postkit.manifest()`, for editors like Prismark.

@@ -92,6 +92,28 @@
       "npm:public",
       "scope:postkit",
       "layer:chakra"
-    ]
+    ],
+    "targets": {
+      "eject-assets": {
+        "command": "node tools/generate-eject-assets.mjs packages/chakra chakra",
+        "inputs": [
+          "{projectRoot}/package.json",
+          "{projectRoot}/src/**/*",
+          "!{projectRoot}/src/**/*.spec.ts",
+          "!{projectRoot}/src/**/*.spec.tsx",
+          "{workspaceRoot}/tools/generate-eject-assets.mjs"
+        ],
+        "outputs": [
+          "{projectRoot}/dist/eject"
+        ],
+        "cache": true
+      },
+      "build": {
+        "dependsOn": [
+          "^build",
+          "eject-assets"
+        ]
+      }
+    }
   }
 }

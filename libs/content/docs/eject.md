@@ -23,25 +23,72 @@ npx postkit eject figure --renderer chakra --to libs/postkit
 ```
 
 ```text
-✓ libs/postkit/figure/figure.tsx
 ✓ libs/postkit/figure/figure.recipe.ts
-✓ lib/postkit.ts   overrides.Figure.view → ./figure
+✓ libs/postkit/figure/figure.tsx
+✓ .postkit-eject.json   Figure @ @postkit/chakra 0.3.0
+✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
 
-Still bound to figureDefinition from @postkit/core.
-Run `postkit diff figure` after upgrading.
+Still bound to Figure's definition from @postkit/core/components.
+Run `postkit diff figure` after upgrading @postkit/chakra.
 ```
 
-The CLI copies that renderer's view, plus the recipe for Chakra, and registers
-the copy as the component's [view](/docs/views) override in your Postkit
-config.
+The CLI copies that renderer's view from your installed `@postkit/chakra` or
+`@postkit/react`, plus the recipe for Chakra and the CSS for headless, and
+registers the copy as the component's [view](/docs/views) override in your
+Postkit config:
 
-| Flag         | Default       | Meaning                             |
-| ------------ | ------------- | ----------------------------------- |
-| `--renderer` | from config   | `headless` or `chakra`              |
-| `--to`       | `src/postkit` | Where the files go                  |
-| `--dry-run`  | `false`       | Show the files without writing them |
+```ts
+// lib/postkit.ts
+import { Figure } from '../libs/postkit/figure/figure';
 
-{/* TODO(0.3.0): confirm the flag defaults above (taken from the SiteDocsCLI board, not spec 03), how the CLI finds "your config", and the exact output format. */}
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, media],
+  overrides: { Figure: { view: Figure } },
+});
+```
+
+If it can't find your config, or can't edit it safely, it prints those lines
+for you to add. See [CLI](/docs/cli#your-config) for how it finds the config
+and for every flag.
+
+| Flag            | Default       | Meaning                               |
+| --------------- | ------------- | ------------------------------------- |
+| `--renderer`    | from config   | `headless` or `chakra`                |
+| `--to`          | `src/postkit` | Where the component's folder goes     |
+| `--dry-run`     | `false`       | Show the files and config change only |
+| `--force`       | `false`       | Overwrite files that already exist    |
+| `--no-register` | registers     | Leave your config alone               |
+
+### What the copy imports
+
+The copied view imports its definition from `@postkit/core/components` and
+helpers from the renderer package's public API (`@postkit/chakra`,
+`@postkit/react`), so keep those in your dependencies. If a view needs a small
+internal helper the package doesn't export, the helper is copied into an
+`internal/` folder beside it.
+
+### Using an ejected Chakra recipe
+
+The ejected view passes its recipe to `postkitChakraView`, but Chakra uses the
+recipe your system registers as `postkitFigure` first, and
+`postkitDefaultTheme` registers Postkit's. To style the component with your
+copy, register it last:
+
+```tsx
+import { defineConfig } from '@chakra-ui/react';
+import { postkitDefaultTheme } from '@postkit/chakra';
+
+import { postkitFigureRecipe } from '../libs/postkit/figure/figure.recipe';
+
+const theme = defineConfig({
+  theme: { slotRecipes: { postkitFigure: postkitFigureRecipe } },
+});
+
+<postkit.Provider preset={postkitDefaultTheme} theme={theme}>
+  {children}
+</postkit.Provider>;
+```
 
 ## What stays upstream
 
@@ -49,27 +96,45 @@ config.
 | ---------------------- | ----------------------------------------------------- |
 | The view               | The definition: props, directive, anatomy, validation |
 | The recipe (Chakra)    | Behaviour, such as carousel paging or code copy       |
-|                        | The manifest entry                                    |
+| The CSS (headless)     | The manifest entry                                    |
 
 Behaviour lives in `@postkit/core/behaviors` and the renderer's hooks, so an
 ejected interactive component keeps getting behaviour fixes when you upgrade.
+And because the directive is validated against the upstream definition, a
+post that passes a bad prop to `::postkit-figure` still fails the build with
+your view in place.
 
 ## Keep up with upstream
 
-After an upgrade, `postkit diff` shows what changed upstream in the views you
-own, so you can decide what to bring across:
+`postkit eject` records what it copied in `.postkit-eject.json` at your
+project root: the package, the version, a content hash and the upstream source
+of each file. Commit it.
+
+After an upgrade, `postkit diff` compares that recorded source with the
+installed version's and prints a unified diff of what changed upstream, so
+you can decide what to bring across. It never changes your copy, and it lists
+the files you've edited since ejecting.
 
 ```sh
 npx postkit diff figure
 ```
 
 ```text
-figure.tsx   0.3.0 → 0.3.2
-+ loading={priority ? "eager" : "lazy"}
-- loading="lazy"
+Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
+--- a/figure.tsx	@postkit/chakra@0.3.0
++++ b/figure.tsx	@postkit/chakra@0.3.2
+@@ -54,7 +54,7 @@
+-          loading={props.loading}
++          loading={props.priority ? 'eager' : props.loading}
 
-1 change. Your edits are kept.
+1 file changed upstream. Your copy wasn't changed.
+Your edits: figure.recipe.ts.
 ```
+
+When you've brought across what you want, `postkit diff figure --accept`
+records the installed version as your new base. In CI,
+`postkit diff --exit-code` fails when an ejected component has upstream
+changes you haven't reviewed.
 
 ## Before you eject
 

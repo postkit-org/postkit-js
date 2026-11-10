@@ -74,7 +74,9 @@
       "@postkit/next",
       "@postkit/react-router",
       "@postkit/tanstack-router",
-      "@postkit/astro"
+      "@postkit/astro",
+      "@postkit/cli",
+      "@postkit/nx"
     ],
     "version": {
       "preVersionCommand": "npx nx run-many -t build"

@@ -1,0 +1,65 @@
+{
+  "name": "@postkit/cli",
+  "version": "0.2.0",
+  "description": "The postkit command: add kits and components, eject and diff views, scaffold components and write manifests",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "typescript",
+    "cli",
+    "scaffolding",
+    "content-components",
+    "mdx"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/cli#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "postkit": "./dist/bin.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "@postkit/core": "0.2.0",
+    "jiti": "^2.4.2",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@postkit/chakra": "0.2.0",
+    "@postkit/react": "0.2.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:tooling"
+    ]
+  }
+}

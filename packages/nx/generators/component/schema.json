@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "PostkitComponent",
+  "title": "Postkit component",
+  "description": "Scaffolds a Postkit component: a definition, a headless view and its CSS, and optionally a Chakra view, recipe and specs.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The component name, such as device or CodeSample.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What is the component called?"
+    },
+    "directory": {
+      "type": "string",
+      "description": "Where the component folder goes, from the workspace root. Ignored with --layout=postkit.",
+      "default": "src/postkit"
+    },
+    "chakra": {
+      "type": "boolean",
+      "description": "Also write a Chakra view and slot recipe.",
+      "default": false
+    },
+    "spec": {
+      "type": "boolean",
+      "description": "Also write a spec per view.",
+      "default": false
+    },
+    "category": {
+      "type": "string",
+      "description": "The catalog category.",
+      "enum": [
+        "article-structure",
+        "technical-content",
+        "media",
+        "discovery",
+        "engagement",
+        "publishing"
+      ],
+      "default": "article-structure"
+    },
+    "directive": {
+      "type": "string",
+      "description": "The Markdown directive. Defaults to postkit-<name>."
+    },
+    "description": {
+      "type": "string",
+      "description": "A one-line description for the catalog and editors."
+    },
+    "importExtension": {
+      "type": "string",
+      "description": "The extension of relative imports: none (bundlers) or js (nodenext).",
+      "enum": ["none", "js"],
+      "default": "none"
+    },
+    "layout": {
+      "type": "string",
+      "description": "site: one folder for a site's own component. postkit: a built-in in Postkit's own repo (packages/core, react and chakra).",
+      "enum": ["site", "postkit"],
+      "default": "site"
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite files that already exist.",
+      "default": false
+    }
+  },
+  "required": ["name"]
+}
