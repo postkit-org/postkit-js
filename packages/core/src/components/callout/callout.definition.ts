@@ -16,6 +16,7 @@ export const calloutDefinition = definePostkitComponent({
       description: 'The semantic emphasis of the aside.',
       default: 'note',
       themeVariant: true,
+      aliases: ['type'],
     }),
   },
   slots: ['root', 'icon', 'content', 'title', 'body'],

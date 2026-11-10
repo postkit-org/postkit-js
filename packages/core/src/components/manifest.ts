@@ -116,6 +116,13 @@ export interface PostkitManifestProp extends PostkitManifestPropV1 {
   readonly default?: unknown;
   /** Whether the prop is also a recipe variant in themed renderers. */
   readonly themeVariant: boolean;
+  /** Other names authors may use for the prop (`type` for Callout's `tone`). */
+  readonly aliases?: readonly string[];
+  /** Leaving the prop out is a validation warning; see `PostkitPropRecommendation`. */
+  readonly recommended?: {
+    readonly reason: string;
+    readonly unless?: readonly string[];
+  };
 }
 
 /** Whether a renderer package exports a view for the component. */
@@ -348,6 +355,10 @@ function manifestProp(prop: PostkitPropDefinition): PostkitManifestProp {
       ? { default: structuredClone(prop.default) }
       : {}),
     themeVariant: prop.themeVariant,
+    ...(prop.aliases ? { aliases: [...prop.aliases] } : {}),
+    ...(prop.recommended
+      ? { recommended: structuredClone(prop.recommended) }
+      : {}),
   };
 }
 

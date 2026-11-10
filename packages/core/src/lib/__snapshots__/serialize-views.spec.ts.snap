@@ -113,7 +113,7 @@ A slide from children.
 "
 `;
 
-exports[`static component views > Carousel > serializes to readable HTML 1`] = `"<section data-postkit-component="Carousel" data-postkit-part="root" data-size="md" data-variant="subtle" aria-label="Screenshots"><figure data-postkit-part="slide"><img data-postkit-part="media" src="/one.png" alt="The editor" loading="lazy"><figcaption data-postkit-part="content"><p data-postkit-part="title"><strong><a data-postkit-part="link" href="/editor">Editor</a></strong></p><p data-postkit-part="description">Write once.</p></figcaption></figure><figure data-postkit-part="slide"><img data-postkit-part="media" src="/two.png" alt="The feed" loading="lazy"></figure><div data-postkit-part="slide"><p>A slide from children.</p></div></section>"`;
+exports[`static component views > Carousel > serializes to readable HTML 1`] = `"<section data-postkit-component="Carousel" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="slides" aria-label="Screenshots"><figure data-postkit-part="slide"><img data-postkit-part="media" src="/one.png" alt="The editor" loading="lazy"><figcaption data-postkit-part="content"><p data-postkit-part="title"><strong><a data-postkit-part="link" href="/editor">Editor</a></strong></p><p data-postkit-part="description">Write once.</p></figcaption></figure><figure data-postkit-part="slide"><img data-postkit-part="media" src="/two.png" alt="The feed" loading="lazy"></figure><div data-postkit-part="slide"><p>A slide from children.</p></div></section>"`;
 
 exports[`static component views > Chart > serializes to plain text 1`] = `
 "Downloads
@@ -169,6 +169,15 @@ Support | No | —
 `;
 
 exports[`static component views > Comparison > serializes to readable HTML 1`] = `"<div data-postkit-component="Comparison" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="title"><strong>Plans</strong></p><p data-postkit-part="description">What each plan includes.</p><table data-postkit-part="table"><thead data-postkit-part="head"><tr><th data-postkit-part="header" scope="col">Feature</th><th data-postkit-part="header" scope="col">Starter</th><th data-postkit-part="header" scope="col">Pro</th></tr></thead><tbody><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Portable content</th><td data-postkit-part="value">Yes</td><td data-postkit-part="value">Yes</td></tr><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Seats</th><td data-postkit-part="value">1</td><td data-postkit-part="value">Unlimited</td></tr><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Support</th><td data-postkit-part="value">No</td><td data-postkit-part="value">—</td></tr></tbody></table></div>"`;
+
+exports[`static component views > Device > serializes to plain text 1`] = `
+"[The home screen]
+
+The companion app.
+"
+`;
+
+exports[`static component views > Device > serializes to readable HTML 1`] = `"<figure data-postkit-component="Device" data-postkit-part="root" data-size="md" data-variant="subtle" data-kind="iphone"><div data-postkit-part="frame"><span data-postkit-part="notch" aria-hidden="true"></span><div data-postkit-part="screen"><img data-postkit-part="image" src="/media/home.png" alt="The home screen" loading="lazy"></div></div><figcaption data-postkit-part="figcaption"><span data-postkit-part="caption">The companion app.</span></figcaption></figure>"`;
 
 exports[`static component views > Diff > serializes to plain text 1`] = `
 "package.json
@@ -237,7 +246,7 @@ First
 "
 `;
 
-exports[`static component views > Gallery > serializes to readable HTML 1`] = `"<div data-postkit-component="Gallery" data-postkit-part="root" data-size="md" data-variant="subtle"><div data-postkit-part="header"><p data-postkit-part="title"><strong>Gallery</strong></p></div><div data-postkit-part="grid"><figure data-postkit-part="item"><a data-postkit-part="imageLink" href="/a"><img data-postkit-part="image" src="/a.jpg" alt="A" loading="lazy"></a><figcaption data-postkit-part="caption">First</figcaption></figure><figure data-postkit-part="item"><img data-postkit-part="image" src="/b.jpg" alt="B" loading="lazy"></figure></div></div>"`;
+exports[`static component views > Gallery > serializes to readable HTML 1`] = `"<div data-postkit-component="Gallery" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="grid"><div data-postkit-part="header"><p data-postkit-part="title"><strong>Gallery</strong></p></div><div data-postkit-part="grid"><figure data-postkit-part="item"><a data-postkit-part="imageLink" href="/a"><img data-postkit-part="image" src="/a.jpg" alt="A" loading="lazy"></a><figcaption data-postkit-part="caption">First</figcaption></figure><figure data-postkit-part="item"><img data-postkit-part="image" src="/b.jpg" alt="B" loading="lazy"></figure></div></div>"`;
 
 exports[`static component views > KeyTakeaway > serializes to plain text 1`] = `
 "Summary
@@ -418,8 +427,8 @@ exports[`static component views > Terminal > serializes to readable HTML 1`] = `
 exports[`static component views > Video > serializes to plain text 1`] = `
 "Open Demo (/media/demo.mp4)
 
-A two-minute demo.
+A two-minute demo. 2:04
 "
 `;
 
-exports[`static component views > Video > serializes to readable HTML 1`] = `"<figure data-postkit-component="Video" data-postkit-part="root" data-size="md" data-variant="subtle"><video data-postkit-part="player" src="/media/demo.mp4" poster="/media/demo.jpg" title="Demo" preload="metadata" controls><a data-postkit-part="fallback" href="/media/demo.mp4">Open Demo</a></video><figcaption data-postkit-part="caption">A two-minute demo.</figcaption></figure>"`;
+exports[`static component views > Video > serializes to readable HTML 1`] = `"<figure data-postkit-component="Video" data-postkit-part="root" data-size="md" data-variant="subtle"><video data-postkit-part="player" src="/media/demo.mp4" poster="/media/demo.jpg" title="Demo" preload="metadata" controls><track kind="captions" src="/media/demo.vtt" srclang="en" label="Captions" default><a data-postkit-part="fallback" href="/media/demo.mp4">Open Demo</a></video><figcaption data-postkit-part="caption">A two-minute demo. <time data-postkit-part="duration" datetime="PT2M4S">2:04</time></figcaption></figure>"`;

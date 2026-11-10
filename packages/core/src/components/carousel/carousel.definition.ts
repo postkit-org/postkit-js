@@ -16,6 +16,12 @@ export const carouselDefinition = definePostkitComponent({
       default: 'Article carousel',
     }),
     initialIndex: prop.number('The initially visible zero-based item index.'),
+    presentation: prop.enum(['slides', 'peek'], {
+      description:
+        'slides shows one item with a position status; peek centres the current item with its neighbours in view, arrows only, and announces its caption. Neither advances on its own.',
+      default: 'slides',
+      themeVariant: true,
+    }),
   },
   slots: [
     'root',
@@ -30,6 +36,8 @@ export const carouselDefinition = definePostkitComponent({
     'status',
     'nextTrigger',
     'emptyState',
+    'caption',
+    'number',
   ],
   example: {
     children: 'Example content.',

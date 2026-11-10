@@ -17,6 +17,31 @@ export interface PostkitPropDefinitionFields<
   readonly themeVariant: ThemeVariant;
   /** The value a renderer uses when the author doesn't set one. */
   readonly default?: Value;
+  /**
+   * Other names authors may use for the prop, such as Callout's `type` for
+   * `tone` (D6). Directives, MDX props and the static serializer map an
+   * alias to the prop; the prop wins when both are set.
+   */
+  readonly aliases?: readonly string[];
+  /**
+   * A prop authors should set: leaving it out is a validation warning
+   * (development console and build output), never a failure, in every mode.
+   */
+  readonly recommended?: PostkitPropRecommendation;
+}
+
+/**
+ * Why a prop is recommended, and what makes it unnecessary. Video's
+ * `captions` is recommended unless the video is `decorative` (D20).
+ */
+export interface PostkitPropRecommendation {
+  /** The warning, such as "add a captions track, or mark it decorative". */
+  readonly reason: string;
+  /**
+   * Props (or renderer-only props, such as the React views' `tracks`) that
+   * silence the warning when set. A boolean prop silences it only when true.
+   */
+  readonly unless?: readonly string[];
 }
 
 /**
@@ -113,6 +138,10 @@ export type PostkitPropValueOf<Prop> = Prop extends {
 export interface PostkitPropOptions<Value, Required extends boolean> {
   readonly required?: Required;
   readonly default?: Value;
+  /** Other names authors may use for the prop. */
+  readonly aliases?: readonly string[];
+  /** Leaving the prop out is a validation warning, never a failure. */
+  readonly recommended?: PostkitPropRecommendation;
 }
 
 /** `true` when a builder was given a `default` (its inferred type isn't `undefined`). */
@@ -152,6 +181,8 @@ function createProp<Prop extends PostkitPropDefinition>(
     readonly required?: boolean;
     readonly default?: unknown;
     readonly themeVariant?: boolean;
+    readonly aliases?: readonly string[];
+    readonly recommended?: PostkitPropRecommendation;
   } = {},
   values?: readonly string[],
 ): Prop {
@@ -164,7 +195,64 @@ function createProp<Prop extends PostkitPropDefinition>(
   if (options.default !== undefined) {
     prop['default'] = deepFreeze(structuredClone(options.default));
   }
+  if (options.aliases !== undefined) {
+    prop['aliases'] = assertAliases(options.aliases);
+  }
+  if (options.recommended !== undefined) {
+    prop['recommended'] = assertRecommendation(
+      options.recommended,
+      options.required === true,
+    );
+  }
   return Object.freeze(prop) as unknown as Prop;
+}
+
+const aliasPattern = /^[a-z][A-Za-z0-9]*$/;
+
+function assertAliases(aliases: readonly string[]): readonly string[] {
+  if (
+    !Array.isArray(aliases) ||
+    aliases.length === 0 ||
+    aliases.some(
+      (alias) => typeof alias !== 'string' || !aliasPattern.test(alias),
+    )
+  ) {
+    throw new TypeError('Postkit prop aliases must be camelCase names.');
+  }
+  if (new Set(aliases).size !== aliases.length) {
+    throw new TypeError(
+      `Postkit prop aliases must be unique: ${aliases.join(', ')}.`,
+    );
+  }
+  return Object.freeze([...aliases]);
+}
+
+function assertRecommendation(
+  recommended: PostkitPropRecommendation,
+  required: boolean,
+): PostkitPropRecommendation {
+  if (required) {
+    throw new TypeError('A required Postkit prop cannot also be recommended.');
+  }
+  if (
+    !recommended ||
+    typeof recommended.reason !== 'string' ||
+    recommended.reason.trim() === ''
+  ) {
+    throw new TypeError('A recommended Postkit prop needs a reason.');
+  }
+  const unless = recommended.unless ?? [];
+  if (
+    unless.some((name) => typeof name !== 'string' || !aliasPattern.test(name))
+  ) {
+    throw new TypeError(
+      "A recommendation's `unless` lists camelCase prop names.",
+    );
+  }
+  return deepFreeze({
+    reason: recommended.reason,
+    ...(unless.length > 0 ? { unless: [...unless] } : {}),
+  });
 }
 
 function assertEnumValues(values: readonly string[], defaultValue: unknown) {

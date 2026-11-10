@@ -19,6 +19,12 @@ export const galleryDefinition = definePostkitComponent({
       description: 'The preferred desktop column count.',
       default: '2',
     }),
+    presentation: prop.enum(['grid', 'row'], {
+      description:
+        'grid lays the items out in columns; row sets 2–3 related items side by side, a horizontal snap rail on phones.',
+      default: 'grid',
+      themeVariant: true,
+    }),
   },
   slots: [
     'root',
@@ -30,6 +36,7 @@ export const galleryDefinition = definePostkitComponent({
     'imageLink',
     'image',
     'caption',
+    'number',
   ],
   example: {
     props: { items: [{ title: 'Example item' }] },
