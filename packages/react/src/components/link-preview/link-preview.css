@@ -1,0 +1,152 @@
+/* LinkPreview: an unfurled link as an inline link, a card, media or a consented embed. */
+@scope ([data-postkit-component='LinkPreview']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-media-min-height: 10rem;
+    border-radius: var(--postkit-radius-xl);
+    overflow: hidden;
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-media-min-height: 5.5rem;
+    border-radius: var(--postkit-radius-md);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-media-min-height: 16rem;
+  }
+  :where([data-postkit-part='anchor']) {
+    display: block;
+    min-width: 0;
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='anchor']:focus-visible) {
+    outline-offset: calc(var(--postkit-focus-width) * -1);
+  }
+  :where([data-postkit-part='anchor']:hover [data-postkit-part='title']) {
+    text-decoration-line: underline;
+  }
+  :where([data-postkit-part='media']) {
+    background: var(--postkit-color-surface-emphasized);
+    min-height: var(--postkit-media-min-height);
+    min-width: 0;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='image']) {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='carousel'], [data-postkit-part='mediaPlayer']) {
+    min-width: 0;
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='siteRow']) {
+    align-items: center;
+    color: var(--postkit-color-fg-muted);
+    display: flex;
+    font-size: var(--postkit-text-sm);
+    gap: var(--postkit-space-2);
+    min-width: 0;
+  }
+  :where([data-postkit-part='favicon']) {
+    flex: 0 0 auto;
+    height: 1rem;
+    object-fit: contain;
+    width: 1rem;
+  }
+  :where([data-postkit-part='siteName'], [data-postkit-part='domain']) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :where([data-postkit-part='title']) {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    font-weight: var(--postkit-weight-semibold);
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    margin-block-start: var(--postkit-space-2);
+    overflow: hidden;
+  }
+  :where([data-postkit-part='description']) {
+    -webkit-box-orient: vertical;
+    color: var(--postkit-color-fg-muted);
+    display: -webkit-box;
+    font-size: var(--postkit-text-sm);
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    margin-block-start: 0.375rem;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='domain']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    margin-block-start: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='embedFrame']) {
+    aspect-ratio: 16 / 9;
+    background: var(--postkit-color-surface-emphasized);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  :where([data-postkit-part='embed']) {
+    border: 0;
+    display: block;
+    height: 100%;
+    inset: 0;
+    position: absolute;
+    width: 100%;
+  }
+  :where([data-postkit-part='consent']) {
+    align-items: center;
+    background: var(--postkit-color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: var(--postkit-space-3);
+    inset: 0;
+    justify-content: center;
+    padding: var(--postkit-space-6);
+    position: absolute;
+    text-align: center;
+  }
+  :where([data-postkit-part='consentButton']) {
+    appearance: none;
+    background: var(--postkit-color-accent);
+    border: 0;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-accent-fg);
+    cursor: pointer;
+    font-weight: var(--postkit-weight-semibold);
+    padding: var(--postkit-space-2) var(--postkit-space-4);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='content']) {
+    padding-inline: 0;
+  }
+
+  /* Inline: a plain link in the sentence. */
+  :where(:scope[data-presentation='inline']) {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    display: inline;
+    margin: 0;
+    overflow: visible;
+  }
+  :where(:scope[data-presentation='inline'] [data-postkit-part='anchor']) {
+    display: inline;
+    text-decoration-line: underline;
+  }
+}

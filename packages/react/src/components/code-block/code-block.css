@@ -1,0 +1,132 @@
+/* CodeBlock: highlighted code with a header and copy control, on a code surface that stays dark (§5.5). */
+@scope ([data-postkit-component='CodeBlock']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-color-focus-ring: var(--postkit-code-focus-ring);
+    background: var(--postkit-code-bg);
+    border-radius: var(--postkit-radius-xl);
+    color: var(--postkit-code-fg);
+    color-scheme: dark;
+    font-size: inherit;
+    overflow: hidden;
+  }
+  /* Inside a CodeGroup panel the group draws the surface. */
+  :where([data-postkit-component='CodeGroup'] [data-postkit-part='panel'] > :scope) {
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+  }
+  :where([data-postkit-part='header']) {
+    align-items: center;
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-code-border);
+    display: flex;
+    gap: var(--postkit-space-3);
+    padding: var(--postkit-space-2) var(--postkit-space-3);
+  }
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+    min-width: 0;
+  }
+  :where([data-postkit-part='language']) {
+    color: var(--postkit-code-fg-muted);
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-xs);
+    text-transform: uppercase;
+  }
+  :where([data-postkit-part='control']) {
+    align-items: center;
+    display: flex;
+    gap: var(--postkit-space-1);
+    margin-inline-start: auto;
+  }
+  :where([data-postkit-part='copyTrigger'], [data-postkit-part='button']) {
+    align-items: center;
+    appearance: none;
+    background: none;
+    border: var(--postkit-border-width) solid var(--postkit-code-border);
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-code-fg-muted);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: var(--postkit-text-xs);
+    gap: var(--postkit-space-1);
+    min-height: 1.75rem;
+    padding: var(--postkit-space-1) var(--postkit-space-2);
+  }
+  :where(
+    [data-postkit-part='copyTrigger']:hover,
+    [data-postkit-part='button']:hover
+  ) {
+    background: var(--postkit-code-selected);
+    color: var(--postkit-code-fg);
+  }
+  :where(
+    [data-postkit-part='copyTrigger']:is([data-copied], [data-state='copied'])
+  ) {
+    color: var(--postkit-code-success);
+  }
+  :where([data-postkit-part='copyIndicator']) {
+    align-items: center;
+    display: inline-flex;
+    gap: inherit;
+  }
+  :where([data-postkit-part='content']) {
+    max-width: 100%;
+    overflow: auto;
+  }
+  :where([data-postkit-part='scroller']) {
+    overflow: auto;
+  }
+  :where(
+    [data-postkit-part='content']:focus-visible,
+    [data-postkit-part='scroller']:focus-visible,
+    [data-postkit-part='code']:focus-visible
+  ) {
+    outline-offset: calc(var(--postkit-focus-width) * -1);
+  }
+  :where([data-postkit-part='code']) {
+    background: none;
+    display: block;
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    line-height: var(--postkit-leading);
+    margin: 0;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='code']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='code']) {
+    font-size: var(--postkit-text-md);
+  }
+  :where([data-postkit-part='codeText']) {
+    display: block;
+    font: inherit;
+    padding: var(--postkit-space-3) var(--postkit-space-4);
+  }
+  :where([data-postkit-part='line'], [data-postkit-part='codeText'] [data-line]) {
+    min-height: 1.5em;
+  }
+  :where(
+    [data-postkit-part='line'][data-highlight],
+    [data-postkit-part='codeText'] [data-line][data-highlight]
+  ) {
+    background: var(--postkit-code-selected);
+  }
+  :where([data-postkit-part='lineNumber']) {
+    color: var(--postkit-code-fg-muted);
+    display: inline-block;
+    margin-inline-end: var(--postkit-space-4);
+    min-width: 2ch;
+    text-align: end;
+    user-select: none;
+  }
+
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-code-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+}

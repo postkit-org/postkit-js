@@ -1,0 +1,38 @@
+/* AudienceBoundary: content for one audience, with a fallback for everyone else. */
+@scope ([data-postkit-component='AudienceBoundary']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    position: relative;
+  }
+  :where([data-postkit-part='label']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    margin-block-end: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+  }
+  :where([data-postkit-part='fallback']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+    color: var(--postkit-color-fg-muted);
+    padding: var(--postkit-space-5);
+    text-align: center;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    border-inline-start: var(--postkit-rule-width) solid
+      var(--postkit-color-border);
+    padding-inline-start: var(--postkit-inset);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='label']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-full);
+    display: inline-flex;
+    padding: var(--postkit-space-1) var(--postkit-space-2);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-inset);
+  }
+}

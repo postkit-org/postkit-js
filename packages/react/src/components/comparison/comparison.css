@@ -1,0 +1,68 @@
+/* Comparison: a feature table that scrolls sideways on narrow screens. */
+@scope ([data-postkit-component='Comparison']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-cell-padding: var(--postkit-space-3);
+    display: grid;
+    gap: var(--postkit-space-2);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-cell-padding: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='scroller']) {
+    margin-block-start: var(--postkit-space-2);
+    overflow-x: auto;
+  }
+  :where([data-postkit-part='scroller']:focus-visible) {
+    outline-offset: calc(var(--postkit-focus-width) * -1);
+  }
+  :where([data-postkit-part='table']) {
+    border-collapse: collapse;
+    min-width: 100%;
+    width: max-content;
+  }
+  :where([data-postkit-part='head']) {
+    background: var(--postkit-color-surface-emphasized);
+  }
+  :where(
+    [data-postkit-part='header'],
+    [data-postkit-part='label'],
+    [data-postkit-part='value']
+  ) {
+    padding: var(--postkit-cell-padding);
+    text-align: start;
+    vertical-align: top;
+  }
+  :where([data-postkit-part='header']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='row']) {
+    border-block-start: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+  }
+  :where([data-postkit-part='label']) {
+    font-weight: var(--postkit-weight-medium);
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='scroller']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='scroller']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='head']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='head']) {
+    background: none;
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-color-border-strong);
+  }
+}

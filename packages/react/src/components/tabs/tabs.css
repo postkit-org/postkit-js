@@ -1,0 +1,69 @@
+/* Tabs: a tab list and its panels; the selected tab is underlined, not only tinted. */
+@scope ([data-postkit-component='Tabs']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-tab-padding: var(--postkit-space-2) var(--postkit-space-3);
+    display: grid;
+    gap: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-tab-padding: var(--postkit-space-1) var(--postkit-space-2);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-tab-padding: var(--postkit-space-3) var(--postkit-space-4);
+  }
+  :where([data-postkit-part='list']) {
+    display: flex;
+    gap: var(--postkit-space-1);
+    overflow-x: auto;
+    padding: var(--postkit-focus-width);
+  }
+  :where([data-postkit-part='tab']) {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-fg-muted);
+    cursor: pointer;
+    font-weight: var(--postkit-weight-medium);
+    padding: var(--postkit-tab-padding);
+    white-space: nowrap;
+  }
+  :where([data-postkit-part='tab']:hover) {
+    color: var(--postkit-color-fg);
+  }
+  :where(
+    [data-postkit-part='tab']:is(
+        [aria-selected='true'],
+        [data-selected],
+        [data-state='active']
+      )
+  ) {
+    background: var(--postkit-color-surface-emphasized);
+    box-shadow: inset 0 -2px 0 var(--postkit-color-fg);
+    color: var(--postkit-color-fg);
+  }
+  :where(
+    [data-postkit-part='tab']:is(:disabled, [aria-disabled='true'], [data-disabled])
+  ) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  :where([data-postkit-part='panels'], [data-postkit-part='panel']) {
+    min-width: 0;
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='panels']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-lg);
+    padding: var(--postkit-inset);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='panels']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    padding: var(--postkit-inset);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='list']) {
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+  }
+}

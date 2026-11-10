@@ -1,0 +1,193 @@
+/* SocialPost: an archived post as a card, or a consented embed. */
+@scope ([data-postkit-component='SocialPost']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-avatar-size: 2.5rem;
+    border-radius: var(--postkit-radius-xl);
+    overflow: hidden;
+    padding: var(--postkit-inset);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-avatar-size: 2rem;
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-avatar-size: 3rem;
+  }
+  :where([data-postkit-part='serviceRow']) {
+    align-items: center;
+    display: flex;
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+  }
+  :where([data-postkit-part='serviceBadge']) {
+    align-items: center;
+    display: inline-flex;
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+    gap: 0.375rem;
+  }
+  :where([data-postkit-part='serviceIcon']) {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+  }
+  :where([data-postkit-part='authorRow']) {
+    align-items: center;
+    display: flex;
+    gap: var(--postkit-space-3);
+    margin-block-start: var(--postkit-space-3);
+    min-width: 0;
+  }
+  :where([data-postkit-part='avatar']) {
+    background: var(--postkit-color-surface-emphasized);
+    border-radius: var(--postkit-radius-full);
+    flex: 0 0 auto;
+    height: var(--postkit-avatar-size);
+    object-fit: cover;
+    width: var(--postkit-avatar-size);
+  }
+  :where([data-postkit-part='author']) {
+    display: grid;
+    min-width: 0;
+  }
+  :where([data-postkit-part='authorName'], [data-postkit-part='handle']) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :where([data-postkit-part='authorName']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='handle'], [data-postkit-part='timestamp']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+  }
+  :where([data-postkit-part='content']) {
+    margin-block-start: var(--postkit-space-4);
+    white-space: pre-wrap;
+  }
+  :where([data-postkit-part='media']) {
+    background: var(--postkit-color-surface-emphasized);
+    border-radius: var(--postkit-radius-lg);
+    margin-block-start: var(--postkit-space-4);
+    overflow: hidden;
+  }
+  :where([data-postkit-part='image']) {
+    display: block;
+    max-height: 32rem;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='metrics']) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-4);
+    list-style: none;
+    margin-block-start: var(--postkit-space-4);
+    padding: 0;
+  }
+  :where([data-postkit-part='metric']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  :where([data-postkit-part='quote']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    margin-block-start: var(--postkit-space-4);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='quoteAuthor']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='quoteContent']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: 0.375rem;
+    white-space: pre-wrap;
+  }
+  :where([data-postkit-part='footer']) {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+    margin-block-start: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='originalLink']) {
+    font-weight: var(--postkit-weight-medium);
+  }
+  :where([data-postkit-part='snapshotInfo']) {
+    border-block-start: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+    color: var(--postkit-color-fg-muted);
+    display: grid;
+    font-size: var(--postkit-text-xs);
+    gap: var(--postkit-space-1);
+    margin-block-start: var(--postkit-space-4);
+    padding-block-start: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='snapshotTime']) {
+    font-weight: var(--postkit-weight-medium);
+  }
+  :where([data-postkit-part='embedFrame']) {
+    aspect-ratio: 16 / 9;
+    background: var(--postkit-color-surface-emphasized);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  :where([data-postkit-part='embed']) {
+    border: 0;
+    display: block;
+    height: 100%;
+    inset: 0;
+    position: absolute;
+    width: 100%;
+  }
+  :where([data-postkit-part='consent']) {
+    align-items: center;
+    background: var(--postkit-color-surface);
+    display: flex;
+    flex-direction: column;
+    gap: var(--postkit-space-3);
+    inset: 0;
+    justify-content: center;
+    padding: var(--postkit-space-6);
+    position: absolute;
+    text-align: center;
+  }
+  :where([data-postkit-part='consentButton']) {
+    appearance: none;
+    background: var(--postkit-color-accent);
+    border: 0;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-accent-fg);
+    cursor: pointer;
+    font-weight: var(--postkit-weight-semibold);
+    padding: var(--postkit-space-2) var(--postkit-space-4);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+    padding-inline: 0;
+  }
+
+  :where(:scope[data-branding='none'] [data-postkit-part='serviceRow']) {
+    display: none;
+  }
+  :where(:scope[data-branding='subtle'] [data-postkit-part='serviceBadge']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where(:scope[data-presentation='embed']) {
+    padding: 0;
+  }
+  :where(:scope[data-presentation='embed'] [data-postkit-part='snapshotInfo']) {
+    margin: var(--postkit-space-4);
+  }
+}

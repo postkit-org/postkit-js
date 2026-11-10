@@ -1,0 +1,67 @@
+/* FileCard: a downloadable file with its type, size and an action. */
+@scope ([data-postkit-component='FileCard']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-mark-size: 2.5rem;
+    align-items: center;
+    border-radius: var(--postkit-radius-xl);
+    display: grid;
+    gap: var(--postkit-space-3);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    padding: var(--postkit-inset);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-mark-size: 2rem;
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-mark-size: 3rem;
+  }
+  :where([data-postkit-part='icon']) {
+    align-items: center;
+    background: var(--postkit-color-surface-emphasized);
+    border-radius: var(--postkit-radius-lg);
+    display: inline-flex;
+    font-family: var(--postkit-font-mono);
+    font-size: 0.625rem;
+    font-weight: var(--postkit-weight-bold);
+    height: var(--postkit-mark-size);
+    justify-content: center;
+    letter-spacing: 0.04em;
+    width: var(--postkit-mark-size);
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+  }
+  :where([data-postkit-part='name']) {
+    font-weight: var(--postkit-weight-semibold);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: 0.875em;
+    margin-block-start: 0.125rem;
+  }
+  :where([data-postkit-part='meta']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    margin-block-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='action']) {
+    font-weight: var(--postkit-weight-semibold);
+    white-space: nowrap;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='icon']) {
+    background: var(--postkit-color-bg);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

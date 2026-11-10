@@ -1,0 +1,83 @@
+/* CardGrid: a grid of linked cards; `--postkit-card-columns` sets the columns. */
+@scope ([data-postkit-component='CardGrid']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    display: grid;
+    gap: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='header']) {
+    display: grid;
+    gap: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='grid']) {
+    display: grid;
+    gap: var(--postkit-space-4);
+    grid-template-columns: repeat(
+      var(--postkit-card-columns, 2),
+      minmax(0, 1fr)
+    );
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='grid']) {
+    gap: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='grid']) {
+    gap: var(--postkit-space-5);
+  }
+  :where([data-postkit-part='card']) {
+    border-radius: var(--postkit-radius-xl);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='image']) {
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='cardBody']) {
+    display: grid;
+    flex: 1;
+    gap: var(--postkit-space-2);
+    grid-auto-rows: min-content;
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='cardTitle']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='cardDescription']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='meta']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: 0.875em;
+  }
+  :where([data-postkit-part='link']) {
+    font-weight: var(--postkit-weight-semibold);
+    margin-block-start: auto;
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='card']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='card']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='cardBody']) {
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  @scope ([data-postkit-component='CardGrid']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where([data-postkit-part='grid']) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

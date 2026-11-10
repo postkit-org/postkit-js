@@ -1,0 +1,98 @@
+/* ProductCard: a recommended product with price, rating and an action. */
+@scope ([data-postkit-component='ProductCard']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
+  }
+  :where(:scope:has(> [data-postkit-part='image'])) {
+    grid-template-columns: minmax(10rem, 1fr) 2fr;
+  }
+  :where([data-postkit-part='image']) {
+    aspect-ratio: 4 / 3;
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='content']) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--postkit-space-2);
+    padding: var(--postkit-space-5);
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='content']) {
+    padding: var(--postkit-space-4);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='content']) {
+    padding: var(--postkit-space-6);
+  }
+  :where([data-postkit-part='badge']) {
+    align-self: flex-start;
+    border: var(--postkit-border-width) solid var(--postkit-color-border-strong);
+    border-radius: var(--postkit-radius-full);
+    font-size: var(--postkit-text-xs);
+    font-weight: var(--postkit-weight-semibold);
+    padding: 0.125rem var(--postkit-space-2);
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='rating']) {
+    font-size: var(--postkit-text-sm);
+    letter-spacing: 0.1em;
+  }
+  :where([data-postkit-part='footer']) {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+    margin-block-start: auto;
+    padding-block-start: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='price']) {
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--postkit-weight-bold);
+  }
+  :where([data-postkit-part='action']) {
+    background: var(--postkit-color-accent);
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-accent-fg);
+    font-weight: var(--postkit-weight-semibold);
+    padding: var(--postkit-space-2) var(--postkit-space-3);
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='action']:hover) {
+    opacity: 0.88;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='image']) {
+    border-radius: var(--postkit-radius-lg);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='content']) {
+    padding-block: 0;
+    padding-inline-end: 0;
+  }
+}
+
+@media (max-width: 30rem) {
+  @scope ([data-postkit-component='ProductCard']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where(:scope:has(> [data-postkit-part='image'])) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

@@ -1,0 +1,48 @@
+/* PullQuote: a quotation lifted out of the text, with attribution. */
+@scope ([data-postkit-component='PullQuote']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-inline-start: var(--postkit-rule-width) solid
+      var(--postkit-color-accent);
+    padding: var(--postkit-space-2) var(--postkit-space-5);
+  }
+  :where([data-postkit-part='mark']) {
+    color: var(--postkit-color-fg-muted);
+    display: block;
+    font-family: var(--postkit-font-heading);
+    font-size: var(--postkit-text-4xl);
+    height: 0.5em;
+    line-height: 0.9;
+  }
+  :where([data-postkit-part='quote']) {
+    font-family: var(--postkit-font-heading);
+    font-size: var(--postkit-text-2xl);
+    font-weight: var(--postkit-weight-medium);
+    line-height: 1.35;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='quote']) {
+    font-size: var(--postkit-text-lg);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='quote']) {
+    font-size: var(--postkit-text-3xl);
+  }
+  :where([data-postkit-part='attribution']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='cite']) {
+    font-style: normal;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-inline-start: 0;
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-5);
+  }
+  :where(:scope[data-variant='outline']) {
+    border-block: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-inline-start: 0;
+    padding: var(--postkit-space-5) 0;
+  }
+}

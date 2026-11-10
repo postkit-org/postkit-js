@@ -1,0 +1,56 @@
+/* KeyTakeaway: the point to remember, with an optional list. */
+@scope ([data-postkit-component='KeyTakeaway']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-5);
+  }
+  :where(:scope[data-size='sm']) {
+    padding: var(--postkit-space-4);
+  }
+  :where(:scope[data-size='lg']) {
+    padding: var(--postkit-space-6);
+  }
+  :where([data-postkit-part='eyebrow']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    font-weight: var(--postkit-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.125em;
+    font-weight: var(--postkit-weight-semibold);
+    line-height: var(--postkit-leading-tight);
+    margin-block-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='body']) {
+    margin-block-start: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='list']) {
+    display: grid;
+    gap: var(--postkit-space-2);
+    margin-block-start: var(--postkit-space-3);
+    padding-inline-start: var(--postkit-space-5);
+  }
+  :where([data-postkit-part='item']) {
+    padding-inline-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='item'])::marker {
+    color: var(--postkit-color-fg-muted);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-inline-start: var(--postkit-rule-width) solid
+      var(--postkit-color-accent);
+    border-radius: 0;
+    padding-block: var(--postkit-space-1);
+    padding-inline-end: 0;
+  }
+}
