@@ -35,7 +35,7 @@ export function CommuneBand() {
             fontSize="24px"
             fontWeight="medium"
             lineHeight="1.2"
-            color="fg.communeBy"
+            color="fg.commune"
             css={{ [narrow]: { fontSize: '18px' } }}
           >
             By

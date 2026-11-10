@@ -77,7 +77,7 @@ libs/site-emails               NEW (nx g @nx/react:library): confirm + release e
 **Footer**
 - Columns: brand line, Product (Components, Docs, Notes, Changelog), Packages (`@postkit/react`, `@postkit/chakra`, `@postkit/email`, `@postkit/core`), Elsewhere (GitHub, npm, Bluesky, X / Twitter).
 - Bottom row: "© 2026 Postkit. MIT licensed." on the left. On the right: Licensing, Privacy, the "w/ OSS" badge (links to `/withoss`) and the theme switch (§11).
-- **Commune band:** a full-width 4px gradient rule, then an always-black band (`bg.commune`, both themes). It holds "By" (24px, `#A1A1AA`, 18px under 767px), a 4px gap, and the white Commune wordmark at full width, linking to `https://commune.software/open-source/postkit`.
+- **Commune band:** a full-width 4px gradient rule, then an always-black band (`bg.commune`, both themes). It holds "By" (24px, white `fg.commune` like the wordmark, 18px under 767px; changed from the board's grey `#A1A1AA` on 10 Nov 2026), a 4px gap, and the white Commune wordmark at full width, linking to `https://commune.software/open-source/postkit`.
 
 ## 5. Content model
 

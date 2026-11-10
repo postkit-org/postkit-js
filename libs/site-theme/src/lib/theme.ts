@@ -160,7 +160,6 @@ export const siteConfig = defineConfig({
           quiet: mode('#86868B', '#8E8E93'),
           inverted: mode('#FFFFFF', '#0F0F11'),
           onCode: mode('#F5F5F7', '#F5F5F7'),
-          communeBy: mode('#A1A1AA', '#A1A1AA'),
           commune: mode('#FFFFFF', '#FFFFFF'),
         },
         border: {
