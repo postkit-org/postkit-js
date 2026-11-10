@@ -183,7 +183,11 @@ export function Chart({
           This chart does not contain any numeric data.
         </Text>
       ) : (
+        // The plot scrolls sideways on narrow screens, so keyboard users need to reach it.
         <Box
+          tabIndex={0}
+          role="region"
+          aria-labelledby={titleId}
           className={recipe.classNameMap.plot}
           css={[styles.plot, slotStyles?.plot]}
         >

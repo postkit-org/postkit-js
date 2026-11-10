@@ -173,7 +173,8 @@ export const postkitComparisonRecipe = defineSlotRecipe({
     root: { display: 'grid', gap: '2' },
     title: {},
     description: { color: 'fg.muted' },
-    scroller: { marginTop: '2', overflowX: 'auto' },
+    // Focusable so keyboard users can scroll it; show where focus is.
+    scroller: { focusVisibleRing: 'inside', marginTop: '2', overflowX: 'auto' },
     table: {
       borderCollapse: 'collapse',
       minWidth: '100%',

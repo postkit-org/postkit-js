@@ -17,7 +17,7 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -354,6 +354,12 @@ export function CodeBlock({
         </ChakraCodeBlock.Header>
       ) : null}
       <ChakraCodeBlock.Content
+        // Chakra puts `aria-expanded` on the content, a generic element whose role doesn't
+        // allow it (axe `aria-allowed-attr`). Expanded state belongs on the control that
+        // toggles it, with `aria-controls`; Chakra's CollapseTrigger already does that, and
+        // Postkit renders no collapse control, so the content drops the attribute.
+        // (`undefined` is compacted away before Chakra's default; `null` overrides it.)
+        aria-expanded={null as unknown as undefined}
         className={slotClassNames(
           recipe.classNameMap.scroller,
           recipe.classNameMap.content,
@@ -595,6 +601,7 @@ export function Diff({
   variant,
   unstyled,
 }: DiffProps) {
+  const titleId = `${useId()}-title`;
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.diff,
     postkitDiffRecipe,
@@ -616,6 +623,7 @@ export function Diff({
           css={[styles.header, slotStyles?.header]}
         >
           <Text
+            id={titleId}
             className={recipe.classNameMap.title}
             css={[styles.title, slotStyles?.title]}
           >
@@ -623,8 +631,12 @@ export function Diff({
           </Text>
         </Box>
       ) : null}
+      {/* The code scrolls sideways on narrow screens, so keyboard users need to reach it. */}
       <Box
         as="pre"
+        tabIndex={0}
+        role="region"
+        {...(title ? { 'aria-labelledby': titleId } : { 'aria-label': 'Diff' })}
         className={recipe.classNameMap.code}
         css={[styles.code, slotStyles?.code]}
       >

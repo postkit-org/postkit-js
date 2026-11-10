@@ -82,6 +82,7 @@ function createPostkitProseElement<Element extends ElementType>(
 function createPostkitProsePrimitive<Element extends ElementType>(
   primitive: ComponentType<Readonly<Record<string, unknown>>>,
   slot: PostkitProseSlot,
+  defaultProps?: Readonly<Record<string, unknown>>,
 ): ChakraComponent<Element> {
   function PostkitProsePrimitive(props: HTMLChakraProps<Element>) {
     const recipe = usePostkitSlotRecipe(
@@ -92,6 +93,7 @@ function createPostkitProsePrimitive<Element extends ElementType>(
     const { className, css, ...rest } = props;
 
     return createElement(primitive, {
+      ...defaultProps,
       ...rest,
       'data-postkit-prose-element': slot,
       className: postkitSlotClassName(recipe.classNameMap[slot], className),
@@ -414,9 +416,13 @@ export const postkitProseComponents = Object.freeze({
   strong: createPostkitProseElement('strong', 'strong'),
   em: createPostkitProseElement('em', 'em'),
   del: createPostkitProseElement('del', 'del'),
+  // Prose tables scroll sideways when they're wider than the column, so keyboard
+  // users need to be able to focus them (axe `scrollable-region-focusable`). The
+  // table keeps its own role; its caption, when there is one, names it.
   table: createPostkitProsePrimitive<'table'>(
     Table.Root as ComponentType<Readonly<Record<string, unknown>>>,
     'table',
+    { tabIndex: 0 },
   ),
   thead: createPostkitProsePrimitive<'thead'>(
     Table.Header as ComponentType<Readonly<Record<string, unknown>>>,

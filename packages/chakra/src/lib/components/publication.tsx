@@ -19,7 +19,7 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
@@ -253,20 +253,26 @@ export function Stat({
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
     >
-      <ChakraStat.ValueText
-        className={recipe.classNameMap.value}
-        css={[styles.value, slotStyles?.value]}
-      >
-        {value}
-      </ChakraStat.ValueText>
+      {/*
+        A <dl> needs each <dt> before its <dd>s, and only <dt>/<dd> children
+        (axe `definition-list`). The label is the term; the value, trend and
+        description describe it. `order` keeps the value first on screen.
+      */}
       <ChakraStat.Label
         className={recipe.classNameMap.label}
         css={[styles.label, slotStyles?.label]}
       >
         {label}
       </ChakraStat.Label>
+      <ChakraStat.ValueText
+        className={recipe.classNameMap.value}
+        css={[{ order: -1 }, styles.value, slotStyles?.value]}
+      >
+        {value}
+      </ChakraStat.ValueText>
       {trend ? (
         <ChakraStat.HelpText
+          as="dd"
           className={recipe.classNameMap.trend}
           css={[styles.trend, slotStyles?.trend]}
         >
@@ -275,6 +281,7 @@ export function Stat({
       ) : null}
       {description ? (
         <ChakraStat.HelpText
+          as="dd"
           className={recipe.classNameMap.description}
           css={[styles.description, slotStyles?.description]}
         >
@@ -310,6 +317,7 @@ export function Comparison({
 }: ComparisonProps) {
   const columns = parseJsonProp<string>(columnsValue, 'Comparison columns');
   const items = parseJsonProp<ComparisonItem>(itemsValue, 'Comparison items');
+  const titleId = `${useId()}-title`;
   const recipe = usePostkitSlotRecipe(
     postkitRecipeKeys.comparison,
     postkitComparisonRecipe,
@@ -330,6 +338,7 @@ export function Comparison({
       {title ? (
         <Heading
           as="p"
+          id={titleId}
           size={postkitHeadingSize(size, {
             sm: 'lg',
             md: 'xl',
@@ -349,7 +358,13 @@ export function Comparison({
           {description}
         </Text>
       ) : null}
+      {/* The table scrolls sideways on narrow screens, so keyboard users need to reach it. */}
       <Box
+        tabIndex={0}
+        role="region"
+        {...(title
+          ? { 'aria-labelledby': titleId }
+          : { 'aria-label': 'Comparison' })}
         className={recipe.classNameMap.scroller}
         css={[styles.scroller, slotStyles?.scroller]}
       >
