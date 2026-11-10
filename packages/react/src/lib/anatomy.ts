@@ -20,6 +20,12 @@ export interface PostkitPartAttributes {
 /** Options for {@link resolvePostkitViewState}. */
 export interface ResolvePostkitViewStateOptions {
   /**
+   * Site defaults (`createPostkit({ defaults })`, rung 4): an unset prop
+   * takes this value before any theme or definition default. Enum values the
+   * definition doesn't allow are ignored.
+   */
+  readonly defaults?: Readonly<Record<string, unknown>>;
+  /**
    * Defaults for theme-variant props that win over the definition's defaults,
    * such as a Chakra recipe's `defaultVariants`. Only plain string and boolean
    * values are used.
@@ -30,9 +36,9 @@ export interface ResolvePostkitViewStateOptions {
 /** Authored props resolved against a definition. */
 export interface PostkitViewState {
   /**
-   * The authored props with defaults applied: an unset prop takes its theme
-   * default or definition default, and an enum value the definition doesn't
-   * allow falls back to the same default.
+   * The authored props with defaults applied: an unset prop takes its site
+   * default, theme default or definition default (in that order), and an
+   * enum value the definition doesn't allow falls back to the same default.
    */
   readonly props: Readonly<Record<string, unknown>>;
   /**
@@ -83,14 +89,17 @@ export function resolvePostkitViewState(
   const state: Record<string, string> = {};
 
   for (const [name, prop] of Object.entries(definition.props)) {
+    const siteDefault = options.defaults?.[name];
     const themeDefault = prop.themeVariant
       ? options.themeDefaults?.[name]
       : undefined;
     const fallback =
-      isPlainVariantValue(themeDefault) &&
-      isAllowedEnumValue(prop, themeDefault)
-        ? themeDefault
-        : prop.default;
+      siteDefault !== undefined && isAllowedEnumValue(prop, siteDefault)
+        ? siteDefault
+        : isPlainVariantValue(themeDefault) &&
+            isAllowedEnumValue(prop, themeDefault)
+          ? themeDefault
+          : prop.default;
     const value = props[name];
 
     if (

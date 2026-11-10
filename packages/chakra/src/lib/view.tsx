@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  chakra,
   useChakraContext,
   type BoxProps,
   type SlotRecipeConfig,
@@ -8,19 +9,22 @@ import {
 } from '@chakra-ui/react';
 import type {
   AnyPostkitComponentDefinition,
-  PostkitPropsOf,
+  PostkitAuthoredPropsOf,
   PostkitSlotOf,
 } from '@postkit/core/components';
 import {
+  applyPostkitSlotOverrides,
   postkitPartAttributes,
   resolvePostkitViewState,
+  usePostkitComponentConfig,
   warnPostkitProps,
   type PostkitChildrenPropsOf,
   type PostkitPartAttributes,
   type PostkitPartGetter,
+  type PostkitResolvedViewProps,
   type PostkitViewComponent,
 } from '@postkit/react';
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 import {
   postkitSlotClassName,
@@ -48,7 +52,7 @@ export interface PostkitChakraViewOwnProps<Slot extends string> {
 /** The default props of a Chakra view built from `Definition`. */
 export type PostkitChakraViewProps<
   Definition extends AnyPostkitComponentDefinition,
-> = PostkitPropsOf<Definition> &
+> = PostkitAuthoredPropsOf<Definition> &
   PostkitChildrenPropsOf<Definition> &
   PostkitChakraViewOwnProps<PostkitSlotOf<Definition>>;
 
@@ -71,16 +75,21 @@ export interface PostkitChakraViewContext<
 > {
   readonly definition: Definition;
   /**
-   * The authored props with defaults applied. An unset theme-variant prop
-   * takes the recipe's `defaultVariants` value (so a host's
-   * `createPostkitTheme` default shows in the anatomy), then the
-   * definition's default.
+   * The authored props with defaults applied, so a prop with a `default` is
+   * never `undefined`. An unset prop takes the site's default
+   * (`createPostkit({ defaults })`), then, for a theme variant, the recipe's
+   * `defaultVariants` value (so a host's `createPostkitTheme` default shows in
+   * the anatomy), then the definition's default.
    */
-  readonly props: Omit<Props, keyof PostkitChakraViewOwnProps<string>>;
+  readonly props: PostkitResolvedViewProps<
+    Definition,
+    Props,
+    keyof PostkitChakraViewOwnProps<string>
+  >;
   /**
-   * The theme-variant props as authored: what the recipe receives. Unset
-   * values stay `undefined` so the recipe's `defaultVariants` apply, and
-   * responsive values pass through.
+   * The theme-variant props as authored, or the site's default: what the
+   * recipe receives. Unset values stay `undefined` so the recipe's
+   * `defaultVariants` apply, and responsive values pass through.
    */
   readonly variants: Readonly<Record<string, unknown>>;
   /**
@@ -112,6 +121,24 @@ export interface PostkitChakraViewOptions {
   readonly fallback?: 'recipe' | 'unstyled';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const chakraOverrides = new WeakMap<ComponentType<any>, ComponentType<any>>();
+
+/**
+ * Wraps a slot override with `chakra()`, so the part's `css` array becomes a
+ * class name the override receives. Cached per override component.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function chakraSlotOverride(component: ComponentType<any>): ComponentType<any> {
+  let wrapped = chakraOverrides.get(component);
+  if (!wrapped) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    wrapped = chakra(component as any) as unknown as ComponentType<any>;
+    chakraOverrides.set(component, wrapped);
+  }
+  return wrapped;
+}
+
 /**
  * Builds a Chakra view from a definition and its slot recipe (03 §2.3).
  *
@@ -125,6 +152,11 @@ export interface PostkitChakraViewOptions {
  * `recipeKey` (so `createPostkitTheme` overrides apply), and otherwise renders
  * unstyled with the recipe's class names (or, with `fallback: 'recipe'`, with
  * the recipe itself).
+ *
+ * Beneath `createPostkit().Provider`, the view also reads the site's
+ * `defaults` (an author's prop wins) and slot overrides. An override part is
+ * wrapped with `chakra()`, so it receives the part's recipe and instance
+ * styles as a class name.
  */
 export function postkitChakraView<
   const Definition extends AnyPostkitComponentDefinition,
@@ -140,7 +172,9 @@ export function postkitChakraView<
   function PostkitChakraView(props: Props) {
     const { classNames, slotStyles, rootProps, unstyled, ...authored } =
       props as Props & PostkitChakraViewOwnProps<string>;
-    warnPostkitProps(definition, authored);
+    const config = usePostkitComponentConfig(definition.name);
+    const siteDefaults = config?.defaults;
+    warnPostkitProps(definition, { ...siteDefaults, ...authored });
 
     const slotRecipe = usePostkitSlotRecipe(recipeKey, recipe, {
       fallback: options.fallback,
@@ -150,12 +184,16 @@ export function postkitChakraView<
     const { props: resolved, state } = resolvePostkitViewState(
       definition,
       authored,
-      { themeDefaults: registered?.defaultVariants },
+      { defaults: siteDefaults, themeDefaults: registered?.defaultVariants },
     );
 
+    // Site theme-variant defaults are also in the recipe's `defaultVariants`
+    // when `chakra`'s provider registers the recipe; passing them here keeps
+    // them when it doesn't (a host-native system without Postkit recipes).
     const variants: Record<string, unknown> = {};
     for (const name of definition.themeVariants) {
-      variants[name] = authored[name as keyof typeof authored];
+      variants[name] =
+        authored[name as keyof typeof authored] ?? siteDefaults?.[name];
     }
     const styles: PostkitSlotStyles<string> = unstyled
       ? {}
@@ -177,7 +215,10 @@ export function postkitChakraView<
         ...(isRoot ? restRootProps : undefined),
         className: postkitSlotClassName(
           postkitSlotClassName(
-            slotRecipe.classNameMap[name],
+            postkitSlotClassName(
+              slotRecipe.classNameMap[name],
+              config?.classNames?.[name],
+            ),
             classNames?.[name],
           ),
           isRoot ? rootClassName : undefined,
@@ -186,12 +227,16 @@ export function postkitChakraView<
       } as PostkitChakraPartProps;
     };
 
-    return render({
-      definition,
-      props: resolved as PostkitChakraViewContext<Definition, Props>['props'],
-      variants,
-      part,
-    });
+    return applyPostkitSlotOverrides(
+      render({
+        definition,
+        props: resolved as PostkitChakraViewContext<Definition, Props>['props'],
+        variants,
+        part,
+      }),
+      config?.slots,
+      chakraSlotOverride,
+    );
   }
 
   PostkitChakraView.displayName = options.displayName ?? definition.name;

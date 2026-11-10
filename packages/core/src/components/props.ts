@@ -2,7 +2,7 @@
 export type PostkitPropKind = 'boolean' | 'enum' | 'json' | 'number' | 'string';
 
 /** The fields every prop definition has. */
-export interface PostkitPropDefinitionBase<
+export interface PostkitPropDefinitionFields<
   Kind extends PostkitPropKind,
   Value,
   Required extends boolean,
@@ -19,25 +19,66 @@ export interface PostkitPropDefinitionBase<
   readonly default?: Value;
 }
 
-export type PostkitStringPropDefinition<Required extends boolean = boolean> =
-  PostkitPropDefinitionBase<'string', string, Required, false>;
+/**
+ * Marks `default` as present when `Default` is `true`, so views receive the
+ * prop as non-optional (`PostkitPropsOf`). `boolean` (the default) means
+ * "not known", which keeps `default` optional.
+ */
+export type PostkitPropDefaultOf<
+  Value,
+  Default extends boolean,
+> = Default extends true ? { readonly default: Value } : unknown;
 
-export type PostkitNumberPropDefinition<Required extends boolean = boolean> =
-  PostkitPropDefinitionBase<'number', number, Required, false>;
+/**
+ * The fields every prop definition has. `Default` is `true` when the prop
+ * declares a `default`.
+ */
+export type PostkitPropDefinitionBase<
+  Kind extends PostkitPropKind,
+  Value,
+  Required extends boolean,
+  ThemeVariant extends boolean,
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionFields<Kind, Value, Required, ThemeVariant> &
+  PostkitPropDefaultOf<Value, Default>;
+
+export type PostkitStringPropDefinition<
+  Required extends boolean = boolean,
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionBase<'string', string, Required, false, Default>;
+
+export type PostkitNumberPropDefinition<
+  Required extends boolean = boolean,
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionBase<'number', number, Required, false, Default>;
 
 export type PostkitBooleanPropDefinition<
   Required extends boolean = boolean,
   ThemeVariant extends boolean = boolean,
-> = PostkitPropDefinitionBase<'boolean', boolean, Required, ThemeVariant>;
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionBase<
+  'boolean',
+  boolean,
+  Required,
+  ThemeVariant,
+  Default
+>;
 
-export interface PostkitEnumPropDefinition<
+export type PostkitEnumPropDefinition<
   Value extends string = string,
   Required extends boolean = boolean,
   ThemeVariant extends boolean = boolean,
-> extends PostkitPropDefinitionBase<'enum', Value, Required, ThemeVariant> {
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionBase<
+  'enum',
+  Value,
+  Required,
+  ThemeVariant,
+  Default
+> & {
   /** The allowed values, in authoring order. */
   readonly values: readonly Value[];
-}
+};
 
 /**
  * A JSON-serialized prop. `Value` describes the parsed shape for views; it is
@@ -46,7 +87,8 @@ export interface PostkitEnumPropDefinition<
 export type PostkitJsonPropDefinition<
   Value = unknown,
   Required extends boolean = boolean,
-> = PostkitPropDefinitionBase<'json', Value, Required, false>;
+  Default extends boolean = boolean,
+> = PostkitPropDefinitionBase<'json', Value, Required, false, Default>;
 
 /** Any prop definition produced by the `prop` builders. */
 export type PostkitPropDefinition =
@@ -72,6 +114,11 @@ export interface PostkitPropOptions<Value, Required extends boolean> {
   readonly required?: Required;
   readonly default?: Value;
 }
+
+/** `true` when a builder was given a `default` (its inferred type isn't `undefined`). */
+type HasDefault<DefaultValue> = [DefaultValue] extends [undefined]
+  ? false
+  : true;
 
 export interface PostkitVariantPropOptions<
   Value,
@@ -158,19 +205,26 @@ export function deepFreeze<Value>(value: Value): Value {
 }
 
 /**
- * A JSON prop. Overloaded on `required` rather than inferring it, so an
- * explicit value type (`prop.json<Item[]>(…)`) still types `required: true`.
+ * A JSON prop. Overloaded on `required` and `default` rather than inferring
+ * them, so an explicit value type (`prop.json<Item[]>(…)`) still types
+ * `required: true` and a declared default.
  */
 function jsonProp<Value = unknown>(
   description: string,
   options: PostkitPropOptions<NoInfer<Value>, true> & {
     readonly required: true;
   },
-): PostkitJsonPropDefinition<Value, true>;
+): PostkitJsonPropDefinition<Value, true, false>;
+function jsonProp<Value = unknown>(
+  description: string,
+  options: PostkitPropOptions<NoInfer<Value>, false> & {
+    readonly default: NoInfer<Value>;
+  },
+): PostkitJsonPropDefinition<Value, false, true>;
 function jsonProp<Value = unknown>(
   description: string,
   options?: PostkitPropOptions<NoInfer<Value>, false>,
-): PostkitJsonPropDefinition<Value, false>;
+): PostkitJsonPropDefinition<Value, false, false>;
 function jsonProp(
   description: string,
   options?: PostkitPropOptions<unknown, boolean>,
@@ -180,23 +234,34 @@ function jsonProp(
 
 /**
  * Prop builders. Each returns a frozen prop definition whose type carries its
- * value type, whether it is required, and whether it is a theme variant.
+ * value type, whether it is required, whether it is a theme variant, and
+ * whether it declares a default.
  */
 export const prop = Object.freeze({
   /** A plain-text prop. */
-  string<const Required extends boolean = false>(
+  string<
+    const Required extends boolean = false,
+    const DefaultValue extends string | undefined = undefined,
+  >(
     description: string,
-    options?: PostkitPropOptions<string, Required>,
-  ): PostkitStringPropDefinition<NoInfer<Required>> {
+    options?: PostkitPropOptions<string, Required> & {
+      readonly default?: DefaultValue;
+    },
+  ): PostkitStringPropDefinition<NoInfer<Required>, HasDefault<DefaultValue>> {
     assertDefaultType('string', options?.default);
     return createProp('string', description, options);
   },
 
   /** A finite number prop. */
-  number<const Required extends boolean = false>(
+  number<
+    const Required extends boolean = false,
+    const DefaultValue extends number | undefined = undefined,
+  >(
     description: string,
-    options?: PostkitPropOptions<number, Required>,
-  ): PostkitNumberPropDefinition<NoInfer<Required>> {
+    options?: PostkitPropOptions<number, Required> & {
+      readonly default?: DefaultValue;
+    },
+  ): PostkitNumberPropDefinition<NoInfer<Required>, HasDefault<DefaultValue>> {
     assertDefaultType('number', options?.default);
     return createProp('number', description, options);
   },
@@ -205,10 +270,17 @@ export const prop = Object.freeze({
   boolean<
     const Required extends boolean = false,
     const ThemeVariant extends boolean = false,
+    const DefaultValue extends boolean | undefined = undefined,
   >(
     description: string,
-    options?: PostkitVariantPropOptions<boolean, Required, ThemeVariant>,
-  ): PostkitBooleanPropDefinition<NoInfer<Required>, NoInfer<ThemeVariant>> {
+    options?: PostkitVariantPropOptions<boolean, Required, ThemeVariant> & {
+      readonly default?: DefaultValue;
+    },
+  ): PostkitBooleanPropDefinition<
+    NoInfer<Required>,
+    NoInfer<ThemeVariant>,
+    HasDefault<DefaultValue>
+  > {
     assertDefaultType('boolean', options?.default);
     return createProp('boolean', description, options);
   },
@@ -218,14 +290,19 @@ export const prop = Object.freeze({
     const Value extends string,
     const Required extends boolean = false,
     const ThemeVariant extends boolean = false,
+    const DefaultValue extends NoInfer<Value> | undefined = undefined,
   >(
     values: readonly Value[],
     descriptionOrOptions:
-      string | PostkitEnumPropOptions<NoInfer<Value>, Required, ThemeVariant>,
+      | string
+      | (PostkitEnumPropOptions<NoInfer<Value>, Required, ThemeVariant> & {
+          readonly default?: DefaultValue;
+        }),
   ): PostkitEnumPropDefinition<
     Value,
     NoInfer<Required>,
-    NoInfer<ThemeVariant>
+    NoInfer<ThemeVariant>,
+    HasDefault<DefaultValue>
   > {
     const options =
       typeof descriptionOrOptions === 'string'

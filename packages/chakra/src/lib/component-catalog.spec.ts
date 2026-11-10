@@ -14,7 +14,7 @@ import { postkitDeclarationManifest } from './declarations.js';
 
 describe('Postkit component catalog', () => {
   it('enriches every portable declaration', () => {
-    expect(POSTKIT_COMPONENT_CATALOG_VERSION).toBe(1);
+    expect(POSTKIT_COMPONENT_CATALOG_VERSION).toBe(2);
     expect(postkitComponentCatalog.declarationVersion).toBe(
       postkitDeclarationManifest.version,
     );

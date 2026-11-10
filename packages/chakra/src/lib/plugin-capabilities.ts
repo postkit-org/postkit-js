@@ -1,2 +1,1 @@
-export type PostkitRemarkPluginId =
-  'directives' | 'frontmatter' | 'gfm' | 'postkit';
+export type { PostkitRemarkPluginId } from '@postkit/react/remark';

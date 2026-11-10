@@ -50,24 +50,88 @@ Version 2 keeps every v1 field and adds:
 | `default`      | Prop      | The value when the author doesn't set one.                                                       |
 | `themeVariant` | Prop      | Whether the prop is a recipe variant.                                                            |
 
-{/* TODO(0.3.0): add a complete v2 component entry once the schema is final, and the exact `support` values per renderer (03 mentions supported, chakra-only and the email fallbacks). */}
+A v2 component entry, shortened to one prop:
+
+```json
+{
+  "name": "Callout",
+  "directive": "postkit-callout",
+  "description": "A highlighted note, tip, warning, or caution.",
+  "childMode": "mdx",
+  "directiveRemarkPlugins": ["directives", "postkit"],
+  "props": {
+    "tone": {
+      "kind": "enum",
+      "values": ["note", "tip", "important", "warning", "caution"],
+      "description": "The semantic emphasis of the aside.",
+      "default": "note",
+      "themeVariant": true
+    }
+  },
+  "slots": ["root", "icon", "content", "title", "body"],
+  "variants": ["size", "variant", "tone"],
+  "category": "Article structure",
+  "kit": "article",
+  "package": "@postkit/core",
+  "keywords": [
+    "callout",
+    "article",
+    "structure",
+    "size",
+    "variant",
+    "title",
+    "tone"
+  ],
+  "example": { "props": {}, "jsx": "…", "directive": "…" },
+  "preview": { "kind": "live", "label": "Callout component preview" },
+  "runtime": "static",
+  "stability": "initial",
+  "support": {
+    "react": "supported",
+    "headless": "supported",
+    "chakra": "supported",
+    "astro": "static",
+    "email": "not-defined"
+  }
+}
+```
+
+`kit` is `null` and `package` is what you pass (or `null`) for your own
+components.
 
 ## Support
 
-The `support` field is computed. A component is supported in email when
-`@postkit/email` exports a view for its definition. Otherwise the email
-renderer applies the fallback the definition declares, `link`, `text` or
-`omit`. In 0.3.0, an interactive component without a headless view yet is
-marked `chakra-only` for React. Component pages show the same data, so they
-can't drift from the packages.
+The `support` field is computed from what each renderer package exports:
+
+| Field      | Values                                      | Meaning                                                                                          |
+| ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `react`    | `supported`, `not-supported`                | v1's field: some React renderer has a view.                                                      |
+| `headless` | `supported`, `chakra-only`, `not-supported` | `@postkit/react`. `chakra-only` is an interactive component still waiting for its headless view. |
+| `chakra`   | `supported`, `not-supported`                | `@postkit/chakra`.                                                                               |
+| `astro`    | `static`, `hydrated`                        | Whether Astro hydrates it.                                                                       |
+| `email`    | `not-defined`                               | Computed from `@postkit/email` in a later 0.3.0 step.                                            |
+
+A renderer the manifest's producer doesn't know is left out: a headless
+site's `manifest()` has no `chakra` field. Email support is next: a component
+will be supported in email when `@postkit/email` exports a view for its
+definition, and otherwise the email renderer applies the fallback the
+definition declares, `link`, `text` or `omit`. Component pages show the same
+data, so they can't drift from the packages.
 
 ## Version 1
 
-v1 stays readable, and Prismark's parser accepts either version. Today's
-manifest ships in `@postkit/chakra`:
+v1 stays readable. `readPostkitComponentManifest` from
+`@postkit/core/components` takes either version and returns v2, filling what
+v1 never recorded with neutral values (no slots or variants, `package: null`,
+the kit from the category). `isPostkitComponentManifestV2` and
+`isPostkitComponentManifestV1` tell them apart, and
+`mergePostkitComponentManifests` combines several:
 
 ```ts
+import { readPostkitComponentManifest } from '@postkit/core/components';
 import manifest from '@postkit/chakra/component-manifest.json';
+
+const catalog = readPostkitComponentManifest(manifest);
 ```
 
 A v1 component entry looks like this:

@@ -45,6 +45,7 @@ export const postkit = createPostkit({
 | `defaults`   | Site-wide prop defaults, keyed by component name. See [Defaults and slots](/docs/defaults-and-slots).                            |
 | `overrides`  | Per-component slot and view overrides, keyed by component name.                                                                  |
 | `link`       | The link component for internal links, such as Next.js `Link`. The framework adapters set it for you.                            |
+| `remark`     | Options for the Remark preset, such as `{ postkit: { strict: false } }`. Directives always validate against the enabled set.     |
 
 ### `defaults`
 
@@ -79,7 +80,8 @@ overrides: {
 }
 ```
 
-{/* TODO(0.3.0): `classNames` under overrides comes from the SiteDocsPartStyles board; spec 03 §4 rung 3 only says "classNames per part". Confirm it lives in overrides. */}
+Site `classNames` come first on each part, then an instance's own
+`classNames`.
 
 ## Returns
 
@@ -89,6 +91,7 @@ overrides: {
 | `postkit.mdxComponents` | Only the enabled components, plus prose. Pass it to your MDX runtime.              |
 | `postkit.remarkPlugins` | The Remark plugins for MDX and Markdown. Directives validate against this set.     |
 | `postkit.manifest()`    | The `postkit.component-catalog` v2 [manifest](/docs/manifest) for this set.        |
+| `postkit.definitions`   | The enabled definitions that render with this renderer.                            |
 
 ```tsx
 // pages/_app.tsx
@@ -106,9 +109,24 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ## Framework adapters
 
-The framework adapters, such as `@postkit/next`, become thin `createPostkit`
-presets that set `link`. Image optimisation stays the host's job. The
-low-level `createPostkitNextComponents()` export from `@postkit/next` stays
-available.
+`@postkit/next`, `@postkit/react-router` and `@postkit/tanstack-router` each
+export a `createPostkit` preset. It takes the same options and returns the
+same result, with `link` set to the framework's link; pass link options (or
+your own component) as `link`. Image optimisation stays the host's job.
 
-{/* TODO(0.3.0): name the preset export from each adapter (@postkit/next, @postkit/react-router, @postkit/tanstack-router) and add an example. Spec 03 §3.1 doesn't name it. */}
+```ts
+import { createPostkit } from '@postkit/next';
+import { article, technical, media } from '@postkit/react/kits';
+import { chakra } from '@postkit/chakra';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+  link: { linkProps: { prefetch: false } },
+});
+```
+
+The low-level exports stay available: `createPostkitNextComponents()`,
+`createPostkitReactRouterComponents()` and
+`createPostkitTanStackRouterComponents()`, plus each adapter's link
+(`createPostkitNextLink()` and so on).

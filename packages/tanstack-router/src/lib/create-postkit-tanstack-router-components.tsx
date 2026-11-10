@@ -2,6 +2,7 @@ import {
   createPostkitLink,
   createPostkitMdxComponents,
   type CreatePostkitLinkOptions,
+  type PostkitLinkComponent,
   type PostkitLinkProps,
 } from '@postkit/chakra';
 import { Link, type CreateLinkProps } from '@tanstack/react-router';
@@ -39,11 +40,15 @@ function TanStackRouterLinkAdapter(props: PostkitTanStackLinkProps) {
   return <TanStackLink {...props} />;
 }
 
-export function createPostkitTanStackRouterComponents(
-  options: PostkitTanStackRouterComponentsOptions = {},
-): MDXComponents {
-  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options.link ?? {};
-  const link = createPostkitLink<PostkitTanStackLinkProps>({
+/**
+ * The TanStack Router link for Postkit: internal links go through TanStack Router's Link, and
+ * external URLs, hashes and downloads stay native anchors.
+ */
+export function createPostkitTanStackRouterLink(
+  options: PostkitTanStackRouterLinkOptions = {},
+): PostkitLinkComponent {
+  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options;
+  return createPostkitLink<PostkitTanStackLinkProps>({
     ...postkitLinkOptions,
     adapter: {
       component: TanStackRouterLinkAdapter,
@@ -59,6 +64,12 @@ export function createPostkitTanStackRouterComponents(
       },
     },
   });
+}
+
+export function createPostkitTanStackRouterComponents(
+  options: PostkitTanStackRouterComponentsOptions = {},
+): MDXComponents {
+  const link = createPostkitTanStackRouterLink(options.link);
 
   return {
     ...createPostkitMdxComponents({ link }),

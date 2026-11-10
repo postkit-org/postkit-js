@@ -2,6 +2,7 @@ import {
   createPostkitLink,
   createPostkitMdxComponents,
   type CreatePostkitLinkOptions,
+  type PostkitLinkComponent,
   type PostkitLinkProps,
 } from '@postkit/chakra';
 import type { MDXComponents } from 'mdx/types';
@@ -29,11 +30,15 @@ function NextLinkAdapter(props: PostkitNextLinkProps) {
   return <Link {...props} />;
 }
 
-export function createPostkitNextComponents(
-  options: PostkitNextComponentsOptions = {},
-): MDXComponents {
-  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options.link ?? {};
-  const link = createPostkitLink<PostkitNextLinkProps>({
+/**
+ * The Next.js link for Postkit: internal links go through next/link, and
+ * external URLs, hashes and downloads stay native anchors.
+ */
+export function createPostkitNextLink(
+  options: PostkitNextLinkOptions = {},
+): PostkitLinkComponent {
+  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options;
+  return createPostkitLink<PostkitNextLinkProps>({
     ...postkitLinkOptions,
     adapter: {
       component: NextLinkAdapter,
@@ -45,6 +50,12 @@ export function createPostkitNextComponents(
       }),
     },
   });
+}
+
+export function createPostkitNextComponents(
+  options: PostkitNextComponentsOptions = {},
+): MDXComponents {
+  const link = createPostkitNextLink(options.link);
 
   return {
     ...createPostkitMdxComponents({ link }),

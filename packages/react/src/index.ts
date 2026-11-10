@@ -23,6 +23,7 @@ export {
   type PostkitPartGetter,
   type PostkitPartOptions,
   type PostkitPartProps,
+  type PostkitResolvedViewProps,
   type PostkitRootProps,
   type PostkitViewComponent,
   type PostkitViewContext,
@@ -182,3 +183,4 @@ export {
 } from './components/video/video.js';
 export * from './hooks/index.js';
 export * from './components/interactive.js';
+export * from './lib/create-postkit.js';

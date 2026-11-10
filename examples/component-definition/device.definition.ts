@@ -3,6 +3,7 @@ import {
   definePostkitComponent,
   presentation,
   prop,
+  type PostkitAuthoredPropsOf,
   type PostkitPropsOf,
   type PostkitSlotOf,
   type PostkitThemeVariantOf,
@@ -44,8 +45,10 @@ export const deviceDefinition = definePostkitComponent({
   },
 });
 
-/** View props: `screens` is required, everything else optional. */
-export type DeviceProps = PostkitPropsOf<typeof deviceDefinition>;
+/** Authored props: `screens` is required, everything else optional. */
+export type DeviceProps = PostkitAuthoredPropsOf<typeof deviceDefinition>;
+/** Props as the view receives them: defaulted props (`frame`) are set. */
+export type ResolvedDeviceProps = PostkitPropsOf<typeof deviceDefinition>;
 /** 'root' | 'frame' | 'screen' | 'caption' */
 export type DeviceSlot = PostkitSlotOf<typeof deviceDefinition>;
 /** 'size' | 'variant' | 'frame' */

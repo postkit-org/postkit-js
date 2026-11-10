@@ -132,7 +132,9 @@ describe('Postkit prop builders', () => {
     >();
     expectTypeOf(
       prop.enum(['note', 'tip'], { description: 'Tone.', default: 'note' }),
-    ).toEqualTypeOf<PostkitEnumPropDefinition<'note' | 'tip', false, false>>();
+    ).toEqualTypeOf<
+      PostkitEnumPropDefinition<'note' | 'tip', false, false, true>
+    >();
     expectTypeOf(
       prop.json<readonly { title: string }[]>('Items.'),
     ).toEqualTypeOf<

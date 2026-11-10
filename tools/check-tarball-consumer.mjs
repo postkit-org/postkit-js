@@ -114,6 +114,14 @@ const packages = await Promise.all([
   import('@postkit/core/behaviors/testing'),
   import('@postkit/unfurl'),
   import('@postkit/react'),
+  import('@postkit/react/kits'),
+  import('@postkit/react/kits/article'),
+  import('@postkit/react/kits/technical'),
+  import('@postkit/react/kits/media'),
+  import('@postkit/react/kits/discovery'),
+  import('@postkit/react/kits/engagement'),
+  import('@postkit/react/kits/publishing'),
+  import('@postkit/react/remark'),
   import('@postkit/chakra'),
   import('@postkit/chakra/theme'),
   import('@postkit/chakra/remark'),
@@ -197,6 +205,116 @@ for (const entry of ['index.js', 'components/index.js']) {
   }
 }
 console.log('@postkit/core behaviours share the host Zag copy; the root entry loads no Zag.');
+
+// 03 step 8: a fixture site with 3 kits + one custom component, in both
+// renderers.
+{
+  const { createElement } = await import('react');
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const { definePostkitComponent, prop, readPostkitComponentManifest } =
+    await import('@postkit/core/components');
+  const { createPostkit, postkitView } = await import('@postkit/react');
+  const { remarkPostkit } = await import('@postkit/react/remark');
+  const { article, technical, media } = await import('@postkit/react/kits');
+  const { chakra, postkitDefaultTheme } = await import('@postkit/chakra');
+
+  const deviceDefinition = definePostkitComponent({
+    name: 'Device',
+    directive: 'postkit-device',
+    category: 'media',
+    description: 'A screenshot framed in a device.',
+    props: {
+      src: prop.string('The screenshot.', { required: true }),
+      frame: prop.enum(['phone', 'laptop'], {
+        description: 'The frame.',
+        default: 'phone',
+        themeVariant: true,
+      }),
+    },
+    slots: ['root', 'screen'],
+  });
+  const Device = postkitView(deviceDefinition, ({ props, part }) =>
+    createElement(
+      'figure',
+      part('root'),
+      createElement('img', { ...part('screen'), src: props.src, alt: '' }),
+    ),
+  );
+
+  for (const renderer of [undefined, chakra]) {
+    const label = renderer ? 'chakra' : 'headless';
+    const postkit = createPostkit({
+      renderer,
+      kits: [article, technical, media],
+      components: [{ definition: deviceDefinition, view: Device }],
+      defaults: { Callout: { variant: 'plain' }, Device: { frame: 'laptop' } },
+    });
+    const { Callout, Figure, Tabs } = postkit.mdxComponents;
+    const markup = renderToStaticMarkup(
+      createElement(
+        postkit.Provider,
+        renderer ? { preset: postkitDefaultTheme } : {},
+        createElement(Callout, { tone: 'tip' }, 'Body'),
+        createElement(Callout, { variant: 'outline' }, 'Authored'),
+        createElement(postkit.mdxComponents.Device, { src: '/phone.png' }),
+        createElement(Figure, { src: '/a.png', alt: '' }),
+        renderer
+          ? createElement(Tabs, { items: [{ label: 'One', content: 'First' }] })
+          : null,
+      ),
+    );
+    for (const expected of [
+      'data-variant="plain"',
+      'data-variant="outline"',
+      'data-postkit-component="Device"',
+      'data-frame="laptop"',
+      'data-postkit-component="Figure"',
+    ]) {
+      if (!markup.includes(expected)) {
+        throw new Error(\`createPostkit (\${label}) did not render \${expected}.\`);
+      }
+    }
+
+    const manifest = readPostkitComponentManifest(
+      JSON.parse(JSON.stringify(postkit.manifest())),
+    );
+    const names = Object.keys(manifest.components);
+    if (!names.includes('Device') || !names.includes('Callout') || names.includes('Poll')) {
+      throw new Error(\`createPostkit (\${label}) manifest has the wrong set: \${names.join(', ')}.\`);
+    }
+    // Every built-in has a headless view since 03 step 6, so Tabs is in both sets.
+    if (!names.includes('Tabs') || manifest.components['Tabs'].support.headless !== 'supported') {
+      throw new Error(\`createPostkit (\${label}) manifest is missing headless Tabs.\`);
+    }
+
+    const [, postkitOptions] = postkit.remarkPlugins.find(
+      (plugin) => Array.isArray(plugin) && plugin[0] === remarkPostkit,
+    );
+    const tree = {
+      type: 'root',
+      children: [
+        { type: 'leafDirective', name: 'postkit-device', attributes: { src: '/p.png' }, children: [] },
+      ],
+    };
+    remarkPostkit(postkitOptions)(tree);
+    if (tree.children[0].name !== 'Device') {
+      throw new Error(\`createPostkit (\${label}) remark plugin did not transform Device.\`);
+    }
+    let failed = false;
+    try {
+      remarkPostkit(postkitOptions)({
+        type: 'root',
+        children: [{ type: 'leafDirective', name: 'postkit-poll', attributes: {}, children: [] }],
+      });
+    } catch {
+      failed = true;
+    }
+    if (!failed) {
+      throw new Error(\`createPostkit (\${label}) accepted a directive it didn't enable.\`);
+    }
+  }
+  console.log('createPostkit fixture site renders 3 kits and a custom component in both renderers.');
+}
 `,
   );
   run(process.execPath, ['smoke.mjs']);
@@ -207,6 +325,10 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
 import {
   calloutDefinition,
   definePostkitComponent,
+  prop,
+  readPostkitComponentManifest,
+  type PostkitAuthoredPropsOf,
+  type PostkitComponentManifest,
   type PostkitPropsOf,
 } from '@postkit/core/components';
 import {
@@ -219,16 +341,26 @@ import {
   type TabsBehaviorFixture,
 } from '@postkit/core/behaviors/testing';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
-import { Callout as HeadlessCallout, postkitView, type CalloutProps } from '@postkit/react';
+import {
+  Callout as HeadlessCallout,
+  Tabs as HeadlessTabs,
+  createPostkit as createHeadlessPostkit,
+  postkitView,
+  useTabs,
+  type CalloutProps,
+  type TabsProps,
+} from '@postkit/react';
 import '@postkit/react/styles.css';
-import { Tabs as HeadlessTabs, useTabs, type TabsProps } from '@postkit/react';
-import { PostkitProvider } from '@postkit/chakra';
+import { article, media, technical } from '@postkit/react/kits';
+import { article as articleKit } from '@postkit/react/kits/article';
+import { remarkPostkit as remarkPostkitHeadless } from '@postkit/react/remark';
+import { PostkitProvider, chakra } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
 import { remarkPostkit } from '@postkit/chakra/remark';
 import { PostkitEmailProvider } from '@postkit/email';
 import { createPostkitShikiAdapter } from '@postkit/shiki';
-import { createPostkitNextComponents } from '@postkit/next';
+import { createPostkit, createPostkitNextComponents } from '@postkit/next';
 import { createPostkitReactRouterComponents } from '@postkit/react-router';
 import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router';
 import { postkitAstro } from '@postkit/astro';
@@ -238,8 +370,44 @@ import type { Audio } from '@postkit/astro/react';
 void parsePostkitHtml;
 void serializePostkitJson;
 void definePostkitComponent;
-const _calloutProps: PostkitPropsOf<typeof calloutDefinition> = { tone: 'tip' };
+const _calloutProps: PostkitAuthoredPropsOf<typeof calloutDefinition> = { tone: 'tip' };
 void _calloutProps;
+const _resolvedCalloutProps: PostkitPropsOf<typeof calloutDefinition> = {
+  tone: 'tip',
+  size: 'md',
+  variant: 'plain',
+};
+void _resolvedCalloutProps;
+
+// 03 step 8: 3 kits + one custom component, in both renderers.
+const deviceDefinition = definePostkitComponent({
+  name: 'Device',
+  directive: 'postkit-device',
+  category: 'media',
+  description: 'A screenshot framed in a device.',
+  props: { src: prop.string('The screenshot.', { required: true }) },
+  slots: ['root'],
+});
+const Device = postkitView(deviceDefinition, () => null);
+const headlessSite = createHeadlessPostkit({
+  kits: [articleKit, technical, media],
+  components: [{ definition: deviceDefinition, view: Device }],
+  defaults: { Callout: { variant: 'plain' } },
+  overrides: { Callout: { slots: { icon: Device } } },
+});
+const chakraSite = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+  components: [{ definition: deviceDefinition, view: Device }],
+  defaults: { Figure: { layout: 'wide' } },
+  link: { linkProps: { prefetch: false } },
+});
+const _manifest: PostkitComponentManifest = chakraSite.manifest();
+void _manifest;
+void headlessSite.Provider;
+void chakraSite.Provider;
+void readPostkitComponentManifest;
+void remarkPostkitHeadless;
 const _carouselApi: CarouselBehaviorApi = createCarousel({ id: 'c', slideCount: 2 }).api;
 void _carouselApi;
 const _tabsDriver = null as unknown as BehaviorDriver<TabsBehaviorFixture>;

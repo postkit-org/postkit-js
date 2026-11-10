@@ -79,8 +79,31 @@ export const mdxComponents = createPostkitReactRouterComponents({
 });
 ```
 
+## With `createPostkit`
+
+The `createPostkit` preset configures a site from its kits, components,
+defaults and overrides, with internal links routed through React Router:
+
+```ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react-router';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+```
+
+It needs `@postkit/react` installed alongside `@postkit/chakra`.
+
 ## Public API
 
+- `createPostkit(options)`: `createPostkit` from `@postkit/react` with `link`
+  set to the React Router link (pass link options or a component as `link`)
+- `CreatePostkitReactRouterOptions`
+- `createPostkitReactRouterLink(options?)`
 - `createPostkitReactRouterComponents(options?)`
 - `PostkitReactRouterComponentsOptions`
 - `PostkitReactRouterLinkOptions`

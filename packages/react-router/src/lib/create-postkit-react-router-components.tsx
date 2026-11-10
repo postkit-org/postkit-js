@@ -2,6 +2,7 @@ import {
   createPostkitLink,
   createPostkitMdxComponents,
   type CreatePostkitLinkOptions,
+  type PostkitLinkComponent,
   type PostkitLinkProps,
 } from '@postkit/chakra';
 import type { MDXComponents } from 'mdx/types';
@@ -26,11 +27,15 @@ function ReactRouterLinkAdapter(props: LinkProps) {
   return <Link {...props} />;
 }
 
-export function createPostkitReactRouterComponents(
-  options: PostkitReactRouterComponentsOptions = {},
-): MDXComponents {
-  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options.link ?? {};
-  const link = createPostkitLink<LinkProps>({
+/**
+ * The React Router link for Postkit: internal links go through React Router's Link, and
+ * external URLs, hashes and downloads stay native anchors.
+ */
+export function createPostkitReactRouterLink(
+  options: PostkitReactRouterLinkOptions = {},
+): PostkitLinkComponent {
+  const { linkProps, mapLinkProps, ...postkitLinkOptions } = options;
+  return createPostkitLink<LinkProps>({
     ...postkitLinkOptions,
     adapter: {
       component: ReactRouterLinkAdapter,
@@ -42,6 +47,12 @@ export function createPostkitReactRouterComponents(
       }),
     },
   });
+}
+
+export function createPostkitReactRouterComponents(
+  options: PostkitReactRouterComponentsOptions = {},
+): MDXComponents {
+  const link = createPostkitReactRouterLink(options.link);
 
   return {
     ...createPostkitMdxComponents({ link }),

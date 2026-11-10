@@ -48,6 +48,7 @@
   },
   "peerDependencies": {
     "@postkit/chakra": "0.2.0",
+    "@postkit/react": "0.2.0",
     "next": ">=15 <17",
     "react": "^19.1.0"
   },

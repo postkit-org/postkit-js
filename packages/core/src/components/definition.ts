@@ -30,14 +30,19 @@ export type PostkitComponentStability =
 /** Whether a component wraps authored MDX content. */
 export type PostkitComponentChildren = 'mdx' | 'none';
 
-/** Authoring props as a view receives them: required props are required. */
+/**
+ * Props as a view receives them: a required prop, or one with a `default`,
+ * is non-optional, since the view resolves defaults before it renders.
+ */
 export type PostkitPropsOfProps<Props extends PostkitPropDefinitions> = {
   -readonly [
     Name in keyof Props as Props[Name] extends {
       readonly required: true;
     }
       ? Name
-      : never
+      : Props[Name] extends { readonly default: unknown }
+        ? Name
+        : never
   ]: PostkitPropValueOf<Props[Name]>;
 } & {
   -readonly [
@@ -45,15 +50,37 @@ export type PostkitPropsOfProps<Props extends PostkitPropDefinitions> = {
       readonly required: true;
     }
       ? never
-      : Name
+      : Props[Name] extends { readonly default: unknown }
+        ? never
+        : Name
   ]?: PostkitPropValueOf<Props[Name]>;
 };
+
+/** Props as an author writes them: only required props are required. */
+export type PostkitAuthoredPropsOfProps<Props extends PostkitPropDefinitions> =
+  {
+    -readonly [
+      Name in keyof Props as Props[Name] extends {
+        readonly required: true;
+      }
+        ? Name
+        : never
+    ]: PostkitPropValueOf<Props[Name]>;
+  } & {
+    -readonly [
+      Name in keyof Props as Props[Name] extends {
+        readonly required: true;
+      }
+        ? never
+        : Name
+    ]?: PostkitPropValueOf<Props[Name]>;
+  };
 
 export interface PostkitComponentExampleDefinition<
   Props extends PostkitPropDefinitions = PostkitPropDefinitions,
 > {
   /** Example prop values; JSON props hold parsed values. */
-  readonly props?: Readonly<Partial<PostkitPropsOfProps<Props>>>;
+  readonly props?: Readonly<Partial<PostkitAuthoredPropsOfProps<Props>>>;
   /** Example authored content, for components with `children: 'mdx'`. */
   readonly children?: string;
 }
@@ -142,10 +169,34 @@ export type AnyPostkitComponentDefinition = PostkitComponentDefinition<
   string
 >;
 
-/** The authoring props of a definition, typed for views. */
+/**
+ * The props of a definition as its view receives them: required props and
+ * props with a `default` are non-optional, so a view needs no `?? 'note'`
+ * fallback. For what an author passes, use {@link PostkitAuthoredPropsOf}.
+ */
 export type PostkitPropsOf<
   Definition extends { readonly props: PostkitPropDefinitions },
 > = PostkitPropsOfProps<Definition['props']>;
+
+/**
+ * The props of a definition as an author writes them: only required props
+ * are required. A view's own props type builds on this.
+ */
+export type PostkitAuthoredPropsOf<
+  Definition extends { readonly props: PostkitPropDefinitions },
+> = PostkitAuthoredPropsOfProps<Definition['props']>;
+
+/** The prop names of a definition that declare a `default`. */
+export type PostkitDefaultedPropNameOf<
+  Definition extends { readonly props: PostkitPropDefinitions },
+> = {
+  [Name in keyof Definition['props']]: Definition['props'][Name] extends {
+    readonly default: unknown;
+  }
+    ? Name
+    : never;
+}[keyof Definition['props']] &
+  string;
 
 /** The prop names of a definition. */
 export type PostkitPropNameOf<

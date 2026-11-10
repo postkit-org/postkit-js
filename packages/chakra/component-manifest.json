@@ -1,6 +1,6 @@
 {
   "id": "postkit.component-catalog",
-  "version": 1,
+  "version": 2,
   "declarationVersion": 7,
   "components": {
     "Aside": {
@@ -13,24 +13,35 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
-          "description": "An optional heading for the aside."
+          "description": "An optional heading for the aside.",
+          "themeVariant": false
         },
         "tone": {
           "kind": "enum",
           "values": ["note", "tip", "important", "warning", "caution"],
-          "description": "The semantic emphasis of the aside."
+          "description": "The semantic emphasis of the aside.",
+          "default": "note",
+          "themeVariant": true
         }
       },
+      "slots": ["root", "icon", "content", "title", "body"],
+      "variants": ["size", "variant", "tone"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "aside",
         "article",
@@ -50,6 +61,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -64,24 +77,35 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
-          "description": "An optional heading for the aside."
+          "description": "An optional heading for the aside.",
+          "themeVariant": false
         },
         "tone": {
           "kind": "enum",
           "values": ["note", "tip", "important", "warning", "caution"],
-          "description": "The semantic emphasis of the aside."
+          "description": "The semantic emphasis of the aside.",
+          "default": "note",
+          "themeVariant": true
         }
       },
+      "slots": ["root", "icon", "content", "title", "body"],
+      "variants": ["size", "variant", "tone"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "callout",
         "article",
@@ -101,6 +125,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -115,30 +141,59 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of titled cards."
+          "description": "A JSON array of titled cards.",
+          "themeVariant": false
         },
-        "title": { "kind": "string", "description": "The grid heading." },
+        "title": {
+          "kind": "string",
+          "description": "The grid heading.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
-          "description": "Supporting copy for the grid."
+          "description": "Supporting copy for the grid.",
+          "themeVariant": false
         },
         "columns": {
           "kind": "enum",
           "values": ["1", "2", "3", "4"],
-          "description": "The preferred desktop column count."
+          "description": "The preferred desktop column count.",
+          "default": "2",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "header",
+        "title",
+        "description",
+        "grid",
+        "card",
+        "image",
+        "cardBody",
+        "cardTitle",
+        "cardDescription",
+        "meta",
+        "link"
+      ],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "card",
         "grid",
@@ -161,6 +216,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -175,24 +232,35 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "summary": {
           "kind": "string",
           "required": true,
-          "description": "The always-visible disclosure label."
+          "description": "The always-visible disclosure label.",
+          "themeVariant": false
         },
         "open": {
           "kind": "boolean",
-          "description": "Whether the disclosure starts expanded."
+          "description": "Whether the disclosure starts expanded.",
+          "default": false,
+          "themeVariant": false
         }
       },
+      "slots": ["root", "summary", "indicator", "content"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "disclosure",
         "article",
@@ -212,6 +280,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -226,30 +296,56 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of image, alt, caption, and link data."
+          "description": "A JSON array of image, alt, caption, and link data.",
+          "themeVariant": false
         },
-        "title": { "kind": "string", "description": "The gallery heading." },
+        "title": {
+          "kind": "string",
+          "description": "The gallery heading.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
-          "description": "Supporting copy for the gallery."
+          "description": "Supporting copy for the gallery.",
+          "themeVariant": false
         },
         "columns": {
           "kind": "enum",
           "values": ["1", "2", "3", "4"],
-          "description": "The preferred desktop column count."
+          "description": "The preferred desktop column count.",
+          "default": "2",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "header",
+        "title",
+        "description",
+        "grid",
+        "item",
+        "imageLink",
+        "image",
+        "caption"
+      ],
+      "variants": ["size", "variant"],
       "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
       "keywords": [
         "gallery",
         "media",
@@ -270,6 +366,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -284,20 +382,29 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of step titles and descriptions."
+          "description": "A JSON array of step titles and descriptions.",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "item", "marker", "content", "title", "description"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": ["steps", "article", "structure", "size", "variant", "items"],
       "example": {
         "props": {
@@ -311,6 +418,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -325,28 +434,41 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of tab labels and content."
+          "description": "A JSON array of tab labels and content.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
-          "description": "An accessible label for the tab list."
+          "description": "An accessible label for the tab list.",
+          "default": "Tabbed content",
+          "themeVariant": false
         },
         "initialIndex": {
           "kind": "number",
-          "description": "The initially selected tab index."
+          "description": "The initially selected tab index.",
+          "default": 0,
+          "themeVariant": false
         }
       },
+      "slots": ["root", "list", "tab", "panels", "panel"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "tabs",
         "article",
@@ -368,6 +490,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -382,53 +506,91 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "code": {
           "kind": "string",
           "required": true,
-          "description": "The literal source code."
+          "description": "The literal source code.",
+          "themeVariant": false
         },
         "language": {
           "kind": "string",
-          "description": "The syntax-language identifier."
+          "description": "The syntax-language identifier.",
+          "themeVariant": false
         },
         "colorScheme": {
           "kind": "enum",
           "values": ["light", "dark"],
-          "description": "The highlighting and semantic-token color scheme."
+          "description": "The highlighting and semantic-token color scheme.",
+          "themeVariant": false
         },
         "filename": {
           "kind": "string",
-          "description": "The displayed filename."
+          "description": "The displayed filename.",
+          "themeVariant": false
         },
         "highlightLines": {
           "kind": "string",
-          "description": "Comma-separated line numbers or ranges."
+          "description": "Comma-separated line numbers or ranges.",
+          "themeVariant": false
         },
         "lineNumbers": {
           "kind": "boolean",
-          "description": "Whether line numbers are displayed."
+          "description": "Whether line numbers are displayed.",
+          "default": false,
+          "themeVariant": false
         },
         "copy": {
           "kind": "boolean",
-          "description": "Whether the copy action is displayed."
+          "description": "Whether the copy action is displayed.",
+          "default": true,
+          "themeVariant": false
         },
         "wrap": {
           "kind": "boolean",
-          "description": "Whether long lines wrap."
+          "description": "Whether long lines wrap.",
+          "default": false,
+          "themeVariant": false
         },
         "maxHeight": {
           "kind": "string",
-          "description": "An optional maximum scrolling height."
+          "description": "An optional maximum scrolling height.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "header",
+        "title",
+        "filename",
+        "language",
+        "control",
+        "actions",
+        "copyTrigger",
+        "button",
+        "copyIndicator",
+        "content",
+        "scroller",
+        "code",
+        "codeText",
+        "lineContent",
+        "line",
+        "lineNumber"
+      ],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "code",
         "block",
@@ -459,6 +621,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -473,28 +637,41 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of labeled code examples."
+          "description": "A JSON array of labeled code examples.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
-          "description": "An accessible label for the code tabs."
+          "description": "An accessible label for the code tabs.",
+          "default": "Code examples",
+          "themeVariant": false
         },
         "initialIndex": {
           "kind": "number",
-          "description": "The initially selected code example."
+          "description": "The initially selected code example.",
+          "default": 0,
+          "themeVariant": false
         }
       },
+      "slots": ["root", "tabs", "tab", "panel"],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "code",
         "group",
@@ -517,6 +694,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -531,24 +710,34 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "diff": {
           "kind": "string",
           "required": true,
-          "description": "Unified diff text."
+          "description": "Unified diff text.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
-          "description": "The displayed diff filename."
+          "description": "The displayed diff filename.",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "header", "title", "code", "line", "marker", "content"],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": ["diff", "technical", "content", "size", "variant", "title"],
       "example": {
         "props": { "diff": "- before\n+ after" },
@@ -560,6 +749,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -574,45 +765,69 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "href": {
           "kind": "string",
           "required": true,
-          "description": "The file URL."
+          "description": "The file URL.",
+          "themeVariant": false
         },
         "name": {
           "kind": "string",
           "required": true,
-          "description": "The displayed filename."
+          "description": "The displayed filename.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "Supporting file description."
+          "description": "Supporting file description.",
+          "themeVariant": false
         },
         "fileType": {
           "kind": "string",
-          "description": "The file format label."
+          "description": "The file format label.",
+          "themeVariant": false
         },
         "fileSize": {
           "kind": "string",
-          "description": "The human-readable size."
+          "description": "The human-readable size.",
+          "themeVariant": false
         },
         "download": {
           "kind": "boolean",
-          "description": "Whether the link requests a download."
+          "description": "Whether the link requests a download.",
+          "default": true,
+          "themeVariant": false
         },
         "actionLabel": {
           "kind": "string",
-          "description": "The visible action text."
+          "description": "The visible action text.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "icon",
+        "content",
+        "name",
+        "description",
+        "meta",
+        "action"
+      ],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "file",
         "card",
@@ -641,6 +856,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -655,21 +872,34 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of paths, types, and optional metadata."
+          "description": "A JSON array of paths, types, and optional metadata.",
+          "themeVariant": false
         },
-        "title": { "kind": "string", "description": "The tree heading." }
+        "title": {
+          "kind": "string",
+          "description": "The tree heading.",
+          "themeVariant": false
+        }
       },
+      "slots": ["root", "title", "list", "item", "icon", "path", "meta"],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "file",
         "tree",
@@ -690,6 +920,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -704,29 +936,55 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "command": {
           "kind": "string",
           "required": true,
-          "description": "The command text."
+          "description": "The command text.",
+          "themeVariant": false
         },
-        "output": { "kind": "string", "description": "The command output." },
+        "output": {
+          "kind": "string",
+          "description": "The command output.",
+          "themeVariant": false
+        },
         "prompt": {
           "kind": "string",
-          "description": "The shell prompt marker."
+          "description": "The shell prompt marker.",
+          "default": "$",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
-          "description": "The terminal window label."
+          "description": "The terminal window label.",
+          "default": "Terminal",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "header",
+        "dots",
+        "title",
+        "body",
+        "prompt",
+        "command",
+        "output"
+      ],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "terminal",
         "technical",
@@ -748,6 +1006,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -762,28 +1022,41 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "audience": {
           "kind": "string",
           "required": true,
-          "description": "The host-defined audience identifier."
+          "description": "The host-defined audience identifier.",
+          "themeVariant": false
         },
         "fallback": {
           "kind": "string",
-          "description": "Fallback copy for an unauthorized viewer."
+          "description": "Fallback copy for an unauthorized viewer.",
+          "default": "This section is available to a different audience.",
+          "themeVariant": false
         },
         "showLabel": {
           "kind": "boolean",
-          "description": "Whether the audience label is visible."
+          "description": "Whether the audience label is visible.",
+          "default": false,
+          "themeVariant": false
         }
       },
+      "slots": ["root", "label", "content", "fallback"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "audience",
         "boundary",
@@ -808,6 +1081,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -822,30 +1097,56 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "columns": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of compared option labels."
+          "description": "A JSON array of compared option labels.",
+          "themeVariant": false
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of feature rows and values."
+          "description": "A JSON array of feature rows and values.",
+          "themeVariant": false
         },
-        "title": { "kind": "string", "description": "The comparison heading." },
+        "title": {
+          "kind": "string",
+          "description": "The comparison heading.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
-          "description": "Supporting comparison copy."
+          "description": "Supporting comparison copy.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "title",
+        "description",
+        "scroller",
+        "table",
+        "head",
+        "header",
+        "row",
+        "label",
+        "value"
+      ],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "comparison",
         "technical",
@@ -870,6 +1171,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -884,24 +1187,39 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
-        "title": { "kind": "string", "description": "The takeaway heading." },
+        "title": {
+          "kind": "string",
+          "description": "The takeaway heading.",
+          "default": "Key takeaway",
+          "themeVariant": false
+        },
         "eyebrow": {
           "kind": "string",
-          "description": "A short label above the heading."
+          "description": "A short label above the heading.",
+          "themeVariant": false
         },
         "items": {
           "kind": "json",
-          "description": "A JSON array of takeaway bullets."
+          "description": "A JSON array of takeaway bullets.",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "eyebrow", "title", "body", "list", "item"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "key",
         "takeaway",
@@ -923,6 +1241,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -937,37 +1257,60 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "question": {
           "kind": "string",
           "required": true,
-          "description": "The poll question."
+          "description": "The poll question.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "Supporting poll copy."
+          "description": "Supporting poll copy.",
+          "themeVariant": false
         },
         "options": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of stable option IDs and labels."
+          "description": "A JSON array of stable option IDs and labels.",
+          "themeVariant": false
         },
         "totalVotes": {
           "kind": "number",
-          "description": "An optional total vote count."
+          "description": "An optional total vote count.",
+          "themeVariant": false
         },
         "selectedId": {
           "kind": "string",
-          "description": "An optional initially selected option."
+          "description": "An optional initially selected option.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "question",
+        "description",
+        "options",
+        "option",
+        "optionLabel",
+        "result",
+        "bar",
+        "status"
+      ],
+      "variants": ["size", "variant"],
       "category": "Engagement",
+      "kit": "engagement",
+      "package": "@postkit/core",
       "keywords": [
         "poll",
         "engagement",
@@ -994,6 +1337,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -1008,48 +1353,88 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "The product name."
+          "description": "The product name.",
+          "themeVariant": false
         },
         "href": {
           "kind": "string",
           "required": true,
-          "description": "The product destination."
+          "description": "The product destination.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "The product summary."
+          "description": "The product summary.",
+          "themeVariant": false
         },
         "actionLabel": {
           "kind": "string",
-          "description": "The product action label."
+          "description": "The product action label.",
+          "default": "View product",
+          "themeVariant": false
         },
         "imageSrc": {
           "kind": "string",
-          "description": "The product image URL."
+          "description": "The product image URL.",
+          "themeVariant": false
         },
         "imageAlt": {
           "kind": "string",
-          "description": "Alternative text for the product image."
+          "description": "Alternative text for the product image.",
+          "themeVariant": false
         },
-        "price": { "kind": "string", "description": "The displayed price." },
-        "rating": { "kind": "number", "description": "A five-point rating." },
-        "badge": { "kind": "string", "description": "A short product badge." },
+        "price": {
+          "kind": "string",
+          "description": "The displayed price.",
+          "themeVariant": false
+        },
+        "rating": {
+          "kind": "number",
+          "description": "A five-point rating.",
+          "themeVariant": false
+        },
+        "badge": {
+          "kind": "string",
+          "description": "A short product badge.",
+          "themeVariant": false
+        },
         "rel": {
           "kind": "string",
-          "description": "The link relationship, normally sponsored."
+          "description": "The link relationship, normally sponsored.",
+          "default": "sponsored",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "image",
+        "content",
+        "badge",
+        "title",
+        "description",
+        "rating",
+        "footer",
+        "price",
+        "action"
+      ],
+      "variants": ["size", "variant"],
       "category": "Publishing",
+      "kit": "publishing",
+      "package": "@postkit/core",
       "keywords": [
         "product",
         "card",
@@ -1082,6 +1467,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1096,25 +1483,39 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "quote": {
           "kind": "string",
           "required": true,
-          "description": "The quoted text."
+          "description": "The quoted text.",
+          "themeVariant": false
         },
         "attribution": {
           "kind": "string",
-          "description": "The quoted speaker or source."
+          "description": "The quoted speaker or source.",
+          "themeVariant": false
         },
-        "cite": { "kind": "string", "description": "The cited work." }
+        "cite": {
+          "kind": "string",
+          "description": "The cited work.",
+          "themeVariant": false
+        }
       },
+      "slots": ["root", "mark", "quote", "attribution", "cite"],
+      "variants": ["size", "variant"],
       "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
       "keywords": [
         "pull",
         "quote",
@@ -1135,6 +1536,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1149,24 +1552,44 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of related content links."
+          "description": "A JSON array of related content links.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
-          "description": "The related-content heading."
+          "description": "The related-content heading.",
+          "default": "Related content",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "title",
+        "list",
+        "item",
+        "link",
+        "itemTitle",
+        "description",
+        "meta"
+      ],
+      "variants": ["size", "variant"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "related",
         "content",
@@ -1189,6 +1612,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1203,36 +1628,58 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "The series title."
+          "description": "The series title.",
+          "themeVariant": false
         },
         "current": {
           "kind": "number",
-          "description": "The current article position."
+          "description": "The current article position.",
+          "themeVariant": false
         },
         "total": {
           "kind": "number",
-          "description": "The number of articles in the series."
+          "description": "The number of articles in the series.",
+          "themeVariant": false
         },
         "previous": {
           "kind": "json",
-          "description": "The previous article title and URL."
+          "description": "The previous article title and URL.",
+          "themeVariant": false
         },
         "next": {
           "kind": "json",
-          "description": "The next article title and URL."
+          "description": "The next article title and URL.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "header",
+        "title",
+        "position",
+        "links",
+        "link",
+        "direction",
+        "linkTitle"
+      ],
+      "variants": ["size", "variant"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "series",
         "navigation",
@@ -1258,6 +1705,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1272,35 +1721,69 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "name": {
           "kind": "string",
           "required": true,
-          "description": "The sponsor name."
+          "description": "The sponsor name.",
+          "themeVariant": false
         },
-        "message": { "kind": "string", "description": "The sponsor message." },
-        "href": { "kind": "string", "description": "The sponsor destination." },
+        "message": {
+          "kind": "string",
+          "description": "The sponsor message.",
+          "themeVariant": false
+        },
+        "href": {
+          "kind": "string",
+          "description": "The sponsor destination.",
+          "themeVariant": false
+        },
         "actionLabel": {
           "kind": "string",
-          "description": "The sponsor action label."
+          "description": "The sponsor action label.",
+          "default": "Learn more",
+          "themeVariant": false
         },
-        "logoSrc": { "kind": "string", "description": "The sponsor logo URL." },
+        "logoSrc": {
+          "kind": "string",
+          "description": "The sponsor logo URL.",
+          "themeVariant": false
+        },
         "logoAlt": {
           "kind": "string",
-          "description": "Alternative text for the sponsor logo."
+          "description": "Alternative text for the sponsor logo.",
+          "themeVariant": false
         },
         "disclosure": {
           "kind": "string",
-          "description": "The commercial disclosure label."
+          "description": "The commercial disclosure label.",
+          "default": "Sponsored",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "disclosure",
+        "logo",
+        "content",
+        "name",
+        "message",
+        "action"
+      ],
+      "variants": ["size", "variant"],
       "category": "Publishing",
+      "kit": "publishing",
+      "package": "@postkit/core",
       "keywords": [
         "sponsor",
         "block",
@@ -1327,6 +1810,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1341,30 +1826,45 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "value": {
           "kind": "string",
           "required": true,
-          "description": "The displayed metric value."
+          "description": "The displayed metric value.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
           "required": true,
-          "description": "The metric label."
+          "description": "The metric label.",
+          "themeVariant": false
         },
-        "trend": { "kind": "string", "description": "The metric trend." },
+        "trend": {
+          "kind": "string",
+          "description": "The metric trend.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
-          "description": "Supporting metric context."
+          "description": "Supporting metric context.",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "value", "label", "trend", "description"],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "stat",
         "technical",
@@ -1386,6 +1886,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1400,33 +1902,57 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of syndicated publication references."
+          "description": "A JSON array of syndicated publication references.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
-          "description": "The accessible heading for the destination list."
+          "description": "The accessible heading for the destination list.",
+          "default": "Appears on",
+          "themeVariant": false
         },
         "presentation": {
           "kind": "enum",
           "values": ["inline", "list", "badges", "card"],
-          "description": "How syndicated destinations are arranged."
+          "description": "How syndicated destinations are arranged.",
+          "default": "inline",
+          "themeVariant": true
         },
         "showDates": {
           "kind": "boolean",
-          "description": "Whether publication dates are shown."
+          "description": "Whether publication dates are shown.",
+          "default": false,
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "label",
+        "list",
+        "item",
+        "link",
+        "icon",
+        "date",
+        "status"
+      ],
+      "variants": ["size", "variant", "presentation"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "appears",
         "on",
@@ -1453,6 +1979,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1467,34 +1995,47 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "src": {
           "kind": "string",
           "required": true,
-          "description": "The audio file URL."
+          "description": "The audio file URL.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "An accessible title for the recording."
+          "description": "An accessible title for the recording.",
+          "themeVariant": false
         },
         "caption": {
           "kind": "string",
-          "description": "Visible supporting text below the player."
+          "description": "Visible supporting text below the player.",
+          "themeVariant": false
         },
         "preload": {
           "kind": "enum",
           "values": ["none", "metadata", "auto"],
-          "description": "Browser preload behavior."
+          "description": "Browser preload behavior.",
+          "default": "metadata",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "title", "player", "caption", "fallback"],
+      "variants": ["size", "variant"],
       "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
       "keywords": [
         "audio",
         "media",
@@ -1515,6 +2056,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1529,46 +2072,77 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "name": {
           "kind": "string",
           "required": true,
-          "description": "The author display name."
+          "description": "The author display name.",
+          "themeVariant": false
         },
         "role": {
           "kind": "string",
-          "description": "The author role, title, or affiliation."
+          "description": "The author role, title, or affiliation.",
+          "themeVariant": false
         },
         "avatarSrc": {
           "kind": "string",
-          "description": "The author portrait URL."
+          "description": "The author portrait URL.",
+          "themeVariant": false
         },
         "avatarAlt": {
           "kind": "string",
-          "description": "Alternative text for the author portrait."
+          "description": "Alternative text for the author portrait.",
+          "themeVariant": false
         },
-        "href": { "kind": "string", "description": "The author profile URL." },
+        "href": {
+          "kind": "string",
+          "description": "The author profile URL.",
+          "themeVariant": false
+        },
         "bio": {
           "kind": "string",
-          "description": "A plain-text author biography."
+          "description": "A plain-text author biography.",
+          "themeVariant": false
         },
         "links": {
           "kind": "json",
-          "description": "A JSON array of author links with label, href, and optional rel fields."
+          "description": "A JSON array of author links with label, href, and optional rel fields.",
+          "themeVariant": false
         },
         "presentation": {
           "kind": "enum",
           "values": ["card", "compact", "inline"],
-          "description": "How much author detail is displayed."
+          "description": "How much author detail is displayed.",
+          "default": "card",
+          "themeVariant": true
         }
       },
+      "slots": [
+        "root",
+        "avatar",
+        "content",
+        "header",
+        "name",
+        "nameLink",
+        "role",
+        "bio",
+        "links",
+        "link"
+      ],
+      "variants": ["size", "variant", "presentation"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "author",
         "card",
@@ -1595,6 +2169,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1609,49 +2185,75 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "The call-to-action heading."
+          "description": "The call-to-action heading.",
+          "themeVariant": false
         },
         "eyebrow": {
           "kind": "string",
-          "description": "A short label displayed above the heading."
+          "description": "A short label displayed above the heading.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "Plain-text supporting copy."
+          "description": "Plain-text supporting copy.",
+          "themeVariant": false
         },
         "primaryLabel": {
           "kind": "string",
-          "description": "The primary action label."
+          "description": "The primary action label.",
+          "themeVariant": false
         },
         "primaryHref": {
           "kind": "string",
-          "description": "The primary action destination."
+          "description": "The primary action destination.",
+          "themeVariant": false
         },
         "secondaryLabel": {
           "kind": "string",
-          "description": "The secondary action label."
+          "description": "The secondary action label.",
+          "themeVariant": false
         },
         "secondaryHref": {
           "kind": "string",
-          "description": "The secondary action destination."
+          "description": "The secondary action destination.",
+          "themeVariant": false
         },
         "alignment": {
           "kind": "enum",
           "values": ["start", "center"],
-          "description": "The content and action alignment."
+          "description": "The content and action alignment.",
+          "default": "start",
+          "themeVariant": true
         }
       },
+      "slots": [
+        "root",
+        "content",
+        "eyebrow",
+        "title",
+        "body",
+        "actions",
+        "primaryAction",
+        "secondaryAction"
+      ],
+      "variants": ["size", "variant", "alignment"],
       "category": "Engagement",
+      "kit": "engagement",
+      "package": "@postkit/core",
       "keywords": [
         "call",
         "to",
@@ -1678,6 +2280,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1692,27 +2296,52 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "items": {
           "kind": "json",
-          "description": "A JSON array of carousel items."
+          "description": "A JSON array of carousel items.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
-          "description": "The accessible name for the carousel."
+          "description": "The accessible name for the carousel.",
+          "default": "Article carousel",
+          "themeVariant": false
         },
         "initialIndex": {
           "kind": "number",
-          "description": "The initially visible zero-based item index."
+          "description": "The initially visible zero-based item index.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "slide",
+        "media",
+        "content",
+        "title",
+        "description",
+        "link",
+        "controls",
+        "previousTrigger",
+        "status",
+        "nextTrigger",
+        "emptyState"
+      ],
+      "variants": ["size", "variant"],
       "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
       "keywords": [
         "carousel",
         "media",
@@ -1733,6 +2362,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -1747,42 +2378,76 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "data": {
           "kind": "json",
           "required": true,
-          "description": "A JSON array of labeled data records."
+          "description": "A JSON array of labeled data records.",
+          "themeVariant": false
         },
         "series": {
           "kind": "json",
-          "description": "A JSON array describing the values to graph."
+          "description": "A JSON array describing the values to graph.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "The visible and accessible chart title."
+          "description": "The visible and accessible chart title.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "A concise explanation of the chart."
+          "description": "A concise explanation of the chart.",
+          "themeVariant": false
         },
         "type": {
           "kind": "enum",
           "values": ["bar", "line"],
-          "description": "The chart presentation."
+          "description": "The chart presentation.",
+          "default": "bar",
+          "themeVariant": false
         },
         "showTable": {
           "kind": "boolean",
-          "description": "Whether to show an accessible source-data table."
+          "description": "Whether to show an accessible source-data table.",
+          "default": false,
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "title",
+        "description",
+        "legend",
+        "legendItem",
+        "legendSwatch",
+        "plot",
+        "svg",
+        "gridLine",
+        "axisLabel",
+        "seriesMark",
+        "emptyState",
+        "tableContainer",
+        "table",
+        "headerCell",
+        "rowHeader",
+        "dataCell"
+      ],
+      "variants": ["size", "variant"],
       "category": "Technical content",
+      "kit": "technical",
+      "package": "@postkit/core",
       "keywords": [
         "chart",
         "technical",
@@ -1810,6 +2475,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1824,80 +2491,115 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "src": {
           "kind": "string",
           "required": true,
-          "description": "The image URL."
+          "description": "The image URL.",
+          "themeVariant": false
         },
         "alt": {
           "kind": "string",
           "required": true,
-          "description": "Alternative text, or an explicitly empty value for a decorative image."
+          "description": "Alternative text, or an explicitly empty value for a decorative image.",
+          "themeVariant": false
         },
         "caption": {
           "kind": "string",
-          "description": "Visible supporting text below the image."
+          "description": "Visible supporting text below the image.",
+          "themeVariant": false
         },
         "credit": {
           "kind": "string",
-          "description": "The image attribution or credit."
+          "description": "The image attribution or credit.",
+          "themeVariant": false
         },
         "creditHref": {
           "kind": "string",
-          "description": "A URL for the image attribution."
+          "description": "A URL for the image attribution.",
+          "themeVariant": false
         },
         "href": {
           "kind": "string",
-          "description": "An optional destination when the image is activated."
+          "description": "An optional destination when the image is activated.",
+          "themeVariant": false
         },
         "width": {
           "kind": "number",
-          "description": "The intrinsic image width in pixels."
+          "description": "The intrinsic image width in pixels.",
+          "themeVariant": false
         },
         "height": {
           "kind": "number",
-          "description": "The intrinsic image height in pixels."
+          "description": "The intrinsic image height in pixels.",
+          "themeVariant": false
         },
         "aspectRatio": {
           "kind": "string",
-          "description": "A CSS aspect ratio such as 16 / 9."
+          "description": "A CSS aspect ratio such as 16 / 9.",
+          "themeVariant": false
         },
         "objectFit": {
           "kind": "enum",
           "values": ["contain", "cover"],
-          "description": "How the image fits its media frame."
+          "description": "How the image fits its media frame.",
+          "default": "cover",
+          "themeVariant": false
         },
         "objectPosition": {
           "kind": "string",
-          "description": "The focal position within the media frame."
+          "description": "The focal position within the media frame.",
+          "themeVariant": false
         },
         "loading": {
           "kind": "enum",
           "values": ["eager", "lazy"],
-          "description": "Browser image loading behavior."
+          "description": "Browser image loading behavior.",
+          "default": "lazy",
+          "themeVariant": false
         },
         "sizes": {
           "kind": "string",
-          "description": "Responsive image display-size hints."
+          "description": "Responsive image display-size hints.",
+          "themeVariant": false
         },
         "srcSet": {
           "kind": "string",
-          "description": "Responsive image source candidates."
+          "description": "Responsive image source candidates.",
+          "themeVariant": false
         },
         "layout": {
           "kind": "enum",
           "values": ["inline", "wide", "bleed"],
-          "description": "The figure width relative to article content."
+          "description": "The figure width relative to article content.",
+          "default": "inline",
+          "themeVariant": true
         }
       },
+      "slots": [
+        "root",
+        "mediaLink",
+        "media",
+        "image",
+        "figcaption",
+        "caption",
+        "credit",
+        "creditLink"
+      ],
+      "variants": ["size", "variant", "layout"],
       "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
       "keywords": [
         "figure",
         "media",
@@ -1933,6 +2635,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
@@ -1947,76 +2651,119 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "href": {
           "kind": "string",
           "required": true,
-          "description": "The destination URL."
+          "description": "The destination URL.",
+          "themeVariant": false
         },
         "presentation": {
           "kind": "enum",
           "values": ["inline", "card", "embed", "media", "auto"],
-          "description": "The requested link treatment. Auto chooses from resolved metadata."
+          "description": "The requested link treatment. Auto chooses from resolved metadata.",
+          "default": "card",
+          "themeVariant": true
         },
         "images": {
           "kind": "enum",
           "values": ["none", "first", "carousel"],
-          "description": "How resolved preview images are displayed."
+          "description": "How resolved preview images are displayed.",
+          "default": "first",
+          "themeVariant": false
         },
         "media": {
           "kind": "enum",
           "values": ["auto", "audio", "video"],
-          "description": "The preferred native media type."
+          "description": "The preferred native media type.",
+          "themeVariant": false
         },
         "activation": {
           "kind": "enum",
           "values": ["click", "immediate"],
-          "description": "Whether an external interactive embed waits for reader consent."
+          "description": "Whether an external interactive embed waits for reader consent.",
+          "default": "click",
+          "themeVariant": false
         },
         "provider": {
           "kind": "string",
-          "description": "A provider override for PostkitProvider, an editor, or a build-time resolver integration."
+          "description": "A provider override for PostkitProvider, an editor, or a build-time resolver integration.",
+          "themeVariant": false
         },
         "metadata": {
           "kind": "json",
-          "description": "A normalized @postkit/unfurl result serialized as JSON."
+          "description": "A normalized @postkit/unfurl result serialized as JSON.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
-          "description": "An author-supplied title override."
+          "description": "An author-supplied title override.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "An author-supplied description override."
+          "description": "An author-supplied description override.",
+          "themeVariant": false
         },
         "siteName": {
           "kind": "string",
-          "description": "An author-supplied site-name override."
+          "description": "An author-supplied site-name override.",
+          "themeVariant": false
         },
         "image": {
           "kind": "string",
-          "description": "An author-supplied primary image override."
+          "description": "An author-supplied primary image override.",
+          "themeVariant": false
         },
         "imageAlt": {
           "kind": "string",
-          "description": "Alternative text for the primary image override."
+          "description": "Alternative text for the primary image override.",
+          "themeVariant": false
         },
         "favicon": {
           "kind": "string",
-          "description": "An author-supplied site icon override."
+          "description": "An author-supplied site icon override.",
+          "themeVariant": false
         },
         "iframeTitle": {
           "kind": "string",
-          "description": "An accessible title for a resolved iframe embed."
+          "description": "An accessible title for a resolved iframe embed.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "anchor",
+        "media",
+        "image",
+        "carousel",
+        "content",
+        "siteRow",
+        "favicon",
+        "siteName",
+        "title",
+        "description",
+        "domain",
+        "embedFrame",
+        "embed",
+        "consent",
+        "consentButton",
+        "mediaPlayer"
+      ],
+      "variants": ["size", "variant", "presentation"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "link",
         "preview",
@@ -2049,6 +2796,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -2063,57 +2812,92 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "The newsletter signup heading."
+          "description": "The newsletter signup heading.",
+          "themeVariant": false
         },
         "description": {
           "kind": "string",
-          "description": "Plain-text supporting copy."
+          "description": "Plain-text supporting copy.",
+          "themeVariant": false
         },
         "list": {
           "kind": "string",
-          "description": "A host-defined newsletter or audience identifier."
+          "description": "A host-defined newsletter or audience identifier.",
+          "themeVariant": false
         },
         "emailLabel": {
           "kind": "string",
-          "description": "The accessible email field label."
+          "description": "The accessible email field label.",
+          "default": "Email address",
+          "themeVariant": false
         },
         "emailPlaceholder": {
           "kind": "string",
-          "description": "The email field placeholder."
+          "description": "The email field placeholder.",
+          "themeVariant": false
         },
         "buttonLabel": {
           "kind": "string",
-          "description": "The submit button label."
+          "description": "The submit button label.",
+          "default": "Subscribe",
+          "themeVariant": false
         },
         "privacy": {
           "kind": "string",
-          "description": "A short privacy or consent note."
+          "description": "A short privacy or consent note.",
+          "themeVariant": false
         },
         "successMessage": {
           "kind": "string",
-          "description": "The default successful-submission message."
+          "description": "The default successful-submission message.",
+          "default": "Thanks for subscribing.",
+          "themeVariant": false
         },
         "errorMessage": {
           "kind": "string",
-          "description": "The default failed-submission message."
+          "description": "The default failed-submission message.",
+          "default": "Subscription failed. Please try again.",
+          "themeVariant": false
         },
         "alignment": {
           "kind": "enum",
           "values": ["start", "center"],
-          "description": "The content and form alignment."
+          "description": "The content and form alignment.",
+          "default": "start",
+          "themeVariant": true
         }
       },
+      "slots": [
+        "root",
+        "content",
+        "title",
+        "description",
+        "form",
+        "label",
+        "fields",
+        "input",
+        "submit",
+        "status",
+        "privacy"
+      ],
+      "variants": ["size", "variant", "alignment"],
       "category": "Engagement",
+      "kit": "engagement",
+      "package": "@postkit/core",
       "keywords": [
         "newsletter",
         "signup",
@@ -2146,6 +2930,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -2160,41 +2946,57 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "url": {
           "kind": "string",
           "required": true,
-          "description": "The canonical URL to share."
+          "description": "The canonical URL to share.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
-          "description": "The title included with the share."
+          "description": "The title included with the share.",
+          "themeVariant": false
         },
         "text": {
           "kind": "string",
-          "description": "Supporting text included with the share."
+          "description": "Supporting text included with the share.",
+          "themeVariant": false
         },
         "services": {
           "kind": "json",
-          "description": "A JSON array of configured service identifiers."
+          "description": "A JSON array of configured service identifiers.",
+          "themeVariant": false
         },
         "label": {
           "kind": "string",
-          "description": "The accessible heading for the actions."
+          "description": "The accessible heading for the actions.",
+          "default": "Share this post",
+          "themeVariant": false
         },
         "layout": {
           "kind": "enum",
           "values": ["inline", "buttons"],
-          "description": "How share actions are arranged."
+          "description": "How share actions are arranged.",
+          "default": "buttons",
+          "themeVariant": true
         }
       },
+      "slots": ["root", "label", "actions", "action", "icon", "status"],
+      "variants": ["size", "variant", "layout"],
       "category": "Engagement",
+      "kit": "engagement",
+      "package": "@postkit/core",
       "keywords": [
         "share",
         "actions",
@@ -2218,6 +3020,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -2232,85 +3036,142 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "href": {
           "kind": "string",
           "required": true,
-          "description": "The original social post URL."
+          "description": "The original social post URL.",
+          "themeVariant": false
         },
         "provider": {
           "kind": "string",
-          "description": "The metadata resolver override."
+          "description": "The metadata resolver override.",
+          "themeVariant": false
         },
         "resolution": {
           "kind": "enum",
           "values": ["live", "snapshot", "snapshot-fallback"],
-          "description": "Whether Postkit resolves the current post, renders frozen metadata, or falls back to live resolution when no snapshot exists."
+          "description": "Whether Postkit resolves the current post, renders frozen metadata, or falls back to live resolution when no snapshot exists.",
+          "themeVariant": false
         },
         "snapshotInfo": {
           "kind": "enum",
           "values": ["auto", "visible", "hidden"],
-          "description": "Whether snapshot capture provenance is displayed in the rendered card."
+          "description": "Whether snapshot capture provenance is displayed in the rendered card.",
+          "default": "auto",
+          "themeVariant": false
         },
         "service": {
           "kind": "string",
-          "description": "The social service branding identifier."
+          "description": "The social service branding identifier.",
+          "themeVariant": false
         },
         "presentation": {
           "kind": "enum",
           "values": ["card", "embed", "auto"],
-          "description": "The native-card or provider-embed treatment."
+          "description": "The native-card or provider-embed treatment.",
+          "default": "auto",
+          "themeVariant": true
         },
         "branding": {
           "kind": "enum",
           "values": ["none", "subtle", "full"],
-          "description": "How strongly the service identity is displayed."
+          "description": "How strongly the service identity is displayed.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "activation": {
           "kind": "enum",
           "values": ["click", "immediate"],
-          "description": "Whether an interactive embed waits for consent."
+          "description": "Whether an interactive embed waits for consent.",
+          "default": "click",
+          "themeVariant": false
         },
         "metadata": {
           "kind": "json",
-          "description": "A normalized social post, unfurl result, or versioned Postkit snapshot envelope."
+          "description": "A normalized social post, unfurl result, or versioned Postkit snapshot envelope.",
+          "themeVariant": false
         },
         "authorName": {
           "kind": "string",
-          "description": "An author-supplied display-name override."
+          "description": "An author-supplied display-name override.",
+          "themeVariant": false
         },
         "authorHandle": {
           "kind": "string",
-          "description": "An author-supplied social handle override."
+          "description": "An author-supplied social handle override.",
+          "themeVariant": false
         },
         "authorAvatar": {
           "kind": "string",
-          "description": "An author-supplied avatar URL override."
+          "description": "An author-supplied avatar URL override.",
+          "themeVariant": false
         },
         "text": {
           "kind": "string",
-          "description": "An author-supplied post-text override."
+          "description": "An author-supplied post-text override.",
+          "themeVariant": false
         },
         "publishedAt": {
           "kind": "string",
-          "description": "An ISO publication timestamp override."
+          "description": "An ISO publication timestamp override.",
+          "themeVariant": false
         },
         "showMetrics": {
           "kind": "boolean",
-          "description": "Whether available engagement counts are shown."
+          "description": "Whether available engagement counts are shown.",
+          "default": false,
+          "themeVariant": false
         },
         "iframeTitle": {
           "kind": "string",
-          "description": "An accessible title for a provider iframe."
+          "description": "An accessible title for a provider iframe.",
+          "themeVariant": false
         }
       },
+      "slots": [
+        "root",
+        "serviceRow",
+        "serviceBadge",
+        "serviceIcon",
+        "authorRow",
+        "avatar",
+        "author",
+        "authorName",
+        "handle",
+        "timestamp",
+        "content",
+        "media",
+        "image",
+        "metrics",
+        "metric",
+        "quote",
+        "quoteAuthor",
+        "quoteContent",
+        "footer",
+        "originalLink",
+        "snapshotInfo",
+        "snapshotLabel",
+        "snapshotTime",
+        "embedFrame",
+        "embed",
+        "consent",
+        "consentButton"
+      ],
+      "variants": ["size", "variant", "presentation", "branding"],
       "category": "Discovery",
+      "kit": "discovery",
+      "package": "@postkit/core",
       "keywords": [
         "social",
         "post",
@@ -2349,6 +3210,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "hydrated",
         "email": "not-defined"
       }
@@ -2363,39 +3226,58 @@
         "size": {
           "kind": "enum",
           "values": ["sm", "md", "lg"],
-          "description": "The component density and type scale."
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
         },
         "variant": {
           "kind": "enum",
           "values": ["outline", "subtle", "plain"],
-          "description": "The component visual treatment."
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
         },
         "src": {
           "kind": "string",
           "required": true,
-          "description": "The video file URL."
+          "description": "The video file URL.",
+          "themeVariant": false
         },
         "title": {
           "kind": "string",
           "required": true,
-          "description": "An accessible title for the video."
+          "description": "An accessible title for the video.",
+          "themeVariant": false
         },
-        "poster": { "kind": "string", "description": "The preview image URL." },
+        "poster": {
+          "kind": "string",
+          "description": "The preview image URL.",
+          "themeVariant": false
+        },
         "caption": {
           "kind": "string",
-          "description": "Visible supporting text below the player."
+          "description": "Visible supporting text below the player.",
+          "themeVariant": false
         },
         "aspectRatio": {
           "kind": "string",
-          "description": "A CSS aspect ratio such as 16 / 9."
+          "description": "A CSS aspect ratio such as 16 / 9.",
+          "default": "16 / 9",
+          "themeVariant": false
         },
         "preload": {
           "kind": "enum",
           "values": ["none", "metadata", "auto"],
-          "description": "Browser preload behavior."
+          "description": "Browser preload behavior.",
+          "default": "metadata",
+          "themeVariant": false
         }
       },
+      "slots": ["root", "frame", "player", "caption", "fallback"],
+      "variants": ["size", "variant"],
       "category": "Media",
+      "kit": "media",
+      "package": "@postkit/core",
       "keywords": [
         "video",
         "media",
@@ -2419,6 +3301,8 @@
       "stability": "initial",
       "support": {
         "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
         "astro": "static",
         "email": "not-defined"
       }
