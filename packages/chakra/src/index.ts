@@ -436,3 +436,9 @@ export {
   type PostkitTypography,
 } from './lib/theme.js';
 export * from './lib/chakra-renderer.js';
+export { Device, type DeviceProps } from './components/device/device.js';
+export {
+  postkitDeviceRecipe,
+  postkitDeviceSlots,
+  type PostkitDeviceSlot,
+} from './components/device/device.recipe.js';

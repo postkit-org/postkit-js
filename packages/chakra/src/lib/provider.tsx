@@ -17,6 +17,10 @@ import {
   type SystemConfig,
   type SystemContext,
 } from '@chakra-ui/react';
+import {
+  PostkitFiguresProvider,
+  type PostkitFigureNumbering,
+} from '@postkit/react';
 import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
 import { createPostkitSystem } from './theme.js';
@@ -133,6 +137,13 @@ export interface PostkitProviderProps {
    * document content.
    */
   readonly newsletter?: PostkitNewsletterConfig;
+  /**
+   * `numbered` numbers Figure, Video and Device ("Fig. 1") and the items of
+   * a Carousel or Gallery ("Fig. 2", "Fig. 2b", …) in reading order.
+   */
+  readonly figures?: PostkitFigureNumbering;
+  /** The label before each figure number. Defaults to `Fig.` */
+  readonly figureLabel?: string;
 }
 
 const PostkitContext = createContext<PostkitContextValue>(
@@ -204,6 +215,8 @@ export function PostkitProvider({
   onResolverError,
   socialServices,
   newsletter,
+  figures,
+  figureLabel,
 }: PostkitProviderProps) {
   const chakraSystem = useMemo(
     () =>
@@ -288,7 +301,13 @@ export function PostkitProvider({
         <CodeBlock.AdapterProvider
           value={codeBlockAdapter ?? postkitPlainTextCodeBlockAdapter}
         >
-          {children}
+          {figures === undefined ? (
+            children
+          ) : (
+            <PostkitFiguresProvider figures={figures} figureLabel={figureLabel}>
+              {children}
+            </PostkitFiguresProvider>
+          )}
         </CodeBlock.AdapterProvider>
       </ChakraProvider>
     </PostkitContext.Provider>

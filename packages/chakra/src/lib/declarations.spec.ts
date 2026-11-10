@@ -23,6 +23,32 @@ const snapshot = JSON.parse(
   readonly manifest: { readonly components: Record<string, unknown> };
 };
 
+/**
+ * What 0.3 adds to the 0.2 declarations (03 §7): new props on existing
+ * components, and new components. Everything else stays identical to 0.2.
+ */
+const added03 = {
+  props: {
+    Carousel: ['presentation'],
+    Gallery: ['presentation'],
+    Video: ['captions', 'captionsLang', 'duration', 'decorative'],
+  } as Readonly<Record<string, readonly string[]>>,
+  components: ['Device'],
+};
+
+/** A declaration as 0.2 had it: 0.3's added props removed, key order kept. */
+function as02(name: string, declaration: PostkitComponentDeclaration) {
+  const added = added03.props[name] ?? [];
+  return {
+    ...declaration,
+    props: Object.fromEntries(
+      Object.entries(declaration.props).filter(
+        ([prop]) => !added.includes(prop),
+      ),
+    ),
+  };
+}
+
 describe('Postkit declaration manifest', () => {
   it('publishes stable names and directives for the initial article components', () => {
     expect(POSTKIT_DECLARATION_VERSION).toBe(7);
@@ -67,6 +93,7 @@ describe('Postkit declaration manifest', () => {
       ['ShareActions', 'postkit-share-actions'],
       ['SocialPost', 'postkit-social-post'],
       ['Video', 'postkit-video'],
+      ['Device', 'postkit-device'],
     ]);
   });
 
@@ -148,34 +175,50 @@ describe('Postkit declaration manifest', () => {
     ]);
   });
 
-  it('builds every declaration from its definition, identical to 0.2', () => {
-    const definitions = Object.entries(postkitBuiltInDefinitions);
+  it('builds every declaration from its definition, identical to 0.2 plus the 0.3 additions', () => {
+    const definitions = Object.entries(postkitBuiltInDefinitions).filter(
+      ([name]) => !added03.components.includes(name),
+    );
     expect(definitions.map(([name]) => name)).toEqual(
       Object.keys(snapshot.manifest.components),
     );
+    expect(
+      Object.keys(postkitBuiltInDefinitions).slice(definitions.length),
+    ).toEqual(added03.components);
     for (const [name, definition] of definitions) {
-      const declaration = postkitDeclarationFromDefinition(definition);
+      const declaration = as02(
+        name,
+        postkitDeclarationFromDefinition(definition),
+      );
       expect(declaration).toStrictEqual(snapshot.manifest.components[name]);
       // Key order reaches the generated manifest, so compare it too.
       expect(JSON.stringify(declaration)).toBe(
         JSON.stringify(snapshot.manifest.components[name]),
       );
     }
-    expect(JSON.parse(JSON.stringify(postkitDeclarationManifest))).toEqual(
-      snapshot.manifest,
-    );
-    expect(JSON.stringify(postkitDeclarationManifest)).toBe(
-      JSON.stringify(snapshot.manifest),
-    );
+    const { Device: _device, ...components02 } =
+      postkitDeclarationManifest.components;
+    const manifest02 = {
+      ...postkitDeclarationManifest,
+      components: Object.fromEntries(
+        Object.entries(components02).map(([name, declaration]) => [
+          name,
+          as02(name, declaration),
+        ]),
+      ),
+    };
+    expect(JSON.parse(JSON.stringify(manifest02))).toEqual(snapshot.manifest);
+    expect(JSON.stringify(manifest02)).toBe(JSON.stringify(snapshot.manifest));
     expect(JSON.stringify(postkitPresentationProps)).toBe(
       JSON.stringify(snapshot.presentationProps),
     );
     expect(Object.isFrozen(postkitDeclarationManifest)).toBe(true);
   });
 
-  it('keeps the 0.2 public types', () => {
+  it('keeps the 0.2 public types, plus Device', () => {
     expectTypeOf<PostkitComponentName>().toEqualTypeOf<
       | 'AppearsOn'
+      | 'Device'
       | 'AudienceBoundary'
       | 'Aside'
       | 'Audio'

@@ -3,6 +3,8 @@
 import { galleryDefinition } from '@postkit/core/components';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import { PostkitFiguresProvider } from '@postkit/react';
+
 import { PostkitProvider } from '../../lib/provider.js';
 import { createPostkitSystem, postkitDefaultTheme } from '../../lib/theme.js';
 import { Gallery } from './gallery.js';
@@ -32,15 +34,18 @@ describe('Chakra Gallery view', () => {
 
   it('stamps every part and merges view, slot and root styles in order', () => {
     const markup = render(
-      <Gallery
-        items={items}
-        title="Title"
-        description="Description"
-        columns={3}
-        classNames={{ image: 'my-image' }}
-        slotStyles={{ grid: { padding: '1px' } }}
-        rootProps={{ id: 'gallery', css: { marginTop: '3px' } }}
-      />,
+      // Numbered, so the figure-number part renders too.
+      <PostkitFiguresProvider figures="numbered">
+        <Gallery
+          items={items}
+          title="Title"
+          description="Description"
+          columns={3}
+          classNames={{ image: 'my-image' }}
+          slotStyles={{ grid: { padding: '1px' } }}
+          rootProps={{ id: 'gallery', css: { marginTop: '3px' } }}
+        />
+      </PostkitFiguresProvider>,
     );
 
     for (const part of postkitGallerySlots) {

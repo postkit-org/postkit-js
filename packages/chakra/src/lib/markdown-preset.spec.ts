@@ -357,7 +357,7 @@ describe('Postkit components in MDX', () => {
 
   it('accepts host components listed in components', () => {
     expect(() =>
-      compileMdx('<Device kind="mac" />', { components: ['Device'] }),
+      compileMdx('<Showcase kind="mac" />', { components: ['Showcase'] }),
     ).not.toThrow();
   });
 });

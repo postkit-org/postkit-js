@@ -26,6 +26,11 @@ export type CalloutProps = {
   readonly title?: string;
   readonly children?: ReactNode;
   readonly icon?: ReactNode;
+  /**
+   * An alias of `tone`, for content written with `type` (Prismark vaults,
+   * D6). `tone` is canonical and wins when both are set.
+   */
+  readonly type?: CalloutTone;
   /** Overrides `data-postkit-component`. `Aside` sets it for you. */
   readonly componentName?: 'Aside' | 'Callout';
   readonly rootProps?: BoxProps;
