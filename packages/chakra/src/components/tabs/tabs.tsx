@@ -6,8 +6,10 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
+import { tabsDefinition } from '@postkit/core/components';
 import { useState, type ReactNode } from 'react';
 
+import { usePostkitChakraAnatomy } from '../../lib/anatomy.js';
 import { parseJsonProp } from '../../lib/json-props.js';
 import {
   postkitSlotClassName,
@@ -18,9 +20,9 @@ import { postkitRecipeKeys } from '../../lib/theme.js';
 import { postkitTabsRecipe, type PostkitTabsSlot } from './tabs.recipe.js';
 
 /*
- * Tabs is chakra-only (03 D11 consequence): its behaviour comes from Chakra's
- * (Ark) Tabs until the headless `useTabs` hook lands, so `@postkit/react` has
- * no Tabs view yet and this one doesn't use `postkitChakraView`.
+ * Tabs keeps Chakra's (Ark) Tabs for its behaviour (03 §5.3), so it doesn't
+ * use `postkitChakraView`; it stamps the same anatomy as the headless `Tabs`
+ * in `@postkit/react` (over `useTabs`), and both pass the shared tabs spec.
  */
 
 export interface TabItem {
@@ -60,6 +62,11 @@ export function Tabs({
     postkitRecipeKeys.tabs,
     postkitTabsRecipe,
   );
+  const anatomy = usePostkitChakraAnatomy<PostkitTabsSlot>(
+    tabsDefinition,
+    { size, variant },
+    { recipeKey: postkitRecipeKeys.tabs, unstyled },
+  );
   const styles: PostkitSlotStyles<PostkitTabsSlot> = unstyled
     ? {}
     : recipe({ size, variant });
@@ -74,6 +81,7 @@ export function Tabs({
   >;
   return (
     <ChakraTabs.Root
+      {...anatomy('root')}
       {...tabsRootProps}
       value={selected}
       onValueChange={({ value: nextValue }: { value: string }) =>
@@ -87,12 +95,14 @@ export function Tabs({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       <ChakraTabs.List
+        {...anatomy('list')}
         aria-label={label}
         className={recipe.classNameMap.list}
         css={[styles.list, slotStyles?.list]}
       >
         {items.map((item, index) => (
           <ChakraTabs.Trigger
+            {...anatomy('tab')}
             value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
@@ -103,11 +113,13 @@ export function Tabs({
         ))}
       </ChakraTabs.List>
       <ChakraTabs.ContentGroup
+        {...anatomy('panels')}
         className={recipe.classNameMap.panels}
         css={[styles.panels, slotStyles?.panels]}
       >
         {items.map((item, index) => (
           <ChakraTabs.Content
+            {...anatomy('panel')}
             value={itemValues[index] ?? String(index)}
             className={recipe.classNameMap.panel}
             css={[styles.panel, slotStyles?.panel]}

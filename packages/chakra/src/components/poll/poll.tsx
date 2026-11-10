@@ -7,11 +7,12 @@ import {
   Progress,
   Text,
   type BoxProps,
+  type ButtonProps,
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
 import { pollDefinition } from '@postkit/core/components';
-import { useState } from 'react';
+import { usePoll } from '@postkit/react';
 
 import { postkitHeadingSize } from '../../lib/components/heading-size.js';
 import { parseJsonProp } from '../../lib/json-props.js';
@@ -40,27 +41,24 @@ export type PollProps = {
 
 /**
  * An interactive reader poll whose submission handler is host-owned, styled
- * by its Chakra recipe.
- *
- * Poll is `chakra-only` for now: its voting behaviour isn't in
- * `@postkit/core/behaviors` yet, so `@postkit/react` has no headless view
- * (03 D11; see `chakraOnly` in `@postkit/react`).
+ * by its Chakra recipe. Its behaviour (results, one vote per poll, the
+ * status line) comes from `usePoll` in `@postkit/react`, which the headless
+ * `Poll` uses too.
  */
 export const Poll = postkitChakraView<typeof pollDefinition, PollProps>(
   pollDefinition,
   postkitPollRecipe,
   ({ props, variants, part }) => {
-    const { question, description, onVote } = props;
+    const { question, description } = props;
     const options = parseJsonProp<PollOption>(props.options, 'Poll options');
-    const [selection, setSelection] = useState(props.selectedId);
-    const total =
-      Number(props.totalVotes) ||
-      options.reduce((sum, option) => sum + (option.votes ?? 0), 0);
+    const api = usePoll({
+      question,
+      options,
+      totalVotes: props.totalVotes,
+      selectedId: props.selectedId,
+      onVote: props.onVote,
+    });
     const size = (variants['size'] as PollProps['size']) ?? 'md';
-    const vote = (option: PollOption) => {
-      setSelection(option.id);
-      void onVote?.(option);
-    };
     return (
       <Box {...part('root')}>
         <Heading
@@ -77,29 +75,26 @@ export const Poll = postkitChakraView<typeof pollDefinition, PollProps>(
         {description ? (
           <Text {...part('description')}>{description}</Text>
         ) : null}
-        <Box role="group" aria-label={question} {...part('options')}>
-          {options.map((option) => {
-            const percentage =
-              total > 0 ? Math.round(((option.votes ?? 0) / total) * 100) : 0;
+        <Box {...(api.getOptionGroupProps() as BoxProps)} {...part('options')}>
+          {api.results.map((result) => {
+            const { option, percentage } = result;
             return (
               <Button
-                type="button"
+                {...(api.getOptionProps(option) as ButtonProps)}
                 size={size}
                 variant="outline"
-                aria-pressed={selection === option.id}
-                onClick={() => vote(option)}
                 {...part('option')}
                 key={option.id}
               >
                 <Box {...part('optionLabel')}>
                   <span>{option.label}</span>
-                  {total ? (
+                  {api.showResults ? (
                     <Box as="span" {...part('result')}>
                       {percentage}%
                     </Box>
                   ) : null}
                 </Box>
-                {total ? (
+                {api.showResults ? (
                   <Progress.Root
                     value={percentage}
                     size="xs"
@@ -114,12 +109,8 @@ export const Poll = postkitChakraView<typeof pollDefinition, PollProps>(
             );
           })}
         </Box>
-        <Text aria-live="polite" {...part('status')}>
-          {selection
-            ? 'Vote selected'
-            : total
-              ? `${total} votes`
-              : 'Select an option'}
+        <Text {...(api.getStatusProps() as BoxProps)} {...part('status')}>
+          {api.status}
         </Text>
       </Box>
     );

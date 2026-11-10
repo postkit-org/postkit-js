@@ -1,12 +1,14 @@
 /**
  * Framework-free behaviours for Postkit's interactive components: carousel
- * paging, tabs, code copy and embed consent. Renderers (React hooks, custom
- * elements) are thin wrappers over these.
+ * paging, tabs, code copy, embed consent, poll voting, newsletter signup and
+ * share actions. Renderers (React hooks, custom elements) are thin wrappers
+ * over these.
  *
  * Carousel, tabs and code copy are Zag machines configured as
- * `@postkit/chakra` configures them (decision D7); embed consent is plain
- * TypeScript. The `@zag-js/*` packages are optional peer dependencies at the
- * range Chakra resolves, so a Chakra host bundles one copy.
+ * `@postkit/chakra` configures them (decision D7); embed consent, the poll,
+ * newsletter signup and share actions are plain TypeScript. The `@zag-js/*`
+ * packages are optional peer dependencies at the range Chakra resolves, so a
+ * Chakra host bundles one copy.
  *
  * @packageDocumentation
  */
@@ -63,3 +65,66 @@ export {
   type EmbedConsentService,
   type EmbedConsentState,
 } from './embed-consent/embed-consent.behavior.js';
+export {
+  connectPoll,
+  createPoll,
+  pollInitialState,
+  pollStatus,
+  pollTotal,
+  pollTransition,
+  type PollApi,
+  type PollBehavior,
+  type PollBehaviorOptions,
+  type PollContext,
+  type PollEvent,
+  type PollNormalizer,
+  type PollOption,
+  type PollResult,
+  type PollService,
+  type PollState,
+} from './poll/poll.behavior.js';
+export {
+  connectNewsletterSignup,
+  createNewsletterSignup,
+  newsletterSignupInitialState,
+  newsletterSignupSubmittingMessage,
+  newsletterSignupTransition,
+  newsletterSignupUnconfiguredMessage,
+  type NewsletterSignupApi,
+  type NewsletterSignupBehavior,
+  type NewsletterSignupBehaviorOptions,
+  type NewsletterSignupConfig,
+  type NewsletterSignupContext,
+  type NewsletterSignupEvent,
+  type NewsletterSignupNormalizer,
+  type NewsletterSignupService,
+  type NewsletterSignupState,
+  type NewsletterSignupStatus,
+  type NewsletterSubscribe,
+  type NewsletterSubscription,
+  type NewsletterSubscriptionResult,
+} from './newsletter-signup/newsletter-signup.behavior.js';
+export {
+  connectShareActions,
+  createShareActions,
+  mergeShareServices,
+  postkitDefaultShareServiceIds,
+  postkitShareServices,
+  shareActionsCopiedMessage,
+  shareActionsInitialState,
+  shareActionsTransition,
+  shareWithService,
+  type ShareActionsApi,
+  type ShareActionsBehavior,
+  type ShareActionsBehaviorOptions,
+  type ShareActionsContext,
+  type ShareActionsEvent,
+  type ShareActionsNormalizer,
+  type ShareActionsService,
+  type ShareActionsState,
+  type ShareEnvironment,
+  type ShareRequest,
+  type ShareService,
+  type ShareServiceRegistry,
+  type ShareWithServiceOptions,
+} from './share-actions/share-actions.behavior.js';

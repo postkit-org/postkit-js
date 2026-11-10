@@ -6,8 +6,10 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
+import { codeGroupDefinition } from '@postkit/core/components';
 import { useState } from 'react';
 
+import { usePostkitChakraAnatomy } from '../../lib/anatomy.js';
 import { parseJsonProp } from '../../lib/json-props.js';
 import {
   postkitSlotClassName,
@@ -22,9 +24,9 @@ import {
 } from './code-group.recipe.js';
 
 /*
- * CodeGroup is interactive (its tabs), so it has no headless view yet and is
- * `chakra-only` in @postkit/react until the tabs behaviour hook lands
- * (03 D11).
+ * CodeGroup keeps Chakra's (Ark) Tabs for its behaviour (03 §5.3) and stamps
+ * the same anatomy as the headless `CodeGroup` in `@postkit/react`; both pass
+ * the shared tabs spec.
  */
 
 type SharedRootProps<Slot extends string> = {
@@ -73,6 +75,11 @@ export function CodeGroup({
     postkitCodeGroupRecipe,
     { fallback: 'recipe' },
   );
+  const anatomy = usePostkitChakraAnatomy<PostkitCodeGroupSlot>(
+    codeGroupDefinition,
+    { size, variant },
+    { recipeKey: postkitRecipeKeys.codeGroup, unstyled },
+  );
   const styles: PostkitSlotStyles<PostkitCodeGroupSlot> = unstyled
     ? {}
     : recipe({ size, variant });
@@ -83,6 +90,7 @@ export function CodeGroup({
   >;
   return (
     <ChakraTabs.Root
+      {...anatomy('root')}
       {...tabsRootProps}
       value={String(selected)}
       onValueChange={({ value: nextValue }: { value: string }) =>
@@ -96,12 +104,14 @@ export function CodeGroup({
       css={[styles.root, slotStyles?.root, rootCss]}
     >
       <ChakraTabs.List
+        {...anatomy('tabs')}
         aria-label={label}
         className={recipe.classNameMap.tabs}
         css={[styles.tabs, slotStyles?.tabs]}
       >
         {items.map((item, index) => (
           <ChakraTabs.Trigger
+            {...anatomy('tab')}
             value={String(index)}
             className={recipe.classNameMap.tab}
             css={[styles.tab, slotStyles?.tab]}
@@ -113,6 +123,7 @@ export function CodeGroup({
       </ChakraTabs.List>
       {items.map((item, index) => (
         <ChakraTabs.Content
+          {...anatomy('panel')}
           value={String(index)}
           className={recipe.classNameMap.panel}
           css={[styles.panel, slotStyles?.panel]}

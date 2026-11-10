@@ -1,26 +1,20 @@
-export interface PostkitNewsletterSubscription {
-  readonly email: string;
-  readonly list?: string;
-}
+import type {
+  NewsletterSignupConfig,
+  NewsletterSubscribe,
+  NewsletterSubscription,
+  NewsletterSubscriptionResult,
+} from '@postkit/core/behaviors';
 
-export interface PostkitNewsletterResult {
-  readonly message?: string;
-}
+export type PostkitNewsletterSubscription = NewsletterSubscription;
 
-export type PostkitNewsletterSubscribe = (
-  subscription: PostkitNewsletterSubscription,
-) => PostkitNewsletterResult | Promise<PostkitNewsletterResult | void> | void;
+export type PostkitNewsletterResult = NewsletterSubscriptionResult;
+
+export type PostkitNewsletterSubscribe = NewsletterSubscribe;
 
 /**
  * Host-owned newsletter configuration. Secrets and provider-specific behavior
  * stay outside authored MDX; Postkit only supplies the presentation and
- * submission boundary.
+ * submission boundary. The same configuration drives the headless
+ * `NewsletterSignup` in `@postkit/react` (its `newsletter` prop).
  */
-export interface PostkitNewsletterConfig {
-  readonly subscribe?: PostkitNewsletterSubscribe;
-  readonly action?: string;
-  readonly method?: 'get' | 'post';
-  readonly emailFieldName?: string;
-  readonly listFieldName?: string;
-  readonly hiddenFields?: Readonly<Record<string, string>>;
-}
+export type PostkitNewsletterConfig = NewsletterSignupConfig;

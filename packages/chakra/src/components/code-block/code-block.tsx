@@ -12,8 +12,10 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
+import { codeBlockDefinition } from '@postkit/core/components';
 import type { ReactNode } from 'react';
 
+import { usePostkitChakraAnatomy } from '../../lib/anatomy.js';
 import { usePostkit, type PostkitCodeBlockConfig } from '../../lib/provider.js';
 import {
   postkitSlotClassName,
@@ -27,9 +29,9 @@ import {
 } from './code-block.recipe.js';
 
 /*
- * CodeBlock is interactive (its copy action), so it has no headless view yet
- * and is `chakra-only` in @postkit/react until the copy behaviour hook lands
- * (03 D11). Syntax highlighting comes from the provider's `codeBlockAdapter`
+ * CodeBlock keeps Chakra's (Ark) CodeBlock and clipboard for its copy action
+ * (03 §5.3) and stamps the same anatomy as the headless `CodeBlock` in
+ * `@postkit/react`; both pass the shared code copy spec. Syntax highlighting comes from the provider's `codeBlockAdapter`
  * (`@postkit/shiki`, or the plain-text default) through Chakra's CodeBlock.
  */
 
@@ -146,6 +148,11 @@ export function CodeBlock({
   const styles: PostkitSlotStyles<PostkitCodeBlockSlot> = unstyled
     ? {}
     : recipe({ size: resolvedSize, variant: resolvedVariant });
+  const anatomy = usePostkitChakraAnatomy<PostkitCodeBlockSlot>(
+    codeBlockDefinition,
+    { size: resolvedSize, variant: resolvedVariant },
+    { recipeKey: postkitRecipeKeys.codeBlock, unstyled },
+  );
   const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
   const codeBlockRootProps = restRootProps as Omit<
     ChakraCodeBlock.RootProps,
@@ -186,7 +193,7 @@ export function CodeBlock({
 
   return (
     <ChakraCodeBlock.Root
-      data-postkit-component="CodeBlock"
+      {...anatomy('root')}
       {...codeBlockRootProps}
       code={source}
       language={language}
@@ -205,14 +212,16 @@ export function CodeBlock({
     >
       {filename || language || shouldCopy ? (
         <ChakraCodeBlock.Header
+          {...anatomy('header')}
           className={recipe.classNameMap.header}
           css={[styles.header, slotStyles?.header]}
         >
           {filename || language ? (
-            <ChakraCodeBlock.Title>
+            <ChakraCodeBlock.Title {...anatomy('title')}>
               {filename ? (
                 <Box
                   as="span"
+                  {...anatomy('filename')}
                   className={slotClassNames(
                     recipe.classNameMap.filename,
                     recipe.classNameMap.title,
@@ -230,6 +239,7 @@ export function CodeBlock({
               {language ? (
                 <Text
                   as="span"
+                  {...anatomy('language')}
                   className={recipe.classNameMap.language}
                   css={[styles.language, slotStyles?.language]}
                 >
@@ -240,6 +250,7 @@ export function CodeBlock({
           ) : null}
           {shouldCopy ? (
             <ChakraCodeBlock.Control
+              {...anatomy('control')}
               className={slotClassNames(
                 recipe.classNameMap.actions,
                 recipe.classNameMap.control,
@@ -257,6 +268,7 @@ export function CodeBlock({
                   const trigger = (
                     <ChakraCodeBlock.CopyTrigger
                       asChild
+                      {...anatomy('copyTrigger')}
                       className={slotClassNames(
                         recipe.classNameMap.button,
                         recipe.classNameMap.copyTrigger,
@@ -281,6 +293,7 @@ export function CodeBlock({
                         variant="ghost"
                       >
                         <ChakraCodeBlock.CopyIndicator
+                          {...anatomy('copyIndicator')}
                           className={recipe.classNameMap.copyIndicator}
                           aria-live={
                             resolvedCopyFeedback === 'inline'
@@ -344,6 +357,7 @@ export function CodeBlock({
         </ChakraCodeBlock.Header>
       ) : null}
       <ChakraCodeBlock.Content
+        {...anatomy('content')}
         // Chakra puts `aria-expanded` on the content, a generic element whose role doesn't
         // allow it (axe `aria-allowed-attr`). Expanded state belongs on the control that
         // toggles it, with `aria-controls`; Chakra's CollapseTrigger already does that, and
@@ -363,10 +377,12 @@ export function CodeBlock({
         ]}
       >
         <ChakraCodeBlock.Code
+          {...anatomy('code')}
           className={recipe.classNameMap.code}
           css={[styles.code, slotStyles?.code]}
         >
           <ChakraCodeBlock.CodeText
+            {...anatomy('codeText')}
             className={slotClassNames(
               recipe.classNameMap.lineContent,
               recipe.classNameMap.codeText,

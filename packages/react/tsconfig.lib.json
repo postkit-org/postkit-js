@@ -14,7 +14,15 @@
   "references": [
     {
       "path": "../core/tsconfig.lib.json"
+    },
+    {
+      "path": "../unfurl/tsconfig.lib.json"
     }
   ],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.spec-support.ts",
+    "src/**/*.spec-support.tsx"
+  ]
 }

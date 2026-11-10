@@ -3,8 +3,11 @@ import {
   carouselBehaviorSpec,
   codeCopyBehaviorSpec,
   embedConsentBehaviorSpec,
+  newsletterSignupBehaviorSpec,
+  pollBehaviorSpec,
   registerBehaviorSpec,
   settle,
+  shareActionsBehaviorSpec,
   tabsBehaviorSpec,
   type BehaviorDriver,
   type EmbedConsentBehaviorFixture,
@@ -13,7 +16,10 @@ import type { ResolvedLinkPreview } from '@postkit/unfurl';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import type { ReactElement } from 'react';
 
-import { PostkitProvider } from '../provider.js';
+import { PostkitProvider, type PostkitProviderProps } from '../provider.js';
+import { Poll } from '../../components/poll/poll.js';
+import { NewsletterSignup } from '../../components/newsletter-signup/newsletter-signup.js';
+import { ShareActions } from '../../components/share-actions/share-actions.js';
 import { Tabs } from '../../components/tabs/tabs.js';
 import { Carousel } from '../../components/carousel/carousel.js';
 import { LinkPreview } from '../../components/link-preview/link-preview.js';
@@ -28,11 +34,14 @@ import { CodeGroup } from '../../components/code-group/code-group.js';
  */
 function testingLibraryDriver<Fixture>(
   view: (fixture: Fixture) => ReactElement,
+  provider: (
+    fixture: Fixture,
+  ) => Omit<PostkitProviderProps, 'children' | 'system'> = () => ({}),
 ): BehaviorDriver<Fixture> {
   return {
     async render(fixture) {
       const { container } = render(
-        <PostkitProvider system={defaultSystem}>
+        <PostkitProvider system={defaultSystem} {...provider(fixture)}>
           {view(fixture)}
         </PostkitProvider>,
       );
@@ -168,4 +177,57 @@ registerBehaviorSpec(
   ),
   runner,
   { label: '@postkit/chakra SocialPost' },
+);
+
+registerBehaviorSpec(
+  pollBehaviorSpec(
+    testingLibraryDriver((fixture) => (
+      <Poll
+        question={fixture.question}
+        options={fixture.options}
+        totalVotes={fixture.totalVotes}
+        selectedId={fixture.selectedId}
+        onVote={fixture.onVote}
+      />
+    )),
+  ),
+  runner,
+  { label: '@postkit/chakra Poll' },
+);
+
+registerBehaviorSpec(
+  newsletterSignupBehaviorSpec(
+    testingLibraryDriver(
+      (fixture) => (
+        <NewsletterSignup
+          title={fixture.title}
+          list={fixture.list}
+          emailLabel={fixture.emailLabel}
+          buttonLabel={fixture.buttonLabel}
+          successMessage={fixture.successMessage}
+          errorMessage={fixture.errorMessage}
+        />
+      ),
+      (fixture) => ({ newsletter: fixture.config }),
+    ),
+  ),
+  runner,
+  { label: '@postkit/chakra NewsletterSignup' },
+);
+
+registerBehaviorSpec(
+  shareActionsBehaviorSpec(
+    testingLibraryDriver((fixture) => (
+      <ShareActions
+        url={fixture.url}
+        title={fixture.title}
+        text={fixture.text}
+        label={fixture.label}
+        services={fixture.services}
+        onShare={fixture.onShare}
+      />
+    )),
+  ),
+  runner,
+  { label: '@postkit/chakra ShareActions' },
 );

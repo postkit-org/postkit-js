@@ -109,11 +109,11 @@ consent-to-embed, is written once as a headless hook and shared by every
 renderer. Postkit's Chakra views use the same hooks, and both pass the same
 behaviour tests.
 
-In 0.3.0 every static component has a headless view. An interactive component
-whose behaviour hasn't moved into the shared hooks yet is marked `chakra-only`
-in the manifest and its component page, and needs the Chakra renderer for now.
-
-{/* TODO(0.3.0): list the components that are chakra-only at release (03 D11 consequence; Poll is likely, since its behaviour isn't in 03 §8 step 6). */}
+In 0.3.0 every built-in component has a headless view, the interactive ones
+included: `Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`, `Poll`, `LinkPreview`,
+`NewsletterSignup`, `ShareActions` and `SocialPost` read their behaviour from
+`useTabs`, `useCarousel`, `useCodeCopy`, `useEmbedConsent`, `usePoll`,
+`useNewsletterSignup` and `useShareActions`. None is `chakra-only`.
 
 ## Who uses it
 

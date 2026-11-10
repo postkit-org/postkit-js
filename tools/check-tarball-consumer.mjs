@@ -163,6 +163,17 @@ for (const zagPackage of ['@zag-js/carousel', '@zag-js/tabs', '@zag-js/clipboard
     throw new Error(\`\${zagPackage} resolves to two copies: \${fromCore} and \${fromArk}.\`);
   }
 }
+// The headless hooks in @postkit/react run on the same copy, @zag-js/react included.
+const requireFromReact = createRequire(
+  new URL('./node_modules/@postkit/react/package.json', import.meta.url),
+);
+for (const zagPackage of ['@zag-js/react', '@zag-js/carousel', '@zag-js/tabs', '@zag-js/clipboard', '@zag-js/core']) {
+  const fromReact = requireFromReact.resolve(\`\${zagPackage}/package.json\`);
+  const fromArk = requireFromArk.resolve(\`\${zagPackage}/package.json\`);
+  if (fromReact !== fromArk) {
+    throw new Error(\`\${zagPackage} resolves to two copies: \${fromReact} and \${fromArk}.\`);
+  }
+}
 
 // Core's root and components entries must not load Zag; only /behaviors may.
 const coreDist = new URL('./node_modules/@postkit/core/dist/', import.meta.url);
@@ -210,6 +221,7 @@ import {
 import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { Callout as HeadlessCallout, postkitView, type CalloutProps } from '@postkit/react';
 import '@postkit/react/styles.css';
+import { Tabs as HeadlessTabs, useTabs, type TabsProps } from '@postkit/react';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
@@ -238,6 +250,10 @@ void HeadlessCallout;
 void postkitView;
 const _headlessCalloutProps: CalloutProps = { tone: 'tip', classNames: { icon: 'mark' } };
 void _headlessCalloutProps;
+const _headlessTabsProps: TabsProps = { items: [{ label: 'A', content: 'a' }], classNames: { tab: 'tab' } };
+void _headlessTabsProps;
+void HeadlessTabs;
+void useTabs;
 void PostkitProvider;
 void DocumentRenderer;
 void createPostkitTheme;

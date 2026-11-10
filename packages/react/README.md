@@ -9,23 +9,28 @@ Emotion, no CSS-in-JS.
 > [`@postkit/chakra`](https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme) unchanged: replace the dependency and
 > update imports.
 
-This package is new in 0.3.0. It ships headless views for 26 of the 35
-built-in components, plus `postkitView` for building views from any
-`@postkit/core/components` definition:
+This package is new in 0.3.0. It ships headless views for all 35 built-in
+components, the behaviour hooks the interactive ones are built on, and
+`postkitView` for building views from any `@postkit/core/components`
+definition:
 
 - **Article structure:** `Callout`, `Aside`, `Figure`, `CardGrid`, `Disclosure`,
-  `Gallery`, `Steps`
-- **Technical content:** `Terminal`, `Diff`, `FileTree`, `FileCard`
+  `Gallery`, `Steps`, `Tabs`
+- **Technical content:** `CodeBlock`, `CodeGroup`, `Terminal`, `Diff`,
+  `FileTree`, `FileCard`
 - **Publication:** `PullQuote`, `KeyTakeaway`, `Stat`, `Comparison`,
   `ProductCard`, `RelatedContent`, `SeriesNavigation`, `SponsorBlock`,
   `AudienceBoundary`
 - **Media and discovery:** `AppearsOn`, `Audio`, `AuthorCard`, `CallToAction`,
-  `Chart`, `Video`
+  `Carousel`, `Chart`, `LinkPreview`, `SocialPost`, `Video`
+- **Engagement:** `Poll`, `NewsletterSignup`, `ShareActions`
 
-The other nine are interactive (`Tabs`, `CodeBlock`, `CodeGroup`, `Poll`,
-`Carousel`, `LinkPreview`, `NewsletterSignup`, `ShareActions`, `SocialPost`).
-They render only through `@postkit/chakra` until their behaviour hooks land;
-the `chakraOnly` export lists every such component.
+The nine interactive views (`Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`,
+`Poll`, `LinkPreview`, `NewsletterSignup`, `ShareActions`, `SocialPost`) read
+their behaviour from the [hooks](#behaviour-hooks) below and pass the same
+shared behaviour specs as their `@postkit/chakra` views. No built-in component
+is Chakra-only any more: the `chakraOnly` export is kept as an empty, frozen
+array so code that reads it keeps working.
 
 ## Install
 
@@ -34,7 +39,11 @@ npm install @postkit/react react react-dom
 ```
 
 The package is ESM-only, includes TypeScript declarations, and supports
-React 19.
+React 19. The behaviour hooks run on [Zag](https://zagjs.com) machines, which
+`@postkit/react` takes as peer dependencies (`@zag-js/react`, `@zag-js/tabs`,
+`@zag-js/carousel`, `@zag-js/clipboard`, `@zag-js/core`, `@zag-js/types`, all
+`^1.27.0`). npm installs them for you; in a Chakra UI host they resolve to the
+copy Chakra already uses, so the page bundles Zag once.
 
 ## Render a component
 
@@ -179,6 +188,59 @@ styles, since they describe the content rather than the theme.
 `FileTree` indents each item by its depth with an inline
 `padding-inline-start`, and each `Diff` line carries
 `data-diff="addition" | "deletion" | "context"`.
+
+`CodeBlock` renders its source as plain-text `<span data-line>` lines, with
+`data-highlight` on highlighted ones. Five of its parts also answer to an older
+slot name (`filename` to `title`, `control` to `actions`, `copyTrigger` to
+`button`, `content` to `scroller`, `codeText` to `lineContent`) and take the
+`classNames` and `slotStyles` of both.
+
+## Behaviour hooks
+
+Behaviour is written once, in `@postkit/core/behaviors`, and the hooks are
+thin React wrappers over it. Each returns the behaviour's API: state plus prop
+getters to spread onto your own elements.
+
+| Hook                  | Behaviour                                                          |
+| --------------------- | ------------------------------------------------------------------ |
+| `useTabs`             | Tabs: roving focus, arrow, Home and End keys, automatic activation |
+| `useCarousel`         | Carousel paging: wrapping buttons, keyboard paging, progress text  |
+| `useCodeCopy`         | Copy to clipboard with a timed "copied" state                      |
+| `useEmbedConsent`     | Consent before a third-party embed loads (`activation: 'click'`)   |
+| `usePoll`             | One vote per poll, results and status                              |
+| `useNewsletterSignup` | The signup form's states and host-owned submission                 |
+| `useShareActions`     | Native share, copy link, email and configured share services       |
+
+```tsx
+import { useTabs } from '@postkit/react';
+
+function Install() {
+  const api = useTabs({ values: ['npm', 'pnpm'] });
+  return (
+    <div {...api.getRootProps()}>
+      <div {...api.getListProps()} aria-label="Install">
+        <button {...api.getTriggerProps({ value: 'npm' })}>npm</button>
+        <button {...api.getTriggerProps({ value: 'pnpm' })}>pnpm</button>
+      </div>
+      <div {...api.getContentProps({ value: 'npm' })}>npm install</div>
+      <div {...api.getContentProps({ value: 'pnpm' })}>pnpm add</div>
+    </div>
+  );
+}
+```
+
+`useTabs`, `useCarousel` and `useCodeCopy` are Zag machines configured as
+`@postkit/chakra` configures them; the others are plain TypeScript. With
+`useEmbedConsent`'s default `click` activation, render the prompt until
+`shouldRenderFrame` is true and the frame only after, so nothing from the
+embed's origin reaches the page before the reader asks for it. `LinkPreview`
+and `SocialPost` work this way.
+
+The views that need host configuration take it as props, since the headless
+package has no provider: `LinkPreview` and `SocialPost` take `resolveLink` (an
+`@postkit/unfurl` resolver callback) and `socialServices`,
+`NewsletterSignup` takes `newsletter`, `ShareActions` takes `socialServices`
+and `onShare`, and `Poll` takes `onVote`.
 
 ## Build a view from a definition
 

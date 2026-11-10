@@ -180,3 +180,5 @@ export {
   type VideoSlot,
   type VideoTrack,
 } from './components/video/video.js';
+export * from './hooks/index.js';
+export * from './components/interactive.js';

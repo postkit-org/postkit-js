@@ -20,8 +20,11 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
+import { linkPreviewDefinition } from '@postkit/core/components';
+import { useEmbedConsent } from '@postkit/react';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 
+import { usePostkitChakraAnatomy } from '../../lib/anatomy.js';
 import { usePostkit } from '../../lib/provider.js';
 import { Audio } from '../audio/audio.js';
 import { Carousel } from '../carousel/carousel.js';
@@ -235,7 +238,12 @@ export function LinkPreview({
     className: rootClassName,
     ...restRootProps
   } = rootProps ?? {};
-  const [embedActive, setEmbedActive] = useState(activation === 'immediate');
+  const consent = useEmbedConsent({ activation });
+  const anatomy = usePostkitChakraAnatomy<PostkitLinkPreviewSlot>(
+    linkPreviewDefinition,
+    { href, presentation, images: imageMode, activation, size, variant },
+    { recipeKey: postkitRecipeKeys.linkPreview, unstyled },
+  );
   const title = titleOverride ?? metadata?.title;
   const description = descriptionOverride ?? metadata?.description;
   const siteName =
@@ -273,9 +281,9 @@ export function LinkPreview({
     return (
       <Box
         as="span"
-        data-postkit-component="LinkPreview"
         data-postkit-provider={provider ?? metadata?.provider?.id}
         data-postkit-resolution={resolutionStatus}
+        {...anatomy('root')}
         {...restRootProps}
         className={postkitSlotClassName(
           recipe.classNameMap.root,
@@ -285,6 +293,8 @@ export function LinkPreview({
       >
         <Link
           href={href}
+          {...anatomy('anchor')}
+
           className={recipe.classNameMap.anchor}
           css={[styles.anchor, slotStyles?.anchor]}
         >
@@ -296,10 +306,14 @@ export function LinkPreview({
 
   const siteContent = (
     <Card.Body
+      {...anatomy('content')}
+
       className={recipe.classNameMap.content}
       css={[styles.content, slotStyles?.content]}
     >
       <Flex
+        {...anatomy('siteRow')}
+
         className={recipe.classNameMap.siteRow}
         css={[styles.siteRow, slotStyles?.siteRow]}
       >
@@ -308,12 +322,16 @@ export function LinkPreview({
             src={favicon}
             alt=""
             loading="lazy"
+            {...anatomy('favicon')}
+
             className={recipe.classNameMap.favicon}
             css={[styles.favicon, slotStyles?.favicon]}
           />
         ) : null}
         <Text
           as="span"
+          {...anatomy('siteName')}
+
           className={recipe.classNameMap.siteName}
           css={[styles.siteName, slotStyles?.siteName]}
         >
@@ -323,6 +341,8 @@ export function LinkPreview({
       <Heading
         as="h3"
         size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
+        {...anatomy('title')}
+
         className={recipe.classNameMap.title}
         css={[styles.title, slotStyles?.title]}
       >
@@ -330,6 +350,8 @@ export function LinkPreview({
       </Heading>
       {description ? (
         <Text
+          {...anatomy('description')}
+
           className={recipe.classNameMap.description}
           css={[styles.description, slotStyles?.description]}
         >
@@ -337,6 +359,8 @@ export function LinkPreview({
         </Text>
       ) : null}
       <Text
+        {...anatomy('domain')}
+
         className={recipe.classNameMap.domain}
         css={[styles.domain, slotStyles?.domain]}
       >
@@ -349,6 +373,8 @@ export function LinkPreview({
   if (resolvedPresentation === 'media' && mediaItem) {
     primaryContent = (
       <Box
+        {...anatomy('mediaPlayer')}
+
         className={recipe.classNameMap.mediaPlayer}
         css={[styles.mediaPlayer, slotStyles?.mediaPlayer]}
       >
@@ -384,11 +410,15 @@ export function LinkPreview({
     primaryContent = (
       <AspectRatio
         ratio={numericAspectRatio(embed.aspectRatio)}
+        {...consent.getRootProps()}
+        {...anatomy('embedFrame')}
+
         className={recipe.classNameMap.embedFrame}
         css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
-        {embedActive ? (
+        {consent.shouldRenderFrame ? (
           <LinkPreviewIframe
+            {...consent.getFrameProps()}
             src={embed.src}
             title={
               iframeTitle ?? embed.title ?? title ?? `Embed from ${siteName}`
@@ -398,11 +428,16 @@ export function LinkPreview({
             referrerPolicy="strict-origin-when-cross-origin"
             allow="accelerometer; autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
+            {...anatomy('embed')}
+
             className={recipe.classNameMap.embed}
             css={[styles.embed, slotStyles?.embed]}
           />
         ) : (
           <Box
+            {...consent.getPromptProps()}
+            {...anatomy('consent')}
+
             className={recipe.classNameMap.consent}
             css={[
               styles.consent,
@@ -429,8 +464,9 @@ export function LinkPreview({
           >
             <Text>Load interactive content from {siteName}?</Text>
             <Button
-              type="button"
-              onClick={() => setEmbedActive(true)}
+              {...consent.getRequestTriggerProps()}
+              {...anatomy('consentButton')}
+
               className={recipe.classNameMap.consentButton}
               css={[styles.consentButton, slotStyles?.consentButton]}
             >
@@ -450,6 +486,8 @@ export function LinkPreview({
     primaryContent =
       shownImages.length > 1 ? (
         <Box
+          {...anatomy('carousel')}
+
           className={recipe.classNameMap.carousel}
           css={[styles.carousel, slotStyles?.carousel]}
         >
@@ -471,6 +509,8 @@ export function LinkPreview({
         <Link
           href={href}
           aria-label={`Open ${title ?? domain}`}
+          {...anatomy('media')}
+
           className={recipe.classNameMap.media}
           css={[styles.media, slotStyles?.media]}
         >
@@ -480,6 +520,8 @@ export function LinkPreview({
             htmlWidth={shownImages[0].width}
             htmlHeight={shownImages[0].height}
             loading="lazy"
+            {...anatomy('image')}
+
             className={recipe.classNameMap.image}
             css={[styles.image, slotStyles?.image]}
           />
@@ -490,10 +532,10 @@ export function LinkPreview({
   return (
     <Card.Root
       as="article"
-      data-postkit-component="LinkPreview"
       data-postkit-presentation={resolvedPresentation}
       data-postkit-provider={provider ?? metadata?.provider?.id}
       data-postkit-resolution={resolutionStatus}
+      {...anatomy('root')}
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
@@ -502,6 +544,8 @@ export function LinkPreview({
       <Link
         href={href}
         aria-label={`Open ${title ?? domain}`}
+        {...anatomy('anchor')}
+
         className={recipe.classNameMap.anchor}
         css={[styles.anchor, slotStyles?.anchor]}
       >
