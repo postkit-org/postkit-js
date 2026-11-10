@@ -4,6 +4,37 @@
 
 Postkit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.
 
+## Reference
+
+- [createPostkit](/docs/create-postkit): Configure the components, renderer, defaults and overrides a site uses, in one call.
+- [definePostkitComponent](/docs/define-postkit-component): Define a component's contract once, and derive its types, directive, theming and manifest entry from it.
+- [Manifest](/docs/manifest): The machine-readable catalog of a site's components, for editors, agents and tooling.
+- [CLI](/docs/cli): Add, own and create components from your terminal.
+- [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
+- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
+- [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
+
+## Renderers
+
+- [Headless](/docs/headless): Render Postkit components as semantic, named parts and style them with your own CSS.
+- [Email](/docs/email): Send the post as a newsletter without rewriting it.
+
+## Customizing
+
+- [Defaults and slots](/docs/defaults-and-slots): Change what authors get without asking, and swap a single part of a component for your own.
+- [Views](/docs/views): Replace a component's whole render with your own view, bound to the same definition.
+- [Eject](/docs/eject): Copy a component's view into your repo to own it, while its contract stays upstream.
+- [New components](/docs/new-components): Scaffold a component of your own that gets a directive, validation and a manifest entry for free.
+
+## Writing
+
+- [Validation](/docs/validation): Find out what Postkit checks when a post compiles, what the errors say, and how to fix them.
+- [Writing in Prismark](/docs/writing-in-prismark): Insert and edit Postkit components in Prismark without touching syntax.
+
+## Get started
+
+- [Kits](/docs/kits): Choose the components your writers need, and ship only those.
+
 ## Start here
 
 - [Getting started](/docs/getting-started): Install Postkit, mount its provider, and render a first portable article component.
@@ -27,12 +58,6 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 ## Services
 
 - [Unfurling and oEmbed](/docs/unfurling): Resolve URLs behind a server boundary and render normalized link or social metadata.
-
-## Reference
-
-- [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
-- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
-- [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
 
 ## Help
 
