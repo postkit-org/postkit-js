@@ -3,9 +3,25 @@ import { selectVisibleNotes } from '@postkit/content';
 import { allNotesEntries } from 'content-collections';
 import { serialize } from 'next-mdx-remote/serialize';
 
-import type { NoteEntry, NoteSummary } from './notes';
+import { componentEntries, componentNameToSlug } from './components';
+import type { NoteComponentLink, NoteEntry, NoteSummary } from './notes';
 
 type GeneratedNotesEntry = (typeof allNotesEntries)[number];
+
+/** Words per minute for the "min read" line. */
+const READING_WORDS_PER_MINUTE = 230;
+
+/**
+ * Minutes to read a note's MDX, rounded up (at least 1). MDX comments and import/export
+ * lines don't count; prop strings (Steps items, a KeyTakeaway) do, since they're read.
+ */
+export function readingMinutes(content: string): number {
+  const text = content
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, ' ')
+    .replace(/^(?:import|export)\s.*$/gm, ' ');
+  const words = text.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)?.length ?? 0;
+  return Math.max(1, Math.ceil(words / READING_WORDS_PER_MINUTE));
+}
 
 function toSummary(entry: GeneratedNotesEntry): NoteSummary {
   return {
@@ -24,6 +40,7 @@ function toSummary(entry: GeneratedNotesEntry): NoteSummary {
       ? { placement: entry.footnotes.placement }
       : null,
     status: entry.status,
+    readingMinutes: readingMinutes(entry.content),
   };
 }
 
@@ -43,6 +60,39 @@ export function getNotes(): NoteSummary[] {
     );
 }
 
+interface MdastNode {
+  readonly type: string;
+  readonly name?: string | null;
+  readonly children?: readonly MdastNode[];
+}
+
+const catalogByName = new Map<string, (typeof componentEntries)[number]>(
+  componentEntries.map((component) => [component.name, component]),
+);
+
+/**
+ * A remark plugin that records the Postkit components an MDX body uses, in order of first
+ * use. It reads the parsed tree (after the Postkit preset turns directives into elements), so
+ * a component named inside a prop string, like the CodeBlock sample, doesn't count.
+ */
+function collectPostkitComponents(found: string[]) {
+  return () => (tree: MdastNode) => {
+    const visit = (node: MdastNode) => {
+      if (
+        (node.type === 'mdxJsxFlowElement' ||
+          node.type === 'mdxJsxTextElement') &&
+        node.name &&
+        catalogByName.has(node.name) &&
+        !found.includes(node.name)
+      ) {
+        found.push(node.name);
+      }
+      node.children?.forEach(visit);
+    };
+    visit(tree);
+  };
+}
+
 export async function getNote(slug: string): Promise<NoteEntry> {
   const entry = visibleNotesEntries().find(
     (candidate) => candidate.slug === slug,
@@ -52,13 +102,36 @@ export async function getNote(slug: string): Promise<NoteEntry> {
     throw new TypeError(`Unknown note slug "${slug}".`);
   }
 
+  const used: string[] = [];
+
   // GFM footnotes come from the preset's remark-gfm; keep this call in step
   // with libs/content/src/lib/notes.spec.ts, which compiles every note with it.
   const source = await serialize(entry.content, {
     mdxOptions: {
-      remarkPlugins: createPostkitRemarkPlugins(),
+      remarkPlugins: [
+        ...createPostkitRemarkPlugins(),
+        collectPostkitComponents(used),
+      ],
+      remarkRehypeOptions: {
+        // Footnote ids are prefixed per note (`{slug}-fn-…`), so pages that show several
+        // notes never collide (03 §7.1). The hidden list heading reads "Notes", as on the board.
+        clobberPrefix: `${slug}-`,
+        footnoteLabel: 'Notes',
+      },
     },
   });
 
-  return { ...toSummary(entry), source };
+  const components: NoteComponentLink[] = used.flatMap((name) => {
+    const component = catalogByName.get(name);
+    return component
+      ? [
+          {
+            name: component.name,
+            href: `/components/${componentNameToSlug(component.name)}`,
+          },
+        ]
+      : [];
+  });
+
+  return { ...toSummary(entry), source, components };
 }
