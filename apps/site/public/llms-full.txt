@@ -429,8 +429,14 @@ Markdown is transformed. By default the transform throws when a directive:
 - omits a required prop.
 
 This makes malformed authored content fail a site build instead of silently
-changing behavior. Directives whose name is not a Postkit component are left
-untouched.
+changing behavior. Errors name the line and column, and the file when the build
+passes one.
+
+A directive that uses the `postkit-` prefix but names no Postkit component also
+fails the build in strict mode (the default), and warns when `strict` is off.
+Anything else that only looks like a directive stays literal text, so ratios
+like 4.5:1, times like 10:30 and URLs with ports render as written. See
+[Validation](/docs/validation) for the full rules.
 
 ## Choose one syntax per file
 
