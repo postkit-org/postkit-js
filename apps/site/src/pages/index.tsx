@@ -20,6 +20,7 @@ import {
   type HomeStats,
 } from '../components/home/home-data.server';
 import { PageMeta, WebSiteJsonLd } from '../components/layout';
+import { trackGoal } from '../lib/analytics';
 
 interface HomePageProps {
   readonly stats: HomeStats;
@@ -61,9 +62,7 @@ export default function IndexPage({
       />
       <InstallCta
         command={installCommand}
-        onCopy={() => {
-          // PK-004: trackGoal('copy-install')
-        }}
+        onCopy={() => trackGoal('copy-install')}
       />
     </>
   );
