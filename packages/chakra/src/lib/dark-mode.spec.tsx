@@ -130,13 +130,25 @@ function colorProblem(
 
 describe('Postkit dark mode', () => {
   describe('recipes use semantic colours only', () => {
-    const recipeDirectory = join(__dirname, 'recipes');
-    const recipeFiles = readdirSync(recipeDirectory).filter((file) =>
-      file.endsWith('.recipe.ts'),
-    );
+    // Recipes live in `lib/recipes` and, since 03 step 7, in each component's
+    // folder under `src/components`. Scan both so moved recipes stay checked.
+    const sourceRoot = join(__dirname, '..');
+    const recipeFiles = (
+      readdirSync(sourceRoot, { recursive: true }) as string[]
+    )
+      .filter((file) => file.endsWith('.recipe.ts'))
+      .sort();
+
+    it('finds the recipes in both places', () => {
+      expect(recipeFiles.some((file) => file.startsWith('lib'))).toBe(true);
+      expect(recipeFiles.some((file) => file.startsWith('components'))).toBe(
+        true,
+      );
+      expect(recipeFiles.length).toBeGreaterThanOrEqual(35);
+    });
 
     it.each(recipeFiles)('%s has no raw colour literals', (file) => {
-      const source = readFileSync(join(recipeDirectory, file), 'utf8')
+      const source = readFileSync(join(sourceRoot, file), 'utf8')
         // Comments may name raw colours when explaining a choice.
         .replace(/\/\*[\s\S]*?\*\//g, '')
         .replace(/\/\/.*$/gm, '');

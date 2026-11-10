@@ -9,14 +9,23 @@ Emotion, no CSS-in-JS.
 > [`@postkit/chakra`](https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme) unchanged: replace the dependency and
 > update imports.
 
-This package is new in 0.3.0 and grows component by component. It currently
-ships `Callout`, `Aside` and `Figure`, plus `postkitView` for building views
-from any `@postkit/core/components` definition.
+This package is new in 0.3.0. It ships headless views for 26 of the 35
+built-in components, plus `postkitView` for building views from any
+`@postkit/core/components` definition:
 
-Technical content: `Terminal`, `Diff`, `FileTree` and `FileCard`.
-`CodeBlock` and `CodeGroup` are interactive and render only through
-`@postkit/chakra` until their behaviour hooks land; the `chakraOnly` export
-lists every such component.
+- **Article structure:** `Callout`, `Aside`, `Figure`, `CardGrid`, `Disclosure`,
+  `Gallery`, `Steps`
+- **Technical content:** `Terminal`, `Diff`, `FileTree`, `FileCard`
+- **Publication:** `PullQuote`, `KeyTakeaway`, `Stat`, `Comparison`,
+  `ProductCard`, `RelatedContent`, `SeriesNavigation`, `SponsorBlock`,
+  `AudienceBoundary`
+- **Media and discovery:** `AppearsOn`, `Audio`, `AuthorCard`, `CallToAction`,
+  `Chart`, `Video`
+
+The other nine are interactive (`Tabs`, `CodeBlock`, `CodeGroup`, `Poll`,
+`Carousel`, `LinkPreview`, `NewsletterSignup`, `ShareActions`, `SocialPost`).
+They render only through `@postkit/chakra` until their behaviour hooks land;
+the `chakraOnly` export lists every such component.
 
 ## Install
 
