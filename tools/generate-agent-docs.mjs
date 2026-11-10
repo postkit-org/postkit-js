@@ -58,8 +58,18 @@ function requiredCategory(data, filename) {
 }
 
 // MDX comments (`{/* TODO … */}`) are notes for maintainers, not reader content.
+// Fenced code blocks are left alone: JSX comments there are part of the example.
 function stripMdxComments(markdown) {
-  return markdown.replace(/^[ \t]*\{\/\*[\s\S]*?\*\/\}[ \t]*\n?/gm, '').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+  return markdown
+    .split(/(^```[\s\S]*?^```[ \t]*$)/m)
+    .map((part, index) =>
+      index % 2 === 1
+        ? part
+        : part
+            .replace(/^[ \t]*\{\/\*[\s\S]*?\*\/\}[ \t]*\n?/gm, '')
+            .replace(/\{\/\*[\s\S]*?\*\/\}/g, ''),
+    )
+    .join('');
 }
 
 const documents = readdirSync(docsDirectory)

@@ -110,7 +110,7 @@ export default function IndexPage({
               </Text>
               <Flex gap="3" flexWrap="wrap">
                 <Button asChild colorPalette="green" size="lg">
-                  <NextLink href="/docs/getting-started">Get started</NextLink>
+                  <NextLink href="/docs/quick-start">Get started</NextLink>
                 </Button>
                 <Button asChild size="lg" variant="outline">
                   <NextLink href="/components">Explore components</NextLink>
