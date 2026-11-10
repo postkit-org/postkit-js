@@ -6,6 +6,11 @@ site's emails (`docs/design/handoff/specs/02-design-system.md`).
 - `src/tokens.json` is the source of truth (copied from the handoff).
 - `siteConfig` / `siteSystem` turn it into a Chakra system with light and dark
   semantic tokens. `theme.spec.ts` fails if `theme.ts` drifts from `tokens.json`.
+- `siteRecipes` (`siteButton`, `siteKbd`) and `siteSlotRecipes` (`siteSegmentedControl`,
+  `siteTextField`, `siteTile`) are the site primitives from the Interaction states board,
+  registered on `siteConfig`. They're prefixed `site` so Chakra's built-in recipes, which
+  Postkit's components use, keep their look. The React wrappers live in
+  `apps/site/src/components/primitives`.
 - `tokens` exports the raw values for email templates, which can't use the Chakra system.
 - `fontStacks` reads `--font-inter-tight` and `--font-jetbrains-mono` (set by the app's
   `next/font` loaders) and falls back to the family names.

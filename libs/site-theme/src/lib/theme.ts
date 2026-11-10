@@ -6,6 +6,8 @@
 // fallback, so the stacks still work where those variables aren't set (emails, tests).
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 
+import { siteRecipes, siteSlotRecipes } from './recipes';
+
 // Chakra's own semantic tokens use `_light` / `_dark`. Overriding them with `base`
 // alone leaves Chakra's `_light` value in place, so set both conditions explicitly.
 const mode = (light: string, dark: string) => ({
@@ -60,6 +62,10 @@ export const siteConfig = defineConfig({
       xl: '1200px',
       '2xl': '1440px',
     },
+    // Site primitives (PK-014). Named `site*` so Chakra's built-in recipes, which Postkit's
+    // components render with, keep their look inside the site.
+    recipes: siteRecipes,
+    slotRecipes: siteSlotRecipes,
     tokens: {
       fonts: {
         body: { value: fontStacks.sans },
@@ -138,6 +144,7 @@ export const siteConfig = defineConfig({
           raised: mode('#FFFFFF', '#3A3A3C'),
           inverted: mode('#1D1D1F', '#F5F5F7'),
           invertedHover: mode('#3A3A3C', '#D1D1D6'),
+          invertedPressed: mode('#000000', '#FFFFFF'),
           code: mode('#1D1D1F', '#161618'),
           glass: mode('rgba(255,255,255,0.62)', 'rgba(15,15,17,0.66)'),
           scrim: mode('rgba(29,29,31,0.30)', 'rgba(0,0,0,0.60)'),
