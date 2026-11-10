@@ -1,3 +1,6 @@
+import { postkitBuiltInDefinitions } from '@postkit/core/components';
+
+import { postkitDefaultTheme, postkitRecipeKeys } from '../theme.js';
 import { postkitAudioRecipe, postkitAudioSlots } from './audio.recipe.js';
 import {
   postkitAuthorCardRecipe,
@@ -172,3 +175,60 @@ import {
   postkitAppearsOnRecipe,
   postkitAppearsOnSlots,
 } from './appears-on.recipe.js';
+
+describe('D12: subtle is the default variant', () => {
+  /*
+   * Figure is being migrated to `postkitChakraView` (03 step 5) and still
+   * defaults to plain; it joins this check when that lands. Aside shares the
+   * Callout recipe, so it has no recipe key of its own.
+   */
+  const pending = new Set<string>(['Figure']);
+  const themed = Object.values(postkitBuiltInDefinitions).filter(
+    (definition) => definition.name !== 'Aside',
+  );
+  const slotRecipes = postkitDefaultTheme.theme?.slotRecipes ?? {};
+
+  it.each(themed.map((definition) => [definition.name, definition] as const))(
+    "%s's recipe default variant matches its definition",
+    (name, definition) => {
+      const themeKey = (name.charAt(0).toLowerCase() +
+        name.slice(1)) as keyof typeof postkitRecipeKeys;
+      const recipe = slotRecipes[postkitRecipeKeys[themeKey]];
+      const props = definition.props as {
+        readonly variant?: { readonly default?: unknown };
+      };
+
+      expect(recipe).toBeDefined();
+      expect(props.variant?.default).toBe('subtle');
+      if (pending.has(name)) return;
+      expect(recipe?.defaultVariants?.variant).toBe('subtle');
+      // Subtle fills a quiet surface, so it must style something.
+      expect(
+        Object.keys(recipe?.variants?.variant?.subtle ?? {}),
+      ).not.toHaveLength(0);
+    },
+  );
+
+  it('keeps the code surfaces ink when subtle', () => {
+    for (const recipe of [
+      postkitStandaloneCodeBlockRecipe,
+      postkitStandaloneCodeGroupRecipe,
+      postkitStandaloneTerminalRecipe,
+    ]) {
+      expect(recipe.defaultVariants?.variant).toBe('subtle');
+      expect(recipe.variants?.variant?.subtle).toEqual({
+        root: { background: 'bg.code' },
+      });
+    }
+    // The host-native fallbacks render without the preset's ink token.
+    for (const recipe of [
+      postkitCodeBlockRecipe,
+      postkitCodeGroupRecipe,
+      postkitTerminalRecipe,
+    ]) {
+      expect(recipe.variants?.variant?.subtle).toEqual({
+        root: { background: 'bg.subtle' },
+      });
+    }
+  });
+});

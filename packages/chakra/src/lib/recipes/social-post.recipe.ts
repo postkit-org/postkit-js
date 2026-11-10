@@ -228,7 +228,7 @@ export const postkitSocialPostRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
     branding: 'subtle',
     presentation: 'auto',
   },

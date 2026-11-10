@@ -102,6 +102,6 @@ export const postkitCarouselRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
   },
 });

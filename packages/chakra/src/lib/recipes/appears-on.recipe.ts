@@ -93,9 +93,17 @@ export const postkitAppearsOnRecipe = defineSlotRecipe({
       card: {},
     },
   },
+  compoundVariants: [
+    {
+      // Badges are `bg.muted` too, so on the subtle surface they lift to `bg`.
+      variant: 'subtle',
+      presentation: 'badges',
+      css: { item: { background: 'bg' } },
+    },
+  ],
   defaultVariants: {
     size: 'md',
-    variant: 'plain',
+    variant: 'subtle',
     presentation: 'inline',
   },
 });

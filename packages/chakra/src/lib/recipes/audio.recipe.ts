@@ -63,6 +63,6 @@ export const postkitAudioRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
   },
 });

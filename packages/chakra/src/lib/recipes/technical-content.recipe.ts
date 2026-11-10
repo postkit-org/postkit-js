@@ -25,6 +25,16 @@ export const postkitCodeBlockSlots = [
   'lineNumber',
 ] as const;
 export type PostkitCodeBlockSlot = (typeof postkitCodeBlockSlots)[number];
+
+// Shared by the host-native and standalone recipes, which differ only in subtle.
+const codeBlockSizes = {
+  sm: { code: { fontSize: 'xs' } },
+  md: { code: { fontSize: 'sm' } },
+  lg: { code: { fontSize: 'md' } },
+};
+const codeBlockOutline = { root: { borderColor: 'border' } };
+const codeBlockPlain = { root: { borderRadius: '0', borderWidth: '0' } };
+
 export const postkitCodeBlockRecipe = defineSlotRecipe({
   className: 'postkit-code-block',
   slots: postkitCodeBlockSlots,
@@ -72,18 +82,14 @@ export const postkitCodeBlockRecipe = defineSlotRecipe({
     },
   },
   variants: {
-    size: {
-      sm: { code: { fontSize: 'xs' } },
-      md: { code: { fontSize: 'sm' } },
-      lg: { code: { fontSize: 'md' } },
-    },
+    size: codeBlockSizes,
     variant: {
-      outline: { root: { borderColor: 'border' } },
+      outline: codeBlockOutline,
       subtle: { root: { background: 'bg.subtle' } },
-      plain: { root: { borderRadius: '0', borderWidth: '0' } },
+      plain: codeBlockPlain,
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 /**
@@ -139,12 +145,32 @@ export const postkitStandaloneCodeBlockRecipe = defineSlotRecipe({
       color: 'fg.onCodeFaint',
     },
   },
-  variants: postkitCodeBlockRecipe.variants,
-  defaultVariants: postkitCodeBlockRecipe.defaultVariants,
+  variants: {
+    size: codeBlockSizes,
+    variant: {
+      outline: codeBlockOutline,
+      // Subtle is the code surface itself (ink), not the host's `bg.subtle`:
+      // the text here is `fg.onCode`, so a light fill would lose contrast.
+      subtle: { root: { background: 'bg.code' } },
+      plain: codeBlockPlain,
+    },
+  },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitCodeGroupSlots = ['root', 'tabs', 'tab', 'panel'] as const;
 export type PostkitCodeGroupSlot = (typeof postkitCodeGroupSlots)[number];
+
+// Shared by the host-native and standalone recipes, which differ only in subtle.
+const codeGroupSizes = {
+  sm: { tab: { fontSize: 'xs' } },
+  md: {},
+  lg: { tab: { fontSize: 'md' } },
+};
+const codeGroupOutline = {
+  root: { borderColor: 'border', borderWidth: '1px' },
+};
+
 export const postkitCodeGroupRecipe = defineSlotRecipe({
   className: 'postkit-code-group',
   slots: postkitCodeGroupSlots,
@@ -171,18 +197,14 @@ export const postkitCodeGroupRecipe = defineSlotRecipe({
     panel: { minWidth: '0' },
   },
   variants: {
-    size: {
-      sm: { tab: { fontSize: 'xs' } },
-      md: {},
-      lg: { tab: { fontSize: 'md' } },
-    },
+    size: codeGroupSizes,
     variant: {
-      outline: { root: { borderColor: 'border', borderWidth: '1px' } },
-      subtle: { root: { boxShadow: 'sm' } },
+      outline: codeGroupOutline,
+      subtle: { root: { background: 'bg.subtle' } },
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitStandaloneCodeGroupRecipe = defineSlotRecipe({
@@ -203,8 +225,16 @@ export const postkitStandaloneCodeGroupRecipe = defineSlotRecipe({
       },
     },
   },
-  variants: postkitCodeGroupRecipe.variants,
-  defaultVariants: postkitCodeGroupRecipe.defaultVariants,
+  variants: {
+    size: codeGroupSizes,
+    variant: {
+      outline: codeGroupOutline,
+      // Subtle is the code surface itself (ink), like CodeBlock's.
+      subtle: { root: { background: 'bg.code' } },
+      plain: {},
+    },
+  },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitTerminalSlots = [
@@ -255,11 +285,13 @@ export const postkitTerminalRecipe = defineSlotRecipe({
     },
     variant: {
       outline: { root: { borderColor: 'border', borderWidth: '1px' } },
-      subtle: { root: { boxShadow: 'md' } },
+      // Without the preset there's no ink token, so the host-native fallback
+      // takes the host's quiet surface instead.
+      subtle: { root: { background: 'bg.subtle' } },
       plain: { root: { borderRadius: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitStandaloneTerminalRecipe = defineSlotRecipe({
@@ -307,11 +339,12 @@ export const postkitStandaloneTerminalRecipe = defineSlotRecipe({
       outline: {
         root: { borderColor: 'border.code', borderWidth: '1px' },
       },
-      subtle: { root: { boxShadow: 'md' } },
+      // Terminal's subtle surface is ink (D12).
+      subtle: { root: { background: 'bg.code' } },
       plain: { root: { borderRadius: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitDiffSlots = [
@@ -366,7 +399,7 @@ export const postkitDiffRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitFileTreeSlots = [
@@ -420,7 +453,7 @@ export const postkitFileTreeRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitFileCardSlots = [
@@ -482,5 +515,5 @@ export const postkitFileCardRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });

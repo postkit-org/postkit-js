@@ -207,7 +207,7 @@ export const postkitLinkPreviewRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
     presentation: 'card',
     compact: false,
   },

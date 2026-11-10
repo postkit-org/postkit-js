@@ -130,7 +130,7 @@ export const postkitGalleryRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'plain' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitDisclosureSlots = [
@@ -169,7 +169,7 @@ export const postkitDisclosureRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitTabsSlots = [
@@ -229,7 +229,7 @@ export const postkitTabsRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitStepsSlots = [
@@ -302,7 +302,7 @@ export const postkitStepsRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'plain' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitCardGridSlots = [
@@ -364,5 +364,5 @@ export const postkitCardGridRecipe = defineSlotRecipe({
       plain: { cardBody: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });

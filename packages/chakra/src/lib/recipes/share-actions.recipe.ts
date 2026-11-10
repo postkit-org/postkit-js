@@ -84,7 +84,7 @@ export const postkitShareActionsRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
     layout: 'buttons',
   },
 });

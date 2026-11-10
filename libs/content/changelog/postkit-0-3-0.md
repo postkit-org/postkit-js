@@ -47,6 +47,9 @@ deliberate break before 1.0.
   until 0.3.x, and the component manifest marks them.
 - Chakra recipes follow the host's colour mode, with dark values for every
   colour in `postkitDefaultTheme`.
+- Every component now defaults to the subtle variant (D12). Pass
+  `variant="outline"`, or set `defaults` in `createPostkit`, to keep the 0.2
+  look.
 - Email support is computed from what the email renderer exports, and every
   component declares an email fallback.
 - Callout accepts `type` as an alias for `tone` in directives.

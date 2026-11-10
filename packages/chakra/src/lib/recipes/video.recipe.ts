@@ -65,6 +65,6 @@ export const postkitVideoRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'plain',
+    variant: 'subtle',
   },
 });

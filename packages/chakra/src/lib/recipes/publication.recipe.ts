@@ -54,7 +54,7 @@ export const postkitPullQuoteRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'plain' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitKeyTakeawaySlots = [
@@ -154,7 +154,7 @@ export const postkitStatRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitComparisonSlots = [
@@ -213,7 +213,7 @@ export const postkitComparisonRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitPollSlots = [
@@ -281,7 +281,7 @@ export const postkitPollRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitProductCardSlots = [
@@ -366,7 +366,7 @@ export const postkitProductCardRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitRelatedContentSlots = [
@@ -422,7 +422,7 @@ export const postkitRelatedContentRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'plain' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitSeriesNavigationSlots = [
@@ -483,7 +483,7 @@ export const postkitSeriesNavigationRecipe = defineSlotRecipe({
       plain: { root: { paddingInline: '0' } },
     },
   },
-  defaultVariants: { size: 'md', variant: 'outline' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });
 
 export const postkitSponsorBlockSlots = [
@@ -585,6 +585,7 @@ export const postkitAudienceBoundaryRecipe = defineSlotRecipe({
         },
       },
       subtle: {
+        root: { background: 'bg.subtle', borderRadius: 'xl', padding: '4' },
         label: {
           background: 'bg.muted',
           borderRadius: 'full',
@@ -596,5 +597,5 @@ export const postkitAudienceBoundaryRecipe = defineSlotRecipe({
       plain: {},
     },
   },
-  defaultVariants: { size: 'md', variant: 'plain' },
+  defaultVariants: { size: 'md', variant: 'subtle' },
 });

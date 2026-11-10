@@ -116,6 +116,6 @@ export const postkitAuthorCardRecipe = defineSlotRecipe({
   defaultVariants: {
     presentation: 'card',
     size: 'md',
-    variant: 'plain',
+    variant: 'subtle',
   },
 });

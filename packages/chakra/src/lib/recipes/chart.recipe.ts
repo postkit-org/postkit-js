@@ -143,6 +143,6 @@ export const postkitChartRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'outline',
+    variant: 'subtle',
   },
 });
