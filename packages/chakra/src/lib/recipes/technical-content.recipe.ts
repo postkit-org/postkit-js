@@ -86,6 +86,13 @@ export const postkitCodeBlockRecipe = defineSlotRecipe({
   defaultVariants: { size: 'md', variant: 'outline' },
 });
 
+/**
+ * The standalone code surfaces (CodeBlock, CodeGroup, Terminal) are a
+ * documented exception to following the host's colour mode: they keep their
+ * own dark surface in both modes. They express it through the `bg.code*`,
+ * `fg.onCode*` and `border.code*` semantic tokens from `postkitDefaultTheme`,
+ * whose light and dark values are both dark, so a host can restyle them.
+ */
 export const postkitStandaloneCodeBlockRecipe = defineSlotRecipe({
   className: 'postkit-code-block',
   slots: postkitCodeBlockSlots,
@@ -93,13 +100,13 @@ export const postkitStandaloneCodeBlockRecipe = defineSlotRecipe({
     ...postkitCodeBlockRecipe.base,
     root: {
       ...postkitCodeBlockRecipe.base?.root,
-      background: 'gray.950',
+      background: 'bg.code',
       borderRadius: 'xl',
-      color: 'gray.100',
+      color: 'fg.onCode',
     },
     header: {
       ...postkitCodeBlockRecipe.base?.header,
-      borderBottomColor: 'whiteAlpha.300',
+      borderBottomColor: 'border.codeDivider',
       borderBottomWidth: '1px',
       gap: '3',
       paddingBlock: '2',
@@ -112,7 +119,7 @@ export const postkitStandaloneCodeBlockRecipe = defineSlotRecipe({
     },
     language: {
       ...postkitCodeBlockRecipe.base?.language,
-      color: 'gray.400',
+      color: 'fg.onCodeMuted',
     },
     control: {
       ...postkitCodeBlockRecipe.base?.control,
@@ -129,7 +136,7 @@ export const postkitStandaloneCodeBlockRecipe = defineSlotRecipe({
     },
     lineNumber: {
       ...postkitCodeBlockRecipe.base?.lineNumber,
-      color: 'gray.600',
+      color: 'fg.onCodeFaint',
     },
   },
   variants: postkitCodeBlockRecipe.variants,
@@ -185,12 +192,15 @@ export const postkitStandaloneCodeGroupRecipe = defineSlotRecipe({
     ...postkitCodeGroupRecipe.base,
     tabs: {
       ...postkitCodeGroupRecipe.base?.tabs,
-      background: 'gray.900',
+      background: 'bg.codeMuted',
     },
     tab: {
       ...postkitCodeGroupRecipe.base?.tab,
-      color: 'gray.400',
-      _selected: { background: 'whiteAlpha.200', color: 'white' },
+      color: 'fg.onCodeMuted',
+      _selected: {
+        background: 'bg.codeSelected',
+        color: 'fg.onCodeEmphasized',
+      },
     },
   },
   variants: postkitCodeGroupRecipe.variants,
@@ -259,32 +269,32 @@ export const postkitStandaloneTerminalRecipe = defineSlotRecipe({
     ...postkitTerminalRecipe.base,
     root: {
       ...postkitTerminalRecipe.base?.root,
-      background: 'gray.950',
-      color: 'gray.100',
+      background: 'bg.code',
+      color: 'fg.onCode',
     },
     header: {
       ...postkitTerminalRecipe.base?.header,
-      background: 'gray.900',
+      background: 'bg.codeMuted',
     },
     dots: {
       ...postkitTerminalRecipe.base?.dots,
-      color: 'gray.500',
+      color: 'fg.onCodeSubtle',
     },
     title: {
       ...postkitTerminalRecipe.base?.title,
-      color: 'gray.400',
+      color: 'fg.onCodeMuted',
     },
     prompt: {
       ...postkitTerminalRecipe.base?.prompt,
-      color: 'green.300',
+      color: 'fg.onCodeSuccess',
     },
     command: {
       ...postkitTerminalRecipe.base?.command,
-      color: 'white',
+      color: 'fg.onCodeEmphasized',
     },
     output: {
       ...postkitTerminalRecipe.base?.output,
-      color: 'gray.400',
+      color: 'fg.onCodeMuted',
     },
   },
   variants: {
@@ -295,7 +305,7 @@ export const postkitStandaloneTerminalRecipe = defineSlotRecipe({
     },
     variant: {
       outline: {
-        root: { borderColor: 'border.inverted', borderWidth: '1px' },
+        root: { borderColor: 'border.code', borderWidth: '1px' },
       },
       subtle: { root: { boxShadow: 'md' } },
       plain: { root: { borderRadius: '0' } },

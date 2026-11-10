@@ -117,14 +117,14 @@ describe('Postkit slot recipes', () => {
     expect(postkitTerminalRecipe.base?.output?.color).toBe('fg.muted');
 
     expect(postkitStandaloneCodeBlockRecipe.base?.root).toMatchObject({
-      background: 'gray.950',
-      color: 'gray.100',
+      background: 'bg.code',
+      color: 'fg.onCode',
     });
     expect(postkitStandaloneCodeGroupRecipe.base?.tabs?.background).toBe(
-      'gray.900',
+      'bg.codeMuted',
     );
     expect(postkitStandaloneTerminalRecipe.base?.root?.background).toBe(
-      'gray.950',
+      'bg.code',
     );
   });
 

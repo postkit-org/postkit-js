@@ -18,7 +18,8 @@ export const postkitVideoRecipe = defineSlotRecipe({
       margin: '0',
     },
     frame: {
-      background: 'black',
+      // Intentional: letterboxing stays black in both colour modes.
+      background: 'bg.letterbox',
       overflow: 'hidden',
       lineHeight: '0',
     },
@@ -32,7 +33,8 @@ export const postkitVideoRecipe = defineSlotRecipe({
       color: 'fg.muted',
     },
     fallback: {
-      color: 'white',
+      // Rendered inside the letterboxed frame, so it uses the frame's text colour.
+      color: 'fg.onLetterbox',
       textDecoration: 'underline',
     },
   },
