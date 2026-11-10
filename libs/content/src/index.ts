@@ -28,7 +28,15 @@ export {
   type NotesEntryData,
 } from './lib/notes.js';
 export {
+  componentAnatomyBoxSchema,
+  componentAnatomyLayerSchema,
+  componentAnatomySchema,
+  componentNameSchema,
+  componentNameToPageSlug,
   componentPageSchema,
+  componentPageSlugToName,
   createComponentPagesCollection,
+  type ComponentAnatomy,
+  type ComponentAnatomyLayer,
   type ComponentPageData,
 } from './lib/component-pages.js';
