@@ -4,6 +4,8 @@ import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 export interface SegmentedControlItem<V extends string = string> {
   value: V;
   label: ReactNode;
+  /** The accessible name, for segments whose label is an icon. Also shown as a tooltip. */
+  ariaLabel?: string;
   disabled?: boolean;
 }
 
@@ -16,6 +18,8 @@ export interface SegmentedControlProps<V extends string = string> {
   onValueChange?: (value: V) => void;
   /** Stretch the track to its container, as the phone boards do. */
   fullWidth?: boolean;
+  /** `icon`: 30×24 icon segments on a 2px track (the footer theme switch). */
+  size?: 'md' | 'icon';
   'aria-label'?: string;
   'aria-labelledby'?: string;
   id?: string;
@@ -38,12 +42,13 @@ export function SegmentedControl<V extends string = string>({
   defaultValue,
   onValueChange,
   fullWidth = false,
+  size = 'md',
   id,
   className,
   ...aria
 }: SegmentedControlProps<V>) {
   const recipe = useSlotRecipe({ key: 'siteSegmentedControl' });
-  const styles = recipe({ fullWidth });
+  const styles = recipe({ fullWidth, size });
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const selected = value !== undefined ? value : uncontrolled;
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -111,6 +116,8 @@ export function SegmentedControl<V extends string = string>({
             type="button"
             role="radio"
             aria-checked={checked}
+            aria-label={item.ariaLabel}
+            title={item.ariaLabel}
             aria-disabled={item.disabled || undefined}
             data-state={checked ? 'checked' : 'unchecked'}
             tabIndex={index === tabStop ? 0 : -1}

@@ -1,0 +1,75 @@
+import { Box, chakra } from '@chakra-ui/react';
+import { gradients } from '@postkit/site-theme';
+
+/** The band's own breakpoint (02 §4): it switches at 767px, not at the site's 760px. */
+const narrow = '@media (max-width: 767px)';
+
+export const COMMUNE_URL = 'https://commune.software/open-source/postkit';
+
+/**
+ * The Commune band (01 §4): a full-width 4px gradient rule, then a black band with "By"
+ * and the Commune wordmark at full width. It doesn't change with the theme (01 §11).
+ *
+ * It sits after the footer, so it's its own (labelled) landmark: content outside every
+ * landmark fails axe's `region` rule, and a second `contentinfo` would fail its own.
+ */
+export function CommuneBand() {
+  return (
+    <chakra.aside aria-label="Made by Commune">
+      <Box aria-hidden="true" height="4px" backgroundImage={gradients.brand} />
+      <Box bg="bg.commune" color="fg.commune">
+        <Box
+          maxW="content"
+          boxSizing="content-box"
+          marginInline="auto"
+          display="flex"
+          flexDirection="column"
+          gap="4px"
+          paddingTop="32px"
+          paddingInline="gutter"
+          paddingBottom="32px"
+          css={{ [narrow]: { paddingTop: '24px', paddingBottom: '20px' } }}
+        >
+          <chakra.p
+            margin="0"
+            fontSize="24px"
+            fontWeight="medium"
+            lineHeight="1.2"
+            color="fg.communeBy"
+            css={{ [narrow]: { fontSize: '18px' } }}
+          >
+            By
+          </chakra.p>
+          <chakra.a
+            href={COMMUNE_URL}
+            aria-label="Commune Software"
+            display="block"
+            color="fg.commune"
+            textDecoration="none"
+            borderRadius="xs"
+          >
+            <CommuneWordmark />
+          </chakra.a>
+        </Box>
+      </Box>
+    </chakra.aside>
+  );
+}
+
+/** `docs/design/handoff/assets/brand/commune-wordmark.svg`, in `currentColor`. */
+function CommuneWordmark() {
+  return (
+    <chakra.svg
+      viewBox="0 0 832 160"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+      display="block"
+      width="100%"
+      height="auto"
+    >
+      <path d="M738.674 4.053h92.432v17.004h-74.12v50.576h72.812v17.004h-72.812v51.012h75.428v17.004h-93.74zM687.814 148.805h2.616V4.053h18.312v152.6h-36.624L628.082 11.901h-2.616v144.752h-18.312V4.053h36.624zM496.998 4.053v101.152q0 18.53 8.502 28.122 8.72 9.374 25.506 9.374t25.288-9.374q8.72-9.593 8.72-28.122V4.053h18.312v101.152q0 26.595-13.952 40.548-13.953 13.952-38.368 13.952-24.417 0-38.368-13.952t-13.952-40.548V4.053zM347.383 4.053h34.88l20.492 144.752h2.616L425.863 4.053h34.88v152.6h-17.004V11.901h-2.616l-20.492 144.752h-33.136L367.003 11.901h-2.616v144.752h-17.004z" />
+      <path d="M250.961 4.053h34.88l20.492 144.752h2.616L329.441 4.053h34.88v152.6h-17.004V11.901h-2.616l-20.492 144.752h-33.136L270.581 11.901h-2.616v144.752h-17.004zM127.07 63.348q0-29.648 14.17-45.998T180.698 1q25.289 0 39.458 16.35 14.17 16.35 14.17 45.998v34.008q0 30.52-14.17 46.434t-39.458 15.914q-25.287 0-39.458-15.914t-14.17-46.434zm53.628 79.352q17.658 0 26.378-11.99 8.938-12.208 8.938-34.662V64.656q0-20.928-8.938-33.79-8.72-12.862-26.378-12.862t-26.596 12.862q-8.72 12.862-8.72 33.79v31.392q0 22.453 8.72 34.662 8.938 11.99 26.596 11.99M54.628 142.7q9.374 0 15.914-3.052 6.758-3.27 10.9-8.502a34.95 34.95 0 0 0 6.322-12.208q2.18-6.976 2.18-14.606v-2.616h18.312v2.616q0 11.554-3.488 21.8-3.487 10.028-10.246 17.658-6.757 7.412-16.786 11.772-10.028 4.142-23.108 4.142-25.288 0-39.458-15.914T1 97.356V63.348Q1 33.7 15.17 17.35T54.628 1q13.08 0 23.108 4.36 10.027 4.142 16.786 11.772 6.758 7.411 10.246 17.658 3.488 10.028 3.488 21.582v2.616H89.944v-2.616a53.3 53.3 0 0 0-2.398-14.388q-1.962-6.976-6.322-12.208-4.142-5.45-10.682-8.502-6.54-3.27-15.914-3.27-17.658 0-26.596 12.862-8.72 12.862-8.72 33.79v31.392q0 22.453 8.72 34.662 8.938 11.99 26.596 11.99" />
+    </chakra.svg>
+  );
+}

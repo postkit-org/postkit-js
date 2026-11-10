@@ -59,6 +59,20 @@ export const siteSegmentedControlRecipe: SlotRecipeConfig = defineSlotRecipe({
     },
   },
   variants: {
+    // `icon`: the footer theme switch (SiteHome, SiteColorTokens): 30×24 icon segments on a
+    // 2px track, unselected in `fg.quiet`. 24px is one of 02 §6's two allowed touch exceptions.
+    size: {
+      md: {},
+      icon: {
+        root: { padding: '2px' },
+        item: {
+          width: '30px',
+          height: '24px',
+          paddingInline: 0,
+          color: 'fg.quiet',
+        },
+      },
+    },
     fullWidth: {
       true: {
         root: { display: 'flex', width: '100%' },
@@ -67,5 +81,5 @@ export const siteSegmentedControlRecipe: SlotRecipeConfig = defineSlotRecipe({
       false: {},
     },
   },
-  defaultVariants: { fullWidth: false },
+  defaultVariants: { size: 'md', fullWidth: false },
 });
