@@ -83,5 +83,5 @@ These need Ryan before the tickets that depend on them. Details and defaults are
 5. ~~**Q5:** the postal address for the email footers~~ Answered 10 Nov 2026: 1870 The Exchange SE Ste 220, PMB 980007, Atlanta, GA 30339-2171.
 6. **Q6:** which notes exist at launch?
 7. **Q7:** is OpenGraphs ready for the share-image templates (the fallback is `@vercel/og`)?
-8. **Q8:** Postkit's Bluesky and X handles.
+8. ~~**Q8:** Postkit's Bluesky and X handles.~~ Answered: Bluesky @postkit.org, X @Postkit_.
 9. **Q9:** the sender address (default `Postkit <releases@postkit.org>`).

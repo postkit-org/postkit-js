@@ -13,7 +13,7 @@ Each one has a default, so work can continue. The agent should bring these back 
 | Q5 | ~~**Postal address** for the email footers~~ **Answered 10 Nov 2026:** 1870 The Exchange SE Ste 220, PMB 980007, Atlanta, GA 30339-2171 | — | PK-052 |
 | Q6 | **Which notes exist at launch?** The index board shows five proposed titles (below). | Launch with "One article, four renderers" and the 0.3.0 release note. The rest are drafts. | PK-021, PK-036 |
 | Q7 | **Share images:** is OpenGraphs ready to render these templates? | `@vercel/og` at build time, with the same layout. | PK-061 |
-| Q8 | **Postkit's social accounts:** Bluesky and X handles for the footer and the menu. | Hide any link without a confirmed URL. | PK-012 |
+| Q8 | ~~**Postkit's social accounts**~~ **Answered 10 Nov 2026:** Bluesky `@postkit.org` (https://bsky.app/profile/postkit.org), X `@Postkit_` (https://x.com/Postkit_). Footer shows both; the phone menu shows Bluesky (01 §4). | — | PK-012 |
 | Q9 | **Sender address** for release emails. | `Postkit <releases@postkit.org>` | PK-052 |
 
 ## Placeholders in the boards

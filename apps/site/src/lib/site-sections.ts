@@ -17,8 +17,10 @@ export function sectionFromPathname(pathname: string): SiteSection | null {
   return sectionRoots.find((section) => section === root) ?? null;
 }
 
-/** Postkit elsewhere. Bluesky and X stay hidden until their handles are confirmed (09 Q8). */
+/** Postkit elsewhere (09 Q8: Bluesky @postkit.org, X @Postkit_). */
 export const externalLinks = {
   github: 'https://github.com/postkit-org/postkit-js',
   npm: 'https://www.npmjs.com/org/postkit',
+  bluesky: 'https://bsky.app/profile/postkit.org',
+  x: 'https://x.com/Postkit_',
 } as const;

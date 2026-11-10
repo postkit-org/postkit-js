@@ -86,6 +86,7 @@ const rows: readonly {
 const elsewhere = [
   { href: externalLinks.github, label: 'GitHub' },
   { href: externalLinks.npm, label: 'npm' },
+  { href: externalLinks.bluesky, label: 'Bluesky' },
 ] as const;
 
 const legal = [

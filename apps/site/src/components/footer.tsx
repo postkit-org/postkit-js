@@ -5,6 +5,7 @@ import { useId, type ComponentProps } from 'react';
 import { LogoPill } from './logo';
 import { OssMark } from './oss-mark';
 import { ThemeSwitch } from './theme-switch';
+import { externalLinks } from '../lib/site-sections';
 
 interface FooterLink {
   readonly label: string;
@@ -18,7 +19,7 @@ const npmPackage = (name: string): FooterLink => ({
   mono: true,
 });
 
-// 01 §4. Elsewhere lists only accounts with a confirmed URL (09 Q8): Bluesky and X wait.
+// 01 §4: Product, Packages, Elsewhere (09 Q8 handles).
 const columns: readonly { title: string; links: readonly FooterLink[] }[] = [
   {
     title: 'Product',
@@ -36,8 +37,10 @@ const columns: readonly { title: string; links: readonly FooterLink[] }[] = [
   {
     title: 'Elsewhere',
     links: [
-      { label: 'GitHub', href: 'https://github.com/postkit-org/postkit-js' },
-      { label: 'npm', href: 'https://www.npmjs.com/org/postkit' },
+      { label: 'GitHub', href: externalLinks.github },
+      { label: 'npm', href: externalLinks.npm },
+      { label: 'Bluesky', href: externalLinks.bluesky },
+      { label: 'X / Twitter', href: externalLinks.x },
     ],
   },
 ];
