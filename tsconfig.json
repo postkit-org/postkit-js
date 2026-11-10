@@ -35,6 +35,9 @@
     },
     {
       "path": "./packages/core"
+    },
+    {
+      "path": "./libs/site-theme"
     }
   ],
   "compilerOptions": {}

@@ -58,7 +58,8 @@
     "yalc:test": "node --test tools/yalc-package-closure.test.mjs",
     "site:dev": "npm run docs:generate && nx dev site",
     "site:build": "npm run docs:generate && nx build site",
-    "site:check": "npm run docs:generate && nx run-many -t lint build --projects=site",
+    "site:check": "npm run docs:generate && npm run site:typecheck && nx run-many -t lint build --projects=site",
+    "site:typecheck": "nx run-many -t typecheck test lint --projects=site-theme",
     "verify:release": "node tools/verify-release.mjs",
     "release:test": "node --test tools/publication-plan.test.mjs"
   },
