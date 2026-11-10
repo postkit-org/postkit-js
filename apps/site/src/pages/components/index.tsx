@@ -10,9 +10,9 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import Head from 'next/head';
 import NextLink from 'next/link';
 
+import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
 import {
   componentCategoryGroups,
   componentEntries,
@@ -28,13 +28,11 @@ const stats = [
 export default function ComponentsPage() {
   return (
     <>
-      <Head>
-        <title>Components · Postkit</title>
-        <meta
-          name="description"
-          content="Explore live previews, variants, sizes, authoring syntax, and props for every Postkit publishing component."
-        />
-      </Head>
+      <PageMeta
+        title="Components"
+        description="Explore live previews, variants, sizes, authoring syntax, and props for every Postkit publishing component."
+      />
+      <BreadcrumbJsonLd items={[{ name: 'Components', path: '/components' }]} />
 
       <Box borderBottomColor="border" borderBottomWidth="1px">
         <Container maxW="7xl" paddingBlock={{ base: '16', md: '24' }}>

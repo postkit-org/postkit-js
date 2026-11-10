@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { Callout, CodeBlock } from '@postkit/chakra';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
-import Head from 'next/head';
 import NextLink from 'next/link';
 
 import { ChangelogCard } from '../components/changelog-card';
+import { PageMeta, WebSiteJsonLd } from '../components/layout';
 import type { ChangelogEntrySummary } from '../lib/changelog';
 import { getLatestChangelogRelease } from '../lib/changelog.server';
 
@@ -51,9 +51,8 @@ export default function IndexPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Head>
-        <title>Postkit — portable publishing components</title>
-      </Head>
+      <PageMeta description="Postkit is a portable publishing component system for React and the web: author once in Markdown or MDX, and render it in React, Next.js, Astro and email." />
+      <WebSiteJsonLd />
 
       <Box
         as="section"

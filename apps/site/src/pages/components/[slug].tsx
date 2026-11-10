@@ -17,10 +17,10 @@ import type {
   GetStaticProps,
   InferGetStaticPropsType,
 } from 'next';
-import Head from 'next/head';
 import NextLink from 'next/link';
 
 import { ComponentPreview } from '../../components/component-preview';
+import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
 import {
   componentEntries,
   componentNameToSlug,
@@ -93,10 +93,16 @@ export default function ComponentPage({
 
   return (
     <>
-      <Head>
-        <title>{component.name} · Components · Postkit</title>
-        <meta name="description" content={component.description} />
-      </Head>
+      <PageMeta title={component.name} description={component.description} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Components', path: '/components' },
+          {
+            name: component.name,
+            path: `/components/${componentNameToSlug(component.name)}`,
+          },
+        ]}
+      />
 
       <Container maxW="7xl" paddingBlock={{ base: '10', md: '16' }}>
         <ChakraLink

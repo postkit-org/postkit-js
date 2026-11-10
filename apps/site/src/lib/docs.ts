@@ -1,6 +1,8 @@
 import type { DocsCategory } from '@postkit/content';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
+import type { TocHeading } from './headings';
+
 export interface DocsEntrySummary {
   readonly slug: string;
   readonly title: string;
@@ -15,4 +17,6 @@ export interface DocsEntrySummary {
 
 export interface DocsEntry extends DocsEntrySummary {
   readonly source: MDXRemoteSerializeResult;
+  /** The body's `h2`s, with the ids `MdxContent` renders: the `Toc` input. */
+  readonly headings: readonly TocHeading[];
 }
