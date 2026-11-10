@@ -7,6 +7,7 @@ import { MetaProvider } from 'next-meta';
 
 import { siteMetaDefaults } from '../components/layout/page-meta';
 import { SiteShell } from '../components/site-shell';
+import { SearchProvider } from '../lib/search';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
 import { fontVariablesCss } from '../lib/fonts';
 import { siteSystem } from '../lib/site-theme';
@@ -34,9 +35,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
         </style>
         {/* Title, description, canonical and social defaults; each page's PageMeta overrides them. */}
         <MetaProvider {...siteMetaDefaults(asPath)}>
-          <SiteShell>
-            <Component {...pageProps} />
-          </SiteShell>
+          <SearchProvider>
+            <SiteShell>
+              <Component {...pageProps} />
+            </SiteShell>
+          </SearchProvider>
         </MetaProvider>
       </PostkitProvider>
     </ThemeProvider>
