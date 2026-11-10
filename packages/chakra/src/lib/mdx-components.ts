@@ -1,20 +1,20 @@
-import { AppearsOn } from './components/appears-on.js';
-import { Audio } from './components/audio.js';
-import { AuthorCard } from './components/author-card.js';
-import { CallToAction } from './components/call-to-action.js';
-import { Carousel } from './components/carousel.js';
-import { Chart } from './components/chart.js';
+import { AppearsOn } from '../components/appears-on/appears-on.js';
+import { Audio } from '../components/audio/audio.js';
+import { AuthorCard } from '../components/author-card/author-card.js';
+import { CallToAction } from '../components/call-to-action/call-to-action.js';
+import { Carousel } from '../components/carousel/carousel.js';
+import { Chart } from '../components/chart/chart.js';
 import { Figure } from '../components/figure/figure.js';
-import { LinkPreview } from './components/link-preview.js';
-import { NewsletterSignup } from './components/newsletter-signup.js';
+import { LinkPreview } from '../components/link-preview/link-preview.js';
+import { NewsletterSignup } from '../components/newsletter-signup/newsletter-signup.js';
 import {
   createPostkitProseLink,
   postkitProseComponents,
   type ProseComponents,
 } from './components/prose.js';
-import { ShareActions } from './components/share-actions.js';
-import { SocialPost } from './components/social-post.js';
-import { Video } from './components/video.js';
+import { ShareActions } from '../components/share-actions/share-actions.js';
+import { SocialPost } from '../components/social-post/social-post.js';
+import { Video } from '../components/video/video.js';
 import {
   CodeBlock,
   CodeGroup,

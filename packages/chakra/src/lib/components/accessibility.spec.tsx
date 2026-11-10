@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 
 import { PostkitProvider } from '../provider.js';
 import { postkitDefaultTheme } from '../theme.js';
-import { Chart } from './chart.js';
+import { Chart } from '../../components/chart/chart.js';
 import { postkitProseComponents } from './prose.js';
 import { Comparison, Stat } from './publication.js';
 import { CodeBlock, CodeGroup, Diff, Terminal } from './technical-content.js';

@@ -44,3 +44,44 @@ export {
   type FigureProps,
   type FigureSlot,
 } from './components/figure/figure.js';
+export {
+  AppearsOn,
+  type AppearsOnProps,
+  type AppearsOnService,
+  type AppearsOnSlot,
+  type SyndicationReference,
+} from './components/appears-on/appears-on.js';
+export {
+  Audio,
+  type AudioProps,
+  type AudioSlot,
+} from './components/audio/audio.js';
+export {
+  AuthorCard,
+  type AuthorCardProps,
+  type AuthorCardSlot,
+  type AuthorLink,
+} from './components/author-card/author-card.js';
+export {
+  CallToAction,
+  type CallToActionProps,
+  type CallToActionSlot,
+} from './components/call-to-action/call-to-action.js';
+export {
+  Chart,
+  postkitChartLayout,
+  type ChartDatum,
+  type ChartProps,
+  type ChartSeries,
+  type ChartSlot,
+  type PostkitChartLayout,
+  type PostkitChartLayoutSeries,
+  type PostkitChartMark,
+} from './components/chart/chart.js';
+export {
+  Video,
+  type VideoProps,
+  type VideoSlot,
+  type VideoTrack,
+} from './components/video/video.js';
+export { chakraOnly } from './lib/chakra-only.js';

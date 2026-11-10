@@ -9,8 +9,8 @@ import {
 import { createPostkitSocialPostSnapshot } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { AppearsOn } from './appears-on.js';
-import { Audio } from './audio.js';
+import { AppearsOn } from '../../components/appears-on/appears-on.js';
+import { Audio } from '../../components/audio/audio.js';
 import { Aside } from '../../components/aside/aside.js';
 import { Callout } from '../../components/callout/callout.js';
 import { Figure } from '../../components/figure/figure.js';
@@ -21,16 +21,16 @@ import {
   Steps,
   Tabs,
 } from './article-structure.js';
-import { AuthorCard } from './author-card.js';
-import { CallToAction } from './call-to-action.js';
-import { Carousel } from './carousel.js';
-import { Chart } from './chart.js';
-import { LinkPreview } from './link-preview.js';
-import { NewsletterSignup } from './newsletter-signup.js';
+import { AuthorCard } from '../../components/author-card/author-card.js';
+import { CallToAction } from '../../components/call-to-action/call-to-action.js';
+import { Carousel } from '../../components/carousel/carousel.js';
+import { Chart } from '../../components/chart/chart.js';
+import { LinkPreview } from '../../components/link-preview/link-preview.js';
+import { NewsletterSignup } from '../../components/newsletter-signup/newsletter-signup.js';
 import { PostkitProvider } from '../provider.js';
-import { ShareActions } from './share-actions.js';
-import { SocialPost } from './social-post.js';
-import { Video } from './video.js';
+import { ShareActions } from '../../components/share-actions/share-actions.js';
+import { SocialPost } from '../../components/social-post/social-post.js';
+import { Video } from '../../components/video/video.js';
 import {
   CodeBlock,
   CodeGroup,

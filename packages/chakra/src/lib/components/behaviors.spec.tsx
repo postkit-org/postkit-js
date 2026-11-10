@@ -15,9 +15,9 @@ import type { ReactElement } from 'react';
 
 import { PostkitProvider } from '../provider.js';
 import { Tabs } from './article-structure.js';
-import { Carousel } from './carousel.js';
-import { LinkPreview } from './link-preview.js';
-import { SocialPost } from './social-post.js';
+import { Carousel } from '../../components/carousel/carousel.js';
+import { LinkPreview } from '../../components/link-preview/link-preview.js';
+import { SocialPost } from '../../components/social-post/social-post.js';
 import { CodeBlock, CodeGroup } from './technical-content.js';
 
 /**
