@@ -158,3 +158,21 @@ Everything here lands before launch (D19). The last column is what site work use
 | 10 Footnotes (§7.1, D13) | PK-037 | End notes only |
 | 11 CLI and Nx generator | CLI, Eject and New components docs | The docs stay draft |
 | 12 Release 0.3.0 | PK-072 | — (the launch is the release) |
+
+### Package issues found while building the site (Nov 10, 2026)
+
+Found by the site build and its axe passes. They live in the packages, so they're fixed there, not worked around in `apps/site`. Each must be done before launch (07 §1 needs a clean axe run on every page).
+
+| # | Package | Issue | Where it shows | Plan step |
+|---|---|---|---|---|
+| P1 | `@postkit/chakra` (remark preset) | Unknown text directives render an empty block: "4.5:1" is read as a directive `:1`. Unknown inline directives should stay literal text | Component pages' accessibility notes | 8 |
+| P2 | `@postkit/chakra` (validation) | Unknown `postkit-*` directives render as a plain `<div>` instead of failing; directive errors carry no file and line (contradicts 03 §3.1) | Docs: Validation | 8 |
+| P3 | `@postkit/chakra` | CodeBlock / Terminal content has `aria-expanded` (axe `aria-allowed-attr`, critical) | Home, code-block, code-group, most docs, changelog | 7 |
+| P4 | `@postkit/chakra` | Contrast below 4.5:1: LinkPreview domain (2.56:1), Figure credit, KeyTakeaway body on its tint, AppearsOn service labels, NewsletterSignup privacy line, ShareActions buttons (1.09:1), SocialPost badge and timestamp | Component pages, home, the first note | 7 |
+| P5 | `@postkit/chakra` | Subtle Callout renders `bg.subtle` grey instead of its tone tint | 404, notes, anatomy (assembled Callout) | 7 |
+| P6 | `@postkit/chakra` | Scrollable regions aren't keyboard-focusable (axe `scrollable-region-focusable`): Chart plot, Comparison scroller, Diff code, prose tables | Component pages; docs chakra, validation, compatibility | 7 |
+| P7 | `@postkit/chakra` | Stat's `<dl>` structure fails axe `definition-list` | Stat component page | 7 |
+| P8 | `@postkit/shiki` | Comment colour `#6a737d` on the dark code surface is below 4.5:1 | Every highlighted code block | 7 |
+| P9 | `@postkit/email` | Tone colours come out as raw palette names (`background-color:green.50`): Chakra Email's default theme has no tone palettes | Home Email tab (worked around by passing site tones) | 9 |
+| P10 | `@postkit/email` | Callout's left border uses the text colour, not the tone | Home Email tab | 9 |
+| P11 | `@postkit/chakra` | Component code (not recipes) still has raw colours: LinkPreview consent scrim text, Chart fallback colours | — | 3 follow-up |

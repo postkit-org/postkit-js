@@ -101,7 +101,7 @@ Each maps to boards. Build them in `apps/site/src/components` from Chakra primit
 | AnatomyDiagram | See 01 §6.3 | Component boards |
 | SubscribeCard / SubscribeForm | Six states (04 §2) | SiteNotes, SiteSignupStates |
 | ResultPage | Mono label, two-tone title, lede, actions | Confirmed, Expired, Unsubscribed, 404 |
-| Kbd | 20px tall, 6px radius, `bg.raised` with an inset hairline | search |
+| Kbd | 20px tall, 6px radius, `bg.kbd` (white in light, `#0F0F11` in dark, as on the boards) with an inset hairline | search |
 
 ## 6. Interaction, focus and motion
 
