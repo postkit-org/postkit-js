@@ -1,10 +1,15 @@
 import { createPostkitRemarkPlugins } from '@postkit/chakra';
+import { selectDocsEntries } from '@postkit/content';
 import { allDocsEntries } from 'content-collections';
 import { serialize } from 'next-mdx-remote/serialize';
 
 import type { DocsEntry, DocsEntrySummary } from './docs';
+import { resolveDocsNavigation, type ResolvedDocsNavigation } from './docs-nav';
 
 type GeneratedDocsEntry = (typeof allDocsEntries)[number];
+
+/** Drafts show in development and are left out of production builds. */
+const visibility = { includeDrafts: process.env.NODE_ENV !== 'production' };
 
 function toSummary(entry: GeneratedDocsEntry): DocsEntrySummary {
   return {
@@ -13,20 +18,44 @@ function toSummary(entry: GeneratedDocsEntry): DocsEntrySummary {
     summary: entry.summary,
     category: entry.category,
     order: entry.order,
+    since: entry.since ?? null,
+    status: entry.status,
   };
 }
 
+/** The visible docs, in nav order. Used for static paths, lists and prev/next. */
 export function getDocsEntries(): DocsEntrySummary[] {
-  return allDocsEntries
-    .map(toSummary)
-    .sort(
-      (left, right) =>
-        left.order - right.order || left.title.localeCompare(right.title),
+  return selectDocsEntries(allDocsEntries, visibility).map(toSummary);
+}
+
+let reportedNavigationProblems = false;
+
+/**
+ * The docs nav resolved against the collection. Unresolved items are a build
+ * warning, not an error, and are reported once per process.
+ */
+export function getDocsNavigation(): ResolvedDocsNavigation {
+  const navigation = resolveDocsNavigation(
+    allDocsEntries.map(toSummary),
+    visibility,
+  );
+
+  if (!reportedNavigationProblems && navigation.problems.length > 0) {
+    reportedNavigationProblems = true;
+    console.warn(
+      `[docs] The docs nav has ${navigation.problems.length} problem(s):\n${navigation.problems
+        .map((problem) => `  - ${problem}`)
+        .join('\n')}`,
     );
+  }
+
+  return navigation;
 }
 
 export async function getDocsEntry(slug: string): Promise<DocsEntry> {
-  const entry = allDocsEntries.find((candidate) => candidate.slug === slug);
+  const entry = selectDocsEntries(allDocsEntries, visibility).find(
+    (candidate) => candidate.slug === slug,
+  );
 
   if (!entry) {
     throw new TypeError(`Unknown documentation slug "${slug}".`);

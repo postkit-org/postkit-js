@@ -1,8 +1,8 @@
 ---
 title: Portable documents and feeds
 summary: Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
-category: Authoring
-order: 55
+category: Writing
+order: 4
 ---
 
 # Portable documents and feeds

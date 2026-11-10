@@ -2,7 +2,7 @@
 title: API reference
 summary: Browse generated TypeScript exports or consume the same API model as structured JSON.
 category: Reference
-order: 85
+order: 5
 ---
 
 # API reference

@@ -1,20 +1,18 @@
 ---
-title: Getting started
-summary: Install Postkit, mount its provider, and render a first portable article component.
-category: Start here
-order: 10
+title: Quick start
+summary: Mount the provider, render a first portable article component, and connect Markdown or MDX.
+category: Get started
+order: 3
 ---
 
-# Getting started
+# Quick start
 
 Postkit gives articles a portable component vocabulary while leaving the host
-application in control of routing, layout, assets, and remote services.
+application in control of routing, layout, assets, and remote services. This
+page assumes the React renderer is installed (see
+[Installation](/docs/installation)).
 
-## Install the React package
-
-```sh
-npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
-```
+## Render a first component
 
 Mount the provider near the article:
 
@@ -40,7 +38,8 @@ The preset gives a standalone article Postkit's visual defaults. In an existing
 Chakra application, omit `preset` and pass the site's system through `system`.
 Postkit then uses the host's component recipes for headings, links, buttons,
 inputs, tables, tabs, code, and other primitives. Add Postkit's preset only when
-its content-specific visual defaults are wanted.
+its content-specific visual defaults are wanted. [Tokens](/docs/tokens) explains
+the layering.
 
 ## Add Markdown or MDX
 
@@ -53,11 +52,16 @@ export const mdxComponents = createPostkitMdxComponents();
 ```
 
 Framework packages add native routing and framework-specific behavior around
-this same map. Continue with [choosing a package](/docs/choosing-a-package) to
-select one.
+this same map. Pick yours under Frameworks: [Next.js](/docs/nextjs),
+[React Router](/docs/react-router), [TanStack Router](/docs/tanstack-router),
+or [Astro](/docs/astro).
+
+Write components as JSX in [MDX](/docs/mdx), or as literal-only
+[Markdown directives](/docs/markdown-directives) in plain Markdown.
 
 ## Keep sensitive work on the server
 
 Link previews and social metadata can require network access or provider
 credentials. Resolve them with `@postkit/unfurl` in a server or build-time
-boundary, then pass normalized data to the renderer.
+boundary, then pass normalized data to the renderer. See
+[Link previews and unfurling](/docs/link-previews).

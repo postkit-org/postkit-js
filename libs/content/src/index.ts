@@ -10,9 +10,16 @@ export {
   type ChangelogEntryData,
 } from './lib/changelog.js';
 export {
+  compareDocsEntries,
   createDocsCollection,
+  docsCategories,
+  docsCategorySchema,
   docsEntrySchema,
+  isDocsEntryVisible,
+  selectDocsEntries,
+  type DocsCategory,
   type DocsEntryData,
+  type DocsVisibilityOptions,
 } from './lib/docs.js';
 export {
   createNotesCollection,

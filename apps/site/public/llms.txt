@@ -4,38 +4,40 @@
 
 Postkit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.
 
-## Start here
+## Get started
 
-- [Getting started](/docs/getting-started): Install Postkit, mount its provider, and render a first portable article component.
-- [Choosing a package](/docs/choosing-a-package): Match each Postkit package to the rendering environment and integration boundary it owns.
+- [Introduction](/docs/introduction): What Postkit is, how its content contract, renderers and host application fit together, and which package to start with.
+- [Installation](/docs/installation): Install the Postkit packages your stack needs and check the framework, runtime, and module requirements.
+- [Quick start](/docs/quick-start): Mount the provider, render a first portable article component, and connect Markdown or MDX.
 
-## Concepts
+## Writing
 
-- [Core concepts](/docs/core-concepts): Understand the content contract, renderers, host responsibilities, and resolver boundaries.
-
-## Authoring
-
-- [Components](/docs/components): Learn how Postkit components, declarations, props, and presentation variants work together.
-- [Markdown and MDX](/docs/markdown-and-mdx): Author Postkit declarations in MDX or literal-only plain Markdown directives.
+- [MDX](/docs/mdx): Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.
+- [Markdown directives](/docs/markdown-directives): Author Postkit components in plain Markdown with literal-only directives and the Postkit Remark preset.
 - [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
+- [Link previews and unfurling](/docs/link-previews): Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.
 
-## Integration
+## Customizing
 
-- [Theming](/docs/theming): Layer Postkit recipes over a Chakra system while preserving the host application's design tokens.
-- [Framework guides](/docs/framework-guides): Connect the portable component map to Next.js, React Router, TanStack Router, or Astro.
+- [Tokens](/docs/tokens): Layer Postkit over a host Chakra system so the site's tokens, fonts, and prose rhythm drive every component.
+- [Part styles](/docs/part-styles): Restyle the named parts of Postkit components with scoped slot recipes, per-instance slot styles, or the host's Chakra recipes.
 
-## Services
+## Renderers
 
-- [Unfurling and oEmbed](/docs/unfurling): Resolve URLs behind a server boundary and render normalized link or social metadata.
+- [Chakra](/docs/chakra): Render Postkit components with @postkit/chakra, the Chakra UI renderer, and configure it through PostkitProvider.
+
+## Frameworks
+
+- [Next.js](/docs/nextjs): Connect the Postkit component map to Next.js MDX with native next/link routing.
+- [React Router](/docs/react-router): Render Postkit MDX beneath React Router with router-native internal links.
+- [TanStack Router](/docs/tanstack-router): Render Postkit MDX beneath TanStack Router and map portable URLs into typed routes.
+- [Astro](/docs/astro): Render Postkit declarations in Astro MDX with server-rendered components and selective React hydration.
 
 ## Reference
 
 - [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
 - [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
 - [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
-
-## Help
-
 - [Troubleshooting](/docs/troubleshooting): Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
 
 ## Packages

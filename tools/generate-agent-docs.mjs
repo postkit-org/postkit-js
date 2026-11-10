@@ -37,11 +37,35 @@ function requiredString(data, key, filename) {
   return value.trim();
 }
 
+// Nav group order (libs/content/src/lib/docs.ts `docsCategories`).
+const docsCategories = [
+  'Get started',
+  'Writing',
+  'Customizing',
+  'Renderers',
+  'Frameworks',
+  'Reference',
+];
+
+function requiredCategory(data, filename) {
+  const category = requiredString(data, 'category', filename);
+  if (!docsCategories.includes(category)) {
+    throw new TypeError(
+      `Documentation entry "${filename}" has an unknown category "${category}".`,
+    );
+  }
+  return category;
+}
+
 const documents = readdirSync(docsDirectory)
   .filter((filename) => filename.endsWith('.md'))
   .map((filename) => {
     const source = readFileSync(join(docsDirectory, filename), 'utf8');
     const { data, content } = matter(source, matterOptions);
+    // Drafts are left out of production output, including the agent docs.
+    if (data.status === 'draft') {
+      return null;
+    }
     if (
       typeof data.order !== 'number' ||
       !Number.isInteger(data.order) ||
@@ -57,14 +81,18 @@ const documents = readdirSync(docsDirectory)
       url: `/docs/${slug}`,
       title: requiredString(data, 'title', filename),
       summary: requiredString(data, 'summary', filename),
-      category: requiredString(data, 'category', filename),
+      category: requiredCategory(data, filename),
       order: data.order,
       content: content.trim(),
     };
   })
+  .filter((document) => document !== null)
   .sort(
     (left, right) =>
-      left.order - right.order || left.title.localeCompare(right.title),
+      docsCategories.indexOf(left.category) -
+        docsCategories.indexOf(right.category) ||
+      left.order - right.order ||
+      left.title.localeCompare(right.title),
   );
 
 const packageDocuments = packageDirectories.map((directory) => {

@@ -2,7 +2,7 @@
 title: Security and trust boundaries
 summary: Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
 category: Reference
-order: 87
+order: 7
 ---
 
 # Security and trust boundaries

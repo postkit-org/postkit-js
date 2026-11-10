@@ -2,20 +2,183 @@
 
 Generated from the canonical Postkit guides and public package READMEs.
 
-## Getting started
+## Introduction
 
-Source: /docs/getting-started
+Source: /docs/introduction
 
-# Getting started
+# Introduction
 
-Postkit gives articles a portable component vocabulary while leaving the host
-application in control of routing, layout, assets, and remote services.
+Postkit is a portable publishing toolkit. It gives articles a shared component
+vocabulary (callouts, figures, code blocks, link previews and more) and keeps
+that vocabulary separate from the application that renders it. Write the
+content once, then render it with Chakra UI, in an email, in Astro, or through
+any framework adapter.
 
-## Install the React package
+Postkit separates authored meaning from application infrastructure.
+
+## The content contract
+
+Components such as `Callout`, `Figure`, `Audio`, and `LinkPreview` describe
+article intent. Their declarations define names, directive syntax, accepted
+props, and whether they contain Markdown children.
+
+The versioned `@postkit/core` document preserves semantic elements, rich
+component names, literal props, and children independently of any renderer.
+It can be parsed from or serialized to HTML, Markdown, safe literal MDX, and
+JSON. The component contract can also be authored as JSX in trusted MDX or as
+literal-only directives in plain Markdown.
+
+The declaration manifest is the machine-readable form of that contract. It
+describes each component, its plain-Markdown directive, child mode, and prop
+schema, so editors and other authoring tools can use it without importing the
+React renderer. The [component catalog](/components) is generated from the
+same source.
+
+## The renderer
+
+Each environment maps the portable declaration to a real component. React's
+`DocumentRenderer` maps semantic nodes and declarations to Chakra-backed
+components. Astro bridges the same declarations into Astro components and
+hydrates only the interactive parts. `@postkit/email` shares the portable
+props where their meaning carries over and uses explicit fallbacks for
+interactions that email clients do not support.
+
+## The host application
+
+The application owns:
+
+- Page layout and navigation
+- Routing policy
+- Chakra tokens and site theme
+- Media storage and URL generation
+- Secrets and remote provider credentials
+- Caching and persistence
+
+Postkit provides explicit extension points for these responsibilities instead
+of assuming one deployment architecture. Adapters do not configure the
+application's content loader, authentication, asset storage, secrets,
+deployment platform, or outer page layout.
+
+## Choosing a package
+
+Install the package closest to the application boundary. Framework adapters
+use the Chakra-based React component system and add their native routing
+behavior.
+
+| Package                    | Choose it for                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
+| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
+| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
+| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
+| `@postkit/next`            | Next.js MDX and `next/link`                                                           |
+| `@postkit/react-router`    | React Router and router-native internal links                                         |
+| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
+| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
+| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
+
+Continue with [Installation](/docs/installation) for the install command that
+matches your stack, or go straight to the [Quick start](/docs/quick-start).
+
+## Installation
+
+Source: /docs/installation
+
+# Installation
+
+Postkit packages are ESM-only, publish TypeScript declarations, and emit
+ES2022 JavaScript. The host application's framework and build tool must support
+those package conventions.
+
+## Install the React renderer
+
+Most sites start with the Chakra UI renderer and its peer dependencies:
 
 ```sh
 npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
+
+`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
+The `@postkit/react` name is reserved for a future generic React renderer without
+a Chakra dependency. The current framework adapters use `@postkit/chakra`.
+
+## Add a framework adapter
+
+Framework adapters add native routing around the same component map. Install
+the one that matches the application:
+
+```sh
+# Next.js
+npm install @postkit/next @postkit/chakra
+
+# React Router
+npm install @postkit/react-router @postkit/chakra react-router
+
+# TanStack Router
+npm install @postkit/tanstack-router @postkit/chakra @tanstack/react-router
+
+# Astro
+npm install @postkit/astro @postkit/chakra
+```
+
+Each framework guide lists the remaining integration steps:
+[Next.js](/docs/nextjs), [React Router](/docs/react-router),
+[TanStack Router](/docs/tanstack-router), and [Astro](/docs/astro).
+
+## Optional packages
+
+An API, feed processor, or non-React content service can use the core document
+contract by itself:
+
+```sh
+npm install @postkit/core
+```
+
+Add `@postkit/unfurl` to the server or build pipeline when the site renders link
+previews:
+
+```sh
+npm install @postkit/unfurl
+```
+
+Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
+
+```sh
+npm install @postkit/shiki
+```
+
+An HTML email build should use `@postkit/email` rather than aliasing Chakra UI
+to an email primitive package. It shares portable Postkit props where the
+meaning carries over and deliberately changes the output for interactions that
+email clients do not support.
+
+## Requirements
+
+| Integration     | Supported range |
+| --------------- | --------------- |
+| React           | React 19        |
+| Chakra UI       | `>=3.29.0 <4`   |
+| Next.js         | `>=15 <17`      |
+| React Router    | `>=7 <8`        |
+| TanStack Router | `>=1.120 <2`    |
+| Astro           | `>=6.4 <8`      |
+
+The package manifests are authoritative for exact peer dependency ranges. Pin
+related `@postkit/*` packages to the same release version. See
+[Compatibility](/docs/compatibility) for the runtime matrix and hydration notes.
+
+## Quick start
+
+Source: /docs/quick-start
+
+# Quick start
+
+Postkit gives articles a portable component vocabulary while leaving the host
+application in control of routing, layout, assets, and remote services. This
+page assumes the React renderer is installed (see
+[Installation](/docs/installation)).
+
+## Render a first component
 
 Mount the provider near the article:
 
@@ -41,7 +204,8 @@ The preset gives a standalone article Postkit's visual defaults. In an existing
 Chakra application, omit `preset` and pass the site's system through `system`.
 Postkit then uses the host's component recipes for headings, links, buttons,
 inputs, tables, tabs, code, and other primitives. Add Postkit's preset only when
-its content-specific visual defaults are wanted.
+its content-specific visual defaults are wanted. [Tokens](/docs/tokens) explains
+the layering.
 
 ## Add Markdown or MDX
 
@@ -54,177 +218,25 @@ export const mdxComponents = createPostkitMdxComponents();
 ```
 
 Framework packages add native routing and framework-specific behavior around
-this same map. Continue with [choosing a package](/docs/choosing-a-package) to
-select one.
+this same map. Pick yours under Frameworks: [Next.js](/docs/nextjs),
+[React Router](/docs/react-router), [TanStack Router](/docs/tanstack-router),
+or [Astro](/docs/astro).
+
+Write components as JSX in [MDX](/docs/mdx), or as literal-only
+[Markdown directives](/docs/markdown-directives) in plain Markdown.
 
 ## Keep sensitive work on the server
 
 Link previews and social metadata can require network access or provider
 credentials. Resolve them with `@postkit/unfurl` in a server or build-time
-boundary, then pass normalized data to the renderer.
+boundary, then pass normalized data to the renderer. See
+[Link previews and unfurling](/docs/link-previews).
 
-## Choosing a package
+## MDX
 
-Source: /docs/choosing-a-package
+Source: /docs/mdx
 
-# Choosing a package
-
-Install the package closest to the application boundary. Framework adapters
-use the Chakra-based React component system and add their native routing
-behavior.
-
-| Package                    | Choose it for                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
-| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
-| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
-| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
-| `@postkit/next`            | Next.js MDX and `next/link`                                                           |
-| `@postkit/react-router`    | React Router and router-native internal links                                         |
-| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
-| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
-| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
-
-`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
-The `@postkit/react` name is reserved for a future generic React renderer without
-a Chakra dependency. The current framework adapters use `@postkit/chakra`.
-
-## Common combinations
-
-An API, feed processor, or non-React content service can use the core document
-contract by itself:
-
-```sh
-npm install @postkit/core
-```
-
-A Next.js publishing site commonly uses:
-
-```sh
-npm install @postkit/next @postkit/chakra
-```
-
-Add `@postkit/unfurl` to the server or build pipeline when the site renders link
-previews:
-
-```sh
-npm install @postkit/unfurl
-```
-
-Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
-
-```sh
-npm install @postkit/shiki
-```
-
-An Astro site should start with `@postkit/astro`, which documents the matching
-Astro integrations and component bridge.
-
-An HTML email build should use `@postkit/email` rather than aliasing Chakra UI
-to an email primitive package. It shares portable Postkit props where the
-meaning carries over and deliberately changes the output for interactions that
-email clients do not support.
-
-## What adapters do not own
-
-Adapters do not configure the application's content loader, authentication,
-asset storage, secrets, deployment platform, or outer page layout. Those remain
-application concerns connected through explicit component props and resolver
-functions.
-
-## Core concepts
-
-Source: /docs/core-concepts
-
-# Core concepts
-
-Postkit separates authored meaning from application infrastructure.
-
-## The content contract
-
-Components such as `Callout`, `Figure`, `Audio`, and `LinkPreview` describe
-article intent. Their declarations define names, directive syntax, accepted
-props, and whether they contain Markdown children.
-
-The versioned `@postkit/core` document preserves semantic elements, rich
-component names, literal props, and children independently of any renderer.
-It can be parsed from or serialized to HTML, Markdown, safe literal MDX, and
-JSON. The component contract can also be authored as JSX in trusted MDX or as
-literal-only directives in plain Markdown.
-
-## The renderer
-
-Each environment maps the portable declaration to a real component. React's
-`DocumentRenderer` maps semantic nodes and declarations to Chakra-backed
-components. Astro bridges the same declarations into Astro components and
-hydrates only the interactive parts.
-
-## The host application
-
-The application owns:
-
-- Page layout and navigation
-- Routing policy
-- Chakra tokens and site theme
-- Media storage and URL generation
-- Secrets and remote provider credentials
-- Caching and persistence
-
-Postkit provides explicit extension points for these responsibilities instead
-of assuming one deployment architecture.
-
-## Resolver boundaries
-
-Remote content is normalized before rendering. `@postkit/unfurl` returns a
-provider-neutral snapshot; `LinkPreview` and `SocialPost` render that snapshot.
-This keeps remote requests, credentials, and provider-specific response formats
-out of presentation components.
-
-## Components
-
-Source: /docs/components
-
-# Components
-
-Postkit includes article structure, technical content, media, discovery,
-sharing, and conversion components.
-
-Common components include:
-
-- `Callout`, `Aside`, `KeyTakeaway`, and `PullQuote`
-- `CodeBlock`, `CodeGroup`, `Diff`, `FileTree`, and `Terminal`
-- `Audio`, `Video`, `Figure`, `Gallery`, and `Carousel`
-- `LinkPreview`, `RelatedContent`, and `SeriesNavigation`
-- `ShareActions`, `SocialPost`, and `AppearsOn`
-- `AuthorCard`, `NewsletterSignup`, and `CallToAction`
-
-## Presentation props
-
-Portable components share compact presentation controls:
-
-- `size`: `sm`, `md`, or `lg`
-- `variant`: `outline`, `subtle`, or `plain`
-
-Site-wide visual decisions belong in the Chakra system or Postkit theme rather
-than repeated content props.
-
-## Declarations
-
-The declaration manifest is the machine-readable content contract. It describes
-each component, its plain-Markdown directive, child mode, and prop schema.
-Editors and other authoring tools can use this manifest without importing the
-React renderer.
-
-The public component explorer is generated from that same declaration source,
-so it stays aligned with the renderer and editor integrations.
-
-[Browse live previews, variants, sizes, syntax, and props →](/components)
-
-## Markdown and MDX
-
-Source: /docs/markdown-and-mdx
-
-# Markdown and MDX
+# MDX
 
 Use JSX declarations in MDX:
 
@@ -237,7 +249,17 @@ Use JSX declarations in MDX:
 ```
 
 Register Postkit's component map with the framework's MDX runtime. Framework
-adapters supply the same components with native internal-link behavior.
+adapters supply the same components with native internal-link behavior:
+
+```tsx
+import { createPostkitMdxComponents } from '@postkit/chakra';
+
+export const mdxComponents = createPostkitMdxComponents();
+```
+
+MDX is executable JavaScript. Compile it only from authors trusted at that
+level; for untrusted authoring, use [Markdown directives](/docs/markdown-directives)
+instead (see [Security](/docs/security)).
 
 ## Code blocks
 
@@ -336,7 +358,17 @@ Supported options are `title`/`filename`, `lineNumbers`/`noLineNumbers`,
 `data-max-height`. Explicit attributes take precedence over the metadata
 string. CSS expressions and authored JavaScript are rejected.
 
-## Plain Markdown directives
+## Choose one syntax per file
+
+MDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and
+reserve `::postkit-*{...}` declarations for plain Markdown pipelines (see
+[Markdown directives](/docs/markdown-directives)).
+
+## Markdown directives
+
+Source: /docs/markdown-directives
+
+# Markdown directives
 
 Plain Markdown pipelines can use literal-only directives:
 
@@ -346,9 +378,12 @@ The content remains regular **Markdown**.
 :::
 ```
 
-Enable Postkit's Remark preset in the Markdown pipeline. Directive props are
-literal values rather than arbitrary JavaScript, which keeps the format
-portable and suitable for untrusted authoring environments.
+Directive props are literal values rather than arbitrary JavaScript, which
+keeps the format portable and suitable for untrusted authoring environments.
+
+## Enable the Remark preset
+
+Add Postkit's Remark plugins to the Markdown pipeline:
 
 ```ts
 import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
@@ -358,14 +393,61 @@ export const markdownOptions = {
 };
 ```
 
+The preset enables GitHub Flavored Markdown, frontmatter recognition, the
+directive syntax, and the Postkit transform. Pass options to adjust it:
+
+- `before` and `after` add Remark plugins around Postkit's defaults.
+- `gfm: false` or `frontmatter: false` omits that default.
+- `postkit: { output: 'hast' }` annotates directives for pipelines such as
+  react-markdown that map `data.hName` to a registered component. The default
+  output is MDX JSX nodes.
+
 The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root
 imports remain supported.
 
+## Directive forms
+
+Every component has a `postkit-` directive name, listed on its
+[component page](/components).
+
+- Components with Markdown children use a container directive with three
+  colons, closed by a matching `:::` line.
+- Components without children use a leaf directive with two colons on a
+  single line.
+
+```md
+::postkit-audio{src="/media/episode.mp3" title="Episode 12"}
+
+::postkit-link-preview{href="https://example.com/article"}
+```
+
+Props that take a list, such as the `items` of `Tabs` or `Carousel`, take a
+JSON array written as a literal string:
+
+```md
+::postkit-tabs{items='[{"label":"npm","content":"npm install @postkit/chakra"},{"label":"pnpm","content":"pnpm add @postkit/chakra"}]'}
+```
+
+## Validation
+
+Directives are validated against the component declarations while the
+Markdown is transformed. By default the transform throws when a directive:
+
+- uses a prop the component does not declare;
+- gives an enum prop a value outside its allowed values;
+- omits a required prop.
+
+This makes malformed authored content fail a site build instead of silently
+changing behavior. Directives whose name is not a Postkit component are left
+untouched.
+
 ## Choose one syntax per file
 
-MDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and
-reserve `::postkit-*{...}` declarations for plain Markdown pipelines.
+MDX interprets braces as JavaScript expressions, which conflicts with the
+brace-attribute syntax of directives. Use JSX in `.mdx` files (see
+[MDX](/docs/mdx)) and reserve `::postkit-*{...}` declarations for plain
+Markdown pipelines.
 
 ## Portable documents and feeds
 
@@ -437,17 +519,92 @@ Annotations improve round trips, but they are not an authenticity mechanism.
 Continue to treat remote content as untrusted and expose only application-
 approved component overrides and link behavior.
 
-## Theming
+## Link previews and unfurling
 
-Source: /docs/theming
+Source: /docs/link-previews
 
-# Theming
+# Link previews and unfurling
+
+Remote content is normalized before rendering. `@postkit/unfurl` returns a
+provider-neutral snapshot; `LinkPreview` and `SocialPost` render that snapshot.
+This keeps remote requests, credentials, and provider-specific response formats
+out of presentation components.
+
+`@postkit/unfurl` normalizes metadata from Open Graph, oEmbed, OpenGraphs, and
+custom resolvers. It is designed for a server or build process, not direct use
+in a browser component.
+
+## Resolution flow
+
+1. The application receives or loads a URL.
+2. A trusted server validates it against the application's URL policy.
+3. `@postkit/unfurl` calls the configured provider.
+4. The application caches the normalized result.
+5. A Postkit component renders the normalized snapshot.
+
+Provider credentials remain at the resolver boundary.
+
+## Create a resolver
+
+Adapters are included for OpenGraphs, Iframely, Embedly, and Microlink. Every
+adapter normalizes its response into `ResolvedLinkPreview`. OpenGraphs is the
+default provider when a registry is created:
+
+```ts
+import {
+  createIframelyResolver,
+  createLinkResolverRegistry,
+  createOpenGraphsResolver,
+} from '@postkit/unfurl';
+
+export const linkResolver = createLinkResolverRegistry({
+  resolvers: [
+    createOpenGraphsResolver({
+      apiKey: process.env.OPENGRAPHS_API_KEY,
+    }),
+    createIframelyResolver({
+      apiKey: process.env.IFRAMELY_API_KEY!,
+    }),
+  ],
+  fallbackProviders: ['iframely'],
+});
+
+const metadata = await linkResolver.resolve('https://example.com/article');
+```
+
+Fallback providers are opt-in, so an outage or malformed response does not
+unexpectedly consume credits with another service. Use
+`createCallbackResolver` to wrap an application's own resolution function.
+
+## Rendering
+
+`LinkPreview` can consume a normalized link result through its `metadata`
+prop, either as an object or as a JSON string from a saved snapshot:
+
+```tsx
+<LinkPreview href="https://example.com/article" metadata={metadata} />
+```
+
+`SocialPost` can render a captured social snapshot or use an application
+callback to resolve one at runtime.
+
+Live embeds should remain an explicit application choice because they can add
+third-party scripts, tracking, consent requirements, and layout instability.
+Provider markup is retained as `embed.rawHtml`, but Postkit's React renderer
+never injects it. See [Security](/docs/security) for the full trust boundary.
+
+## Tokens
+
+Source: /docs/tokens
+
+# Tokens
 
 Postkit is host-native by default. Its semantic components use Chakra
-primitives internally, allowing an existing application's Heading, Link,
-Button, Input, Table, Tabs, Code, and related recipes to flow through. Postkit
-adds no visual preset unless the host opts into one. The `Prose` wrapper still
-provides structural content rhythm in either mode.
+primitives internally, so an existing application's tokens and recipes flow
+through. Postkit adds no visual preset unless the host opts into one. The
+`Prose` wrapper still provides structural content rhythm in either mode.
+
+## Layer a system
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
@@ -488,9 +645,8 @@ The layering order is:
 2. The site-wide Chakra `system`
 3. The explicit `theme` supplied to the nearest `PostkitProvider`
 
-Use content props for semantic variation and theme recipes for persistent visual
-policy. `createPostkitTheme` remains the final, component-scoped override for a
-documentation or editorial subtree.
+`PostkitProvider` accepts the same three props directly, so a site can pass
+`system`, `preset`, and `theme` there instead of composing a system first.
 
 Import theme-only APIs from `@postkit/chakra/theme`. This focused entry point
 keeps component and Markdown declarations out of shared theme libraries and
@@ -508,33 +664,22 @@ supported.
   palettes.
 - Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
 
-Markdown headings render through Chakra `Heading` with `as="h1"` through
-`as="h6"`. Postkit does not override the Heading recipe's font weight, family,
-line height, letter spacing, or color. Markdown blockquotes and semantic lists,
-including lists inside publishing components, render through Chakra
-`Blockquote` and `List`. Code-block copy actions similarly render through
-Chakra `Button` while retaining Postkit's copy behavior.
+## Typography
 
-Structured controls also retain their Chakra recipe boundaries:
-`NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
-composes `Stat`, poll result bars compose `Progress`, and product ratings
-compose a read-only `RatingGroup`.
+Postkit components use three font roles: `body` for prose, descriptions, and
+controls; `heading` for titles and heading-like slots; and `mono` for code. In
+a host system they come from the `fonts` tokens. To change them only inside a
+Postkit subtree, pass `typography` to `createPostkitTheme`:
 
-Card-like surfaces use Chakra `Card` roots and parts where their content model
-matches, author imagery uses `Avatar`, callouts and takeaways use `Alert`, and
-responsive video or embed frames use `AspectRatio`. Postkit retains semantic
-`article` and `aside` roots through Chakra's polymorphic rendering. Carousels
-delegate paging, pointer dragging, and accessible controls to Chakra
-`Carousel`, so the host's Carousel recipe flows through while Postkit retains
-its article item model and content slots. Instructional `Steps` compose Chakra
-`List`, allowing the host List recipe to flow through beneath Postkit's numbered
-marker treatment. `Disclosure` intentionally remains native `details` and
-`summary`, preserving built-in toggle behavior without client-side JavaScript.
-
-CodeBlock's canonical content-specific slots are `title`, `language`,
-`control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
-`line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,
-and `lineContent` slot names remain compatibility aliases.
+```tsx
+const theme = createPostkitTheme({
+  typography: {
+    body: '"Inter", sans-serif',
+    heading: ['"Newsreader"', 'serif'],
+    mono: '"JetBrains Mono", monospace',
+  },
+});
+```
 
 ## Tune prose rhythm
 
@@ -568,80 +713,556 @@ const documentationTheme = createPostkitTheme({
 
 The wrapper applies these defaults before its prose recipe and direct `css`
 prop, preserving both theme-level and instance-level overrides. Use
-`<Prose unstyled>` for a completely bare wrapper. Markdown `ul`, `ol`, and `li`
-elements render through Chakra's List recipe; pass `unstyled` to a mapped list
-root when its complete list subtree should be bare. Ordered-list mappings retain
-native `start`, `reversed`, and `type` attributes supplied by Markdown renderers.
+`<Prose unstyled>` for a completely bare wrapper.
 
-## Framework guides
+To restyle individual parts of a component, see [Part styles](/docs/part-styles).
 
-Source: /docs/framework-guides
+## Part styles
 
-# Framework guides
+Source: /docs/part-styles
 
-Framework adapters keep internal links native to the host router while
-preserving normal anchors for external URLs, protocol links, hashes, downloads,
-and explicit non-default targets.
+# Part styles
+
+Every Postkit component is built from named parts (slots). A `Callout` has
+`root`, `icon`, `content`, `title`, and `body`; a `CodeBlock` has a title,
+language label, copy control, and code lines. Each part can be styled at three
+levels: the host's Chakra recipes, a scoped Postkit theme, or a single
+instance.
+
+## Host recipes flow through
+
+Postkit's semantic components compose Chakra primitives, so the host's
+Heading, Link, Button, Input, Table, Tabs, Code, and related recipes apply
+without extra configuration.
+
+Markdown headings render through Chakra `Heading` with `as="h1"` through
+`as="h6"`. Postkit does not override the Heading recipe's font weight, family,
+line height, letter spacing, or color. Markdown blockquotes and semantic lists,
+including lists inside publishing components, render through Chakra
+`Blockquote` and `List`. Code-block copy actions similarly render through
+Chakra `Button` while retaining Postkit's copy behavior.
+
+Structured controls also retain their Chakra recipe boundaries:
+`NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
+composes `Stat`, poll result bars compose `Progress`, and product ratings
+compose a read-only `RatingGroup`.
+
+Card-like surfaces use Chakra `Card` roots and parts where their content model
+matches, author imagery uses `Avatar`, callouts and takeaways use `Alert`, and
+responsive video or embed frames use `AspectRatio`. Postkit retains semantic
+`article` and `aside` roots through Chakra's polymorphic rendering. Carousels
+delegate paging, pointer dragging, and accessible controls to Chakra
+`Carousel`, so the host's Carousel recipe flows through while Postkit retains
+its article item model and content slots. Instructional `Steps` compose Chakra
+`List`, allowing the host List recipe to flow through beneath Postkit's numbered
+marker treatment. `Disclosure` intentionally remains native `details` and
+`summary`, preserving built-in toggle behavior without client-side JavaScript.
+
+## Scoped slot recipes
+
+`createPostkitTheme` builds component-scoped slot recipe overrides for the
+`theme` prop on `PostkitProvider`. Each component key accepts `base`,
+`variants`, `defaultVariants`, and `compoundVariants`, keyed by slot name:
+
+```tsx
+import { PostkitProvider } from '@postkit/chakra';
+import { createPostkitTheme } from '@postkit/chakra/theme';
+
+const theme = createPostkitTheme({
+  callout: {
+    base: {
+      title: { fontWeight: 'semibold', letterSpacing: '-0.01em' },
+    },
+    variants: {
+      tone: {
+        tip: { root: { borderInlineStartWidth: '4px' } },
+      },
+    },
+  },
+});
+
+<PostkitProvider system={siteSystem} theme={theme}>
+  {article}
+</PostkitProvider>;
+```
+
+The override applies only beneath that provider, so a documentation or
+editorial subtree can differ from the rest of the site without changing
+site-wide component defaults. To register Postkit slot recipes in the host
+system itself, use the recipe names in `postkitRecipeKeys` (for example
+`postkitRecipeKeys.callout` is `postkitCallout`).
+
+## One instance
+
+Components accept `slotStyles` for per-instance part styles, `rootProps` for
+the root element, and `unstyled` to drop the component's recipe entirely:
+
+```tsx
+<Callout
+  title="Heads up"
+  tone="warning"
+  slotStyles={{ title: { textTransform: 'uppercase' } }}
+/>
+```
+
+Use content props for semantic variation and theme recipes for persistent
+visual policy. Repeating `slotStyles` across articles is a sign the style
+belongs in a theme.
+
+## CodeBlock parts
+
+CodeBlock's canonical content-specific slots are `title`, `language`,
+`control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
+`line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,
+and `lineContent` slot names remain compatibility aliases.
+
+## Lists
+
+Markdown `ul`, `ol`, and `li` elements render through Chakra's List recipe;
+pass `unstyled` to a mapped list root when its complete list subtree should be
+bare. Ordered-list mappings retain native `start`, `reversed`, and `type`
+attributes supplied by Markdown renderers.
+
+## Chakra
+
+Source: /docs/chakra
+
+# Chakra
+
+`@postkit/chakra` is the Chakra UI renderer for React. It maps every portable
+declaration to a Chakra-backed component, supplies the Markdown and MDX
+tooling, and ships Postkit's optional visual preset. The framework adapters
+(Next.js, React Router, TanStack Router, and Astro) all render through it.
+
+`@postkit/chakra` was previously named `@postkit/react`. The `@postkit/react`
+name is reserved for a future generic React renderer without a Chakra
+dependency.
+
+```sh
+npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
+```
+
+It needs React 19 and Chakra UI `>=3.29.0 <4`.
+
+## Entry points
+
+| Import                                    | Contains                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `@postkit/chakra`                         | Components, `PostkitProvider`, the MDX map, declarations, theme    |
+| `@postkit/chakra/theme`                   | `createPostkitSystem`, `createPostkitTheme`, `postkitDefaultTheme` |
+| `@postkit/chakra/remark`                  | `createPostkitRemarkPlugins` and the Remark transform              |
+| `@postkit/chakra/document`                | `DocumentRenderer` and the `@postkit/core` parsers and serializers |
+| `@postkit/chakra/component-manifest.json` | The generated component manifest                                   |
+
+The focused entry points keep React components out of theme libraries and
+build-only Markdown tooling.
+
+## The provider
+
+Render articles beneath `PostkitProvider`. It supplies Chakra context and the
+site-wide Postkit configuration:
+
+- `system`: the site's Chakra system. Its tokens, recipes, and global styles
+  are preserved.
+- `preset`: optional visual defaults beneath the system. Pass
+  `postkitDefaultTheme` for Postkit's standalone appearance.
+- `theme`: scoped overrides from `createPostkitTheme`, applied last.
+- `codeBlock` and `codeBlockAdapter`: code-block defaults and an optional
+  syntax highlighter (see [MDX](/docs/mdx)).
+- `resolver` or `resolvers`, with `defaultResolver`: runtime link resolution
+  for `LinkPreview` (see [Link previews](/docs/link-previews)).
+
+```tsx
+import { PostkitProvider } from '@postkit/chakra';
+
+<PostkitProvider system={siteSystem}>{article}</PostkitProvider>;
+```
+
+## Styling modes
+
+- Host-native: pass the site's `system` and omit `preset`. The host's Chakra
+  recipes control presentation.
+- Standalone preset: pass `preset={postkitDefaultTheme}` for Postkit's complete
+  visual treatment, including its dark CodeBlock, CodeGroup, and Terminal
+  palettes.
+- Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
+
+[Tokens](/docs/tokens) covers the layering, and [Part styles](/docs/part-styles)
+covers per-part overrides.
+
+## Presentation props
+
+Portable components share compact presentation controls:
+
+- `size`: `sm`, `md`, or `lg`
+- `variant`: `outline`, `subtle`, or `plain`
+
+Site-wide visual decisions belong in the Chakra system or Postkit theme rather
+than repeated content props. The [component catalog](/components) lists every
+component with live previews, its props, and its directive syntax.
+
+## Rendering documents
+
+To render a portable document (from HTML, Markdown, MDX, or JSON) rather than
+compiled MDX, use `DocumentRenderer` from `@postkit/chakra/document`. See
+[Portable documents and feeds](/docs/portable-documents).
 
 ## Next.js
+
+Source: /docs/nextjs
+
+# Next.js
+
+`@postkit/next` layers `next/link` over `@postkit/chakra`. Internal links stay
+native to the Next.js router, while external URLs, protocol links, hashes,
+downloads, and explicit non-default targets remain normal anchors.
+
+```sh
+npm install @postkit/next @postkit/chakra @chakra-ui/react @emotion/react react react-dom
+```
+
+It supports Next.js 15 and 16 with React 19 and the matching `@postkit/chakra`
+release.
+
+## Register the MDX components
 
 Create the native MDX component map in `mdx-components.tsx`:
 
 ```tsx
+// mdx-components.tsx
 import { createPostkitNextComponents } from '@postkit/next';
+import type { MDXComponents } from 'mdx/types';
 
-export function useMDXComponents() {
-  return createPostkitNextComponents();
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return createPostkitNextComponents({ components });
 }
 ```
 
-## React Router and TanStack Router
+The returned value is an MDX component map. Components supplied through
+`options.components` override Postkit defaults, so site components take final
+precedence:
 
-Create the adapter's component map and render the article beneath the
-application router provider. Both adapters accept a link-prop mapper for
-application-specific route behavior.
+```tsx
+export function useMDXComponents(): MDXComponents {
+  return createPostkitNextComponents({
+    components: {
+      h2: ArticleHeading,
+    },
+  });
+}
+```
 
-TanStack Router applications can translate portable string URLs into a typed
-route, params, search, mask, or preload configuration at this boundary.
+## Mount the provider
+
+Mount `PostkitProvider` in the application's provider tree:
+
+```tsx
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <PostkitProvider preset={postkitDefaultTheme}>{children}</PostkitProvider>
+  );
+}
+```
+
+The preset is optional; omit it when the host Chakra recipes should provide the
+visual policy. The application owns its Chakra system, page layout, content
+loader, and Next.js image configuration.
+
+## Customize links
+
+Next-specific link props can be supplied globally or derived for each
+destination:
+
+```tsx
+export function useMDXComponents(): MDXComponents {
+  return createPostkitNextComponents({
+    link: {
+      linkProps: { prefetch: false },
+      mapLinkProps: ({ href }) => ({
+        scroll: !href.startsWith('/reference/'),
+      }),
+    },
+  });
+}
+```
+
+## Remote MDX
+
+The same map works with runtimes such as `next-mdx-remote`. Compile with
+Postkit's Remark plugins so plain Markdown directives become components:
+
+```tsx
+import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
+import { createPostkitNextComponents } from '@postkit/next';
+import { MDXRemote } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
+
+const components = createPostkitNextComponents();
+
+const source = await serialize(markdown, {
+  mdxOptions: { remarkPlugins: createPostkitRemarkPlugins() },
+});
+
+<MDXRemote {...source} components={components} />;
+```
+
+The package README and the checked Next.js example in the repository's
+`examples/next` directory contain the complete adapter API.
+
+## React Router
+
+Source: /docs/react-router
+
+# React Router
+
+`@postkit/react-router` routes internal destinations through React Router and
+leaves external URLs, protocol links, hashes, downloads, and explicit
+non-default targets as native anchors.
+
+```sh
+npm install @postkit/react-router @postkit/chakra @chakra-ui/react @emotion/react react react-dom react-router
+```
+
+It supports React Router 7 with React 19 and the matching `@postkit/chakra`
+release.
+
+## Create the component map
+
+```tsx
+import { createPostkitReactRouterComponents } from '@postkit/react-router';
+
+export const mdxComponents = createPostkitReactRouterComponents();
+```
+
+Render the article beneath both the application router and `PostkitProvider`:
+
+```tsx
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
+import { BrowserRouter } from 'react-router';
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <PostkitProvider preset={postkitDefaultTheme}>
+        <Article components={mdxComponents} />
+      </PostkitProvider>
+    </BrowserRouter>
+  );
+}
+```
+
+The application owns route definitions, data loading, and the outer page
+layout. The preset is optional; omit it when the host Chakra recipes should
+provide the visual policy.
+
+## Customize components and links
+
+Site components take final precedence:
+
+```tsx
+export const mdxComponents = createPostkitReactRouterComponents({
+  components: {
+    h2: ArticleHeading,
+  },
+});
+```
+
+Router-specific link props can be supplied globally or derived for each
+destination:
+
+```tsx
+export const mdxComponents = createPostkitReactRouterComponents({
+  link: {
+    linkProps: { prefetch: 'intent' },
+    mapLinkProps: ({ href }) => ({
+      preventScrollReset: href.startsWith('?'),
+    }),
+  },
+});
+```
+
+If React Router reports missing context, move the rendered article beneath the
+router provider. A checked example lives in the repository's
+`examples/react-router` directory.
+
+## TanStack Router
+
+Source: /docs/tanstack-router
+
+# TanStack Router
+
+`@postkit/tanstack-router` converts internal Markdown destinations into router
+links and keeps external URLs, protocol links, hashes, downloads, and explicit
+non-default targets as native anchors.
+
+```sh
+npm install @postkit/tanstack-router @postkit/chakra @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
+```
+
+It supports TanStack Router `>=1.120 <2` with React 19 and the matching
+`@postkit/chakra` release.
+
+## Create the component map
+
+```tsx
+import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router';
+
+export const mdxComponents = createPostkitTanStackRouterComponents();
+```
+
+Render the article beneath the application's TanStack Router provider and
+`PostkitProvider`. The application owns its generated route tree, data loading,
+and page layout. `PostkitProvider` is host-native by default; pass
+`preset={postkitDefaultTheme}` only when Postkit's standalone visual treatment
+is wanted.
+
+## Recover typed routes
+
+Plain Markdown stores destinations as strings. Resolve those strings into the
+application's generated route tree at the adapter boundary:
+
+```tsx
+export const mdxComponents = createPostkitTanStackRouterComponents({
+  link: {
+    linkProps: { preload: 'intent' },
+    mapLinkProps: ({ href }) => {
+      const article = /^\/articles\/([^/]+)$/.exec(href);
+
+      return article
+        ? {
+            to: '/articles/$slug',
+            params: { slug: article[1] },
+          }
+        : {};
+    },
+  },
+});
+```
+
+The link mapper can return route-specific `to`, `params`, `search`, mask, and
+preload props.
+
+## Customize components
+
+```tsx
+export const mdxComponents = createPostkitTanStackRouterComponents({
+  components: {
+    h2: ArticleHeading,
+  },
+});
+```
+
+If router context is missing, move the article beneath the router provider. If
+a generated route rejects a portable string, translate it in `mapLinkProps`. A
+checked example lives in the repository's `examples/tanstack-router` directory.
 
 ## Astro
 
-Install the Astro React and MDX integrations, add `postkitAstro()` to the Astro
-configuration, and render imported MDX with `postkitAstroComponents`. Static
-components remain server-rendered while interactive components hydrate at an
-appropriate boundary.
+Source: /docs/astro
 
-Each npm package README contains the exact peer dependencies and complete
-adapter API.
+# Astro
 
-## Unfurling and oEmbed
+`@postkit/astro` renders Postkit declarations through Astro MDX, provides
+Chakra context for every isolated React rendering boundary, and hydrates only
+components that require a React runtime.
 
-Source: /docs/unfurling
+## Install
 
-# Unfurling and oEmbed
+```sh
+npm install @postkit/astro @postkit/chakra
+npx astro add react mdx
+npm install @astrojs/markdown-remark
+```
 
-`@postkit/unfurl` normalizes metadata from Open Graph, oEmbed, OpenGraphs, and
-custom resolvers. It is designed for a server or build process, not direct use
-in a browser component.
+It supports Astro `>=6.4 <8`.
 
-## Resolution flow
+Add the Postkit integration and its unified Markdown processor:
 
-1. The application receives or loads a URL.
-2. A trusted server validates it against the application's URL policy.
-3. `@postkit/unfurl` calls the configured provider.
-4. The application caches the normalized result.
-5. A Postkit component renders the normalized snapshot.
+```ts
+// astro.config.ts
+import mdx from '@astrojs/mdx';
+import react from '@astrojs/react';
+import { defineConfig } from 'astro/config';
+import { createPostkitAstroMdxOptions, postkitAstro } from '@postkit/astro';
 
-Provider credentials remain at the resolver boundary.
+export default defineConfig({
+  integrations: [postkitAstro(), react(), mdx(createPostkitAstroMdxOptions())],
+});
+```
 
-## Rendering
+`createPostkitAstroMdxOptions()` selects Astro's unified processor because
+Postkit's base Markdown lifecycle uses Remark plugins. Additional Remark
+plugins belong in the Postkit preset's `before` or `after` lists, while Rehype
+configuration can be passed alongside it.
 
-`LinkPreview` can consume a normalized link result. `SocialPost` can render a
-captured social snapshot or use an application callback to resolve one at
-runtime.
+## Use a custom Chakra system
 
-Live embeds should remain an explicit application choice because they can add
-third-party scripts, tracking, consent requirements, and layout instability.
+`postkitAstro()` uses Chakra's host-native `defaultSystem` unless the site
+provides a module that default-exports its own `SystemContext`:
+
+```ts
+postkitAstro({
+  chakraSystem: './src/styles/postkit-system.ts',
+});
+```
+
+Opt into Postkit's standalone preset from that module when desired:
+
+```ts
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/chakra';
+
+export default createPostkitSystem({ preset: postkitDefaultTheme });
+```
+
+The relative path resolves from the Astro project root and is imported by both
+the server renderer and hydrated islands. This avoids trying to serialize a
+Chakra system through Astro island props.
+
+## Render MDX
+
+Pass the component map to imported MDX or to content collections:
+
+```astro
+---
+import { render } from 'astro:content';
+import { postkitAstroComponents } from '@postkit/astro/components';
+
+const { Content } = await render(Astro.props.entry);
+---
+
+<Content components={postkitAstroComponents} />
+```
+
+Site components take final precedence:
+
+```ts
+import { createPostkitAstroComponents } from '@postkit/astro/components';
+
+export const articleComponents = createPostkitAstroComponents({
+  h2: ArticleHeading,
+  Callout,
+});
+```
+
+Use Postkit's JSX declarations in Astro MDX. Reserve `::postkit-*{...}`
+directives for plain Markdown pipelines.
+
+## Hydration policy
+
+Audio and Video use native browser controls, while AppearsOn, Figure, and the
+current Chart renderer are static, so Astro emits them without a client
+runtime. Disclosure also works natively without hydration. Carousel, CodeBlock,
+CodeGroup, LinkPreview, NewsletterSignup, Poll, ShareActions, SocialPost, and
+Tabs use `client:visible` and hydrate only when they approach the viewport.
+
+Poll selections are local unless the host supplies persistence. Host callbacks
+such as `onVote` belong inside a hydrated React wrapper; functions cannot be
+serialized as props across an Astro island boundary.
+
+The package README and the repository's `examples/astro` directory, which is
+built and inspected in CI, contain the complete API.
 
 ## API reference
 

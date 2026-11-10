@@ -1,8 +1,8 @@
 ---
 title: Troubleshooting
 summary: Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
-category: Help
-order: 90
+category: Reference
+order: 8
 ---
 
 # Troubleshooting

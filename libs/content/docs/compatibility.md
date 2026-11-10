@@ -2,7 +2,7 @@
 title: Compatibility and environments
 summary: Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
 category: Reference
-order: 86
+order: 6
 ---
 
 # Compatibility and environments

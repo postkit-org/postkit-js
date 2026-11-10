@@ -17,7 +17,11 @@ import NextLink from 'next/link';
 import { MDXRemote } from 'next-mdx-remote';
 
 import type { DocsEntry, DocsEntrySummary } from '../../lib/docs';
-import { getDocsEntries, getDocsEntry } from '../../lib/docs.server';
+import {
+  getDocsEntries,
+  getDocsEntry,
+  getDocsNavigation,
+} from '../../lib/docs.server';
 
 const postkitComponents = createPostkitNextComponents({
   link: {
@@ -35,12 +39,17 @@ interface DocsEntryParams extends Record<string, string> {
   readonly slug: string;
 }
 
-export const getStaticPaths: GetStaticPaths<DocsEntryParams> = async () => ({
-  fallback: false,
-  paths: getDocsEntries().map((entry) => ({
-    params: { slug: entry.slug },
-  })),
-});
+export const getStaticPaths: GetStaticPaths<DocsEntryParams> = async () => {
+  // Reports unresolved nav items as a build warning (PK-035 renders the nav).
+  getDocsNavigation();
+
+  return {
+    fallback: false,
+    paths: getDocsEntries().map((entry) => ({
+      params: { slug: entry.slug },
+    })),
+  };
+};
 
 export const getStaticProps: GetStaticProps<
   DocsEntryPageProps,
@@ -76,18 +85,7 @@ export default function DocsEntryPage({
 
       <Container maxW="4xl" paddingBlock={{ base: '12', md: '20' }}>
         <Stack gap="8">
-          <ChakraLink
-            alignSelf="flex-start"
-            asChild
-            color="accent"
-            fontSize="sm"
-            fontWeight="700"
-            textDecoration="none"
-          >
-            <NextLink href="/docs">← All documentation</NextLink>
-          </ChakraLink>
-
-          <Box>
+          <Flex align="baseline" gap="3" wrap="wrap">
             <Text
               color="accent"
               fontFamily="mono"
@@ -98,7 +96,17 @@ export default function DocsEntryPage({
             >
               {entry.category}
             </Text>
-          </Box>
+            {entry.since ? (
+              <Text color="fg.secondary" fontFamily="mono" fontSize="xs">
+                Since {entry.since}
+              </Text>
+            ) : null}
+            {entry.status === 'draft' ? (
+              <Text color="fg.secondary" fontFamily="mono" fontSize="xs">
+                Draft
+              </Text>
+            ) : null}
+          </Flex>
 
           <MDXRemote {...entry.source} components={postkitComponents} />
 

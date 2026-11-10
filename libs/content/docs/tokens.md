@@ -1,17 +1,18 @@
 ---
-title: Theming
-summary: Layer Postkit recipes over a Chakra system while preserving the host application's design tokens.
-category: Integration
-order: 60
+title: Tokens
+summary: Layer Postkit over a host Chakra system so the site's tokens, fonts, and prose rhythm drive every component.
+category: Customizing
+order: 1
 ---
 
-# Theming
+# Tokens
 
 Postkit is host-native by default. Its semantic components use Chakra
-primitives internally, allowing an existing application's Heading, Link,
-Button, Input, Table, Tabs, Code, and related recipes to flow through. Postkit
-adds no visual preset unless the host opts into one. The `Prose` wrapper still
-provides structural content rhythm in either mode.
+primitives internally, so an existing application's tokens and recipes flow
+through. Postkit adds no visual preset unless the host opts into one. The
+`Prose` wrapper still provides structural content rhythm in either mode.
+
+## Layer a system
 
 ```tsx
 import { createSystem, defaultConfig } from '@chakra-ui/react';
@@ -52,9 +53,8 @@ The layering order is:
 2. The site-wide Chakra `system`
 3. The explicit `theme` supplied to the nearest `PostkitProvider`
 
-Use content props for semantic variation and theme recipes for persistent visual
-policy. `createPostkitTheme` remains the final, component-scoped override for a
-documentation or editorial subtree.
+`PostkitProvider` accepts the same three props directly, so a site can pass
+`system`, `preset`, and `theme` there instead of composing a system first.
 
 Import theme-only APIs from `@postkit/chakra/theme`. This focused entry point
 keeps component and Markdown declarations out of shared theme libraries and
@@ -72,33 +72,22 @@ supported.
   palettes.
 - Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
 
-Markdown headings render through Chakra `Heading` with `as="h1"` through
-`as="h6"`. Postkit does not override the Heading recipe's font weight, family,
-line height, letter spacing, or color. Markdown blockquotes and semantic lists,
-including lists inside publishing components, render through Chakra
-`Blockquote` and `List`. Code-block copy actions similarly render through
-Chakra `Button` while retaining Postkit's copy behavior.
+## Typography
 
-Structured controls also retain their Chakra recipe boundaries:
-`NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
-composes `Stat`, poll result bars compose `Progress`, and product ratings
-compose a read-only `RatingGroup`.
+Postkit components use three font roles: `body` for prose, descriptions, and
+controls; `heading` for titles and heading-like slots; and `mono` for code. In
+a host system they come from the `fonts` tokens. To change them only inside a
+Postkit subtree, pass `typography` to `createPostkitTheme`:
 
-Card-like surfaces use Chakra `Card` roots and parts where their content model
-matches, author imagery uses `Avatar`, callouts and takeaways use `Alert`, and
-responsive video or embed frames use `AspectRatio`. Postkit retains semantic
-`article` and `aside` roots through Chakra's polymorphic rendering. Carousels
-delegate paging, pointer dragging, and accessible controls to Chakra
-`Carousel`, so the host's Carousel recipe flows through while Postkit retains
-its article item model and content slots. Instructional `Steps` compose Chakra
-`List`, allowing the host List recipe to flow through beneath Postkit's numbered
-marker treatment. `Disclosure` intentionally remains native `details` and
-`summary`, preserving built-in toggle behavior without client-side JavaScript.
-
-CodeBlock's canonical content-specific slots are `title`, `language`,
-`control`, `copyTrigger`, `copyIndicator`, `content`, `code`, `codeText`,
-`line`, and `lineNumber`. The older `filename`, `actions`, `button`, `scroller`,
-and `lineContent` slot names remain compatibility aliases.
+```tsx
+const theme = createPostkitTheme({
+  typography: {
+    body: '"Inter", sans-serif',
+    heading: ['"Newsreader"', 'serif'],
+    mono: '"JetBrains Mono", monospace',
+  },
+});
+```
 
 ## Tune prose rhythm
 
@@ -132,7 +121,6 @@ const documentationTheme = createPostkitTheme({
 
 The wrapper applies these defaults before its prose recipe and direct `css`
 prop, preserving both theme-level and instance-level overrides. Use
-`<Prose unstyled>` for a completely bare wrapper. Markdown `ul`, `ol`, and `li`
-elements render through Chakra's List recipe; pass `unstyled` to a mapped list
-root when its complete list subtree should be bare. Ordered-list mappings retain
-native `start`, `reversed`, and `type` attributes supplied by Markdown renderers.
+`<Prose unstyled>` for a completely bare wrapper.
+
+To restyle individual parts of a component, see [Part styles](/docs/part-styles).

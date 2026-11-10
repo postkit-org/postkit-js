@@ -1,11 +1,11 @@
 ---
-title: Markdown and MDX
-summary: Author Postkit declarations in MDX or literal-only plain Markdown directives.
-category: Authoring
-order: 50
+title: MDX
+summary: Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.
+category: Writing
+order: 1
 ---
 
-# Markdown and MDX
+# MDX
 
 Use JSX declarations in MDX:
 
@@ -18,7 +18,17 @@ Use JSX declarations in MDX:
 ```
 
 Register Postkit's component map with the framework's MDX runtime. Framework
-adapters supply the same components with native internal-link behavior.
+adapters supply the same components with native internal-link behavior:
+
+```tsx
+import { createPostkitMdxComponents } from '@postkit/chakra';
+
+export const mdxComponents = createPostkitMdxComponents();
+```
+
+MDX is executable JavaScript. Compile it only from authors trusted at that
+level; for untrusted authoring, use [Markdown directives](/docs/markdown-directives)
+instead (see [Security](/docs/security)).
 
 ## Code blocks
 
@@ -117,33 +127,8 @@ Supported options are `title`/`filename`, `lineNumbers`/`noLineNumbers`,
 `data-max-height`. Explicit attributes take precedence over the metadata
 string. CSS expressions and authored JavaScript are rejected.
 
-## Plain Markdown directives
-
-Plain Markdown pipelines can use literal-only directives:
-
-```md
-:::postkit-callout{title="Release status" tone="tip"}
-The content remains regular **Markdown**.
-:::
-```
-
-Enable Postkit's Remark preset in the Markdown pipeline. Directive props are
-literal values rather than arbitrary JavaScript, which keeps the format
-portable and suitable for untrusted authoring environments.
-
-```ts
-import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
-
-export const markdownOptions = {
-  remarkPlugins: createPostkitRemarkPlugins(),
-};
-```
-
-The focused `@postkit/chakra/remark` entry point keeps React components and
-Chakra theme declarations out of build-only Markdown tooling. Existing root
-imports remain supported.
-
 ## Choose one syntax per file
 
 MDX interprets braces as JavaScript expressions. Use JSX in `.mdx` files and
-reserve `::postkit-*{...}` declarations for plain Markdown pipelines.
+reserve `::postkit-*{...}` declarations for plain Markdown pipelines (see
+[Markdown directives](/docs/markdown-directives)).
