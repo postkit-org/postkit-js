@@ -21,6 +21,7 @@ import {
 } from '../components/home/home-data.server';
 import { PageMeta, WebSiteJsonLd } from '../components/layout';
 import { trackGoal } from '../lib/analytics';
+import { assertSearchReady } from '../lib/search-records';
 
 interface HomePageProps {
   readonly stats: HomeStats;
@@ -28,13 +29,19 @@ interface HomePageProps {
   readonly authoringDocument: PostkitDocument;
 }
 
-export const getStaticProps: GetStaticProps<HomePageProps> = async () => ({
-  props: {
-    stats: getHomeStats(),
-    emailHtml: await renderEmailArticle(),
-    authoringDocument: parseAuthoringExample(),
-  },
-});
+export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+  // Search's build-time check (PK-040): fails `next build` if search-featured.json names
+  // a page that isn't published.
+  assertSearchReady();
+
+  return {
+    props: {
+      stats: getHomeStats(),
+      emailHtml: await renderEmailArticle(),
+      authoringDocument: parseAuthoringExample(),
+    },
+  };
+};
 
 export default function IndexPage({
   stats,

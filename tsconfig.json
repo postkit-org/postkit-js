@@ -44,6 +44,9 @@
     },
     {
       "path": "./libs/site-feeds"
+    },
+    {
+      "path": "./libs/site-search"
     }
   ],
   "compilerOptions": {}

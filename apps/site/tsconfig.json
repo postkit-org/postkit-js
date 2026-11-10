@@ -29,6 +29,7 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
+    "src/content/*.json",
     "index.d.ts",
     "next-env.d.ts"
   ],
@@ -57,6 +58,9 @@
     },
     {
       "path": "../../libs/site-feeds"
+    },
+    {
+      "path": "../../libs/site-search"
     },
     {
       "path": "../../packages/shiki"

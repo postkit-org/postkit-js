@@ -1,0 +1,39 @@
+{
+  "name": "@postkit/site-search",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "import": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "name": "site-search",
+    "tags": [
+      "npm:private",
+      "scope:postkit",
+      "type:util"
+    ]
+  },
+  "dependencies": {
+    "@chakra-docs/core": "^0.3.0",
+    "@chakra-docs/search": "^0.3.0",
+    "github-slugger": "^2.0.0"
+  },
+  "devDependencies": {
+    "@postkit/content": "0.0.1",
+    "gray-matter": "^4.0.3",
+    "yaml": "^2.9.0"
+  }
+}
