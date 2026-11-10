@@ -125,6 +125,66 @@ type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
   definition, and each definition is also exported on its own, such as
   `calloutDefinition`.
 
+## Behaviours
+
+`@postkit/core/behaviors` holds the behaviour of Postkit's interactive
+components as framework-free state machines, so React hooks, custom elements
+and tests all run the same logic:
+
+| Behaviour      | Engine           | Postkit configuration                                                    |
+| -------------- | ---------------- | ------------------------------------------------------------------------ |
+| `carousel`     | Zag `carousel`   | One slide per page, no gap, wraps at both ends, mouse drag               |
+| `tabs`         | Zag `tabs`       | Horizontal; arrow keys, Home and End select as focus moves               |
+| `codeCopy`     | Zag `clipboard`  | "Copied" feedback for one second                                         |
+| `embedConsent` | Plain TypeScript | `idle` → `requested` → `loaded`; `click` activation waits for the reader |
+
+```ts
+import { createTabs, spreadProps } from '@postkit/core/behaviors';
+
+const tabs = createTabs({ id: 'install', values: ['npm', 'pnpm'] });
+const render = () => spreadProps(list, tabs.api.getListProps()); // …each part
+render();
+tabs.subscribe(render);
+tabs.start();
+```
+
+- `createCarousel`, `createTabs`, `createCodeCopy` and `createEmbedConsent`
+  return a running behaviour: `api`, `start`, `stop` and `subscribe`.
+  `spreadProps` applies an API's props to DOM elements; `examples/behaviors`
+  shows the whole loop.
+- For framework adapters, each Zag behaviour also exports its machine, its
+  `connect` and its props (`tabsMachine`, `connectTabs`, `tabsProps(options)`),
+  so a React hook is `connectTabs(useMachine(tabsMachine, tabsProps(options)),
+normalizeProps)`. Embed consent exports `embedConsentTransition` and
+  `connectEmbedConsent` for the same purpose.
+- `createMachineService` runs any flat Zag machine without a UI framework.
+
+The `@zag-js/*` packages are optional peer dependencies at `^1.27.0`, the range
+`@chakra-ui/react` 3.29 and later resolve through Ark UI, so a Chakra host
+installs one copy. Install `@zag-js/carousel`, `@zag-js/tabs`,
+`@zag-js/clipboard`, `@zag-js/core` and `@zag-js/types` yourself when you use
+`/behaviors` without Chakra. The root `@postkit/core` entry never imports them.
+
+### Shared behaviour specs
+
+`@postkit/core/behaviors/testing` exports one spec per behaviour
+(`carouselBehaviorSpec`, `tabsBehaviorSpec`, `codeCopyBehaviorSpec`,
+`embedConsentBehaviorSpec`). Every renderer runs them against its own
+components through a `BehaviorDriver`: `render(fixture)` returns the rendered
+container, `interact(action)` runs a DOM interaction and lets the renderer
+settle, `waitFor(assertion)` retries, and `cleanup()` unmounts. The specs read
+state only from the DOM (roles, ARIA and `data-*` attributes, text), have no
+test-runner dependency, and emulate the layout and observers jsdom lacks.
+
+```ts
+import {
+  registerBehaviorSpec,
+  tabsBehaviorSpec,
+} from '@postkit/core/behaviors/testing';
+
+registerBehaviorSpec(tabsBehaviorSpec(myDriver), { describe, it });
+```
+
 ## License
 
 MIT

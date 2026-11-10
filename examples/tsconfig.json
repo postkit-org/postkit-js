@@ -12,6 +12,7 @@
     "types": ["node"]
   },
   "include": [
+    "behaviors/**/*.ts",
     "component-definition/**/*.ts",
     "email/**/*.ts",
     "email/**/*.tsx",
