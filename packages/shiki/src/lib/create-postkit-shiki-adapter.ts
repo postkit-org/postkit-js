@@ -25,6 +25,36 @@ export const postkitShikiThemes = {
   light: 'github-light',
 } as const satisfies PostkitShikiThemes;
 
+/**
+ * Colour fixes applied to the curated themes. Postkit's code surface is dark in
+ * both colour modes, and GitHub Dark's comment grey (#6a737d) is about 3.6:1
+ * on it. #959da5, a lighter grey from the same GitHub palette, is above 4.5:1
+ * on every Postkit code surface (`bg.code`, `bg.codeMuted`, highlighted lines).
+ * Only the comment colour changes; the other token colours already pass.
+ */
+const postkitShikiColorReplacements = {
+  'github-dark': { '#6a737d': '#959da5' },
+} as const satisfies Record<string, Record<string, string>>;
+
+type ColorReplacements = Record<string, string | Record<string, string>>;
+
+function withPostkitColorReplacements(
+  options: PostkitShikiHighlightOptions | undefined,
+): PostkitShikiHighlightOptions {
+  const merged: ColorReplacements = { ...options?.colorReplacements };
+  for (const [theme, replacements] of Object.entries(
+    postkitShikiColorReplacements,
+  )) {
+    const own = merged[theme];
+    // The host's own replacements for a theme win over Postkit's.
+    merged[theme] = {
+      ...replacements,
+      ...(typeof own === 'object' ? own : {}),
+    };
+  }
+  return { ...options, colorReplacements: merged };
+}
+
 export type PostkitShikiHighlightOptions = Omit<
   NonNullable<ShikiAdapterOptions<Highlighter>['highlightOptions']>,
   'lang' | 'theme'
@@ -58,8 +88,9 @@ export function createPostkitShikiAdapter(
         themes: [...new Set([themes.dark, themes.light])],
       });
     },
-    highlightOptions:
-      options.highlightOptions as ShikiAdapterOptions<Highlighter>['highlightOptions'],
+    highlightOptions: withPostkitColorReplacements(
+      options.highlightOptions,
+    ) as ShikiAdapterOptions<Highlighter>['highlightOptions'],
     theme: {
       dark: themes.dark,
       light: themes.light,
