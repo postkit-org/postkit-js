@@ -11,9 +11,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { AppearsOn } from './appears-on.js';
 import { Audio } from './audio.js';
+import { Aside } from '../../components/aside/aside.js';
+import { Callout } from '../../components/callout/callout.js';
+import { Figure } from '../../components/figure/figure.js';
 import {
-  Aside,
-  Callout,
   CardGrid,
   Disclosure,
   Gallery,
@@ -24,7 +25,6 @@ import { AuthorCard } from './author-card.js';
 import { CallToAction } from './call-to-action.js';
 import { Carousel } from './carousel.js';
 import { Chart } from './chart.js';
-import { Figure } from './figure.js';
 import { LinkPreview } from './link-preview.js';
 import { NewsletterSignup } from './newsletter-signup.js';
 import { PostkitProvider } from '../provider.js';

@@ -114,6 +114,22 @@ export interface PostkitComponentDefinition<
   readonly themeVariants: readonly ThemeVariant[];
   readonly keywords: readonly string[];
   readonly example?: PostkitComponentExampleDefinition<Props>;
+  /**
+   * Type-only: the anatomy slot union, `'root' | 'icon' | …`. It is
+   * `undefined` at runtime and never enumerable.
+   *
+   * It exists so a renderer can read the union in value position
+   * (`{ callout: calloutDefinition.$slot }`): declaration emit then writes the
+   * resolved literal union, so the renderer's public maps cost consumers no
+   * type instantiations. In type position, use {@link PostkitSlotOf}.
+   */
+  readonly $slot: Slots[number];
+  /**
+   * Type-only: the theme-variant prop union, `'size' | 'variant' | …`. It is
+   * `undefined` at runtime; see {@link PostkitComponentDefinition.$slot}. In
+   * type position, use {@link PostkitThemeVariantOf}.
+   */
+  readonly $themeVariant: ThemeVariant;
 }
 
 /** Any component definition. */

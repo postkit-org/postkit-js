@@ -193,6 +193,20 @@ describe('definePostkitComponent', () => {
     expectTypeOf(callout).toExtend<AnyPostkitComponentDefinition>();
   });
 
+  it('carries type-only slot and theme-variant unions for value-position derivation', () => {
+    const callout = defineCallout();
+
+    expectTypeOf(callout.$slot).toEqualTypeOf<
+      'root' | 'icon' | 'title' | 'body'
+    >();
+    expectTypeOf(callout.$themeVariant).toEqualTypeOf<
+      'size' | 'variant' | 'tone'
+    >();
+    // Type-only: nothing at runtime, so manifests and equality don't change.
+    expect('$slot' in callout).toBe(false);
+    expect('$themeVariant' in callout).toBe(false);
+  });
+
   it('type-checks examples against the props', () => {
     expect(() =>
       definePostkitComponent({

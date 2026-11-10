@@ -1,3 +1,40 @@
+import {
+  appearsOnDefinition,
+  audienceBoundaryDefinition,
+  audioDefinition,
+  authorCardDefinition,
+  calloutDefinition,
+  callToActionDefinition,
+  cardGridDefinition,
+  carouselDefinition,
+  chartDefinition,
+  codeBlockDefinition,
+  codeGroupDefinition,
+  comparisonDefinition,
+  diffDefinition,
+  disclosureDefinition,
+  figureDefinition,
+  fileCardDefinition,
+  fileTreeDefinition,
+  galleryDefinition,
+  keyTakeawayDefinition,
+  linkPreviewDefinition,
+  newsletterSignupDefinition,
+  pollDefinition,
+  productCardDefinition,
+  pullQuoteDefinition,
+  relatedContentDefinition,
+  seriesNavigationDefinition,
+  shareActionsDefinition,
+  socialPostDefinition,
+  sponsorBlockDefinition,
+  statDefinition,
+  stepsDefinition,
+  tabsDefinition,
+  terminalDefinition,
+  videoDefinition,
+} from '@postkit/core/components';
+
 /**
  * A deliberately shallow style object for Postkit theme overrides.
  *
@@ -58,192 +95,143 @@ export interface PostkitTypography {
   readonly mono?: PostkitFontFamily;
 }
 
-/**
- * The anatomy slots of every themed component, keyed by theme key.
+/*
+ * The theme maps are derived from the definitions in `@postkit/core/components`.
  *
- * The component entries mirror each definition's `slots` in
- * `@postkit/core/components`, and `theme-contract.spec.ts` fails if they drift.
- * They stay written out because indexing the definitions' slot arrays would
- * cost every theme consumer extra type instantiations.
+ * They read each definition's type-only `$slot` and `$themeVariant` unions in
+ * value position, so the types below are inferred. Declaration emit writes
+ * inferred types out as resolved literal unions: theme consumers never load
+ * the definitions' declarations and pay no more type instantiations than for
+ * written-out maps (`npm run types:performance:check`). Indexing the
+ * definitions in type position instead (`PostkitSlotOf<typeof …>`) would cost
+ * every consumer an instantiation per component. The objects are only read
+ * with `typeof`; their runtime values are `undefined`.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- read only with `typeof`
+const postkitThemeSlots = {
+  audienceBoundary: audienceBoundaryDefinition.$slot,
+  appearsOn: appearsOnDefinition.$slot,
+  audio: audioDefinition.$slot,
+  authorCard: authorCardDefinition.$slot,
+  callout: calloutDefinition.$slot,
+  callToAction: callToActionDefinition.$slot,
+  cardGrid: cardGridDefinition.$slot,
+  carousel: carouselDefinition.$slot,
+  chart: chartDefinition.$slot,
+  codeBlock: codeBlockDefinition.$slot,
+  codeGroup: codeGroupDefinition.$slot,
+  comparison: comparisonDefinition.$slot,
+  diff: diffDefinition.$slot,
+  disclosure: disclosureDefinition.$slot,
+  figure: figureDefinition.$slot,
+  fileCard: fileCardDefinition.$slot,
+  fileTree: fileTreeDefinition.$slot,
+  gallery: galleryDefinition.$slot,
+  keyTakeaway: keyTakeawayDefinition.$slot,
+  linkPreview: linkPreviewDefinition.$slot,
+  newsletterSignup: newsletterSignupDefinition.$slot,
+  poll: pollDefinition.$slot,
+  productCard: productCardDefinition.$slot,
+  pullQuote: pullQuoteDefinition.$slot,
+  relatedContent: relatedContentDefinition.$slot,
+  seriesNavigation: seriesNavigationDefinition.$slot,
+  shareActions: shareActionsDefinition.$slot,
+  socialPost: socialPostDefinition.$slot,
+  sponsorBlock: sponsorBlockDefinition.$slot,
+  stat: statDefinition.$slot,
+  steps: stepsDefinition.$slot,
+  tabs: tabsDefinition.$slot,
+  terminal: terminalDefinition.$slot,
+  video: videoDefinition.$slot,
+} as const;
+
+/** `LinkPreview`'s theme variants plus its recipe-only `compact` variant. */
+function withCompactVariant<Variant extends string>(
+  variant: Variant,
+): Variant | 'compact' {
+  return variant;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- read only with `typeof`
+const postkitThemeVariants = {
+  audienceBoundary: audienceBoundaryDefinition.$themeVariant,
+  appearsOn: appearsOnDefinition.$themeVariant,
+  audio: audioDefinition.$themeVariant,
+  authorCard: authorCardDefinition.$themeVariant,
+  callout: calloutDefinition.$themeVariant,
+  callToAction: callToActionDefinition.$themeVariant,
+  cardGrid: cardGridDefinition.$themeVariant,
+  carousel: carouselDefinition.$themeVariant,
+  chart: chartDefinition.$themeVariant,
+  codeBlock: codeBlockDefinition.$themeVariant,
+  codeGroup: codeGroupDefinition.$themeVariant,
+  comparison: comparisonDefinition.$themeVariant,
+  diff: diffDefinition.$themeVariant,
+  disclosure: disclosureDefinition.$themeVariant,
+  figure: figureDefinition.$themeVariant,
+  fileCard: fileCardDefinition.$themeVariant,
+  fileTree: fileTreeDefinition.$themeVariant,
+  gallery: galleryDefinition.$themeVariant,
+  keyTakeaway: keyTakeawayDefinition.$themeVariant,
+  linkPreview: withCompactVariant(linkPreviewDefinition.$themeVariant),
+  newsletterSignup: newsletterSignupDefinition.$themeVariant,
+  poll: pollDefinition.$themeVariant,
+  productCard: productCardDefinition.$themeVariant,
+  pullQuote: pullQuoteDefinition.$themeVariant,
+  relatedContent: relatedContentDefinition.$themeVariant,
+  seriesNavigation: seriesNavigationDefinition.$themeVariant,
+  shareActions: shareActionsDefinition.$themeVariant,
+  socialPost: socialPostDefinition.$themeVariant,
+  sponsorBlock: sponsorBlockDefinition.$themeVariant,
+  stat: statDefinition.$themeVariant,
+  steps: stepsDefinition.$themeVariant,
+  tabs: tabsDefinition.$themeVariant,
+  terminal: terminalDefinition.$themeVariant,
+  video: videoDefinition.$themeVariant,
+} as const;
+
+type PostkitDefinitionThemeSlots = typeof postkitThemeSlots;
+type PostkitDefinitionThemeVariants = typeof postkitThemeVariants;
+
+/**
+ * The anatomy slots of every themed component, keyed by theme key: each
+ * definition's `slots`, plus `prose`, which has no definition.
  */
 export interface PostkitThemeSlotMap {
-  readonly audienceBoundary: 'root' | 'label' | 'content' | 'fallback';
-  readonly appearsOn:
-    'root' | 'label' | 'list' | 'item' | 'link' | 'icon' | 'date' | 'status';
-  readonly audio: 'root' | 'title' | 'player' | 'caption' | 'fallback';
-  readonly authorCard:
-    | 'root'
-    | 'avatar'
-    | 'content'
-    | 'header'
-    | 'name'
-    | 'nameLink'
-    | 'role'
-    | 'bio'
-    | 'links'
-    | 'link';
-  readonly callout: 'root' | 'icon' | 'content' | 'title' | 'body';
-  readonly callToAction:
-    | 'root'
-    | 'content'
-    | 'eyebrow'
-    | 'title'
-    | 'body'
-    | 'actions'
-    | 'primaryAction'
-    | 'secondaryAction';
-  readonly cardGrid:
-    | 'root'
-    | 'header'
-    | 'title'
-    | 'description'
-    | 'grid'
-    | 'card'
-    | 'image'
-    | 'cardBody'
-    | 'cardTitle'
-    | 'cardDescription'
-    | 'meta'
-    | 'link';
-  readonly carousel:
-    | 'root'
-    | 'slide'
-    | 'media'
-    | 'content'
-    | 'title'
-    | 'description'
-    | 'link'
-    | 'controls'
-    | 'previousTrigger'
-    | 'status'
-    | 'nextTrigger'
-    | 'emptyState';
-  readonly chart:
-    | 'root'
-    | 'title'
-    | 'description'
-    | 'legend'
-    | 'legendItem'
-    | 'legendSwatch'
-    | 'plot'
-    | 'svg'
-    | 'gridLine'
-    | 'axisLabel'
-    | 'seriesMark'
-    | 'emptyState'
-    | 'tableContainer'
-    | 'table'
-    | 'headerCell'
-    | 'rowHeader'
-    | 'dataCell';
-  readonly codeBlock:
-    | 'root'
-    | 'header'
-    | 'title'
-    | 'filename'
-    | 'language'
-    | 'control'
-    | 'actions'
-    | 'copyTrigger'
-    | 'button'
-    | 'copyIndicator'
-    | 'content'
-    | 'scroller'
-    | 'code'
-    | 'codeText'
-    | 'lineContent'
-    | 'line'
-    | 'lineNumber';
-  readonly codeGroup: 'root' | 'tabs' | 'tab' | 'panel';
-  readonly comparison:
-    | 'root'
-    | 'title'
-    | 'description'
-    | 'scroller'
-    | 'table'
-    | 'head'
-    | 'header'
-    | 'row'
-    | 'label'
-    | 'value';
-  readonly diff:
-    'root' | 'header' | 'title' | 'code' | 'line' | 'marker' | 'content';
-  readonly disclosure: 'root' | 'summary' | 'indicator' | 'content';
-  readonly figure:
-    | 'root'
-    | 'mediaLink'
-    | 'media'
-    | 'image'
-    | 'figcaption'
-    | 'caption'
-    | 'credit'
-    | 'creditLink';
-  readonly fileCard:
-    'root' | 'icon' | 'content' | 'name' | 'description' | 'meta' | 'action';
-  readonly fileTree:
-    'root' | 'title' | 'list' | 'item' | 'icon' | 'path' | 'meta';
-  readonly gallery:
-    | 'root'
-    | 'header'
-    | 'title'
-    | 'description'
-    | 'grid'
-    | 'item'
-    | 'imageLink'
-    | 'image'
-    | 'caption';
-  readonly keyTakeaway: 'root' | 'eyebrow' | 'title' | 'body' | 'list' | 'item';
-  readonly linkPreview:
-    | 'root'
-    | 'anchor'
-    | 'media'
-    | 'image'
-    | 'carousel'
-    | 'content'
-    | 'siteRow'
-    | 'favicon'
-    | 'siteName'
-    | 'title'
-    | 'description'
-    | 'domain'
-    | 'embedFrame'
-    | 'embed'
-    | 'consent'
-    | 'consentButton'
-    | 'mediaPlayer';
-  readonly newsletterSignup:
-    | 'root'
-    | 'content'
-    | 'title'
-    | 'description'
-    | 'form'
-    | 'label'
-    | 'fields'
-    | 'input'
-    | 'submit'
-    | 'status'
-    | 'privacy';
-  readonly poll:
-    | 'root'
-    | 'question'
-    | 'description'
-    | 'options'
-    | 'option'
-    | 'optionLabel'
-    | 'result'
-    | 'bar'
-    | 'status';
-  readonly productCard:
-    | 'root'
-    | 'image'
-    | 'content'
-    | 'badge'
-    | 'title'
-    | 'description'
-    | 'rating'
-    | 'footer'
-    | 'price'
-    | 'action';
+  readonly audienceBoundary: PostkitDefinitionThemeSlots['audienceBoundary'];
+  readonly appearsOn: PostkitDefinitionThemeSlots['appearsOn'];
+  readonly audio: PostkitDefinitionThemeSlots['audio'];
+  readonly authorCard: PostkitDefinitionThemeSlots['authorCard'];
+  readonly callout: PostkitDefinitionThemeSlots['callout'];
+  readonly callToAction: PostkitDefinitionThemeSlots['callToAction'];
+  readonly cardGrid: PostkitDefinitionThemeSlots['cardGrid'];
+  readonly carousel: PostkitDefinitionThemeSlots['carousel'];
+  readonly chart: PostkitDefinitionThemeSlots['chart'];
+  readonly codeBlock: PostkitDefinitionThemeSlots['codeBlock'];
+  readonly codeGroup: PostkitDefinitionThemeSlots['codeGroup'];
+  readonly comparison: PostkitDefinitionThemeSlots['comparison'];
+  readonly diff: PostkitDefinitionThemeSlots['diff'];
+  readonly disclosure: PostkitDefinitionThemeSlots['disclosure'];
+  readonly figure: PostkitDefinitionThemeSlots['figure'];
+  readonly fileCard: PostkitDefinitionThemeSlots['fileCard'];
+  readonly fileTree: PostkitDefinitionThemeSlots['fileTree'];
+  readonly gallery: PostkitDefinitionThemeSlots['gallery'];
+  readonly keyTakeaway: PostkitDefinitionThemeSlots['keyTakeaway'];
+  readonly linkPreview: PostkitDefinitionThemeSlots['linkPreview'];
+  readonly newsletterSignup: PostkitDefinitionThemeSlots['newsletterSignup'];
+  readonly poll: PostkitDefinitionThemeSlots['poll'];
+  readonly productCard: PostkitDefinitionThemeSlots['productCard'];
+  readonly pullQuote: PostkitDefinitionThemeSlots['pullQuote'];
+  readonly relatedContent: PostkitDefinitionThemeSlots['relatedContent'];
+  readonly seriesNavigation: PostkitDefinitionThemeSlots['seriesNavigation'];
+  readonly shareActions: PostkitDefinitionThemeSlots['shareActions'];
+  readonly socialPost: PostkitDefinitionThemeSlots['socialPost'];
+  readonly sponsorBlock: PostkitDefinitionThemeSlots['sponsorBlock'];
+  readonly stat: PostkitDefinitionThemeSlots['stat'];
+  readonly steps: PostkitDefinitionThemeSlots['steps'];
+  readonly tabs: PostkitDefinitionThemeSlots['tabs'];
+  readonly terminal: PostkitDefinitionThemeSlots['terminal'];
+  readonly video: PostkitDefinitionThemeSlots['video'];
   readonly prose:
     | 'root'
     | 'h1'
@@ -286,114 +274,49 @@ export interface PostkitThemeSlotMap {
     | 'summary'
     | 'input'
     | 'br';
-  readonly pullQuote: 'root' | 'mark' | 'quote' | 'attribution' | 'cite';
-  readonly relatedContent:
-    | 'root'
-    | 'title'
-    | 'list'
-    | 'item'
-    | 'link'
-    | 'itemTitle'
-    | 'description'
-    | 'meta';
-  readonly seriesNavigation:
-    | 'root'
-    | 'header'
-    | 'title'
-    | 'position'
-    | 'links'
-    | 'link'
-    | 'direction'
-    | 'linkTitle';
-  readonly shareActions:
-    'root' | 'label' | 'actions' | 'action' | 'icon' | 'status';
-  readonly socialPost:
-    | 'root'
-    | 'serviceRow'
-    | 'serviceBadge'
-    | 'serviceIcon'
-    | 'authorRow'
-    | 'avatar'
-    | 'author'
-    | 'authorName'
-    | 'handle'
-    | 'timestamp'
-    | 'content'
-    | 'media'
-    | 'image'
-    | 'metrics'
-    | 'metric'
-    | 'quote'
-    | 'quoteAuthor'
-    | 'quoteContent'
-    | 'footer'
-    | 'originalLink'
-    | 'snapshotInfo'
-    | 'snapshotLabel'
-    | 'snapshotTime'
-    | 'embedFrame'
-    | 'embed'
-    | 'consent'
-    | 'consentButton';
-  readonly sponsorBlock:
-    'root' | 'disclosure' | 'logo' | 'content' | 'name' | 'message' | 'action';
-  readonly stat: 'root' | 'value' | 'label' | 'trend' | 'description';
-  readonly steps:
-    'root' | 'item' | 'marker' | 'content' | 'title' | 'description';
-  readonly tabs: 'root' | 'list' | 'tab' | 'panels' | 'panel';
-  readonly terminal:
-    | 'root'
-    | 'header'
-    | 'dots'
-    | 'title'
-    | 'body'
-    | 'prompt'
-    | 'command'
-    | 'output';
-  readonly video: 'root' | 'frame' | 'player' | 'caption' | 'fallback';
 }
 
 /**
  * The recipe variants of every themed component: the props marked
- * `themeVariant` in its definition (checked by `theme-contract.spec.ts`), plus
- * the recipe-only `linkPreview.compact`.
+ * `themeVariant` in its definition, plus the recipe-only
+ * `linkPreview.compact`.
  */
 export interface PostkitThemeVariantMap {
-  readonly audienceBoundary: 'size' | 'variant';
-  readonly appearsOn: 'size' | 'variant' | 'presentation';
-  readonly audio: 'size' | 'variant';
-  readonly authorCard: 'size' | 'variant' | 'presentation';
-  readonly callout: 'size' | 'variant' | 'tone';
-  readonly callToAction: 'size' | 'variant' | 'alignment';
-  readonly cardGrid: 'size' | 'variant';
-  readonly carousel: 'size' | 'variant';
-  readonly chart: 'size' | 'variant';
-  readonly codeBlock: 'size' | 'variant';
-  readonly codeGroup: 'size' | 'variant';
-  readonly comparison: 'size' | 'variant';
-  readonly diff: 'size' | 'variant';
-  readonly disclosure: 'size' | 'variant';
-  readonly figure: 'size' | 'variant' | 'layout';
-  readonly fileCard: 'size' | 'variant';
-  readonly fileTree: 'size' | 'variant';
-  readonly gallery: 'size' | 'variant';
-  readonly keyTakeaway: 'size' | 'variant';
-  readonly linkPreview: 'size' | 'variant' | 'presentation' | 'compact';
-  readonly newsletterSignup: 'size' | 'variant' | 'alignment';
-  readonly poll: 'size' | 'variant';
-  readonly productCard: 'size' | 'variant';
+  readonly audienceBoundary: PostkitDefinitionThemeVariants['audienceBoundary'];
+  readonly appearsOn: PostkitDefinitionThemeVariants['appearsOn'];
+  readonly audio: PostkitDefinitionThemeVariants['audio'];
+  readonly authorCard: PostkitDefinitionThemeVariants['authorCard'];
+  readonly callout: PostkitDefinitionThemeVariants['callout'];
+  readonly callToAction: PostkitDefinitionThemeVariants['callToAction'];
+  readonly cardGrid: PostkitDefinitionThemeVariants['cardGrid'];
+  readonly carousel: PostkitDefinitionThemeVariants['carousel'];
+  readonly chart: PostkitDefinitionThemeVariants['chart'];
+  readonly codeBlock: PostkitDefinitionThemeVariants['codeBlock'];
+  readonly codeGroup: PostkitDefinitionThemeVariants['codeGroup'];
+  readonly comparison: PostkitDefinitionThemeVariants['comparison'];
+  readonly diff: PostkitDefinitionThemeVariants['diff'];
+  readonly disclosure: PostkitDefinitionThemeVariants['disclosure'];
+  readonly figure: PostkitDefinitionThemeVariants['figure'];
+  readonly fileCard: PostkitDefinitionThemeVariants['fileCard'];
+  readonly fileTree: PostkitDefinitionThemeVariants['fileTree'];
+  readonly gallery: PostkitDefinitionThemeVariants['gallery'];
+  readonly keyTakeaway: PostkitDefinitionThemeVariants['keyTakeaway'];
+  readonly linkPreview: PostkitDefinitionThemeVariants['linkPreview'];
+  readonly newsletterSignup: PostkitDefinitionThemeVariants['newsletterSignup'];
+  readonly poll: PostkitDefinitionThemeVariants['poll'];
+  readonly productCard: PostkitDefinitionThemeVariants['productCard'];
+  readonly pullQuote: PostkitDefinitionThemeVariants['pullQuote'];
+  readonly relatedContent: PostkitDefinitionThemeVariants['relatedContent'];
+  readonly seriesNavigation: PostkitDefinitionThemeVariants['seriesNavigation'];
+  readonly shareActions: PostkitDefinitionThemeVariants['shareActions'];
+  readonly socialPost: PostkitDefinitionThemeVariants['socialPost'];
+  readonly sponsorBlock: PostkitDefinitionThemeVariants['sponsorBlock'];
+  readonly stat: PostkitDefinitionThemeVariants['stat'];
+  readonly steps: PostkitDefinitionThemeVariants['steps'];
+  readonly tabs: PostkitDefinitionThemeVariants['tabs'];
+  readonly terminal: PostkitDefinitionThemeVariants['terminal'];
+  readonly video: PostkitDefinitionThemeVariants['video'];
   readonly prose: never;
-  readonly pullQuote: 'size' | 'variant';
-  readonly relatedContent: 'size' | 'variant';
-  readonly seriesNavigation: 'size' | 'variant';
-  readonly shareActions: 'size' | 'variant' | 'layout';
-  readonly socialPost: 'size' | 'variant' | 'branding' | 'presentation';
-  readonly sponsorBlock: 'size' | 'variant';
-  readonly stat: 'size' | 'variant';
-  readonly steps: 'size' | 'variant';
-  readonly tabs: 'size' | 'variant';
-  readonly terminal: 'size' | 'variant';
-  readonly video: 'size' | 'variant';
 }
 
 type PostkitOverrideFor<Name extends keyof PostkitThemeSlotMap> =

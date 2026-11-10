@@ -4,7 +4,7 @@ import { AuthorCard } from './components/author-card.js';
 import { CallToAction } from './components/call-to-action.js';
 import { Carousel } from './components/carousel.js';
 import { Chart } from './components/chart.js';
-import { Figure } from './components/figure.js';
+import { Figure } from '../components/figure/figure.js';
 import { LinkPreview } from './components/link-preview.js';
 import { NewsletterSignup } from './components/newsletter-signup.js';
 import {
@@ -35,9 +35,9 @@ import {
   SponsorBlock,
   Stat,
 } from './components/publication.js';
+import { Aside } from '../components/aside/aside.js';
+import { Callout } from '../components/callout/callout.js';
 import {
-  Aside,
-  Callout,
   CardGrid,
   Disclosure,
   Gallery,

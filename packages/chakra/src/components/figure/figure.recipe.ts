@@ -1,15 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
+import { figureDefinition } from '@postkit/core/components';
 
-export const postkitFigureSlots = [
-  'root',
-  'mediaLink',
-  'media',
-  'image',
-  'figcaption',
-  'caption',
-  'credit',
-  'creditLink',
-] as const;
+/** The Figure anatomy, from its definition. */
+export const postkitFigureSlots = figureDefinition.slots;
 
 export type PostkitFigureSlot = (typeof postkitFigureSlots)[number];
 
@@ -79,9 +72,10 @@ export const postkitFigureRecipe = defineSlotRecipe({
           borderWidth: '1px',
         },
       },
+      // The default (D12): a quiet surface in both colour modes.
       subtle: {
         root: {
-          background: 'bg.muted',
+          background: 'bg.subtle',
           borderRadius: 'xl',
           padding: '2',
         },
@@ -113,7 +107,7 @@ export const postkitFigureRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     size: 'md',
-    variant: 'plain',
+    variant: 'subtle',
     layout: 'inline',
   },
 });

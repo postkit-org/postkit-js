@@ -1860,8 +1860,8 @@ Source: https://github.com/postkit-org/postkit-js/tree/main/packages/chakra
 # `@postkit/chakra`
 
 Postkit's Chakra UI renderer for React. This package was previously named
-`@postkit/react`; the new name reserves `@postkit/react` for a future generic
-React renderer without a Chakra dependency.
+`@postkit/react`; from 0.3.0, [`@postkit/react`](https://github.com/postkit-org/postkit-js/tree/main/packages/react#readme) is Postkit's
+headless renderer, with no Chakra dependency.
 
 To migrate, replace the `@postkit/react` dependency with `@postkit/chakra` and
 update imports, including `/theme`, `/remark`, and `/document`. The component
@@ -2801,6 +2801,30 @@ Stable classes such as `.postkit-audio__root`,
 `.postkit-audio__player`, and `.postkit-audio__caption` provide a CSS escape
 hatch. `rootProps` can supply standard Chakra props and a site class name
 without replacing the generated slot class.
+
+### Anatomy attributes and class names
+
+Components built on `postkitChakraView` (`Callout`, `Aside` and `Figure` so
+far) stamp the same anatomy as the headless `@postkit/react` views:
+`data-postkit-component` and the resolved theme variants (`data-tone`,
+`data-size`, `data-variant`, `data-layout`) on the root, and
+`data-postkit-part` on every part. An unset variant reports the recipe's
+`defaultVariants` value, including a host override from `createPostkitTheme`.
+`unstyled` instances also carry `data-postkit-unstyled`.
+
+These components also accept `classNames`, a class per part added after the
+recipe's class:
+
+```tsx
+<Figure
+  src="/studio.jpg"
+  alt="The studio"
+  classNames={{ root: 'site-figure', caption: 'site-caption' }}
+/>
+```
+
+`Figure` defaults to the `subtle` variant, a quiet `bg.subtle` surface; pass
+`variant="plain"` for the previous look.
 
 Code blocks expose conceptual `title`, `language`, `control`, `copyTrigger`,
 `copyIndicator`, `content`, `code`, `codeText`, `line`, and `lineNumber` slots.

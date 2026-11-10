@@ -47,8 +47,6 @@ import {
   postkitCallToActionSlots,
 } from './recipes/call-to-action.recipe.js';
 import {
-  postkitCalloutRecipe,
-  postkitCalloutSlots,
   postkitCardGridRecipe,
   postkitCardGridSlots,
   postkitDisclosureRecipe,
@@ -61,13 +59,17 @@ import {
   postkitTabsSlots,
 } from './recipes/article-structure.recipe.js';
 import {
+  postkitCalloutRecipe,
+  postkitCalloutSlots,
+} from '../components/callout/callout.recipe.js';
+import {
   postkitChartRecipe,
   postkitChartSlots,
 } from './recipes/chart.recipe.js';
 import {
   postkitFigureRecipe,
   postkitFigureSlots,
-} from './recipes/figure.recipe.js';
+} from '../components/figure/figure.recipe.js';
 import {
   postkitLinkPreviewRecipe,
   postkitLinkPreviewSlots,
