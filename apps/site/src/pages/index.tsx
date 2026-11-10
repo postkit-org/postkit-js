@@ -16,7 +16,7 @@ import NextLink from 'next/link';
 
 import { ChangelogCard } from '../components/changelog-card';
 import type { ChangelogEntrySummary } from '../lib/changelog';
-import { getChangelogEntries } from '../lib/changelog.server';
+import { getLatestChangelogRelease } from '../lib/changelog.server';
 
 interface HomePageProps {
   readonly latestEntry: ChangelogEntrySummary | null;
@@ -24,7 +24,7 @@ interface HomePageProps {
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => ({
   props: {
-    latestEntry: getChangelogEntries()[0] ?? null,
+    latestEntry: getLatestChangelogRelease(),
   },
 });
 
@@ -219,7 +219,7 @@ export default function IndexPage({
                   <NextLink href="/changelog">View every release →</NextLink>
                 </Button>
               </Flex>
-              <ChangelogCard entry={latestEntry} featured />
+              <ChangelogCard entry={latestEntry} featured latest />
             </Stack>
           ) : null}
         </Stack>

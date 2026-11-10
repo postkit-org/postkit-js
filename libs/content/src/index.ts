@@ -6,8 +6,16 @@ export {
 } from './lib/shared.js';
 export {
   changelogEntrySchema,
+  changelogStatusSchema,
+  changelogVersionSchema,
+  changelogVersionSlug,
+  compareChangelogVersions,
   createChangelogCollection,
+  getLatestChangelogRelease,
+  getReleasedChangelogEntries,
+  sortChangelogEntries,
   type ChangelogEntryData,
+  type ChangelogStatus,
 } from './lib/changelog.js';
 export {
   compareDocsEntries,
@@ -32,7 +40,15 @@ export {
   type NotesEntryData,
 } from './lib/notes.js';
 export {
+  componentAnatomyBoxSchema,
+  componentAnatomyLayerSchema,
+  componentAnatomySchema,
+  componentNameSchema,
+  componentNameToPageSlug,
   componentPageSchema,
+  componentPageSlugToName,
   createComponentPagesCollection,
+  type ComponentAnatomy,
+  type ComponentAnatomyLayer,
   type ComponentPageData,
 } from './lib/component-pages.js';

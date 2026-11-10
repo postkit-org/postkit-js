@@ -17,7 +17,10 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { MDXRemote } from 'next-mdx-remote';
 
-import { formatChangelogDate, type ChangelogEntry } from '../../lib/changelog';
+import {
+  formatChangelogRelease,
+  type ChangelogEntry,
+} from '../../lib/changelog';
 import {
   getChangelogEntries,
   getChangelogEntry,
@@ -33,8 +36,9 @@ interface ChangelogEntryPageProps {
   readonly entry: ChangelogEntry;
 }
 
+/** `0-2-0`: the slug comes from the entry's `version`, not its filename (01 §3). */
 interface ChangelogEntryParams extends Record<string, string> {
-  readonly slug: string;
+  readonly version: string;
 }
 
 export const getStaticPaths: GetStaticPaths<
@@ -42,7 +46,7 @@ export const getStaticPaths: GetStaticPaths<
 > = async () => ({
   fallback: false,
   paths: getChangelogEntries().map((entry) => ({
-    params: { slug: entry.slug },
+    params: { version: entry.slug },
   })),
 });
 
@@ -51,7 +55,7 @@ export const getStaticProps: GetStaticProps<
   ChangelogEntryParams
 > = async ({ params }) => ({
   props: {
-    entry: await getChangelogEntry(params?.slug ?? ''),
+    entry: await getChangelogEntry(params?.version ?? ''),
   },
 });
 
@@ -61,7 +65,7 @@ export default function ChangelogEntryPage({
   return (
     <>
       <Head>
-        <title>{entry.title} · Postkit changelog</title>
+        <title>{`${entry.title} · Postkit changelog`}</title>
         <meta name="description" content={entry.summary} />
       </Head>
 
@@ -84,9 +88,17 @@ export default function ChangelogEntryPage({
                 {entry.version}
               </Badge>
               <Text color="fg.muted" fontFamily="mono" fontSize="xs">
-                {formatChangelogDate(entry.date)}
+                {formatChangelogRelease(entry)}
               </Text>
+              {entry.status === 'upcoming' ? (
+                <Badge colorPalette="orange" variant="subtle">
+                  In development
+                </Badge>
+              ) : null}
             </Flex>
+            <Text color="fg.muted" fontSize="lg" marginTop="3">
+              {entry.subtitle}
+            </Text>
           </Box>
 
           <MDXRemote {...entry.source} components={postkitComponents} />

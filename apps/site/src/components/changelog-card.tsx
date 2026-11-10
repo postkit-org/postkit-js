@@ -9,16 +9,24 @@ import {
 import NextLink from 'next/link';
 
 import {
-  formatChangelogDate,
+  changelogHref,
+  formatChangelogRelease,
   type ChangelogEntrySummary,
 } from '../lib/changelog';
 
 export interface ChangelogCardProps {
   readonly entry: ChangelogEntrySummary;
   readonly featured?: boolean;
+  /** Marks the newest released entry. Upcoming entries are marked "In development" instead. */
+  readonly latest?: boolean;
 }
 
-export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
+export function ChangelogCard({
+  entry,
+  featured = false,
+  latest = false,
+}: ChangelogCardProps) {
+  const upcoming = entry.status === 'upcoming';
   return (
     <Box
       as="article"
@@ -44,8 +52,17 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
             fontFamily="mono"
             fontSize="xs"
           >
-            {formatChangelogDate(entry.date)}
+            {formatChangelogRelease(entry)}
           </Text>
+          {upcoming ? (
+            <Badge colorPalette="orange" variant="subtle">
+              In development
+            </Badge>
+          ) : latest ? (
+            <Badge colorPalette="green" variant="subtle">
+              Latest
+            </Badge>
+          ) : null}
         </Flex>
         <Flex gap="2" flexWrap="wrap">
           {entry.tags.map((tag) => (
@@ -68,7 +85,10 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
         fontWeight="500"
         marginTop="5"
       >
-        {entry.title}
+        {entry.title}{' '}
+        <Text as="span" color={featured ? 'fg.inverted' : 'fg.muted'}>
+          {entry.subtitle}
+        </Text>
       </Heading>
       <Text
         color={featured ? 'fg.inverted' : 'fg.secondary'}
@@ -86,9 +106,7 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
         marginTop="6"
         textDecoration="none"
       >
-        <NextLink href={`/changelog/${entry.slug}`}>
-          Read release notes →
-        </NextLink>
+        <NextLink href={changelogHref(entry)}>Read release notes →</NextLink>
       </ChakraLink>
     </Box>
   );

@@ -4,18 +4,27 @@ import Head from 'next/head';
 
 import { ChangelogCard } from '../../components/changelog-card';
 import type { ChangelogEntrySummary } from '../../lib/changelog';
-import { getChangelogEntries } from '../../lib/changelog.server';
+import {
+  getChangelogEntries,
+  getLatestChangelogRelease,
+} from '../../lib/changelog.server';
 
 interface ChangelogPageProps {
   readonly entries: readonly ChangelogEntrySummary[];
+  /** The newest released entry's slug; upcoming entries never take "Latest". */
+  readonly latestSlug: string | null;
 }
 
 export const getStaticProps: GetStaticProps<ChangelogPageProps> = async () => ({
-  props: { entries: getChangelogEntries() },
+  props: {
+    entries: getChangelogEntries(),
+    latestSlug: getLatestChangelogRelease()?.slug ?? null,
+  },
 });
 
 export default function ChangelogPage({
   entries,
+  latestSlug,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
@@ -62,7 +71,11 @@ export default function ChangelogPage({
 
         <Stack gap="6" marginTop={{ base: '12', md: '16' }}>
           {entries.map((entry) => (
-            <ChangelogCard entry={entry} key={entry.slug} />
+            <ChangelogCard
+              entry={entry}
+              key={entry.slug}
+              latest={entry.slug === latestSlug}
+            />
           ))}
         </Stack>
       </Container>
