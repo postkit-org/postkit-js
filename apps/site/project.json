@@ -15,6 +15,17 @@
       ]
     },
     "build": {
+      "inputs": [
+        "default",
+        "^default",
+        { "externalDependencies": ["next"] },
+        { "dependentTasksOutputFiles": "**/*.d.ts", "transitive": true },
+        { "env": "NEXT_PUBLIC_FATHOM_SITE_ID" },
+        { "env": "NEXT_PUBLIC_SENTRY_DSN" },
+        { "env": "SENTRY_AUTH_TOKEN" },
+        { "env": "SENTRY_ORG" },
+        { "env": "SENTRY_PROJECT" }
+      ],
       "options": {
         "env": {
           "NODE_ENV": "production"

@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
+import { SiteAnalytics } from '../components/site-analytics';
 import { SiteShell } from '../components/site-shell';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
 import { fontVariablesCss } from '../lib/fonts';
@@ -32,9 +33,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <style jsx global>
           {fontVariablesCss}
         </style>
-        <SiteShell>
-          <Component {...pageProps} />
-        </SiteShell>
+        <SiteAnalytics>
+          <SiteShell>
+            <Component {...pageProps} />
+          </SiteShell>
+        </SiteAnalytics>
       </PostkitProvider>
     </ThemeProvider>
   );

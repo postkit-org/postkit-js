@@ -4,6 +4,7 @@ const { readdirSync, readFileSync } = require('node:fs');
 const path = require('node:path');
 
 const { withContentCollections } = require('@content-collections/next');
+const { withSentryConfig } = require('@sentry/nextjs/config');
 const {
   changelogEntrySchema,
   getLatestChangelogRelease,
@@ -58,7 +59,48 @@ const nextConfig = {
     '@postkit/chakra',
     '@postkit/unfurl',
     '@postkit/site-theme',
+    '@postkit/site-telemetry',
   ],
 };
 
-module.exports = withContentCollections(nextConfig);
+/**
+ * Sentry (01 §12). Error reporting is off until `NEXT_PUBLIC_SENTRY_DSN` is set; the tunnel
+ * route only exists then. Source maps upload only when `SENTRY_AUTH_TOKEN` is set (CI);
+ * without it the build skips upload and release creation quietly. Build-time telemetry to
+ * Sentry is off either way.
+ */
+const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN?.trim() || undefined;
+const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN?.trim() || undefined;
+const uploadSourceMaps = sentryAuthToken !== undefined;
+
+/** @type {import('@sentry/nextjs/config').SentryBuildOptions} */
+const sentryBuildOptions = {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: sentryAuthToken,
+  silent: !uploadSourceMaps,
+  telemetry: false,
+  // A random path per build, so ad blockers don't drop events.
+  tunnelRoute: sentryDsn ? true : undefined,
+  sourcemaps: {
+    disable: !uploadSourceMaps,
+    // Upload them, then keep them off the public site.
+    deleteSourcemapsAfterUpload: true,
+  },
+  release: {
+    create: uploadSourceMaps,
+    finalize: uploadSourceMaps,
+  },
+  // Pages Router: Sentry traces navigations itself; `onRouterTransitionStart` is App Router.
+  suppressOnRouterTransitionStartWarning: true,
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayIframe: true,
+    excludeReplayShadowDom: true,
+    excludeReplayWorker: true,
+  },
+};
+
+module.exports = withContentCollections(
+  withSentryConfig(nextConfig, sentryBuildOptions),
+);
