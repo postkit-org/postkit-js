@@ -10,6 +10,7 @@ import { SiteAnalytics } from '../components/site-analytics';
 import { SiteShell } from '../components/site-shell';
 import { SearchProvider } from '../lib/search';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
+import { siteCodeBlockConfig } from '../lib/code-block-config';
 import { fontVariablesCss } from '../lib/fonts';
 import { siteSystem } from '../lib/site-theme';
 import './styles.css';
@@ -27,6 +28,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <PostkitProvider
         system={siteSystem}
         codeBlockAdapter={siteCodeBlockAdapter}
+        codeBlock={siteCodeBlockConfig}
       >
         <Head>
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

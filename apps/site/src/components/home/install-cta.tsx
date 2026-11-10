@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { PageContainer, TwoToneHeading } from '../layout';
 import { Button } from '../primitives';
+import { CheckIcon, CopyIcon } from '../icons';
 
 /** How long "Copied" stays before the label reverts (02 §6, the `copyRevert` duration). */
 export const COPY_REVERT_MS = 1600;
@@ -65,7 +66,7 @@ export function CopyCommand({ command, onCopy }: CopyCommandProps) {
         <Button
           variant="primary"
           size="lg"
-          minW="88px"
+          minW="48px"
           flexShrink={0}
           fontFamily="mono"
           fontSize="sm"
@@ -74,25 +75,13 @@ export function CopyCommand({ command, onCopy }: CopyCommandProps) {
         >
           {copied ? (
             <>
-              <chakra.svg
-                aria-hidden="true"
-                viewBox="0 0 16 16"
-                width="14px"
-                height="14px"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                color="tone.tip"
-                marginInlineEnd="-2px"
-              >
-                <path d="M3 8.5l3.2 3.2L13 4.8" />
-              </chakra.svg>
+              <chakra.span display="inline-flex" color="tone.tip">
+                <CheckIcon width="14" height="14" />
+              </chakra.span>
               Copied
             </>
           ) : (
-            'Copy'
+            <CopyIcon />
           )}
         </Button>
       </Flex>

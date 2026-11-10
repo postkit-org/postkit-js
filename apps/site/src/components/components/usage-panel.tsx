@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { SegmentedControl } from '../primitives';
 import type { UsageSyntax } from './usage-source';
+import { CheckIcon, CopyIcon } from '../icons';
 
 const syntaxItems = [
   { value: 'mdx', label: 'MDX' },
@@ -62,12 +63,16 @@ function CopyButton({ text }: { readonly text: string }) {
       css={{ '@media (hover: hover)': { '&:hover': { bg: 'bg.hover' } } }}
     >
       {copied ? (
-        <chakra.span aria-hidden="true" color="tone.tip" fontWeight="semibold">
-          ✓
+        <chakra.span display="inline-flex" color="tone.tip">
+          <CheckIcon />
         </chakra.span>
-      ) : null}
-      <span aria-live="polite">{copied ? 'Copied' : 'Copy'}</span>
-      <chakra.span srOnly>{copied ? '' : ' code'}</chakra.span>
+      ) : (
+        <CopyIcon />
+      )}
+      {/* The papers icon alone when idle; "Copied" shows (and is announced) after copying. */}
+      <chakra.span aria-live="polite" srOnly={!copied}>
+        {copied ? 'Copied' : 'Copy code'}
+      </chakra.span>
     </chakra.button>
   );
 }
