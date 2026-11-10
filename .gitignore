@@ -58,3 +58,6 @@ vitest.config.*.timestamp*
 .content-collections
 out
 /apps/site/public/api/
+
+# Design handoff renders (15 MB of JPEGs; regenerate from reference/previews or keep locally)
+docs/design/handoff/reference/renders/

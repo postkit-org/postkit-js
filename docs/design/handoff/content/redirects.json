@@ -1,0 +1,60 @@
+{
+ "$note": "Changed URLs \u2192 new IA (01 \u00a73, \u00a75.1). permanent: true sends 308 in Next.js. /docs \u2192 /docs/introduction is temporary (307).",
+ "redirects": [
+  {
+   "source": "/changelog/2026-07-27-postkit-0-1-0",
+   "destination": "/changelog/0-1-0",
+   "permanent": true
+  },
+  {
+   "source": "/changelog/2026-09-03-postkit-0-2-0",
+   "destination": "/changelog/0-2-0",
+   "permanent": true
+  },
+  {
+   "source": "/docs/choosing-a-package",
+   "destination": "/docs/introduction",
+   "permanent": true
+  },
+  {
+   "source": "/docs/core-concepts",
+   "destination": "/docs/introduction",
+   "permanent": true
+  },
+  {
+   "source": "/docs/getting-started",
+   "destination": "/docs/quick-start",
+   "permanent": true
+  },
+  {
+   "source": "/docs/markdown-and-mdx",
+   "destination": "/docs/mdx",
+   "permanent": true
+  },
+  {
+   "source": "/docs/theming",
+   "destination": "/docs/part-styles",
+   "permanent": true
+  },
+  {
+   "source": "/docs/framework-guides",
+   "destination": "/docs/nextjs",
+   "permanent": true
+  },
+  {
+   "source": "/docs/unfurling",
+   "destination": "/docs/link-previews",
+   "permanent": true
+  },
+  {
+   "source": "/docs/components",
+   "destination": "/components",
+   "permanent": true
+  },
+  {
+   "source": "/docs",
+   "destination": "/docs/introduction",
+   "permanent": false
+  }
+ ]
+}

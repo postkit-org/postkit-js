@@ -1,0 +1,945 @@
+{
+ "v": 3,
+ "attachments": {},
+ "boards": {
+  "SiteComponents.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 6600,
+   "title": "Components",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteComponentCallout.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 5400,
+   "title": "Component · Callout",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "site"
+  },
+  "SiteDocsQuickStart.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 3800,
+   "title": "Docs · Quick start",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneComponents.dc.html": {
+   "x": 4560,
+   "y": 0,
+   "w": 390,
+   "h": 8100,
+   "title": "Phone · Components",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneComponentCallout.dc.html": {
+   "x": 5030,
+   "y": 0,
+   "w": 390,
+   "h": 8000,
+   "title": "Phone · Callout",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "site"
+  },
+  "PhoneDocsQuickStart.dc.html": {
+   "x": 5500,
+   "y": 0,
+   "w": 390,
+   "h": 6400,
+   "title": "Phone · Quick start",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteComponentKeyTakeaway.dc.html": {
+   "x": 0,
+   "y": 8540,
+   "w": 1440,
+   "h": 6400,
+   "title": "Component · KeyTakeaway",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteComponentCodeBlock.dc.html": {
+   "x": 1520,
+   "y": 8540,
+   "w": 1440,
+   "h": 7200,
+   "title": "Component · CodeBlock",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteComponentFigure.dc.html": {
+   "x": 3040,
+   "y": 8540,
+   "w": 1440,
+   "h": 7300,
+   "title": "Component · Figure",
+   "expand": "fill",
+   "page": "site"
+  },
+  "CompFoundations.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 2600,
+   "title": "Foundations",
+   "page": "components"
+  },
+  "CompKitArticle.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 5200,
+   "title": "Kit 1 · Article structure",
+   "page": "components"
+  },
+  "CompKitTechnical.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 5600,
+   "title": "Kit 2 · Technical content",
+   "page": "components"
+  },
+  "CompKitMedia.dc.html": {
+   "x": 4560,
+   "y": 0,
+   "w": 1440,
+   "h": 5600,
+   "title": "Kit 3 · Media",
+   "page": "components"
+  },
+  "CompKitDiscovery.dc.html": {
+   "x": 1520,
+   "y": 5800,
+   "w": 1440,
+   "h": 5200,
+   "title": "Kit 4 · Discovery",
+   "page": "components"
+  },
+  "CompKitEngagePublish.dc.html": {
+   "x": 3040,
+   "y": 5800,
+   "w": 1440,
+   "h": 6000,
+   "title": "Kits 5–6 · Engagement & Publishing",
+   "page": "components"
+  },
+  "CompFootnotes.dc.html": {
+   "x": 0,
+   "y": 2800,
+   "w": 1440,
+   "h": 6400,
+   "title": "Kit 1 · Footnotes & sidenotes",
+   "page": "components"
+  },
+  "SiteArticle.dc.html": {
+   "x": 0,
+   "y": 16320,
+   "w": 1440,
+   "h": 4300,
+   "title": "Notes · Article with sidenotes",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneArticle.dc.html": {
+   "x": 1520,
+   "y": 16320,
+   "w": 390,
+   "h": 5400,
+   "title": "Phone · Article with end notes",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteHome.dc.html": {
+   "x": -1520,
+   "y": 0,
+   "w": 1440,
+   "h": 7900,
+   "title": "Home",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "site"
+  },
+  "PhoneHome.dc.html": {
+   "x": -1990,
+   "y": 0,
+   "w": 390,
+   "h": 10500,
+   "title": "Phone · Home",
+   "expand": "fill",
+   "is_interactive": true,
+   "page": "site"
+  },
+  "SiteDocsIntro.dc.html": {
+   "x": 0,
+   "y": 22520,
+   "w": 1440,
+   "h": 3200,
+   "title": "Docs · Introduction",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneDocsIntro.dc.html": {
+   "x": 1520,
+   "y": 22520,
+   "w": 390,
+   "h": 4700,
+   "title": "Phone · Docs · Introduction",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteDocsPartStyles.dc.html": {
+   "x": 1990,
+   "y": 22520,
+   "w": 1440,
+   "h": 4500,
+   "title": "Docs · Part styles",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneDocsPartStyles.dc.html": {
+   "x": 3510,
+   "y": 22520,
+   "w": 390,
+   "h": 5700,
+   "title": "Phone · Docs · Part styles",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteDocsEmail.dc.html": {
+   "x": 3980,
+   "y": 22520,
+   "w": 1440,
+   "h": 3700,
+   "title": "Docs · Email",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneDocsEmail.dc.html": {
+   "x": 5500,
+   "y": 22520,
+   "w": 390,
+   "h": 4600,
+   "title": "Phone · Docs · Email",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteDocsNext.dc.html": {
+   "x": 5970,
+   "y": 22520,
+   "w": 1440,
+   "h": 3500,
+   "title": "Docs · Next.js",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneDocsNext.dc.html": {
+   "x": 7490,
+   "y": 22520,
+   "w": 390,
+   "h": 4600,
+   "title": "Phone · Docs · Next.js",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteDocsCLI.dc.html": {
+   "x": 7960,
+   "y": 22520,
+   "w": 1440,
+   "h": 3300,
+   "title": "Docs · CLI",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneDocsCLI.dc.html": {
+   "x": 9480,
+   "y": 22520,
+   "w": 390,
+   "h": 4000,
+   "title": "Phone · Docs · CLI",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteNotes.dc.html": {
+   "x": 0,
+   "y": 29020,
+   "w": 1440,
+   "h": 2800,
+   "title": "Notes",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneNotes.dc.html": {
+   "x": 1520,
+   "y": 29020,
+   "w": 390,
+   "h": 3900,
+   "title": "Phone · Notes",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteChangelog.dc.html": {
+   "x": 1990,
+   "y": 29020,
+   "w": 1440,
+   "h": 2200,
+   "title": "Changelog · index",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneChangelog.dc.html": {
+   "x": 3510,
+   "y": 29020,
+   "w": 390,
+   "h": 3300,
+   "title": "Phone · Changelog · index",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteLicensing.dc.html": {
+   "x": 3980,
+   "y": 29020,
+   "w": 1440,
+   "h": 2800,
+   "title": "Licensing",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneLicensing.dc.html": {
+   "x": 5500,
+   "y": 29020,
+   "w": 390,
+   "h": 3500,
+   "title": "Phone · Licensing",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SitePrivacy.dc.html": {
+   "x": 5970,
+   "y": 29020,
+   "w": 1440,
+   "h": 1900,
+   "title": "Privacy",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhonePrivacy.dc.html": {
+   "x": 7490,
+   "y": 29020,
+   "w": 390,
+   "h": 2400,
+   "title": "Phone · Privacy",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteNotFound.dc.html": {
+   "x": 7960,
+   "y": 29020,
+   "w": 1440,
+   "h": 1600,
+   "title": "404",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneNotFound.dc.html": {
+   "x": 9480,
+   "y": 29020,
+   "w": 390,
+   "h": 1800,
+   "title": "Phone · 404",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteChangelog030.dc.html": {
+   "x": 0,
+   "y": 33620,
+   "w": 1440,
+   "h": 3200,
+   "title": "Changelog · 0.3.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneChangelog030.dc.html": {
+   "x": 1520,
+   "y": 33620,
+   "w": 390,
+   "h": 4400,
+   "title": "Phone · Changelog · 0.3.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteChangelog020.dc.html": {
+   "x": 1990,
+   "y": 33620,
+   "w": 1440,
+   "h": 3600,
+   "title": "Changelog · 0.2.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneChangelog020.dc.html": {
+   "x": 3510,
+   "y": 33620,
+   "w": 390,
+   "h": 5300,
+   "title": "Phone · Changelog · 0.2.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteChangelog010.dc.html": {
+   "x": 3980,
+   "y": 33620,
+   "w": 1440,
+   "h": 3100,
+   "title": "Changelog · 0.1.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneChangelog010.dc.html": {
+   "x": 5500,
+   "y": 33620,
+   "w": 390,
+   "h": 4100,
+   "title": "Phone · Changelog · 0.1.0",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteWithOSS.dc.html": {
+   "x": 11940,
+   "y": 29020,
+   "w": 1440,
+   "h": 4000,
+   "title": "Made with OSS",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneWithOSS.dc.html": {
+   "x": 13460,
+   "y": 29020,
+   "w": 390,
+   "h": 6600,
+   "title": "Phone · Made with OSS",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteSearch.dc.html": {
+   "x": 0,
+   "y": 39420,
+   "w": 1440,
+   "h": 960,
+   "title": "Search · results",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteSearchEmpty.dc.html": {
+   "x": 1520,
+   "y": 39420,
+   "w": 1440,
+   "h": 960,
+   "title": "Search · no results",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneSearch.dc.html": {
+   "x": 3040,
+   "y": 39420,
+   "w": 390,
+   "h": 844,
+   "title": "Phone · Search · suggestions",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneMenuOpen.dc.html": {
+   "x": 3510,
+   "y": 39420,
+   "w": 390,
+   "h": 844,
+   "title": "Phone · Menu open",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteSignupStates.dc.html": {
+   "x": 0,
+   "y": 40820,
+   "w": 1440,
+   "h": 2200,
+   "title": "Sign-up form states",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneSignupStates.dc.html": {
+   "x": 1520,
+   "y": 40820,
+   "w": 390,
+   "h": 3700,
+   "title": "Phone · Sign-up form states",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteConfirmed.dc.html": {
+   "x": 1990,
+   "y": 40820,
+   "w": 1440,
+   "h": 1500,
+   "title": "Subscription confirmed",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneConfirmed.dc.html": {
+   "x": 3510,
+   "y": 40820,
+   "w": 390,
+   "h": 1800,
+   "title": "Phone · Subscription confirmed",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteConfirmExpired.dc.html": {
+   "x": 3980,
+   "y": 40820,
+   "w": 1440,
+   "h": 1500,
+   "title": "Confirm link expired",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneConfirmExpired.dc.html": {
+   "x": 5500,
+   "y": 40820,
+   "w": 390,
+   "h": 1700,
+   "title": "Phone · Confirm link expired",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteUnsubscribed.dc.html": {
+   "x": 5970,
+   "y": 40820,
+   "w": 1440,
+   "h": 1500,
+   "title": "Unsubscribed",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneUnsubscribed.dc.html": {
+   "x": 7490,
+   "y": 40820,
+   "w": 390,
+   "h": 1800,
+   "title": "Phone · Unsubscribed",
+   "expand": "fill",
+   "page": "site"
+  },
+  "EmailConfirm.dc.html": {
+   "x": 7960,
+   "y": 40820,
+   "w": 680,
+   "h": 700,
+   "title": "Email · Confirm subscription",
+   "expand": "fill",
+   "page": "site"
+  },
+  "EmailRelease.dc.html": {
+   "x": 8720,
+   "y": 40820,
+   "w": 680,
+   "h": 1500,
+   "title": "Email · Release (0.2.0)",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneComponentKeyTakeaway.dc.html": {
+   "x": 4560,
+   "y": 8540,
+   "w": 390,
+   "h": 9100,
+   "title": "Phone · Component · KeyTakeaway",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneComponentCodeBlock.dc.html": {
+   "x": 5030,
+   "y": 8540,
+   "w": 390,
+   "h": 10800,
+   "title": "Phone · Component · CodeBlock",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneComponentFigure.dc.html": {
+   "x": 5500,
+   "y": 8540,
+   "w": 390,
+   "h": 10600,
+   "title": "Phone · Component · Figure",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteInteractionStates.dc.html": {
+   "x": 0,
+   "y": 44920,
+   "w": 1440,
+   "h": 2000,
+   "title": "Interaction states",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteIcons.dc.html": {
+   "x": 1520,
+   "y": 44920,
+   "w": 1440,
+   "h": 900,
+   "title": "Icons",
+   "expand": "fill",
+   "page": "site"
+  },
+  "OgHome.dc.html": {
+   "x": 3040,
+   "y": 44920,
+   "w": 1200,
+   "h": 630,
+   "title": "Share image · Home",
+   "expand": "fill",
+   "page": "site"
+  },
+  "OgComponent.dc.html": {
+   "x": 4320,
+   "y": 44920,
+   "w": 1200,
+   "h": 630,
+   "title": "Share image · Component",
+   "expand": "fill",
+   "page": "site"
+  },
+  "OgDocs.dc.html": {
+   "x": 5600,
+   "y": 44920,
+   "w": 1200,
+   "h": 630,
+   "title": "Share image · Docs page",
+   "expand": "fill",
+   "page": "site"
+  },
+  "OgNote.dc.html": {
+   "x": 6880,
+   "y": 44920,
+   "w": 1200,
+   "h": 630,
+   "title": "Share image · Note",
+   "expand": "fill",
+   "page": "site"
+  },
+  "OgRelease.dc.html": {
+   "x": 8160,
+   "y": 44920,
+   "w": 1200,
+   "h": 630,
+   "title": "Share image · Changelog entry",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteHomeDark.dc.html": {
+   "x": 0,
+   "y": 47320,
+   "w": 1440,
+   "h": 7900,
+   "title": "Dark · Home",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneHomeDark.dc.html": {
+   "x": 1520,
+   "y": 47320,
+   "w": 390,
+   "h": 10500,
+   "title": "Dark · Phone · Home",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteComponentCalloutDark.dc.html": {
+   "x": 1990,
+   "y": 47320,
+   "w": 1440,
+   "h": 5400,
+   "title": "Dark · Component · Callout",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteArticleDark.dc.html": {
+   "x": 3510,
+   "y": 47320,
+   "w": 1440,
+   "h": 4300,
+   "title": "Dark · Notes article",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneArticleDark.dc.html": {
+   "x": 5030,
+   "y": 47320,
+   "w": 390,
+   "h": 5400,
+   "title": "Dark · Phone · Notes article",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteDocsPartStylesDark.dc.html": {
+   "x": 5500,
+   "y": 47320,
+   "w": 1440,
+   "h": 4500,
+   "title": "Dark · Docs · Part styles",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteSearchDark.dc.html": {
+   "x": 7020,
+   "y": 47320,
+   "w": 1440,
+   "h": 960,
+   "title": "Dark · Search",
+   "expand": "fill",
+   "page": "site"
+  },
+  "PhoneMenuOpenDark.dc.html": {
+   "x": 8540,
+   "y": 47320,
+   "w": 390,
+   "h": 844,
+   "title": "Dark · Phone · Menu open",
+   "expand": "fill",
+   "page": "site"
+  },
+  "SiteColorTokens.dc.html": {
+   "x": 9010,
+   "y": 47320,
+   "w": 1440,
+   "h": 2300,
+   "title": "Colour tokens · light and dark",
+   "expand": "fill",
+   "page": "site"
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-11-05T19:35:00Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas",
+  "page": "components"
+ },
+ "notes": {
+  "rowA": {
+   "kind": "title1",
+   "maxW": 2960,
+   "text": "A — Editorial: paper, ink, a serif voice",
+   "w": 240,
+   "x": 0,
+   "y": -320,
+   "page": "directions"
+  },
+  "rowB": {
+   "kind": "title1",
+   "maxW": 2960,
+   "text": "B — Swiss grid: white, one signal colour, the grid shows",
+   "w": 240,
+   "x": 0,
+   "y": 3100,
+   "page": "directions"
+  },
+  "rowC": {
+   "kind": "title1",
+   "maxW": 2960,
+   "text": "C — Commune all-ink: a sibling of commune.software",
+   "w": 240,
+   "x": 0,
+   "y": 6520,
+   "page": "directions"
+  },
+  "rowD": {
+   "kind": "title1",
+   "maxW": 2960,
+   "text": "D — Quiet: two-tone statements, each shown with its components",
+   "w": 240,
+   "x": 0,
+   "y": 9940,
+   "page": "directions"
+  },
+  "siteTitle": {
+   "x": 0,
+   "y": -320,
+   "text": "postkit.org — Components, Callout and Quick start",
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "site"
+  },
+  "phoneTitle": {
+   "x": 4560,
+   "y": -320,
+   "text": "Phone",
+   "kind": "title1",
+   "maxW": 1330,
+   "page": "site"
+  },
+  "templateTitle": {
+   "x": 0,
+   "y": 8220,
+   "text": "The component page template, filled in: KeyTakeaway, CodeBlock, Figure",
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "site"
+  },
+  "compTitle": {
+   "x": 0,
+   "y": -320,
+   "text": "Components — the headless baseline, kit by kit",
+   "kind": "title1",
+   "maxW": 6000,
+   "page": "components"
+  },
+  "articleTitle": {
+   "x": 0,
+   "y": 16000,
+   "text": "Notes article — footnotes in the margin on wide screens, at the end on phones",
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "site"
+  },
+  "homeTitle": {
+   "x": -1990,
+   "y": -320,
+   "text": "Home",
+   "kind": "title1",
+   "maxW": 1910,
+   "page": "site"
+  },
+  "docsTitle": {
+   "x": 0,
+   "y": 22200,
+   "text": "Docs — one page from each section",
+   "kind": "title1",
+   "maxW": 9900,
+   "page": "site"
+  },
+  "restTitle": {
+   "x": 0,
+   "y": 28700,
+   "text": "Notes, Changelog, legal pages and 404",
+   "kind": "title1",
+   "maxW": 9900,
+   "page": "site"
+  },
+  "clTitle": {
+   "x": 0,
+   "y": 33300,
+   "text": "Changelog — one page per release",
+   "kind": "title1",
+   "maxW": 5800,
+   "page": "site"
+  }
+ },
+ "order": [
+  "PhoneHome.dc.html",
+  "SiteHome.dc.html",
+  "SiteComponents.dc.html",
+  "SiteComponentCallout.dc.html",
+  "SiteDocsQuickStart.dc.html",
+  "PhoneComponents.dc.html",
+  "PhoneComponentCallout.dc.html",
+  "PhoneDocsQuickStart.dc.html",
+  "SiteComponentKeyTakeaway.dc.html",
+  "SiteComponentCodeBlock.dc.html",
+  "SiteComponentFigure.dc.html",
+  "SiteArticle.dc.html",
+  "PhoneArticle.dc.html",
+  "SiteDocsIntro.dc.html",
+  "PhoneDocsIntro.dc.html",
+  "SiteDocsPartStyles.dc.html",
+  "PhoneDocsPartStyles.dc.html",
+  "SiteDocsEmail.dc.html",
+  "PhoneDocsEmail.dc.html",
+  "SiteDocsNext.dc.html",
+  "PhoneDocsNext.dc.html",
+  "SiteDocsCLI.dc.html",
+  "PhoneDocsCLI.dc.html",
+  "SiteNotes.dc.html",
+  "PhoneNotes.dc.html",
+  "SiteChangelog.dc.html",
+  "PhoneChangelog.dc.html",
+  "SiteChangelog030.dc.html",
+  "PhoneChangelog030.dc.html",
+  "SiteChangelog020.dc.html",
+  "PhoneChangelog020.dc.html",
+  "SiteChangelog010.dc.html",
+  "PhoneChangelog010.dc.html",
+  "SiteLicensing.dc.html",
+  "PhoneLicensing.dc.html",
+  "SitePrivacy.dc.html",
+  "PhonePrivacy.dc.html",
+  "SiteNotFound.dc.html",
+  "PhoneNotFound.dc.html",
+  "CompFoundations.dc.html",
+  "CompKitArticle.dc.html",
+  "CompFootnotes.dc.html",
+  "CompKitTechnical.dc.html",
+  "CompKitMedia.dc.html",
+  "CompKitDiscovery.dc.html",
+  "CompKitEngagePublish.dc.html",
+  "SiteWithOSS.dc.html",
+  "PhoneWithOSS.dc.html",
+  "SiteSearch.dc.html",
+  "SiteSearchEmpty.dc.html",
+  "PhoneSearch.dc.html",
+  "PhoneMenuOpen.dc.html",
+  "SiteSignupStates.dc.html",
+  "PhoneSignupStates.dc.html",
+  "SiteConfirmed.dc.html",
+  "PhoneConfirmed.dc.html",
+  "SiteConfirmExpired.dc.html",
+  "PhoneConfirmExpired.dc.html",
+  "SiteUnsubscribed.dc.html",
+  "PhoneUnsubscribed.dc.html",
+  "EmailConfirm.dc.html",
+  "EmailRelease.dc.html",
+  "PhoneComponentKeyTakeaway.dc.html",
+  "PhoneComponentCodeBlock.dc.html",
+  "PhoneComponentFigure.dc.html",
+  "SiteInteractionStates.dc.html",
+  "SiteIcons.dc.html",
+  "OgHome.dc.html",
+  "OgComponent.dc.html",
+  "OgDocs.dc.html",
+  "OgNote.dc.html",
+  "OgRelease.dc.html",
+  "SiteHomeDark.dc.html",
+  "PhoneHomeDark.dc.html",
+  "SiteComponentCalloutDark.dc.html",
+  "SiteArticleDark.dc.html",
+  "PhoneArticleDark.dc.html",
+  "SiteDocsPartStylesDark.dc.html",
+  "SiteSearchDark.dc.html",
+  "PhoneMenuOpenDark.dc.html",
+  "SiteColorTokens.dc.html"
+ ],
+ "pages": [
+  {
+   "id": "components",
+   "name": "Components"
+  },
+  {
+   "id": "site",
+   "name": "Site"
+  }
+ ],
+ "title": "Postkit — Design"
+}
