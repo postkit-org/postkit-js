@@ -31,14 +31,12 @@ import { PostkitProvider } from '../provider.js';
 import { ShareActions } from './share-actions.js';
 import { SocialPost } from './social-post.js';
 import { Video } from './video.js';
-import {
-  CodeBlock,
-  CodeGroup,
-  Diff,
-  FileCard,
-  FileTree,
-  Terminal,
-} from './technical-content.js';
+import { CodeBlock } from '../../components/code-block/code-block.js';
+import { CodeGroup } from '../../components/code-group/code-group.js';
+import { Diff } from '../../components/diff/diff.js';
+import { FileCard } from '../../components/file-card/file-card.js';
+import { FileTree } from '../../components/file-tree/file-tree.js';
+import { Terminal } from '../../components/terminal/terminal.js';
 import {
   AudienceBoundary,
   Comparison,

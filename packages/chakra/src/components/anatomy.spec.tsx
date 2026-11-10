@@ -16,6 +16,20 @@ import { Callout } from './callout/callout.js';
 import { postkitCalloutRecipe } from './callout/callout.recipe.js';
 import { Figure } from './figure/figure.js';
 import { postkitFigureRecipe } from './figure/figure.recipe.js';
+import {
+  diffDefinition,
+  fileCardDefinition,
+  fileTreeDefinition,
+  terminalDefinition,
+} from '@postkit/core/components';
+import { Diff } from './diff/diff.js';
+import { postkitDiffRecipe } from './diff/diff.recipe.js';
+import { FileCard } from './file-card/file-card.js';
+import { postkitFileCardRecipe } from './file-card/file-card.recipe.js';
+import { FileTree } from './file-tree/file-tree.js';
+import { postkitFileTreeRecipe } from './file-tree/file-tree.recipe.js';
+import { Terminal } from './terminal/terminal.js';
+import { postkitTerminalRecipe } from './terminal/terminal.recipe.js';
 
 /*
  * Both renderers must emit the same anatomy (03 §5.1): the same parts, nested
@@ -277,4 +291,188 @@ describe('Postkit anatomy parity between @postkit/react and @postkit/chakra', ()
       expect(recipe.defaultVariants).toEqual(definitionDefaults);
     },
   );
+
+  describe('technical content', () => {
+    const technical = [
+      [
+        'Terminal',
+        terminalDefinition,
+        Headless.Terminal,
+        Terminal,
+        postkitTerminalRecipe,
+        [
+          { command: 'npm i' },
+          { command: 'npm i', output: 'added 1 package', prompt: '>' },
+        ],
+      ],
+      [
+        'Diff',
+        diffDefinition,
+        Headless.Diff,
+        Diff,
+        postkitDiffRecipe,
+        [{ diff: '- a\n+ b\n c\n' }, { diff: '+ b', title: 'a.ts' }],
+      ],
+      [
+        'FileTree',
+        fileTreeDefinition,
+        Headless.FileTree,
+        FileTree,
+        postkitFileTreeRecipe,
+        [
+          { items: [{ path: 'a.ts' }] },
+          {
+            title: 'Files',
+            items: JSON.stringify([
+              { path: 'src', type: 'folder' },
+              { path: 'src/a.ts', meta: '2 KB' },
+            ]),
+          },
+        ],
+      ],
+      [
+        'FileCard',
+        fileCardDefinition,
+        Headless.FileCard,
+        FileCard,
+        postkitFileCardRecipe,
+        [
+          { href: '/a.pdf', name: 'a.pdf' },
+          {
+            href: '/b.zip',
+            name: 'b.zip',
+            description: 'Sources',
+            fileType: 'ZIP',
+            fileSize: '2 MB',
+            download: 'false',
+          },
+        ],
+      ],
+    ] as const;
+
+    it.each(technical)(
+      '%s emits the same anatomy for every variant, size and content shape',
+      (name, definition, HeadlessView, ChakraView, _recipe, shapes) => {
+        for (const [variant, size] of combinations<string | undefined>(
+          variants,
+          sizes,
+        )) {
+          for (const shape of shapes) {
+            const anatomy = expectSameAnatomy(
+              definition,
+              HeadlessView as ComponentType<never>,
+              ChakraView as ComponentType<never>,
+              { variant, size, ...shape },
+            );
+            expect(anatomy[0]?.attributes).toMatchObject({
+              'data-postkit-component': name,
+              'data-postkit-part': 'root',
+              'data-variant': variant ?? 'subtle',
+              'data-size': size ?? 'md',
+            });
+          }
+        }
+      },
+      60_000,
+    );
+
+    it.each(technical)(
+      '%s matches unstyled and without a registered recipe',
+      (_, definition, HeadlessView, ChakraView, _recipe, shapes) => {
+        const shape = shapes[shapes.length - 1];
+        const [root] = expectSameAnatomy(
+          definition,
+          HeadlessView as ComponentType<never>,
+          ChakraView as ComponentType<never>,
+          { unstyled: true, ...shape },
+        );
+        expect(root?.attributes['data-postkit-unstyled']).toBe('');
+        expectSameAnatomy(
+          definition,
+          HeadlessView as ComponentType<never>,
+          ChakraView as ComponentType<never>,
+          { ...shape },
+          defaultSystem,
+        );
+      },
+    );
+
+    it('emits the full part trees', () => {
+      const parts = (nodes: readonly AnatomyNode[]): unknown[] =>
+        nodes.map((node) =>
+          node.children.length
+            ? {
+                [node.attributes['data-postkit-part'] ?? '']: parts(
+                  node.children,
+                ),
+              }
+            : node.attributes['data-postkit-part'],
+        );
+      const tree = (index: number) => {
+        const [, definition, HeadlessView, ChakraView, , shapes] =
+          technical[index];
+        return parts(
+          expectSameAnatomy(
+            definition,
+            HeadlessView as ComponentType<never>,
+            ChakraView as ComponentType<never>,
+            { ...shapes[shapes.length - 1] },
+          ),
+        );
+      };
+
+      expect(tree(0)).toEqual([
+        {
+          root: [
+            { header: ['dots', 'title'] },
+            { body: ['prompt', 'command', 'output'] },
+          ],
+        },
+      ]);
+      expect(tree(1)).toEqual([
+        {
+          root: [
+            { header: ['title'] },
+            { code: [{ line: ['marker', 'content'] }] },
+          ],
+        },
+      ]);
+      expect(tree(2)).toEqual([
+        {
+          root: [
+            'title',
+            {
+              list: [
+                { item: ['icon', 'path'] },
+                { item: ['icon', 'path', 'meta'] },
+              ],
+            },
+          ],
+        },
+      ]);
+      expect(tree(3)).toEqual([
+        {
+          root: [
+            'icon',
+            { content: ['name', 'description', 'meta'] },
+            'action',
+          ],
+        },
+      ]);
+    });
+
+    it.each(technical)(
+      "%s's recipe defaults match its definition's defaults (D12)",
+      (_, definition, _headless, _chakra, recipe) => {
+        const definitionDefaults = Object.fromEntries(
+          definition.themeVariants.map((name) => [
+            name,
+            (definition.props as AnyPostkitComponentDefinition['props'])[name]
+              ?.default,
+          ]),
+        );
+        expect(recipe.defaultVariants).toEqual(definitionDefaults);
+      },
+    );
+  });
 });

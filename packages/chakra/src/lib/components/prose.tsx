@@ -31,7 +31,7 @@ import {
   useContext,
 } from 'react';
 
-import { CodeBlock } from './technical-content.js';
+import { CodeBlock } from '../../components/code-block/code-block.js';
 import { resolvePostkitFenceMetadata } from '../fence-metadata.js';
 import {
   postkitProseListRhythm,

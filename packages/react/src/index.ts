@@ -44,3 +44,30 @@ export {
   type FigureProps,
   type FigureSlot,
 } from './components/figure/figure.js';
+export { chakraOnly, type ChakraOnlyComponentName } from './lib/chakra-only.js';
+export {
+  Diff,
+  postkitDiffLines,
+  type DiffProps,
+  type DiffSlot,
+  type PostkitDiffLine,
+} from './components/diff/diff.js';
+export {
+  FileCard,
+  postkitFileCardMark,
+  type FileCardProps,
+  type FileCardSlot,
+} from './components/file-card/file-card.js';
+export {
+  FileTree,
+  postkitFileTreeDepth,
+  postkitFileTreeItems,
+  type FileTreeItem,
+  type FileTreeProps,
+  type FileTreeSlot,
+} from './components/file-tree/file-tree.js';
+export {
+  Terminal,
+  type TerminalProps,
+  type TerminalSlot,
+} from './components/terminal/terminal.js';

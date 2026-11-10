@@ -9,13 +9,11 @@ import type { SystemContext } from '@chakra-ui/react';
 import { render } from '@testing-library/react';
 
 import { Callout } from '../components/callout/callout.js';
-import { Terminal } from './components/technical-content.js';
+import { Terminal } from '../components/terminal/terminal.js';
 import { PostkitProvider } from './provider.js';
-import {
-  postkitCodeBlockRecipe,
-  postkitCodeGroupRecipe,
-  postkitTerminalRecipe,
-} from './recipes/technical-content.recipe.js';
+import { postkitCodeBlockRecipe } from '../components/code-block/code-block.recipe.js';
+import { postkitCodeGroupRecipe } from '../components/code-group/code-group.recipe.js';
+import { postkitTerminalRecipe } from '../components/terminal/terminal.recipe.js';
 import {
   createPostkitSystem,
   postkitDefaultTheme,

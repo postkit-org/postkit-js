@@ -946,7 +946,7 @@ without replacing the generated slot class.
 ### Anatomy attributes and class names
 
 Components built on `postkitChakraView` (`Callout`, `Aside` and `Figure` so
-far) stamp the same anatomy as the headless `@postkit/react` views:
+far, plus `Terminal`, `Diff`, `FileTree` and `FileCard`) stamp the same anatomy as the headless `@postkit/react` views:
 `data-postkit-component` and the resolved theme variants (`data-tone`,
 `data-size`, `data-variant`, `data-layout`) on the root, and
 `data-postkit-part` on every part. An unset variant reports the recipe's

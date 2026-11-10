@@ -96,18 +96,28 @@ import {
 } from './recipes/video.recipe.js';
 import {
   postkitCodeBlockSlots,
+  postkitStandaloneCodeBlockRecipe,
+} from '../components/code-block/code-block.recipe.js';
+import {
   postkitCodeGroupSlots,
+  postkitStandaloneCodeGroupRecipe,
+} from '../components/code-group/code-group.recipe.js';
+import {
   postkitDiffRecipe,
   postkitDiffSlots,
+} from '../components/diff/diff.recipe.js';
+import {
   postkitFileCardRecipe,
   postkitFileCardSlots,
+} from '../components/file-card/file-card.recipe.js';
+import {
   postkitFileTreeRecipe,
   postkitFileTreeSlots,
-  postkitTerminalSlots,
-  postkitStandaloneCodeBlockRecipe,
-  postkitStandaloneCodeGroupRecipe,
+} from '../components/file-tree/file-tree.recipe.js';
+import {
   postkitStandaloneTerminalRecipe,
-} from './recipes/technical-content.recipe.js';
+  postkitTerminalSlots,
+} from '../components/terminal/terminal.recipe.js';
 import {
   postkitAudienceBoundaryRecipe,
   postkitAudienceBoundarySlots,

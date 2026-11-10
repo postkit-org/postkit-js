@@ -103,6 +103,13 @@ export interface PostkitChakraViewOptions {
   readonly recipeKey?: string;
   /** Defaults to the definition's name. */
   readonly displayName?: string;
+  /**
+   * What renders when the host's system registers no recipe under
+   * `recipeKey`: `'unstyled'` (the default) keeps only the recipe's class
+   * names; `'recipe'` applies the view's own recipe, for components whose
+   * structure needs its styles (such as Terminal's grid header).
+   */
+  readonly fallback?: 'recipe' | 'unstyled';
 }
 
 /**
@@ -116,7 +123,8 @@ export interface PostkitChakraViewOptions {
  *
  * The recipe comes from the host's Chakra system when it registers one under
  * `recipeKey` (so `createPostkitTheme` overrides apply), and otherwise renders
- * unstyled with the recipe's class names.
+ * unstyled with the recipe's class names (or, with `fallback: 'recipe'`, with
+ * the recipe itself).
  */
 export function postkitChakraView<
   const Definition extends AnyPostkitComponentDefinition,
@@ -134,7 +142,9 @@ export function postkitChakraView<
       props as Props & PostkitChakraViewOwnProps<string>;
     warnPostkitProps(definition, authored);
 
-    const slotRecipe = usePostkitSlotRecipe(recipeKey, recipe);
+    const slotRecipe = usePostkitSlotRecipe(recipeKey, recipe, {
+      fallback: options.fallback,
+    });
     const registered = useChakraContext().getSlotRecipe(recipeKey) as
       SlotRecipeConfig | undefined;
     const { props: resolved, state } = resolvePostkitViewState(
