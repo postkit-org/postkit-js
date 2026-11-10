@@ -8,6 +8,7 @@ export const codeGroupDefinition = definePostkitComponent({
   description: 'A tabbed set of alternative code examples.',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of labeled code examples.', {

@@ -9,6 +9,7 @@ export const appearsOnDefinition = definePostkitComponent({
     'A provenance-aware list of destinations where the post was syndicated.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of syndicated publication references.', {

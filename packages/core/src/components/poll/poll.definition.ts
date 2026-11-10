@@ -9,6 +9,7 @@ export const pollDefinition = definePostkitComponent({
     'An interactive reader poll whose submission handler is host-owned.',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'link' },
   props: {
     ...presentation,
     question: prop.string('The poll question.', { required: true }),

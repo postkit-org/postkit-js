@@ -8,6 +8,7 @@ export const galleryDefinition = definePostkitComponent({
   description: 'A responsive image gallery with captions and links.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of image, alt, caption, and link data.', {

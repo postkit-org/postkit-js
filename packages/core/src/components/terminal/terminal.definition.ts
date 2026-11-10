@@ -8,6 +8,7 @@ export const terminalDefinition = definePostkitComponent({
   description: 'A terminal command and its optional output.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     command: prop.string('The command text.', { required: true }),

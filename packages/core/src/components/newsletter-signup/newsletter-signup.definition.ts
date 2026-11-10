@@ -10,6 +10,7 @@ export const newsletterSignupDefinition = definePostkitComponent({
   children: 'mdx',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'omit' },
   props: {
     ...presentation,
     title: prop.string('The newsletter signup heading.', { required: true }),

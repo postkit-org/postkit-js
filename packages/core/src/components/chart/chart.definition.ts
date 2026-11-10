@@ -8,6 +8,7 @@ export const chartDefinition = definePostkitComponent({
   description: 'An accessible bar or line chart with optional data table.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     data: prop.json('A JSON array of labeled data records.', {

@@ -269,6 +269,12 @@ describe('@postkit/email components', () => {
       'CallToAction',
       'Callout',
       'Figure',
+      'KeyTakeaway',
+      'LinkPreview',
+      'ProductCard',
+      'PullQuote',
+      'Stat',
+      'Steps',
       'Video',
     ]);
   });

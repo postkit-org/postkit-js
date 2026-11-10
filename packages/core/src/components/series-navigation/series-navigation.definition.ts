@@ -8,6 +8,7 @@ export const seriesNavigationDefinition = definePostkitComponent({
   description: 'Previous and next navigation for a named article series.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     title: prop.string('The series title.', { required: true }),

@@ -23,6 +23,7 @@ import { renderEmail } from '@postkit/email';
 const { html, text, warnings } = await renderEmail(post.body, {
   format: 'mdx',
   baseUrl: 'https://example.com',
+  definitions: postkit.definitions, // your createPostkit() set
 });
 
 await newsletter.send({ subject: post.title, html, text });
@@ -30,19 +31,21 @@ await newsletter.send({ subject: post.title, html, text });
 
 Hand `html` and `text` to any provider. Postkit never sends anything itself.
 
-{/* TODO(0.3.0): the SiteDocsEmail board passes a `postkit` option (the site's createPostkit instance) instead of `format`. Spec 03 §6.1 has no `postkit` option. Confirm the final signature and update this sample. */}
-
 ## Options
 
-| Option       | Description                                                             |
-| ------------ | ----------------------------------------------------------------------- |
-| `format`     | `'mdx'`, `'markdown'` or `'document'` (a `@postkit/core` document).     |
-| `theme`      | Optional Chakra Email theme. Defaults to the light Postkit email theme. |
-| `baseUrl`    | Resolves relative links and images, such as `'https://example.com'`.    |
-| `components` | Optional overrides, keyed by definition, the same as on your site.      |
-| `wrapper`    | Optional layout component for the header, footer and unsubscribe link.  |
+| Option        | Description                                                                        |
+| ------------- | ---------------------------------------------------------------------------------- |
+| `format`      | `'mdx'`, `'markdown'` or `'document'` (a `@postkit/core` document).                |
+| `theme`       | Optional Chakra Email theme. Defaults to the light Postkit email theme.            |
+| `baseUrl`     | Resolves relative links and images, such as `'https://example.com'`.               |
+| `components`  | Optional overrides, keyed like your MDX map: components by name, prose by element. |
+| `wrapper`     | Optional layout component for the header, footer and unsubscribe link.             |
+| `definitions` | The components the post may use. Defaults to every built-in.                       |
+| `url`         | The post on your site, where `link` fallbacks point.                               |
 
-It resolves to `{ html, text, warnings }`.
+It resolves to `{ html, text, warnings }`. To use only part of a post, as a
+digest does, call `parseEmailSource` first, pick the nodes you want, and pass
+the result with `format: 'document'`.
 
 ## How it works
 
@@ -63,36 +66,46 @@ mode.
 | -------------------------------- | --------- | -------------------------------------------- |
 | Callout · Aside · CallToAction   | Supported | Table layout, inline styles, your tones      |
 | Figure · Audio · Video           | Supported | Image with caption; media as a linked poster |
-| KeyTakeaway · PullQuote · Steps  | Next      | Planned for 0.3.x                            |
-| Stat · ProductCard · LinkPreview | Next      | LinkPreview as a static card                 |
+| KeyTakeaway · PullQuote · Steps  | Supported | Boxed summary, ruled quote, numbered rows    |
+| Stat · ProductCard · LinkPreview | Supported | LinkPreview as a static card, never an embed |
 | Footnotes                        | Supported | Numbered notes at the end, no links          |
-| Everything else                  | Fallback  | Declared per component: link, text or omit   |
+| Everything else                  | Fallback  | Declared per component: text, link or omit   |
 
 The status on each component page is computed from what `@postkit/email`
 exports, so it can't drift out of date. Footnotes always render as end notes
 with superscript numbers and no links, because in-message anchors are
-unreliable across clients.
+unreliable across clients. The plain-text part marks them `[1]`.
 
 ## Fallbacks
 
 Interactive components can't run in an inbox. Each one declares what to do
 instead, so a newsletter never shows a broken widget:
 
-| Fallback | What readers see                              | Used by                        |
-| -------- | --------------------------------------------- | ------------------------------ |
-| `link`   | A short line linking to the post on your site | Poll, Tabs, CodeGroup          |
-| `text`   | The content as plain, readable text           | Disclosure, Comparison         |
-| `omit`   | Nothing; the block is skipped                 | ShareActions, NewsletterSignup |
+| Fallback | What readers see                                    | Used by                                                                                                                                                                                                             |
+| -------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text`   | The content as plain, readable text, code and links | AppearsOn, AudienceBoundary, AuthorCard, CardGrid, Carousel, Chart, CodeBlock, CodeGroup, Comparison, Diff, Disclosure, FileCard, FileTree, Gallery, RelatedContent, SeriesNavigation, SponsorBlock, Tabs, Terminal |
+| `link`   | A short line linking to it on the web               | Poll (to your post), SocialPost (to the post itself)                                                                                                                                                                |
+| `omit`   | Nothing; the block is skipped                       | ShareActions, NewsletterSignup                                                                                                                                                                                      |
 
-When a fallback applies, or a component is unknown, `renderEmail` adds an entry
-to `warnings`. It never throws on content your site renders.
+Your own components declare one the same way, with `email: { fallback: 'text' }`
+in `definePostkitComponent`. When a fallback applies, or a component is
+unknown, `renderEmail` adds an entry to `warnings`. It never throws on content
+your site renders.
 
-{/* TODO(0.3.0): the "Used by" column comes from the SiteDocsEmail board. Confirm each component's declared email fallback in its definition. */}
+## Views and the provider
 
-## Today's API
+`renderEmail` is built from parts you can use directly. The package exports:
 
-Until `renderEmail` lands, `@postkit/email` exports the email views and a
-provider, and you call Chakra Email's `render()` yourself:
+- Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure`, `KeyTakeaway`,
+  `LinkPreview`, `ProductCard`, `PullQuote`, `Stat`, `Steps` and `Video`, and
+  `postkitEmailViews`, the map of all of them that the manifest's
+  `support.email` is computed from.
+- `PostkitEmailProvider`, which applies `postkitEmailTheme` (light, with
+  literal `tone.*` and `tint.*` colours) and accepts Chakra Email theme
+  overrides on top, such as your own tones.
+- `createPostkitEmailMdxComponents()` and `postkitEmailMdxComponents`, the MDX
+  map of the views, for email builds that compile trusted MDX.
+- `parseEmailSource`, the parsing step of `renderEmail`.
 
 ```tsx
 import { render } from '@chakra-email/core';
@@ -111,17 +124,6 @@ const html = await render(
   </PostkitEmailProvider>,
 );
 ```
-
-The package exports:
-
-- Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure` and `Video`.
-- `PostkitEmailProvider`, which applies `postkitEmailTheme` (light, with
-  literal `tone.*` and `tint.*` colours) and accepts Chakra Email theme
-  overrides on top, such as your own tones.
-- `createPostkitEmailMdxComponents()` and `postkitEmailMdxComponents`, the MDX
-  map for the supported subset, for email builds that compile trusted MDX.
-- `createPostkitEmailAction`, `createPostkitEmailMediaModel` and
-  `numericEmailDimension`, small helpers that normalize props for email.
 
 Audio and Video never emit native media elements, because major email clients
 don't support them consistently.

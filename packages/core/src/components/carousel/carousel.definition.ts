@@ -9,6 +9,7 @@ export const carouselDefinition = definePostkitComponent({
   children: 'mdx',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of carousel items.'),

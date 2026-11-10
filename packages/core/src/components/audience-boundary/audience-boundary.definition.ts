@@ -10,6 +10,7 @@ export const audienceBoundaryDefinition = definePostkitComponent({
   children: 'mdx',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     audience: prop.string('The host-defined audience identifier.', {

@@ -8,6 +8,7 @@ export const diffDefinition = definePostkitComponent({
   description: 'A semantic unified diff with additions and deletions.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     diff: prop.string('Unified diff text.', { required: true }),

@@ -9,6 +9,7 @@ export const disclosureDefinition = definePostkitComponent({
   children: 'mdx',
   runtime: 'native-controls',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     summary: prop.string('The always-visible disclosure label.', {

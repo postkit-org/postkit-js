@@ -64,7 +64,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "Callout": {
@@ -128,7 +128,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "CardGrid": {
@@ -219,7 +219,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Disclosure": {
@@ -283,7 +283,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Gallery": {
@@ -369,7 +369,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Steps": {
@@ -421,7 +421,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "Tabs": {
@@ -493,7 +493,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "CodeBlock": {
@@ -624,7 +624,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "CodeGroup": {
@@ -697,7 +697,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Diff": {
@@ -752,7 +752,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "FileCard": {
@@ -859,7 +859,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "FileTree": {
@@ -923,7 +923,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Terminal": {
@@ -1009,7 +1009,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "AudienceBoundary": {
@@ -1084,7 +1084,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Comparison": {
@@ -1174,7 +1174,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "KeyTakeaway": {
@@ -1244,7 +1244,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "Poll": {
@@ -1340,7 +1340,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "link" }
       }
     },
     "ProductCard": {
@@ -1470,7 +1470,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "PullQuote": {
@@ -1539,7 +1539,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "RelatedContent": {
@@ -1615,7 +1615,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "SeriesNavigation": {
@@ -1708,7 +1708,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "SponsorBlock": {
@@ -1813,7 +1813,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Stat": {
@@ -1889,7 +1889,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "AppearsOn": {
@@ -1982,7 +1982,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Audio": {
@@ -2059,7 +2059,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "AuthorCard": {
@@ -2172,7 +2172,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "CallToAction": {
@@ -2283,7 +2283,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "Carousel": {
@@ -2365,7 +2365,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Chart": {
@@ -2478,7 +2478,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     },
     "Figure": {
@@ -2638,7 +2638,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "LinkPreview": {
@@ -2799,7 +2799,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": "supported"
       }
     },
     "NewsletterSignup": {
@@ -2933,7 +2933,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "omit" }
       }
     },
     "ShareActions": {
@@ -3023,7 +3023,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "omit" }
       }
     },
     "SocialPost": {
@@ -3213,7 +3213,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "hydrated",
-        "email": "not-defined"
+        "email": { "fallback": "link" }
       }
     },
     "Video": {
@@ -3304,7 +3304,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": "supported"
       }
     }
   }

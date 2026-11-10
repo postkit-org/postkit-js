@@ -3,13 +3,15 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { Body, Container, Head, Html, render, Text } from '@chakra-email/core';
+import { Body, Container, Head, Html } from '@chakra-email/core';
 import {
+  createPostkitDocument,
   parsePostkitMarkdown,
   type PostkitDocument,
 } from '@postkit/chakra/document';
-import { Callout, PostkitEmailProvider } from '@postkit/email';
+import { renderEmail } from '@postkit/email';
 import { emailToneColors } from '@postkit/site-emails';
+import type { ReactNode } from 'react';
 
 import {
   componentCategoryGroups,
@@ -100,33 +102,46 @@ export function getHomeStats(): HomeStats {
   };
 }
 
+/** The Email tab's frame: a 600px column, as in an inbox. */
+function EmailTabFrame({ children }: { readonly children?: ReactNode }) {
+  return (
+    <Html lang="en">
+      <Head />
+      <Body m={0} p={0}>
+        <Container maxW="600px" px={4} py={4}>
+          {children}
+        </Container>
+      </Body>
+    </Html>
+  );
+}
+
 /**
- * The renderer panel's article through `@postkit/email`, rendered to an HTML document with
- * Chakra Email's `render` (as `@postkit/email`'s README and `examples/email` do). The page
- * shows it in an `<iframe srcDoc>`. The package's light email theme supplies everything; the
- * only override is the site's own tones (`emailToneColors`, shared with the site's emails), so
- * the Callout matches the Chakra tab next to it.
+ * The renderer panel's article through `@postkit/email`'s `renderEmail` (03 §6.1): the
+ * article as a portable document, its Callout mapped to the email view. The page shows the
+ * HTML in an `<iframe srcDoc>`. The package's light email theme supplies everything; the only
+ * override is the site's own tones (`emailToneColors`, shared with the site's emails), so the
+ * Callout matches the Chakra tab next to it.
  */
 export async function renderEmailArticle(): Promise<string> {
   const { lead, callout } = rendererArticle;
-
-  return render(
-    <PostkitEmailProvider theme={{ colors: emailToneColors }}>
-      <Html lang="en">
-        <Head />
-        <Body m={0} p={0}>
-          <Container maxW="600px" px={4} py={4}>
-            <Text mt={0} mb={4}>
-              {lead}
-            </Text>
-            <Callout tone={callout.tone} title={callout.title}>
-              {callout.body}
-            </Callout>
-          </Container>
-        </Body>
-      </Html>
-    </PostkitEmailProvider>,
+  const { html } = await renderEmail(
+    createPostkitDocument([
+      { type: 'element', name: 'p', children: [{ type: 'text', value: lead }] },
+      {
+        type: 'component',
+        name: 'Callout',
+        props: { tone: callout.tone, title: callout.title },
+        children: [{ type: 'text', value: callout.body }],
+      },
+    ]),
+    {
+      format: 'document',
+      theme: { colors: emailToneColors },
+      wrapper: EmailTabFrame,
+    },
   );
+  return html;
 }
 
 /**

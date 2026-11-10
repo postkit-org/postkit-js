@@ -8,6 +8,7 @@ export const comparisonDefinition = definePostkitComponent({
   description: 'An accessible feature and option comparison table.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     columns: prop.json('A JSON array of compared option labels.', {

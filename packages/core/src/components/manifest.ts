@@ -5,6 +5,7 @@ import {
   type PostkitComponentRuntime,
   type PostkitComponentStability,
 } from './definition.js';
+import type { PostkitEmailSupport } from './email.js';
 import { deepFreeze, type PostkitPropDefinition } from './props.js';
 
 /*
@@ -142,10 +143,13 @@ export interface PostkitComponentSupport {
   /** Astro hydrates components with client behaviour or a resolver. */
   readonly astro: 'hydrated' | 'static';
   /**
-   * TODO(03 step 9): computed from the views `@postkit/email` exports, with
-   * the definition's declared fallback. Until then, v1's placeholder.
+   * `@postkit/email` (03 §6): `supported` when it exports a view for the
+   * definition, else the definition's declared `{ fallback }`, else
+   * `not-supported`. Absent when the manifest's producer doesn't know the
+   * email views (such as `@postkit/chakra`'s `postkitComponentCatalog`, or a
+   * v1 manifest, whose `not-defined` was a placeholder).
    */
-  readonly email: 'not-defined';
+  readonly email?: PostkitEmailSupport;
 }
 
 /** One component in a v2 manifest. */
@@ -189,6 +193,11 @@ export interface PostkitManifestRenderers {
   readonly headless?: Iterable<string>;
   /** Component names `@postkit/chakra` exports a view for. */
   readonly chakra?: Iterable<string>;
+  /**
+   * Component names `@postkit/email` exports a view for
+   * (`Object.keys(postkitEmailViews)`).
+   */
+  readonly email?: Iterable<string>;
 }
 
 export interface CreatePostkitComponentManifestOptions {
@@ -355,10 +364,35 @@ function toSet(names: Iterable<string> | undefined) {
   return names === undefined ? undefined : new Set(names);
 }
 
+interface RendererSets {
+  readonly headless: ReadonlySet<string> | undefined;
+  readonly chakra: ReadonlySet<string> | undefined;
+  readonly email: ReadonlySet<string> | undefined;
+}
+
+function rendererSets(
+  renderers: PostkitManifestRenderers | undefined,
+): RendererSets {
+  return {
+    headless: toSet(renderers?.headless),
+    chakra: toSet(renderers?.chakra),
+    email: toSet(renderers?.email),
+  };
+}
+
+function emailSupport(
+  definition: AnyPostkitComponentDefinition,
+  email: ReadonlySet<string>,
+): PostkitEmailSupport {
+  if (email.has(definition.name)) return 'supported';
+  return definition.email
+    ? { fallback: definition.email.fallback }
+    : 'not-supported';
+}
+
 function computeSupport(
   definition: AnyPostkitComponentDefinition,
-  headless: ReadonlySet<string> | undefined,
-  chakra: ReadonlySet<string> | undefined,
+  { headless, chakra, email }: RendererSets,
 ): PostkitComponentSupport {
   const inHeadless = headless?.has(definition.name) ?? false;
   const inChakra = chakra?.has(definition.name) ?? false;
@@ -375,7 +409,6 @@ function computeSupport(
       definition.runtime === 'client' || definition.runtime === 'resolver'
         ? 'hydrated'
         : 'static',
-    email: 'not-defined',
   };
   if (headless) {
     support.headless = inHeadless
@@ -385,13 +418,14 @@ function computeSupport(
         : 'not-supported';
   }
   if (chakra) support.chakra = inChakra ? 'supported' : 'not-supported';
+  if (email) support.email = emailSupport(definition, email);
   // Fixed key order for the generated JSON.
   return {
     react: support.react,
     ...(support.headless ? { headless: support.headless } : {}),
     ...(support.chakra ? { chakra: support.chakra } : {}),
     astro: support.astro,
-    email: support.email,
+    ...(support.email ? { email: support.email } : {}),
   };
 }
 
@@ -400,11 +434,7 @@ export function createPostkitComponentManifestEntry(
   input: PostkitComponentManifestInput,
   options: CreatePostkitComponentManifestOptions = {},
 ): PostkitComponentManifestEntry {
-  return createEntry(
-    input,
-    toSet(options.renderers?.headless),
-    toSet(options.renderers?.chakra),
-  );
+  return createEntry(input, rendererSets(options.renderers));
 }
 
 function createEntry(
@@ -413,8 +443,7 @@ function createEntry(
     kit = null,
     package: packageName = null,
   }: PostkitComponentManifestInput,
-  headless: ReadonlySet<string> | undefined,
-  chakra: ReadonlySet<string> | undefined,
+  renderers: RendererSets,
 ): PostkitComponentManifestEntry {
   const category = postkitComponentCategories[definition.category];
   return deepFreeze({
@@ -449,7 +478,7 @@ function createEntry(
     },
     runtime: definition.runtime,
     stability: definition.stability,
-    support: computeSupport(definition, headless, chakra),
+    support: computeSupport(definition, renderers),
   });
 }
 
@@ -461,15 +490,14 @@ export function createPostkitComponentManifest(
   components: Iterable<PostkitComponentManifestInput>,
   options: CreatePostkitComponentManifestOptions = {},
 ): PostkitComponentManifest {
-  const headless = toSet(options.renderers?.headless);
-  const chakra = toSet(options.renderers?.chakra);
+  const renderers = rendererSets(options.renderers);
   const entries: Record<string, PostkitComponentManifestEntry> = {};
   for (const input of components) {
     const { name } = input.definition;
     if (Object.hasOwn(entries, name)) {
       throw new TypeError(`The Postkit manifest lists "${name}" twice.`);
     }
-    entries[name] = createEntry(input, headless, chakra);
+    entries[name] = createEntry(input, renderers);
   }
   return Object.freeze({
     id: POSTKIT_COMPONENT_MANIFEST_ID,
@@ -545,11 +573,8 @@ function upgradeEntry(
     stability: (stabilities.has(stability)
       ? stability
       : 'initial') as PostkitComponentStability,
-    support: {
-      react: support.react,
-      astro: support.astro,
-      email: support.email,
-    },
+    // v1's `email: 'not-defined'` was a placeholder, not support data.
+    support: { react: support.react, astro: support.astro },
   };
 }
 
@@ -557,7 +582,8 @@ function upgradeEntry(
  * Upgrades a v1 manifest to v2. Fields v1 never recorded get neutral values:
  * `slots` and `variants` are empty, every prop's `themeVariant` is `false`
  * and no prop has a `default`, `package` is `null`, the kit follows the
- * category, and `support` keeps only v1's fields.
+ * category, and `support` keeps v1's `react` and `astro` (v1's
+ * `email: 'not-defined'` was a placeholder, so `email` is left out).
  */
 export function upgradePostkitComponentManifest(
   manifest: PostkitComponentManifestV1,

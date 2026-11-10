@@ -198,6 +198,9 @@ type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
   `prop.enum` and `prop.boolean` also take `themeVariant`.
 - `presentation` is the shared `size` (default `md`) and `variant` (default
   `subtle`) pair.
+- `email: { fallback: 'text' | 'link' | 'omit' }` declares what
+  `@postkit/email`'s `renderEmail` does when it has no view for the component
+  (03 §6): its static view as text, a link to it on the web, or nothing.
 - `PostkitPropsOf`, `PostkitSlotOf`, `PostkitThemeVariantOf`,
   `PostkitThemeKeyOf` and `PostkitRecipeKeyOf` derive view props, slot and
   variant unions, and theme and recipe keys from a definition.
@@ -213,7 +216,10 @@ type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
 `createPostkitComponentManifest(components, { renderers })` generates the
 `postkit.component-catalog` v2 manifest for exactly the definitions given:
 v1's fields plus `package`, `kit`, `stability`, `slots`, `variants`, a
-computed `support`, and each prop's `default` and `themeVariant`.
+computed `support`, and each prop's `default` and `themeVariant`. `renderers`
+lists the views each renderer package exports (`headless`, `chakra`, `email`);
+`support.email` is `supported`, the definition's declared `{ fallback }`, or
+`not-supported`, and is left out when `renderers.email` isn't given.
 `createPostkit().manifest()` and `@postkit/chakra/component-manifest.json`
 both use it.
 

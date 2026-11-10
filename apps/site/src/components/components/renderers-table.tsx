@@ -8,17 +8,23 @@ const statusLabels: Readonly<Record<RendererStatus, string>> = {
   hydrated: 'Hydrated',
   planned: 'Planned',
   'not-supported': 'Not supported',
+  'text-fallback': 'As text',
+  'link-fallback': 'As a link',
+  omitted: 'Left out',
 };
 
-/** Supported in some form: a filled tip-green dot. Planned or missing: a hollow one. */
+/**
+ * Supported in some form: a filled tip-green dot. Planned, missing or an email fallback (the
+ * gap stays visible): a hollow one.
+ */
 function isAvailable(status: RendererStatus): boolean {
   return status === 'supported' || status === 'static' || status === 'hydrated';
 }
 
 /**
  * The Renderers table (SiteComponent* boards): one row per renderer with its package and
- * status. Rows come from `rendererSupport` (`lib/components.ts`), which says where each
- * status comes from until 03 step 9's computed matrix lands.
+ * status. Rows come from `rendererSupport` (`lib/components.ts`), which reads the manifest's
+ * computed `support` (03 step 9).
  */
 export function RenderersTable({
   rows,

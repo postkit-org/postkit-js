@@ -91,7 +91,7 @@ A v2 component entry, shortened to one prop:
     "headless": "supported",
     "chakra": "supported",
     "astro": "static",
-    "email": "not-defined"
+    "email": "supported"
   }
 }
 ```
@@ -103,27 +103,33 @@ components.
 
 The `support` field is computed from what each renderer package exports:
 
-| Field      | Values                                      | Meaning                                                                                          |
-| ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `react`    | `supported`, `not-supported`                | v1's field: some React renderer has a view.                                                      |
-| `headless` | `supported`, `chakra-only`, `not-supported` | `@postkit/react`. `chakra-only` is an interactive component still waiting for its headless view. |
-| `chakra`   | `supported`, `not-supported`                | `@postkit/chakra`.                                                                               |
-| `astro`    | `static`, `hydrated`                        | Whether Astro hydrates it.                                                                       |
-| `email`    | `not-defined`                               | Computed from `@postkit/email` in a later 0.3.0 step.                                            |
+| Field      | Values                                            | Meaning                                                                                          |
+| ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `react`    | `supported`, `not-supported`                      | v1's field: some React renderer has a view.                                                      |
+| `headless` | `supported`, `chakra-only`, `not-supported`       | `@postkit/react`. `chakra-only` is an interactive component still waiting for its headless view. |
+| `chakra`   | `supported`, `not-supported`                      | `@postkit/chakra`.                                                                               |
+| `astro`    | `static`, `hydrated`                              | Whether Astro hydrates it.                                                                       |
+| `email`    | `supported`, `{ "fallback": … }`, `not-supported` | `@postkit/email`, or the definition's declared fallback: `text`, `link` or `omit`.               |
 
 A renderer the manifest's producer doesn't know is left out: a headless
-site's `manifest()` has no `chakra` field. Email support is next: a component
-will be supported in email when `@postkit/email` exports a view for its
-definition, and otherwise the email renderer applies the fallback the
-definition declares, `link`, `text` or `omit`. Component pages show the same
-data, so they can't drift from the packages.
+site's `manifest()` has no `chakra` field, and `email` is there only when the
+producer read `@postkit/email`'s views. `component-manifest.json` has it;
+`@postkit/chakra`'s `postkitComponentCatalog` doesn't, since it doesn't depend
+on `@postkit/email`. To add it to your own manifest, pass
+`renderers: { email: Object.keys(postkitEmailViews) }` to
+`createPostkitComponentManifest`. A component is supported in email when
+`@postkit/email` exports a view for its definition; otherwise `renderEmail`
+applies the fallback the definition declares (`{ "fallback": "text" }`,
+`"link"` or `"omit"`, see [Email](/docs/email)). Component pages show the
+same data, so they can't drift from the packages.
 
 ## Version 1
 
 v1 stays readable. `readPostkitComponentManifest` from
 `@postkit/core/components` takes either version and returns v2, filling what
 v1 never recorded with neutral values (no slots or variants, `package: null`,
-the kit from the category). `isPostkitComponentManifestV2` and
+the kit from the category, and no `email`, since v1's `not-defined` was a
+placeholder). `isPostkitComponentManifestV2` and
 `isPostkitComponentManifestV1` tell them apart, and
 `mergePostkitComponentManifests` combines several:
 

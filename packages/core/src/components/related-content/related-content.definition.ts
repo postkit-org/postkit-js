@@ -8,6 +8,7 @@ export const relatedContentDefinition = definePostkitComponent({
   description: 'A semantic list of related articles or resources.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of related content links.', {

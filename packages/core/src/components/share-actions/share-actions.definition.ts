@@ -9,6 +9,7 @@ export const shareActionsDefinition = definePostkitComponent({
     'Reader-initiated native, copy, email, and configured social sharing actions.',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'omit' },
   props: {
     ...presentation,
     url: prop.string('The canonical URL to share.', { required: true }),

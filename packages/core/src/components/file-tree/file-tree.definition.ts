@@ -8,6 +8,7 @@ export const fileTreeDefinition = definePostkitComponent({
   description: 'A compact, semantic repository or project tree.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of paths, types, and optional metadata.', {

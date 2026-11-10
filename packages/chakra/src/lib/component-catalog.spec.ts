@@ -62,7 +62,16 @@ describe('Postkit component catalog', () => {
       join(__dirname, '..', '..', 'component-manifest.json'),
       'utf8',
     );
-    expect(JSON.parse(manifest)).toEqual(
+    // The generated file adds `support.email` from @postkit/email's views,
+    // which this package doesn't depend on (03 §6).
+    const generated = JSON.parse(manifest) as {
+      components: Record<string, { support: { email?: unknown } }>;
+    };
+    for (const entry of Object.values(generated.components)) {
+      expect(entry.support.email).toBeDefined();
+      delete entry.support.email;
+    }
+    expect(generated).toEqual(
       JSON.parse(JSON.stringify(postkitComponentCatalog)),
     );
     expect(Object.keys(postkitComponentCatalog.components)).toEqual(

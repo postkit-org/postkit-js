@@ -8,6 +8,7 @@ export const sponsorBlockDefinition = definePostkitComponent({
   description: 'A clearly disclosed sponsor message and destination.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     name: prop.string('The sponsor name.', { required: true }),

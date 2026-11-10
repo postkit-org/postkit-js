@@ -1,4 +1,8 @@
 import {
+  postkitEmailFallbacks,
+  type PostkitComponentEmailDefinition,
+} from './email.js';
+import {
   deepFreeze,
   type PostkitPropDefinitions,
   type PostkitPropValueOf,
@@ -114,6 +118,11 @@ export interface PostkitComponentDefinitionInput<
   readonly keywords?: readonly string[];
   /** Example props and children for the catalog and generated docs. */
   readonly example?: PostkitComponentExampleDefinition<NoInfer<Props>>;
+  /**
+   * The email fallback when `@postkit/email` has no view for the component
+   * (03 §6): `{ fallback: 'text' | 'link' | 'omit' }`.
+   */
+  readonly email?: PostkitComponentEmailDefinition;
 }
 
 /** A frozen, framework-free component definition. */
@@ -141,6 +150,8 @@ export interface PostkitComponentDefinition<
   readonly themeVariants: readonly ThemeVariant[];
   readonly keywords: readonly string[];
   readonly example?: PostkitComponentExampleDefinition<Props>;
+  /** The declared email fallback, when the definition has one (03 §6). */
+  readonly email?: PostkitComponentEmailDefinition;
   /**
    * Type-only: the anatomy slot union, `'root' | 'icon' | …`. It is
    * `undefined` at runtime and never enumerable.
@@ -370,6 +381,16 @@ export function definePostkitComponent<
     }
   }
 
+  const email = definition.email;
+  if (
+    email !== undefined &&
+    (typeof email !== 'object' ||
+      email === null ||
+      !postkitEmailFallbacks.includes(email.fallback))
+  ) {
+    fail(name, 'email must be { fallback: "link" | "omit" | "text" }.');
+  }
+
   const result: Record<string, unknown> = {
     name,
     directive: definition.directive,
@@ -386,6 +407,7 @@ export function definePostkitComponent<
     keywords: [...keywords],
   };
   if (example) result['example'] = structuredClone(example);
+  if (email) result['email'] = { fallback: email.fallback };
 
   return deepFreeze(result) as never;
 }

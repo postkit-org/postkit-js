@@ -47,3 +47,4 @@ export {
 } from './props.js';
 export * from './built-ins.js';
 export * from './manifest.js';
+export * from './email.js';

@@ -8,6 +8,7 @@ export const tabsDefinition = definePostkitComponent({
   description: 'Keyboard-operable switchable article panels.',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of tab labels and content.', {

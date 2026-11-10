@@ -121,14 +121,12 @@ describe('component manifest v2', () => {
       headless: 'supported',
       chakra: 'supported',
       astro: 'static',
-      email: 'not-defined',
     });
     expect(manifest.components['Poll'].support).toEqual({
       react: 'supported',
       headless: 'chakra-only',
       chakra: 'supported',
       astro: 'hydrated',
-      email: 'not-defined',
     });
 
     const headlessOnly = createPostkitComponentManifest(
@@ -139,7 +137,6 @@ describe('component manifest v2', () => {
       react: 'supported',
       headless: 'supported',
       astro: 'static',
-      email: 'not-defined',
     });
   });
 
@@ -194,8 +191,9 @@ describe('reading manifests', () => {
       slots: [],
       variants: [],
       stability: 'initial',
-      support: { react: 'supported', astro: 'static', email: 'not-defined' },
+      support: { react: 'supported', astro: 'static' },
     });
+    expect(upgraded.components['Callout'].support).not.toHaveProperty('email');
     expect(upgraded.components['Callout'].props['tone']).toEqual({
       kind: 'enum',
       values: ['note', 'tip'],

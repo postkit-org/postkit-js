@@ -9,6 +9,7 @@ export const codeBlockDefinition = definePostkitComponent({
     'Source code rendered with Chakra CodeBlock, with adapter-driven syntax highlighting, filenames, line numbers, copying, and wrapping.',
   runtime: 'client',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     code: prop.string('The literal source code.', { required: true }),

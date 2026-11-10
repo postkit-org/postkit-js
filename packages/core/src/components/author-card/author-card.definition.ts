@@ -9,6 +9,7 @@ export const authorCardDefinition = definePostkitComponent({
   children: 'mdx',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     name: prop.string('The author display name.', { required: true }),

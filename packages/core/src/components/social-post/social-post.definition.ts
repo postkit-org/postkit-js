@@ -9,6 +9,7 @@ export const socialPostDefinition = definePostkitComponent({
     'A consistently styled social post card or consent-gated provider embed.',
   runtime: 'resolver',
   stability: 'initial',
+  email: { fallback: 'link' },
   props: {
     ...presentation,
     href: prop.string('The original social post URL.', { required: true }),

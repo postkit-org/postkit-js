@@ -8,6 +8,7 @@ export const cardGridDefinition = definePostkitComponent({
   description: 'A deterministic grid of related navigation cards.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     items: prop.json('A JSON array of titled cards.', { required: true }),

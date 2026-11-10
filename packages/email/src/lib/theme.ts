@@ -101,12 +101,19 @@ export function usePostkitEmailToneColors(tone: Tone): PostkitEmailToneColors {
 }
 
 /** The `gray.*` steps Postkit's neutral email views use. */
-export type PostkitEmailGrayStep = 50 | 200 | 600 | 700;
+export type PostkitEmailGrayStep = 50 | 100 | 200 | 600 | 700 | 900;
 
 /** The neutral views' greys from the active email theme, as literal values. */
 export function usePostkitEmailGrays(): Record<PostkitEmailGrayStep, string> {
   const theme = useTheme();
   const gray = (step: PostkitEmailGrayStep) =>
     resolveEmailColor(`gray.${step}`, theme, defaultGray(step));
-  return { 50: gray(50), 200: gray(200), 600: gray(600), 700: gray(700) };
+  return {
+    50: gray(50),
+    100: gray(100),
+    200: gray(200),
+    600: gray(600),
+    700: gray(700),
+    900: gray(900),
+  };
 }

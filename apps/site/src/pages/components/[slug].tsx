@@ -3,7 +3,6 @@ import {
   createPostkitRemarkPlugins,
   type PostkitComponentName,
 } from '@postkit/chakra';
-import * as postkitEmail from '@postkit/email';
 import type { ComponentAnatomyLayer } from '@postkit/content';
 import { allComponentPages } from 'content-collections';
 import type {
@@ -44,6 +43,7 @@ import {
   type TocHeading,
 } from '../../components/layout';
 import { componentPropDefault } from '../../lib/component-defaults';
+import { componentEmailSupport } from '../../lib/component-email-support';
 import { getComponentPage } from '../../lib/component-pages';
 import {
   componentNameToSlug,
@@ -158,8 +158,6 @@ export const getStaticProps: GetStaticProps<
         .filter((entry) => entry.name !== component.name)
         .slice(0, 3)
         .map((entry) => entry.name);
-  // 06 PK-032 stand-in for 03 step 9: email support is what `@postkit/email` exports.
-  const emailComponentNames = Object.keys(postkitEmail);
   const contentFile =
     allComponentPages.find((entry) => entry.slug === slug)?._meta.filePath ??
     null;
@@ -175,7 +173,10 @@ export const getStaticProps: GetStaticProps<
       usage: await bodySection(sections, 'usage'),
       theming: await bodySection(sections, 'theming'),
       accessibility: await bodySection(sections, 'accessibility'),
-      renderers: rendererSupport(component, emailComponentNames),
+      renderers: rendererSupport(
+        component,
+        componentEmailSupport(component.name),
+      ),
       contentFile,
     },
   };

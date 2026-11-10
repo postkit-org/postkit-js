@@ -8,6 +8,7 @@ export const fileCardDefinition = definePostkitComponent({
   description: 'A descriptive file link or download.',
   runtime: 'static',
   stability: 'initial',
+  email: { fallback: 'text' },
   props: {
     ...presentation,
     href: prop.string('The file URL.', { required: true }),

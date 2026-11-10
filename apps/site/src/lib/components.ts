@@ -8,6 +8,8 @@ import {
   type PostkitPropDeclaration,
 } from '@postkit/chakra';
 
+import type { ComponentEmailSupport } from './component-email-support';
+
 export interface ComponentCategoryGroup {
   readonly category: PostkitComponentCategory;
   readonly components: readonly PostkitComponentCatalogEntry[];
@@ -215,7 +217,14 @@ export function formatPropType(prop: PostkitPropDeclaration): string {
 // --- Renderer support ------------------------------------------------------------------------
 
 export type RendererStatus =
-  'supported' | 'static' | 'hydrated' | 'planned' | 'not-supported';
+  | 'supported'
+  | 'static'
+  | 'hydrated'
+  | 'planned'
+  | 'not-supported'
+  | 'text-fallback'
+  | 'link-fallback'
+  | 'omitted';
 
 export interface RendererSupportRow {
   readonly renderer: string;
@@ -223,51 +232,55 @@ export interface RendererSupportRow {
   readonly status: RendererStatus;
 }
 
+/** The Email row: `@postkit/email`'s view, or the definition's declared fallback. */
+function emailStatus(email: ComponentEmailSupport | null): RendererStatus {
+  if (email === 'supported') return 'supported';
+  if (email !== null && typeof email === 'object') {
+    return email.fallback === 'omit' ? 'omitted' : `${email.fallback}-fallback`;
+  }
+  return 'not-supported';
+}
+
 /**
- * The Renderers table (01 §6.3). 03 step 9's computed support matrix doesn't exist yet, so
- * (06 PK-032):
- * - **Email** is computed from the names `@postkit/email` exports (`emailComponentNames`,
- *   read in `getStaticProps`); the manifest's `email: not-defined` is wrong for all 35.
- * - **Chakra** and **Astro** come from the manifest's `support`.
- * - **Headless** has no manifest field yet and no package exports it (`@postkit/react`
- *   becomes headless in 0.3.0, D11), so it reads "Planned" until either exists.
+ * The Renderers table (01 §6.3), from the manifest's computed `support` (03 §6, step 9):
+ * - **Headless**, **Chakra** and **Astro** from `postkitComponentCatalog`.
+ * - **Email** from `support.email` in the generated `component-manifest.json`
+ *   (`componentEmailSupport`, read in `getStaticProps`): supported, or the definition's
+ *   declared fallback (rendered as text, as a link, or left out).
  * - **Web components** are planned for every component (03 §5.4).
  */
 export function rendererSupport(
   component: PostkitComponentCatalogEntry,
-  emailComponentNames: readonly string[],
+  email: ComponentEmailSupport | null,
 ): RendererSupportRow[] {
-  // Read as a loose record: manifest v2 may add `headless` (03 §3.2).
-  const support: Readonly<Record<string, string | undefined>> = {
-    ...component.support,
-  };
-  const headless = support['headless'];
+  const support = component.support;
 
   return [
     {
       renderer: 'Headless',
       packageName: '@postkit/react',
-      status: headless === 'supported' ? 'supported' : 'planned',
+      status: support.headless === 'supported' ? 'supported' : 'planned',
     },
     {
       renderer: 'Chakra',
       packageName: '@postkit/chakra',
-      status: support['react'] === 'supported' ? 'supported' : 'not-supported',
+      status:
+        (support.chakra ?? support.react) === 'supported'
+          ? 'supported'
+          : 'not-supported',
     },
     {
       renderer: 'Email',
       packageName: '@postkit/email',
-      status: emailComponentNames.includes(component.name)
-        ? 'supported'
-        : 'not-supported',
+      status: emailStatus(email),
     },
     {
       renderer: 'Astro',
       packageName: '@postkit/astro',
       status:
-        support['astro'] === 'hydrated'
+        support.astro === 'hydrated'
           ? 'hydrated'
-          : support['astro'] === 'static'
+          : support.astro === 'static'
             ? 'static'
             : 'not-supported',
     },
