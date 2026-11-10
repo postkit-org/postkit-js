@@ -5,8 +5,6 @@ category: Customizing
 order: 2
 ---
 
-# Part styles
-
 Every Postkit component is built from named parts (slots). A `Callout` has
 `root`, `icon`, `content`, `title`, and `body`; a `CodeBlock` has a title,
 language label, copy control, and code lines. Each part can be styled at three

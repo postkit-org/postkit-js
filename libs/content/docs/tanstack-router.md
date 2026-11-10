@@ -5,8 +5,6 @@ category: Frameworks
 order: 3
 ---
 
-# TanStack Router
-
 `@postkit/tanstack-router` converts internal Markdown destinations into router
 links and keeps external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.

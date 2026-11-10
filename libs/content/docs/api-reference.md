@@ -5,8 +5,6 @@ category: Reference
 order: 5
 ---
 
-# API reference
-
 Postkit generates its API reference from the public exports of every published
 package.
 

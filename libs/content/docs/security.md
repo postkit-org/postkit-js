@@ -5,8 +5,6 @@ category: Reference
 order: 7
 ---
 
-# Security and trust boundaries
-
 Postkit separates portable authored content from trusted application
 infrastructure. Treat every URL, metadata response, saved snapshot, and
 Markdown document as untrusted input.

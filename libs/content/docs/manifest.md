@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Manifest
-
 The manifest is the machine-readable catalog of components: each one's
 name, directive, props, parts and renderer support. Editors such as Prismark
 read it to offer writers the components a site renders, and agents and other

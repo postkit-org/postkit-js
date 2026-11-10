@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Views
-
 A view is the render function for a component. Replacing it is rung 6 of the
 customization ladder: you change the whole markup, and the component keeps its
 definition. Its props, directive, validation and manifest entry stay the same,

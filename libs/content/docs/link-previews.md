@@ -5,8 +5,6 @@ category: Writing
 order: 5
 ---
 
-# Link previews and unfurling
-
 Remote content is normalized before rendering. `@postkit/unfurl` returns a
 provider-neutral snapshot; `LinkPreview` and `SocialPost` render that snapshot.
 This keeps remote requests, credentials, and provider-specific response formats

@@ -5,8 +5,6 @@ category: Customizing
 order: 1
 ---
 
-# Tokens
-
 Postkit is host-native by default. Its semantic components use Chakra
 primitives internally, so an existing application's tokens and recipes flow
 through. Postkit adds no visual preset unless the host opts into one. The

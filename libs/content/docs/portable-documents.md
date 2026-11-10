@@ -5,8 +5,6 @@ category: Writing
 order: 4
 ---
 
-# Portable documents and feeds
-
 Use `@postkit/core` when an API or feed needs to offer the same article as
 HTML, Markdown, MDX, or versioned JSON. The package has no React dependency.
 

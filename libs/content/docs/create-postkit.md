@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# createPostkit
-
 `createPostkit` configures everything a host needs from the set of components
 it actually uses: the provider, the MDX map, the directive plugins and the
 manifest.

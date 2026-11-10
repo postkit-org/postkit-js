@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# New components
-
 When Postkit doesn't have what you need, define it yourself. This is rung 8 of
 the customization ladder. Your component is defined the same way Postkit's
 built-in ones are, so it gets a Markdown directive, validation, theming and a

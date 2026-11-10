@@ -6,8 +6,6 @@ Generated from the canonical Postkit guides and public package READMEs.
 
 Source: /docs/introduction
 
-# Introduction
-
 Postkit is a portable publishing toolkit. It gives articles a shared component
 vocabulary (callouts, figures, code blocks, link previews and more) and keeps
 that vocabulary separate from the application that renders it. Write the
@@ -83,8 +81,6 @@ matches your stack, or go straight to the [Quick start](/docs/quick-start).
 ## Installation
 
 Source: /docs/installation
-
-# Installation
 
 Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
@@ -171,8 +167,6 @@ related `@postkit/*` packages to the same release version. See
 
 Source: /docs/quick-start
 
-# Quick start
-
 Postkit gives articles a portable component vocabulary while leaving the host
 application in control of routing, layout, assets, and remote services. This
 page assumes the React renderer is installed (see
@@ -235,8 +229,6 @@ boundary, then pass normalized data to the renderer. See
 ## MDX
 
 Source: /docs/mdx
-
-# MDX
 
 Use JSX declarations in MDX:
 
@@ -368,8 +360,6 @@ reserve `::postkit-*{...}` declarations for plain Markdown pipelines (see
 
 Source: /docs/markdown-directives
 
-# Markdown directives
-
 Plain Markdown pipelines can use literal-only directives:
 
 ```md
@@ -452,8 +442,6 @@ Markdown pipelines.
 ## Validation
 
 Source: /docs/validation
-
-# Validation
 
 Postkit checks authored components when a post compiles, so a misspelled prop
 or an impossible value stops the build instead of reaching a reader. This page
@@ -549,8 +537,6 @@ problems.
 
 Source: /docs/portable-documents
 
-# Portable documents and feeds
-
 Use `@postkit/core` when an API or feed needs to offer the same article as
 HTML, Markdown, MDX, or versioned JSON. The package has no React dependency.
 
@@ -618,8 +604,6 @@ approved component overrides and link behavior.
 ## Link previews and unfurling
 
 Source: /docs/link-previews
-
-# Link previews and unfurling
 
 Remote content is normalized before rendering. `@postkit/unfurl` returns a
 provider-neutral snapshot; `LinkPreview` and `SocialPost` render that snapshot.
@@ -692,8 +676,6 @@ never injects it. See [Security](/docs/security) for the full trust boundary.
 ## Tokens
 
 Source: /docs/tokens
-
-# Tokens
 
 Postkit is host-native by default. Its semantic components use Chakra
 primitives internally, so an existing application's tokens and recipes flow
@@ -817,8 +799,6 @@ To restyle individual parts of a component, see [Part styles](/docs/part-styles)
 
 Source: /docs/part-styles
 
-# Part styles
-
 Every Postkit component is built from named parts (slots). A `Callout` has
 `root`, `icon`, `content`, `title`, and `body`; a `CodeBlock` has a title,
 language label, copy control, and code lines. Each part can be styled at three
@@ -923,8 +903,6 @@ attributes supplied by Markdown renderers.
 
 Source: /docs/chakra
 
-# Chakra
-
 `@postkit/chakra` is the Chakra UI renderer for React. It maps every portable
 declaration to a Chakra-backed component, supplies the Markdown and MDX
 tooling, and ships Postkit's optional visual preset. The framework adapters
@@ -1006,8 +984,6 @@ compiled MDX, use `DocumentRenderer` from `@postkit/chakra/document`. See
 ## Next.js
 
 Source: /docs/nextjs
-
-# Next.js
 
 `@postkit/next` layers `next/link` over `@postkit/chakra`. Internal links stay
 native to the Next.js router, while external URLs, protocol links, hashes,
@@ -1111,8 +1087,6 @@ The package README and the checked Next.js example in the repository's
 
 Source: /docs/react-router
 
-# React Router
-
 `@postkit/react-router` routes internal destinations through React Router and
 leaves external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.
@@ -1187,8 +1161,6 @@ router provider. A checked example lives in the repository's
 
 Source: /docs/tanstack-router
 
-# TanStack Router
-
 `@postkit/tanstack-router` converts internal Markdown destinations into router
 links and keeps external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.
@@ -1257,8 +1229,6 @@ checked example lives in the repository's `examples/tanstack-router` directory.
 ## Astro
 
 Source: /docs/astro
-
-# Astro
 
 `@postkit/astro` renders Postkit declarations through Astro MDX, provides
 Chakra context for every isolated React rendering boundary, and hydrates only
@@ -1364,8 +1334,6 @@ built and inspected in CI, contain the complete API.
 
 Source: /docs/api-reference
 
-# API reference
-
 Postkit generates its API reference from the public exports of every published
 package.
 
@@ -1381,8 +1349,6 @@ model describes the complete TypeScript library surface.
 ## Compatibility and environments
 
 Source: /docs/compatibility
-
-# Compatibility and environments
 
 Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
@@ -1438,8 +1404,6 @@ to the same release version and review the changelog before upgrading.
 
 Source: /docs/security
 
-# Security and trust boundaries
-
 Postkit separates portable authored content from trusted application
 infrastructure. Treat every URL, metadata response, saved snapshot, and
 Markdown document as untrusted input.
@@ -1490,8 +1454,6 @@ Do not include secrets or publish a proof of concept in a public issue.
 ## Troubleshooting
 
 Source: /docs/troubleshooting
-
-# Troubleshooting
 
 ## Components render with only host styling
 

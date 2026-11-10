@@ -7,8 +7,6 @@ since: '0.3.0'
 status: draft
 ---
 
-# Email
-
 Your posts already have callouts, figures and footnotes. `@postkit/email`
 turns the same file into an email that looks right in Gmail, Outlook and Apple
 Mail, so the newsletter is never a second draft.

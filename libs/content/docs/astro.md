@@ -5,8 +5,6 @@ category: Frameworks
 order: 4
 ---
 
-# Astro
-
 `@postkit/astro` renders Postkit declarations through Astro MDX, provides
 Chakra context for every isolated React rendering boundary, and hydrates only
 components that require a React runtime.
