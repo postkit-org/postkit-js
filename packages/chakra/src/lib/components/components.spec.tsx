@@ -35,18 +35,16 @@ import { Diff } from '../../components/diff/diff.js';
 import { FileCard } from '../../components/file-card/file-card.js';
 import { FileTree } from '../../components/file-tree/file-tree.js';
 import { Terminal } from '../../components/terminal/terminal.js';
-import {
-  AudienceBoundary,
-  Comparison,
-  KeyTakeaway,
-  Poll,
-  ProductCard,
-  PullQuote,
-  RelatedContent,
-  SeriesNavigation,
-  SponsorBlock,
-  Stat,
-} from './publication.js';
+import { AudienceBoundary } from '../../components/audience-boundary/audience-boundary.js';
+import { Comparison } from '../../components/comparison/comparison.js';
+import { KeyTakeaway } from '../../components/key-takeaway/key-takeaway.js';
+import { Poll } from '../../components/poll/poll.js';
+import { ProductCard } from '../../components/product-card/product-card.js';
+import { PullQuote } from '../../components/pull-quote/pull-quote.js';
+import { RelatedContent } from '../../components/related-content/related-content.js';
+import { SeriesNavigation } from '../../components/series-navigation/series-navigation.js';
+import { SponsorBlock } from '../../components/sponsor-block/sponsor-block.js';
+import { Stat } from '../../components/stat/stat.js';
 
 function render(component: React.ReactNode): string {
   return renderToStaticMarkup(

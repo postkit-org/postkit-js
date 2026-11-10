@@ -87,30 +87,45 @@ export {
 } from './components/terminal/terminal.js';
 export {
   AudienceBoundary,
-  Comparison,
-  KeyTakeaway,
-  Poll,
-  ProductCard,
-  PullQuote,
-  RelatedContent,
-  SeriesNavigation,
-  SponsorBlock,
-  Stat,
   type AudienceBoundaryProps,
+} from './components/audience-boundary/audience-boundary.js';
+export {
+  Comparison,
   type ComparisonItem,
   type ComparisonProps,
+} from './components/comparison/comparison.js';
+export {
+  KeyTakeaway,
   type KeyTakeawayProps,
+} from './components/key-takeaway/key-takeaway.js';
+export {
+  Poll,
   type PollOption,
   type PollProps,
+} from './components/poll/poll.js';
+export {
+  ProductCard,
   type ProductCardProps,
+} from './components/product-card/product-card.js';
+export {
+  PullQuote,
   type PullQuoteProps,
+} from './components/pull-quote/pull-quote.js';
+export {
+  RelatedContent,
   type RelatedContentItem,
   type RelatedContentProps,
+} from './components/related-content/related-content.js';
+export {
+  SeriesNavigation,
   type SeriesLink,
   type SeriesNavigationProps,
+} from './components/series-navigation/series-navigation.js';
+export {
+  SponsorBlock,
   type SponsorBlockProps,
-  type StatProps,
-} from './lib/components/publication.js';
+} from './components/sponsor-block/sponsor-block.js';
+export { Stat, type StatProps } from './components/stat/stat.js';
 export {
   postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
@@ -144,35 +159,53 @@ export {
 export {
   postkitAudienceBoundaryRecipe,
   postkitAudienceBoundarySlots,
+  type PostkitAudienceBoundarySlot,
+} from './components/audience-boundary/audience-boundary.recipe.js';
+export {
   postkitComparisonRecipe,
   postkitComparisonSlots,
+  type PostkitComparisonSlot,
+} from './components/comparison/comparison.recipe.js';
+export {
   postkitKeyTakeawayRecipe,
   postkitKeyTakeawaySlots,
+  type PostkitKeyTakeawaySlot,
+} from './components/key-takeaway/key-takeaway.recipe.js';
+export {
   postkitPollRecipe,
   postkitPollSlots,
+  type PostkitPollSlot,
+} from './components/poll/poll.recipe.js';
+export {
   postkitProductCardRecipe,
   postkitProductCardSlots,
+  type PostkitProductCardSlot,
+} from './components/product-card/product-card.recipe.js';
+export {
   postkitPullQuoteRecipe,
   postkitPullQuoteSlots,
+  type PostkitPullQuoteSlot,
+} from './components/pull-quote/pull-quote.recipe.js';
+export {
   postkitRelatedContentRecipe,
   postkitRelatedContentSlots,
+  type PostkitRelatedContentSlot,
+} from './components/related-content/related-content.recipe.js';
+export {
   postkitSeriesNavigationRecipe,
   postkitSeriesNavigationSlots,
+  type PostkitSeriesNavigationSlot,
+} from './components/series-navigation/series-navigation.recipe.js';
+export {
   postkitSponsorBlockRecipe,
   postkitSponsorBlockSlots,
+  type PostkitSponsorBlockSlot,
+} from './components/sponsor-block/sponsor-block.recipe.js';
+export {
   postkitStatRecipe,
   postkitStatSlots,
-  type PostkitAudienceBoundarySlot,
-  type PostkitComparisonSlot,
-  type PostkitKeyTakeawaySlot,
-  type PostkitPollSlot,
-  type PostkitProductCardSlot,
-  type PostkitPullQuoteSlot,
-  type PostkitRelatedContentSlot,
-  type PostkitSeriesNavigationSlot,
-  type PostkitSponsorBlockSlot,
   type PostkitStatSlot,
-} from './lib/recipes/publication.recipe.js';
+} from './components/stat/stat.recipe.js';
 export {
   CallToAction,
   type CallToActionProps,

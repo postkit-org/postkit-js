@@ -13,6 +13,7 @@ export const chakraOnly = Object.freeze([
   // Technical content: CodeBlock's copy action and CodeGroup's tabs.
   'CodeBlock',
   'CodeGroup',
+  'Poll',
 ] as const);
 
 /** A built-in component that only `@postkit/chakra` renders today. */
