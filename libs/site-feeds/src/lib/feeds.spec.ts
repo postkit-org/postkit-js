@@ -186,9 +186,13 @@ describe('the site feeds, from libs/content', () => {
       'https://postkit.org/changelog/0-2-0',
       'https://postkit.org/changelog/0-1-0',
     ]);
-    expect(
-      changelog.items.every((entry) => entry.content.kind === 'full'),
-    ).toBe(true);
+    // Callout titles are prop text: they read as text, not only as annotations.
+    expect(changelog.items[0].contentHtml).toContain(
+      '<p data-postkit-part="title"><strong>Review before upgrading</strong></p>',
+    );
+    expect(changelog.items[1].contentHtml).toContain(
+      '<strong>Release status</strong>',
+    );
     expectValid(changelog.artifacts);
     for (const source of Object.values(changelog.artifacts)) {
       expect(source).toContain('0-2-0');
@@ -207,8 +211,22 @@ describe('the site feeds, from libs/content', () => {
     expect(notes.items.map((note) => note.url)).toEqual([
       'https://postkit.org/notes/one-article-four-renderers',
     ]);
-    // Its KeyTakeaway, Steps and others are prop-only: summary and link (see content-html).
-    expect(notes.items[0].content.kind).toBe('summary');
+    // The whole note, including the components whose content is only in props.
+    const html = notes.items[0].contentHtml;
+    for (const text of [
+      'Components are defined once, outside any framework.',
+      'npm install @postkit/react',
+      'added 1 package in 2s',
+      'post.mdx',
+      'The file stays plain text. The renderer is a choice you can change later.',
+      '— Postkit design principles',
+      '<strong>Theme the parts.</strong>',
+      'Style root, icon and title with CSS or a recipe.',
+      'href="https://github.com/postkit-org/postkit-js"',
+      'Portable web and email components, Markdown tooling and framework adapters.',
+    ]) {
+      expect(html).toContain(text);
+    }
     expectValid(notes.artifacts);
   });
 

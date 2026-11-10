@@ -1,17 +1,21 @@
-import { parsePostkitHtml } from '@postkit/core';
+import { parsePostkit, parsePostkitHtml } from '@postkit/core';
 
-import { renderFeedContent, stripMdxComments } from './content-html.js';
+import { relativeUrlsInHtml } from './validate.js';
+import {
+  renderFeedContent,
+  stripMdxComments,
+  toPostkitMdx,
+} from './content-html.js';
+import { parseXml } from './xml.js';
 
 const base = {
   siteUrl: 'https://postkit.org',
-  url: 'https://postkit.org/changelog/0-2-0',
   title: 'Postkit 0.2.0',
-  summary: 'The summary.',
 };
 
 describe('renderFeedContent', () => {
   it('renders Markdown with Postkit directives through @postkit/core', () => {
-    const content = renderFeedContent(
+    const html = renderFeedContent(
       `# Postkit 0.2.0
 
 Intro with a [relative link](/docs/mdx) and an [absolute one](https://example.com/a).
@@ -27,17 +31,20 @@ const a = 1 < 2;
       { ...base, format: 'markdown' },
     );
 
-    expect(content.kind).toBe('full');
     // The repeated title is dropped; readers show the item title already.
-    expect(content.html).not.toContain('<h1');
-    expect(content.html).toContain('href="https://postkit.org/docs/mdx"');
-    expect(content.html).toContain('href="https://example.com/a"');
-    expect(content.html).toContain('data-postkit-component="Callout"');
-    expect(content.html).toContain('<strong');
-    expect(content.html).toContain('const a = 1 &lt; 2;');
+    expect(html).not.toContain('<h1');
+    expect(html).toContain('href="https://postkit.org/docs/mdx"');
+    expect(html).toContain('href="https://example.com/a"');
+    expect(html).toContain('data-postkit-component="Callout"');
+    // The title is reader text, not only an annotation.
+    expect(html).toContain(
+      '<p data-postkit-part="title"><strong>Review before upgrading</strong></p>',
+    );
+    expect(html).toContain('<strong');
+    expect(html).toContain('const a = 1 &lt; 2;');
 
     // The output is core's portable HTML: it reads back as the same Callout.
-    const document = parsePostkitHtml(content.html);
+    const document = parsePostkitHtml(html);
     const callout = document.children.find((node) => node.type === 'component');
     expect(callout).toMatchObject({
       type: 'component',
@@ -48,12 +55,12 @@ const a = 1 < 2;
 
   // The site compiles changelog Markdown as MDX too, so inline HTML has to be MDX-valid.
   it('keeps inline HTML safe', () => {
-    const content = renderFeedContent(
+    const html = renderFeedContent(
       `Hello <a href="javascript:alert(1)" onclick="alert(1)">x</a> <img src="/a.png" alt="A" onerror="alert(1)" />`,
       { ...base, format: 'markdown' },
     );
-    expect(content.html).not.toMatch(/javascript:|onclick|onerror/);
-    expect(content.html).toContain('src="https://postkit.org/a.png"');
+    expect(html).not.toMatch(/javascript:|onclick|onerror/);
+    expect(html).toContain('src="https://postkit.org/a.png"');
   });
 
   it('fails closed on content core cannot make safe', () => {
@@ -69,7 +76,7 @@ const a = 1 < 2;
   });
 
   it('renders MDX components with children, without maintainer comments', () => {
-    const content = renderFeedContent(
+    const html = renderFeedContent(
       `{/* TODO: a maintainer note */}
 
 <Callout tone="tip" title="Keep the content">
@@ -78,24 +85,70 @@ const a = 1 < 2;
 `,
       { ...base, format: 'mdx' },
     );
-    expect(content.kind).toBe('full');
-    expect(content.html).not.toContain('TODO');
-    expect(content.html).toContain('Change the renderer, not the article.');
+    expect(html).not.toContain('TODO');
+    expect(html).toContain('Keep the content');
+    expect(html).toContain('Change the renderer, not the article.');
   });
 
-  it('falls back to the summary and a link for prop-only components', () => {
-    const content = renderFeedContent(
-      `Intro.
+  it('renders components whose content is only in props', () => {
+    const source = `Intro.
 
 <KeyTakeaway title="In short" items='["One", "Two"]' />
+
+<Steps items='[{"title": "Install", "description": "Add the package."}]' />
+
+<PullQuote quote="Plain text stays." attribution="The handbook" />
+
+<Terminal command="npm install @postkit/core" output="added 1 package" />
+
+<CodeBlock filename="a.ts" language="ts" code="const a = 1 < 2;" />
+
+<LinkPreview href="https://example.com/post" title="A post" description="About it." />
+
+<Figure src="/media/a.png" alt="A chart" caption="Downloads by week." />
+`;
+    const html = renderFeedContent(source, { ...base, format: 'mdx' });
+    for (const text of [
+      '<p data-postkit-part="title"><strong>In short</strong></p>',
+      '<li data-postkit-part="item">One</li>',
+      '<strong>Install</strong>',
+      'Add the package.',
+      '<blockquote data-postkit-part="quote"><p>Plain text stays.</p></blockquote>',
+      '— The handbook',
+      'npm install @postkit/core',
+      'added 1 package',
+      '<span data-postkit-part="filename">a.ts</span>',
+      '<code class="language-ts">const a = 1 &lt; 2;</code>',
+      'href="https://example.com/post"',
+      'About it.',
+      'src="https://postkit.org/media/a.png"',
+      'Downloads by week.',
+    ]) {
+      expect(html).toContain(text);
+    }
+    expect(relativeUrlsInHtml(html)).toEqual([]);
+    // Well-formed: the HTML parses as XML once void elements are closed, and it
+    // reads back as the same document.
+    expect(() =>
+      parseXml(
+        `<div>${html.replace(/<(img|br|hr)([^>]*)>/g, '<$1$2/>')}</div>`,
+      ),
+    ).not.toThrow();
+    expect(parsePostkitHtml(html)).toEqual(
+      parsePostkit(toPostkitMdx(source, 'mdx'), { format: 'mdx' }),
+    );
+  });
+
+  it('shows the public fallback of an AudienceBoundary', () => {
+    const html = renderFeedContent(
+      `<AudienceBoundary audience="members" fallback="For members.">
+  Secret.
+</AudienceBoundary>
 `,
       { ...base, format: 'mdx' },
     );
-    expect(content).toEqual({
-      kind: 'summary',
-      html: '<p>The summary.</p><p><a href="https://postkit.org/changelog/0-2-0">Read it on postkit.org</a></p>',
-      reason: expect.stringContaining('KeyTakeaway'),
-    });
+    expect(html).toContain('For members.');
+    expect(html).not.toContain('Secret.');
   });
 });
 

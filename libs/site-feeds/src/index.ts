@@ -1,10 +1,7 @@
 export {
-  absolutizeDocument,
-  findPropOnlyComponents,
   renderFeedContent,
   stripMdxComments,
   toPostkitMdx,
-  type FeedContent,
   type FeedSourceFormat,
   type RenderFeedContentOptions,
 } from './lib/content-html.js';

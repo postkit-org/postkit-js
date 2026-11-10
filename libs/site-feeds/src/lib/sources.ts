@@ -13,7 +13,7 @@ import {
 } from '@postkit/content';
 import { parse as parseYaml } from 'yaml';
 
-import { renderFeedContent, type FeedContent } from './content-html.js';
+import { renderFeedContent } from './content-html.js';
 import type { SiteFeedItem } from './feeds.js';
 
 /** Changelog entries carry no author; the feeds credit the project. */
@@ -26,9 +26,8 @@ export interface FeedSourceOptions {
   readonly nodeEnv?: string;
 }
 
-export interface LoadedFeedItem extends SiteFeedItem {
-  readonly content: FeedContent;
-}
+/** A feed item read from `libs/content`, with its full body as HTML. */
+export type LoadedFeedItem = SiteFeedItem;
 
 function readEntries(directory: string, extensions: readonly string[]) {
   return readdirSync(directory)
@@ -52,14 +51,14 @@ function withContent(
   format: 'markdown' | 'mdx',
   siteUrl: string,
 ): LoadedFeedItem {
-  const content = renderFeedContent(source, {
-    format,
-    siteUrl,
-    url: item.url,
-    title: item.title,
-    summary: item.summary,
-  });
-  return { ...item, content, contentHtml: content.html };
+  return {
+    ...item,
+    contentHtml: renderFeedContent(source, {
+      format,
+      siteUrl,
+      title: item.title,
+    }),
+  };
 }
 
 /**

@@ -24,11 +24,4 @@ for (const feed of feeds) {
   process.stdout.write(
     `Feed ${feed.name}: ${feed.items.length} item(s) → ${join(outDirectory, feed.name)}.{xml,atom,json}\n`,
   );
-  for (const item of feed.items) {
-    if (item.content.kind === 'summary') {
-      process.stdout.write(
-        `  ${item.url}: summary and link only (${item.content.reason})\n`,
-      );
-    }
-  }
 }

@@ -278,6 +278,29 @@ function convertChildren(
   return result;
 }
 
+function hasProperty(node: HastElement, name: string): boolean {
+  const kebab = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+  return name in node.properties || kebab in node.properties;
+}
+
+/**
+ * A component's static view (`data-postkit-view`, written by
+ * `serializePostkitHtml`) is markup generated from its props. Only the element
+ * marked `data-postkit-slot` holds authored children; everything else is
+ * dropped so the component node round-trips exactly.
+ */
+function staticViewChildren(node: HastElement): HastNode[] {
+  for (const child of node.children) {
+    if (child.type !== 'element') continue;
+    if (hasProperty(child, 'dataPostkitSlot')) return child.children;
+    // A nested component's slot belongs to that component.
+    if (hasProperty(child, 'dataPostkitComponent')) continue;
+    const found = staticViewChildren(child);
+    if (found.length > 0) return found;
+  }
+  return [];
+}
+
 function convertElement(
   node: HastElement,
   options: ParsePostkitHtmlOptions,
@@ -315,7 +338,9 @@ function convertElement(
         type: 'component',
         name: componentName,
         ...(props ? { props } : {}),
-        children,
+        children: hasProperty(node, 'dataPostkitView')
+          ? convertChildren(staticViewChildren(node), options, allowed)
+          : children,
       },
     ];
   }
