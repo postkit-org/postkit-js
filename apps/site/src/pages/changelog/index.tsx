@@ -1,8 +1,7 @@
 import { Box, Container, Heading, Stack, Text } from '@chakra-ui/react';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
-import Head from 'next/head';
-
 import { ChangelogCard } from '../../components/changelog-card';
+import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
 import type { ChangelogEntrySummary } from '../../lib/changelog';
 import {
   getChangelogEntries,
@@ -28,13 +27,11 @@ export default function ChangelogPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Head>
-        <title>Changelog · Postkit</title>
-        <meta
-          name="description"
-          content="Release notes and changes across the Postkit packages."
-        />
-      </Head>
+      <PageMeta
+        title="Changelog"
+        description="Release notes and changes across the Postkit packages."
+      />
+      <BreadcrumbJsonLd items={[{ name: 'Changelog', path: '/changelog' }]} />
 
       <Container maxW="5xl" paddingBlock={{ base: '16', md: '24' }}>
         <Box maxW="3xl">

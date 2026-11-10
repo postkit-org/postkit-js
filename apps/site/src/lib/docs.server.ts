@@ -5,6 +5,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 
 import type { DocsEntry, DocsEntrySummary } from './docs';
 import { resolveDocsNavigation, type ResolvedDocsNavigation } from './docs-nav';
+import { extractHeadings } from './headings';
 
 type GeneratedDocsEntry = (typeof allDocsEntries)[number];
 
@@ -67,5 +68,9 @@ export async function getDocsEntry(slug: string): Promise<DocsEntry> {
     },
   });
 
-  return { ...toSummary(entry), source };
+  return {
+    ...toSummary(entry),
+    source,
+    headings: extractHeadings(entry.content),
+  };
 }

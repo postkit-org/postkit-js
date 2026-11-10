@@ -2,7 +2,10 @@ import { PostkitProvider } from '@postkit/chakra';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { MetaProvider } from 'next-meta';
 
+import { siteMetaDefaults } from '../components/layout/page-meta';
 import { SiteShell } from '../components/site-shell';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
 import { fontVariablesCss } from '../lib/fonts';
@@ -10,6 +13,8 @@ import { siteSystem } from '../lib/site-theme';
 import './styles.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
+  const { asPath } = useRouter();
+
   return (
     <ThemeProvider
       attribute="class"
@@ -22,19 +27,17 @@ function CustomApp({ Component, pageProps }: AppProps) {
         codeBlockAdapter={siteCodeBlockAdapter}
       >
         <Head>
-          <meta
-            name="description"
-            content="Postkit is a portable publishing component system for React and the web."
-          />
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-          <title>Postkit</title>
         </Head>
         <style jsx global>
           {fontVariablesCss}
         </style>
-        <SiteShell>
-          <Component {...pageProps} />
-        </SiteShell>
+        {/* Title, description, canonical and social defaults; each page's PageMeta overrides them. */}
+        <MetaProvider {...siteMetaDefaults(asPath)}>
+          <SiteShell>
+            <Component {...pageProps} />
+          </SiteShell>
+        </MetaProvider>
       </PostkitProvider>
     </ThemeProvider>
   );

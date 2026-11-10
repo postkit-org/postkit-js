@@ -7,17 +7,20 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { createPostkitNextComponents } from '@postkit/next';
 import type {
   GetStaticPaths,
   GetStaticProps,
   InferGetStaticPropsType,
 } from 'next';
-import Head from 'next/head';
 import NextLink from 'next/link';
-import { MDXRemote } from 'next-mdx-remote';
 
 import {
+  BreadcrumbJsonLd,
+  MdxContent,
+  PageMeta,
+} from '../../components/layout';
+import {
+  changelogHref,
   formatChangelogRelease,
   type ChangelogEntry,
 } from '../../lib/changelog';
@@ -25,12 +28,6 @@ import {
   getChangelogEntries,
   getChangelogEntry,
 } from '../../lib/changelog.server';
-
-const postkitComponents = createPostkitNextComponents({
-  link: {
-    linkProps: { prefetch: false },
-  },
-});
 
 interface ChangelogEntryPageProps {
   readonly entry: ChangelogEntry;
@@ -64,10 +61,17 @@ export default function ChangelogEntryPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Head>
-        <title>{`${entry.title} · Postkit changelog`}</title>
-        <meta name="description" content={entry.summary} />
-      </Head>
+      <PageMeta
+        title={entry.title}
+        description={entry.summary}
+        type="article"
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Changelog', path: '/changelog' },
+          { name: entry.title, path: changelogHref(entry) },
+        ]}
+      />
 
       <Container maxW="4xl" paddingBlock={{ base: '12', md: '20' }}>
         <Stack gap="8">
@@ -101,7 +105,7 @@ export default function ChangelogEntryPage({
             </Text>
           </Box>
 
-          <MDXRemote {...entry.source} components={postkitComponents} />
+          <MdxContent source={entry.source} />
         </Stack>
       </Container>
     </>
