@@ -241,7 +241,10 @@ In order: breadcrumb, title (name + grey value line), badges (kit, static/intera
   - ⌘K or Ctrl K, or the header trigger, opens it. On phones it's full screen.
   - Results are grouped: Components, Docs, Notes, Changelog. Up to 4 per group, with the match highlighted in the snippet.
   - The first result is active. ↑/↓ move, ↵ opens, Esc closes.
-  - **Empty query:** "Jump to" plus popular components (PhoneSearch).
+  - **Empty query (decided 10 Nov 2026):** pre-populated with what someone discovering Postkit and adding it to their site needs first, in this order (PhoneSearch layout: "Jump to", then "Popular components"). The list is curated in `content/search-featured.json`, not computed from traffic (there is no query history to compute it from), and every entry must resolve to a published page or the build fails.
+    - **Jump to:** Quick start, Installation, Introduction, the Next.js guide, Markdown directives, Part styles, the latest released changelog entry.
+    - **Popular components:** Callout, CodeBlock, Figure, KeyTakeaway, Tabs, Terminal.
+    - When a group filter is active (e.g. "Search docs"), only that group's featured entries show.
   - **No results:** the message, three suggestions taken from the closest titles, and "Request it on GitHub" (SiteSearchEmpty).
 - **`/?q=`:** loading any page with `?q=` opens the dialog with that query filled in (this is what the `SearchAction` in §7 points at).
 - **Accessibility:** a combobox and listbox with `aria-activedescendant`. A focus trap while open. Focus returns to the trigger on close.

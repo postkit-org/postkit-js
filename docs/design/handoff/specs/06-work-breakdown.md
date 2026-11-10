@@ -99,7 +99,7 @@ Use Nx generators for every new project: `nx g @nx/js:library`, `nx g @nx/react:
 - Build the search records from the content collections and the manifest, the `@chakra-docs/search` MiniSearch engine with the synonyms file, and `GET /api/search`. Tests per 07.
 
 **PK-041 · Search dialog** (SiteSearch, SiteSearchEmpty, PhoneSearch, SiteSearchDark)
-- Calls `/api/search` through `@chakra-docs/search/client` once open; grouped results; keyboard; no-results suggestions; "Jump to" on an empty query; opens from ⌘K, the header and "Search docs".
+- Calls `/api/search` through `@chakra-docs/search/client` once open; grouped results; keyboard; no-results suggestions; the pre-populated empty state from `content/search-featured.json` ("Jump to" and popular components); opens from ⌘K, the header and "Search docs".
 
 **PK-042 · Feeds and llms.txt** (01 §10)
 
