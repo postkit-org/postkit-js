@@ -1,5 +1,5 @@
 import { pollDefinition } from '@postkit/core/components';
-import { chakraOnly } from '@postkit/react';
+import { chakraOnly, Poll as HeadlessPoll } from '@postkit/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { PostkitProvider } from '../../lib/provider.js';
@@ -9,9 +9,10 @@ import { Poll } from './poll.js';
 const system = createPostkitSystem({ preset: postkitDefaultTheme });
 
 describe('Chakra Poll view', () => {
-  it('carries its definition and is chakra-only for now', () => {
+  it('carries its definition and has a headless view', () => {
     expect(Poll.definition).toBe(pollDefinition);
-    expect(chakraOnly).toContain('Poll');
+    expect(chakraOnly).not.toContain('Poll');
+    expect(HeadlessPoll.definition).toBe(pollDefinition);
   });
 
   it('stamps the anatomy and records a vote', () => {

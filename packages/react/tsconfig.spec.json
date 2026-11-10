@@ -12,6 +12,8 @@
     "vite.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
+    "src/**/*.spec-support.ts",
+    "src/**/*.spec-support.tsx",
     "src/**/*.d.ts"
   ],
   "references": [

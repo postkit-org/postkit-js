@@ -15,7 +15,8 @@ import {
   type UnstyledProp,
 } from '@chakra-ui/react';
 import { newsletterSignupDefinition } from '@postkit/core/components';
-import { type FormEvent, type ReactNode, useId, useState } from 'react';
+import { useNewsletterSignup } from '@postkit/react';
+import { type ComponentProps, type ReactNode, useId } from 'react';
 
 import { postkitHeadingSize } from '../../lib/components/heading-size.js';
 import { usePostkit } from '../../lib/provider.js';
@@ -46,15 +47,12 @@ export type NewsletterSignupProps = {
 } & RecipeVariantProps<typeof postkitNewsletterSignupRecipe> &
   UnstyledProp;
 
-type SubmissionState =
-  | { readonly status: 'idle' | 'submitting'; readonly message: string }
-  | { readonly status: 'success' | 'error'; readonly message: string };
-
 const NewsletterForm = chakra('form');
 
 /**
  * A newsletter form connected by `PostkitProvider`, styled by its Chakra
- * recipe. There is no headless view yet (03 D11).
+ * recipe. Its form states come from `useNewsletterSignup` in
+ * `@postkit/react`, which the headless `NewsletterSignup` uses too.
  */
 export const NewsletterSignup = postkitChakraView<
   typeof newsletterSignupDefinition,
@@ -77,48 +75,18 @@ export const NewsletterSignup = postkitChakraView<
     } = props;
     const { newsletter } = usePostkit();
     const inputId = useId();
-    const [submission, setSubmission] = useState<SubmissionState>({
-      status: 'idle',
-      message: '',
+    const api = useNewsletterSignup({
+      config: newsletter,
+      list,
+      successMessage,
+      errorMessage,
     });
     const fieldSize = variants['size'] ?? 'md';
-    const configured = Boolean(newsletter?.subscribe || newsletter?.action);
-    const usesCallback = Boolean(newsletter?.subscribe);
-    const emailFieldName = newsletter?.emailFieldName ?? 'email';
-    const listFieldName = newsletter?.listFieldName ?? 'list';
-
-    async function submit(event: FormEvent<HTMLFormElement>) {
-      if (!newsletter?.subscribe) {
-        if (!newsletter?.action) event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      const formElement = event.currentTarget;
-      const form = new FormData(formElement);
-      const email = String(form.get(emailFieldName) ?? '');
-      setSubmission({ status: 'submitting', message: 'Subscribing…' });
-
-      try {
-        const result = await newsletter.subscribe({ email, list });
-        formElement.reset();
-        setSubmission({
-          status: 'success',
-          message: result?.message ?? successMessage ?? '',
-        });
-      } catch {
-        setSubmission({ status: 'error', message: errorMessage ?? '' });
-      }
-    }
-
-    const statusMessage =
-      submission.message ||
-      (!configured ? 'Newsletter signup is not configured.' : '');
 
     return (
       <Box
         as="aside"
-        data-postkit-configured={configured ? 'true' : 'false'}
+        data-postkit-configured={api.configured ? 'true' : 'false'}
         {...part('root')}
       >
         <Box {...part('content')}>
@@ -138,64 +106,54 @@ export const NewsletterSignup = postkitChakraView<
           ) : null}
         </Box>
         <NewsletterForm
-          action={usesCallback ? undefined : newsletter?.action}
-          method={newsletter?.method ?? 'post'}
-          onSubmit={submit}
+          {...(api.getFormProps() as ComponentProps<typeof NewsletterForm>)}
           {...part('form')}
         >
           <Field.Root
             required
-            invalid={submission.status === 'error'}
-            disabled={submission.status === 'submitting'}
+            invalid={api.status === 'error'}
+            disabled={api.submitting}
           >
             <Field.Label htmlFor={inputId} {...part('label')}>
               {emailLabel}
             </Field.Label>
             <Box {...part('fields')}>
               <Input
+                {...(api.getInputProps() as InputProps)}
                 size={fieldSize as InputProps['size']}
                 id={inputId}
-                name={emailFieldName}
-                type="email"
-                autoComplete="email"
                 placeholder={emailPlaceholder}
-                required
-                disabled={submission.status === 'submitting'}
                 {...part('input')}
               />
               <Button
+                {...(api.getSubmitProps() as ButtonProps)}
                 size={fieldSize as ButtonProps['size']}
                 variant="solid"
-                type="submit"
-                disabled={!configured || submission.status === 'submitting'}
-                loading={submission.status === 'submitting'}
+                loading={api.submitting}
                 {...part('submit')}
               >
                 {buttonLabel}
               </Button>
             </Box>
-            {submission.status === 'error' ? (
-              <Field.ErrorText aria-live="polite" {...part('status')}>
-                {statusMessage}
+            {api.status === 'error' ? (
+              <Field.ErrorText
+                {...(api.getStatusProps() as BoxProps)}
+                {...part('status')}
+              >
+                {api.message}
               </Field.ErrorText>
             ) : (
               <Field.HelperText
-                aria-live="polite"
-                role="status"
+                {...(api.getStatusProps() as BoxProps)}
                 {...part('status')}
               >
-                {statusMessage}
+                {api.message}
               </Field.HelperText>
             )}
           </Field.Root>
-          {list ? (
-            <input type="hidden" name={listFieldName} value={list} />
-          ) : null}
-          {Object.entries(newsletter?.hiddenFields ?? {}).map(
-            ([name, value]) => (
-              <input key={name} type="hidden" name={name} value={value} />
-            ),
-          )}
+          {api.hiddenFields.map(([name, value]) => (
+            <input key={name} type="hidden" name={name} value={value} />
+          ))}
           {privacy ? <Text {...part('privacy')}>{privacy}</Text> : null}
         </NewsletterForm>
       </Box>

@@ -20,8 +20,11 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
+import { socialPostDefinition } from '@postkit/core/components';
+import { useEmbedConsent } from '@postkit/react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { usePostkitChakraAnatomy } from '../../lib/anatomy.js';
 import { usePostkit } from '../../lib/provider.js';
 import {
   postkitSocialPostRecipe,
@@ -194,7 +197,12 @@ export function SocialPost({
     className: rootClassName,
     ...restRootProps
   } = rootProps ?? {};
-  const [embedActive, setEmbedActive] = useState(activation === 'immediate');
+  const consent = useEmbedConsent({ activation });
+  const anatomy = usePostkitChakraAnatomy<PostkitSocialPostSlot>(
+    socialPostDefinition,
+    { href, presentation, branding, snapshotInfo, activation, size, variant },
+    { recipeKey: postkitRecipeKeys.socialPost, unstyled },
+  );
 
   useEffect(() => {
     if (supplied || !resolveLink || resolutionMode === 'snapshot') return;
@@ -265,16 +273,19 @@ export function SocialPost({
     snapshotVisible && snapshot ? (
       <Box
         data-postkit-snapshot-captured-at={snapshot.capturedAt}
+        {...anatomy('snapshotInfo')}
         className={recipe.classNameMap.snapshotInfo}
         css={[styles.snapshotInfo, slotStyles?.snapshotInfo]}
       >
         <Text
+          {...anatomy('snapshotLabel')}
           className={recipe.classNameMap.snapshotLabel}
           css={[styles.snapshotLabel, slotStyles?.snapshotLabel]}
         >
           Snapshot captured{' '}
           <SocialPostTime
             dateTime={snapshot.capturedAt}
+            {...anatomy('snapshotTime')}
             className={recipe.classNameMap.snapshotTime}
             css={[styles.snapshotTime, slotStyles?.snapshotTime]}
           >
@@ -284,12 +295,14 @@ export function SocialPost({
         </Text>
         {formattedResolvedTime ? (
           <Text
+            {...anatomy('snapshotLabel')}
             className={recipe.classNameMap.snapshotLabel}
             css={[styles.snapshotLabel, slotStyles?.snapshotLabel]}
           >
             Resolver data fetched{' '}
             <SocialPostTime
               dateTime={snapshot.resolvedAt}
+              {...anatomy('snapshotTime')}
               className={recipe.classNameMap.snapshotTime}
               css={[styles.snapshotTime, slotStyles?.snapshotTime]}
             >
@@ -306,11 +319,14 @@ export function SocialPost({
     primaryContent = (
       <AspectRatio
         ratio={numericAspectRatio(embed.aspectRatio)}
+        {...consent.getRootProps()}
+        {...anatomy('embedFrame')}
         className={recipe.classNameMap.embedFrame}
         css={[styles.embedFrame, slotStyles?.embedFrame]}
       >
-        {embedActive ? (
+        {consent.shouldRenderFrame ? (
           <SocialPostIframe
+            {...consent.getFrameProps()}
             src={embed.src}
             title={
               iframeTitle ??
@@ -322,11 +338,14 @@ export function SocialPost({
             referrerPolicy="strict-origin-when-cross-origin"
             allow="encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
+            {...anatomy('embed')}
             className={recipe.classNameMap.embed}
             css={[styles.embed, slotStyles?.embed]}
           />
         ) : (
           <Box
+            {...consent.getPromptProps()}
+            {...anatomy('consent')}
             className={recipe.classNameMap.consent}
             css={[styles.consent, slotStyles?.consent]}
           >
@@ -334,8 +353,8 @@ export function SocialPost({
               Load interactive content from {service?.label ?? serviceId}?
             </Text>
             <Button
-              type="button"
-              onClick={() => setEmbedActive(true)}
+              {...consent.getRequestTriggerProps()}
+              {...anatomy('consentButton')}
               className={recipe.classNameMap.consentButton}
               css={[styles.consentButton, slotStyles?.consentButton]}
             >
@@ -349,12 +368,14 @@ export function SocialPost({
     primaryContent = (
       <>
         <Flex
+          {...anatomy('serviceRow')}
           className={recipe.classNameMap.serviceRow}
           css={[styles.serviceRow, slotStyles?.serviceRow]}
         >
           <Box
             as="span"
             data-postkit-service={serviceId}
+            {...anatomy('serviceBadge')}
             className={recipe.classNameMap.serviceBadge}
             css={[
               styles.serviceBadge,
@@ -365,6 +386,7 @@ export function SocialPost({
             <Box
               as="span"
               aria-hidden={service?.icon ? undefined : true}
+              {...anatomy('serviceIcon')}
               className={recipe.classNameMap.serviceIcon}
               css={[styles.serviceIcon, slotStyles?.serviceIcon]}
             >
@@ -376,6 +398,7 @@ export function SocialPost({
           {formattedTimestamp ? (
             <SocialPostTime
               dateTime={timestamp}
+              {...anatomy('timestamp')}
               className={recipe.classNameMap.timestamp}
               css={[styles.timestamp, slotStyles?.timestamp]}
             >
@@ -385,6 +408,7 @@ export function SocialPost({
         </Flex>
         {displayedAuthor || displayedHandle || avatar ? (
           <Flex
+            {...anatomy('authorRow')}
             className={recipe.classNameMap.authorRow}
             css={[styles.authorRow, slotStyles?.authorRow]}
           >
@@ -393,16 +417,19 @@ export function SocialPost({
                 src={avatar}
                 alt=""
                 loading="lazy"
+                {...anatomy('avatar')}
                 className={recipe.classNameMap.avatar}
                 css={[styles.avatar, slotStyles?.avatar]}
               />
             ) : null}
             <Box
+              {...anatomy('author')}
               className={recipe.classNameMap.author}
               css={[styles.author, slotStyles?.author]}
             >
               {displayedAuthor ? (
                 <Text
+                  {...anatomy('authorName')}
                   className={recipe.classNameMap.authorName}
                   css={[styles.authorName, slotStyles?.authorName]}
                 >
@@ -411,6 +438,7 @@ export function SocialPost({
               ) : null}
               {displayedHandle ? (
                 <Text
+                  {...anatomy('handle')}
                   className={recipe.classNameMap.handle}
                   css={[styles.handle, slotStyles?.handle]}
                 >
@@ -423,6 +451,7 @@ export function SocialPost({
         {postText ? (
           <SocialPostQuote
             cite={postUrl}
+            {...anatomy('content')}
             className={recipe.classNameMap.content}
             css={[styles.content, slotStyles?.content]}
           >
@@ -431,6 +460,7 @@ export function SocialPost({
         ) : null}
         {resolvedSocial?.images[0] ? (
           <Box
+            {...anatomy('media')}
             className={recipe.classNameMap.media}
             css={[styles.media, slotStyles?.media]}
           >
@@ -438,6 +468,7 @@ export function SocialPost({
               src={resolvedSocial.images[0].src}
               alt={resolvedSocial.images[0].alt ?? ''}
               loading="lazy"
+              {...anatomy('image')}
               className={recipe.classNameMap.image}
               css={[styles.image, slotStyles?.image]}
             />
@@ -445,10 +476,12 @@ export function SocialPost({
         ) : null}
         {resolvedSocial?.quotedPost ? (
           <Box
+            {...anatomy('quote')}
             className={recipe.classNameMap.quote}
             css={[styles.quote, slotStyles?.quote]}
           >
             <Text
+              {...anatomy('quoteAuthor')}
               className={recipe.classNameMap.quoteAuthor}
               css={[styles.quoteAuthor, slotStyles?.quoteAuthor]}
             >
@@ -459,6 +492,7 @@ export function SocialPost({
             </Text>
             {resolvedSocial.quotedPost.text ? (
               <Text
+                {...anatomy('quoteContent')}
                 className={recipe.classNameMap.quoteContent}
                 css={[styles.quoteContent, slotStyles?.quoteContent]}
               >
@@ -470,6 +504,7 @@ export function SocialPost({
         {metrics.length ? (
           <Flex
             aria-label="Post engagement"
+            {...anatomy('metrics')}
             className={recipe.classNameMap.metrics}
             css={[styles.metrics, slotStyles?.metrics]}
           >
@@ -477,6 +512,7 @@ export function SocialPost({
               <Text
                 as="span"
                 key={metric}
+                {...anatomy('metric')}
                 className={recipe.classNameMap.metric}
                 css={[styles.metric, slotStyles?.metric]}
               >
@@ -486,11 +522,13 @@ export function SocialPost({
           </Flex>
         ) : null}
         <Flex
+          {...anatomy('footer')}
           className={recipe.classNameMap.footer}
           css={[styles.footer, slotStyles?.footer]}
         >
           <Link
             href={postUrl}
+            {...anatomy('originalLink')}
             className={recipe.classNameMap.originalLink}
             css={[styles.originalLink, slotStyles?.originalLink]}
           >
@@ -504,11 +542,11 @@ export function SocialPost({
   return (
     <Card.Root
       as="article"
-      data-postkit-component="SocialPost"
       data-postkit-provider={provider ?? preview?.provider.id}
       data-postkit-service={serviceId}
       data-postkit-resolution={resolutionStatus}
       data-postkit-resolution-mode={resolutionMode}
+      {...anatomy('root')}
       {...restRootProps}
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}

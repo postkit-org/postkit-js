@@ -48,3 +48,15 @@ export {
   tabsBehaviorSpec,
   type TabsBehaviorFixture,
 } from '../tabs/tabs.behavior.spec-suite.js';
+export {
+  pollBehaviorSpec,
+  type PollBehaviorFixture,
+} from '../poll/poll.behavior.spec-suite.js';
+export {
+  newsletterSignupBehaviorSpec,
+  type NewsletterSignupBehaviorFixture,
+} from '../newsletter-signup/newsletter-signup.behavior.spec-suite.js';
+export {
+  shareActionsBehaviorSpec,
+  type ShareActionsBehaviorFixture,
+} from '../share-actions/share-actions.behavior.spec-suite.js';
