@@ -1,4 +1,10 @@
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,6 +14,15 @@ import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const docsDirectory = join(workspaceRoot, 'libs', 'content', 'docs');
 const publicDirectory = join(workspaceRoot, 'apps', 'site', 'public');
+// Raw Markdown for each published guide, linked from llms.txt (01 §10).
+const markdownDirectoryName = 'docs-md';
+const markdownDirectory = join(publicDirectory, markdownDirectoryName);
+const componentManifestPath = join(
+  workspaceRoot,
+  'packages',
+  'chakra',
+  'component-manifest.json',
+);
 const repositoryUrl = 'https://github.com/postkit-org/postkit-js';
 const packageDirectories = [
   'unfurl',
@@ -94,6 +109,7 @@ const documents = readdirSync(docsDirectory)
     return {
       slug,
       url: `/docs/${slug}`,
+      markdownUrl: `/${markdownDirectoryName}/${slug}.md`,
       title: requiredString(data, 'title', filename),
       summary: requiredString(data, 'summary', filename),
       category: requiredCategory(data, filename),
@@ -128,6 +144,28 @@ const packageDocuments = packageDirectories.map((directory) => {
   };
 });
 
+// Components come from the generated manifest; each has a page at /components/[slug]
+// (the slug rule matches componentNameToSlug in apps/site/src/lib/components.ts).
+const componentManifest = JSON.parse(
+  readFileSync(componentManifestPath, 'utf8'),
+);
+const components = Object.values(componentManifest.components).map(
+  (component) => ({
+    name: component.name,
+    url: `/components/${component.name
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .toLowerCase()}`,
+    category: component.category,
+    summary: component.description,
+  }),
+);
+const groupedComponents = new Map();
+for (const component of components) {
+  const entries = groupedComponents.get(component.category) ?? [];
+  entries.push(component);
+  groupedComponents.set(component.category, entries);
+}
+
 const groupedDocuments = new Map();
 for (const document of documents) {
   const entries = groupedDocuments.get(document.category) ?? [];
@@ -147,7 +185,20 @@ const indexLines = [
 for (const [category, entries] of groupedDocuments) {
   indexLines.push(`## ${category}`, '');
   for (const entry of entries) {
-    indexLines.push(`- [${entry.title}](${entry.url}): ${entry.summary}`);
+    indexLines.push(
+      `- [${entry.title}](${entry.url}) ([Markdown](${entry.markdownUrl})): ${entry.summary}`,
+    );
+  }
+  indexLines.push('');
+}
+
+indexLines.push('## Components', '');
+for (const [category, entries] of groupedComponents) {
+  indexLines.push(`### ${category}`, '');
+  for (const component of entries) {
+    indexLines.push(
+      `- [${component.name}](${component.url}): ${component.summary}`,
+    );
   }
   indexLines.push('');
 }
@@ -166,6 +217,11 @@ indexLines.push(
   '- [TypeScript API model](/api/postkit-api.json): TypeDoc JSON generated from every public package export.',
   '- [Full documentation context](/llms-full.txt): Guides and package documentation in one text document.',
   '- [Documentation index](/postkit-docs.json): Structured guide metadata and content.',
+  '',
+  '## Feeds',
+  '',
+  '- [Changelog](/feeds/changelog.xml): Released versions as RSS 2.0; also [Atom](/feeds/changelog.atom) and [JSON Feed](/feeds/changelog.json).',
+  '- [Notes](/feeds/notes.xml): Release notes, guides and case studies as RSS 2.0; also [Atom](/feeds/notes.atom) and [JSON Feed](/feeds/notes.json).',
   '',
   '## Source',
   '',
@@ -212,6 +268,7 @@ const outputs = new Map([
         version: 1,
         repository: repositoryUrl,
         documents,
+        components,
         packages: packageDocuments.map(({ name, description, url }) => ({
           name,
           description,
@@ -230,7 +287,39 @@ const outputs = new Map([
   ],
 ]);
 
+for (const document of documents) {
+  outputs.set(
+    join(markdownDirectory, `${document.slug}.md`),
+    `# ${document.title}\n\n${document.summary}\n\n${document.content}\n`,
+  );
+}
+
 const check = process.argv.includes('--check');
+
+// Raw Markdown for a guide that was removed or became a draft must not linger.
+const expectedMarkdown = new Set(
+  documents.map((document) => `${document.slug}.md`),
+);
+let existingMarkdown = [];
+try {
+  existingMarkdown = readdirSync(markdownDirectory);
+} catch {
+  existingMarkdown = [];
+}
+const staleMarkdown = existingMarkdown.filter(
+  (filename) => !expectedMarkdown.has(filename),
+);
+if (check && staleMarkdown.length > 0) {
+  throw new Error(
+    `Stale raw Markdown in ${markdownDirectory}: ${staleMarkdown.join(', ')}. Run npm run docs:agents:generate.`,
+  );
+}
+if (!check) {
+  for (const filename of staleMarkdown) {
+    rmSync(join(markdownDirectory, filename), { recursive: true, force: true });
+  }
+  mkdirSync(markdownDirectory, { recursive: true });
+}
 for (const [path, output] of outputs) {
   if (check) {
     let existing;

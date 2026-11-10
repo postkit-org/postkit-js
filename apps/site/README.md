@@ -21,8 +21,13 @@ npm run docs:check
 
 TypeDoc HTML and JSON are emitted under `public/api` and are intentionally
 untracked. `public/llms.txt`, `public/llms-full.txt`, and
-`public/postkit-docs.json` are small generated artifacts kept in version
-control; update them through `npm run docs:agents:generate`.
+`public/postkit-docs.json` (and the raw guide Markdown in `public/docs-md/`,
+linked from `llms.txt`) are small generated artifacts kept in version control;
+update them through `npm run docs:agents:generate`.
+
+The notes and changelog feeds (`public/feeds/`) are generated and untracked:
+`nx run site:feeds` writes them before every `nx build site`, from
+`libs/site-feeds`.
 
 ## Analytics and error reporting
 

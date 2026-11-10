@@ -41,6 +41,9 @@
     },
     {
       "path": "./libs/site-telemetry"
+    },
+    {
+      "path": "./libs/site-feeds"
     }
   ],
   "compilerOptions": {}

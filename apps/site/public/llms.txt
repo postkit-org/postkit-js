@@ -6,40 +6,95 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 
 ## Get started
 
-- [Introduction](/docs/introduction): What Postkit is, how its content contract, renderers and host application fit together, and which package to start with.
-- [Installation](/docs/installation): Install the Postkit packages your stack needs and check the framework, runtime, and module requirements.
-- [Quick start](/docs/quick-start): Mount the provider, render a first portable article component, and connect Markdown or MDX.
+- [Introduction](/docs/introduction) ([Markdown](/docs-md/introduction.md)): What Postkit is, how its content contract, renderers and host application fit together, and which package to start with.
+- [Installation](/docs/installation) ([Markdown](/docs-md/installation.md)): Install the Postkit packages your stack needs and check the framework, runtime, and module requirements.
+- [Quick start](/docs/quick-start) ([Markdown](/docs-md/quick-start.md)): Mount the provider, render a first portable article component, and connect Markdown or MDX.
 
 ## Writing
 
-- [MDX](/docs/mdx): Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.
-- [Markdown directives](/docs/markdown-directives): Author Postkit components in plain Markdown with literal-only directives and the Postkit Remark preset.
-- [Validation](/docs/validation): Find out what Postkit checks when a post compiles, what the errors say, and how to fix them.
-- [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
-- [Link previews and unfurling](/docs/link-previews): Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.
+- [MDX](/docs/mdx) ([Markdown](/docs-md/mdx.md)): Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.
+- [Markdown directives](/docs/markdown-directives) ([Markdown](/docs-md/markdown-directives.md)): Author Postkit components in plain Markdown with literal-only directives and the Postkit Remark preset.
+- [Validation](/docs/validation) ([Markdown](/docs-md/validation.md)): Find out what Postkit checks when a post compiles, what the errors say, and how to fix them.
+- [Portable documents and feeds](/docs/portable-documents) ([Markdown](/docs-md/portable-documents.md)): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
+- [Link previews and unfurling](/docs/link-previews) ([Markdown](/docs-md/link-previews.md)): Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.
 
 ## Customizing
 
-- [Tokens](/docs/tokens): Layer Postkit over a host Chakra system so the site's tokens, fonts, and prose rhythm drive every component.
-- [Part styles](/docs/part-styles): Restyle the named parts of Postkit components with scoped slot recipes, per-instance slot styles, or the host's Chakra recipes.
+- [Tokens](/docs/tokens) ([Markdown](/docs-md/tokens.md)): Layer Postkit over a host Chakra system so the site's tokens, fonts, and prose rhythm drive every component.
+- [Part styles](/docs/part-styles) ([Markdown](/docs-md/part-styles.md)): Restyle the named parts of Postkit components with scoped slot recipes, per-instance slot styles, or the host's Chakra recipes.
 
 ## Renderers
 
-- [Chakra](/docs/chakra): Render Postkit components with @postkit/chakra, the Chakra UI renderer, and configure it through PostkitProvider.
+- [Chakra](/docs/chakra) ([Markdown](/docs-md/chakra.md)): Render Postkit components with @postkit/chakra, the Chakra UI renderer, and configure it through PostkitProvider.
 
 ## Frameworks
 
-- [Next.js](/docs/nextjs): Connect the Postkit component map to Next.js MDX with native next/link routing.
-- [React Router](/docs/react-router): Render Postkit MDX beneath React Router with router-native internal links.
-- [TanStack Router](/docs/tanstack-router): Render Postkit MDX beneath TanStack Router and map portable URLs into typed routes.
-- [Astro](/docs/astro): Render Postkit declarations in Astro MDX with server-rendered components and selective React hydration.
+- [Next.js](/docs/nextjs) ([Markdown](/docs-md/nextjs.md)): Connect the Postkit component map to Next.js MDX with native next/link routing.
+- [React Router](/docs/react-router) ([Markdown](/docs-md/react-router.md)): Render Postkit MDX beneath React Router with router-native internal links.
+- [TanStack Router](/docs/tanstack-router) ([Markdown](/docs-md/tanstack-router.md)): Render Postkit MDX beneath TanStack Router and map portable URLs into typed routes.
+- [Astro](/docs/astro) ([Markdown](/docs-md/astro.md)): Render Postkit declarations in Astro MDX with server-rendered components and selective React hydration.
 
 ## Reference
 
-- [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
-- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
-- [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
-- [Troubleshooting](/docs/troubleshooting): Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
+- [API reference](/docs/api-reference) ([Markdown](/docs-md/api-reference.md)): Browse generated TypeScript exports or consume the same API model as structured JSON.
+- [Compatibility and environments](/docs/compatibility) ([Markdown](/docs-md/compatibility.md)): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
+- [Security and trust boundaries](/docs/security) ([Markdown](/docs-md/security.md)): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
+- [Troubleshooting](/docs/troubleshooting) ([Markdown](/docs-md/troubleshooting.md)): Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
+
+## Components
+
+### Article structure
+
+- [Aside](/components/aside): A semantic article aside with optional emphasis.
+- [Callout](/components/callout): A highlighted note, tip, warning, or caution.
+- [CardGrid](/components/card-grid): A deterministic grid of related navigation cards.
+- [Disclosure](/components/disclosure): Native expandable content for details and FAQs.
+- [Steps](/components/steps): An ordered sequence of titled instructions.
+- [Tabs](/components/tabs): Keyboard-operable switchable article panels.
+- [AudienceBoundary](/components/audience-boundary): An authored audience marker with a host-controlled visibility boundary.
+- [KeyTakeaway](/components/key-takeaway): A highlighted summary or list of essential points.
+- [PullQuote](/components/pull-quote): A prominent quotation with optional attribution and citation.
+
+### Media
+
+- [Gallery](/components/gallery): A responsive image gallery with captions and links.
+- [Audio](/components/audio): An accessible audio player with an optional caption.
+- [Carousel](/components/carousel): A keyboard-operable image and content carousel.
+- [Figure](/components/figure): A responsive image with an optional caption and attribution.
+- [Video](/components/video): A responsive HTML video player with caption support.
+
+### Technical content
+
+- [CodeBlock](/components/code-block): Source code rendered with Chakra CodeBlock, with adapter-driven syntax highlighting, filenames, line numbers, copying, and wrapping.
+- [CodeGroup](/components/code-group): A tabbed set of alternative code examples.
+- [Diff](/components/diff): A semantic unified diff with additions and deletions.
+- [FileCard](/components/file-card): A descriptive file link or download.
+- [FileTree](/components/file-tree): A compact, semantic repository or project tree.
+- [Terminal](/components/terminal): A terminal command and its optional output.
+- [Comparison](/components/comparison): An accessible feature and option comparison table.
+- [Stat](/components/stat): A prominent metric with context and trend.
+- [Chart](/components/chart): An accessible bar or line chart with optional data table.
+
+### Engagement
+
+- [Poll](/components/poll): An interactive reader poll whose submission handler is host-owned.
+- [CallToAction](/components/call-to-action): A focused article callout with primary and secondary actions.
+- [NewsletterSignup](/components/newsletter-signup): A provider-agnostic newsletter form connected by PostkitProvider.
+- [ShareActions](/components/share-actions): Reader-initiated native, copy, email, and configured social sharing actions.
+
+### Publishing
+
+- [ProductCard](/components/product-card): A product or recommendation card with explicit commercial linking.
+- [SponsorBlock](/components/sponsor-block): A clearly disclosed sponsor message and destination.
+
+### Discovery
+
+- [RelatedContent](/components/related-content): A semantic list of related articles or resources.
+- [SeriesNavigation](/components/series-navigation): Previous and next navigation for a named article series.
+- [AppearsOn](/components/appears-on): A provenance-aware list of destinations where the post was syndicated.
+- [AuthorCard](/components/author-card): A semantic author biography with portrait and profile links.
+- [LinkPreview](/components/link-preview): A portable inline link, metadata card, native media player, or isolated rich embed.
+- [SocialPost](/components/social-post): A consistently styled social post card or consent-gated provider embed.
 
 ## Packages
 
@@ -57,6 +112,11 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 - [TypeScript API model](/api/postkit-api.json): TypeDoc JSON generated from every public package export.
 - [Full documentation context](/llms-full.txt): Guides and package documentation in one text document.
 - [Documentation index](/postkit-docs.json): Structured guide metadata and content.
+
+## Feeds
+
+- [Changelog](/feeds/changelog.xml): Released versions as RSS 2.0; also [Atom](/feeds/changelog.atom) and [JSON Feed](/feeds/changelog.json).
+- [Notes](/feeds/notes.xml): Release notes, guides and case studies as RSS 2.0; also [Atom](/feeds/notes.atom) and [JSON Feed](/feeds/notes.json).
 
 ## Source
 

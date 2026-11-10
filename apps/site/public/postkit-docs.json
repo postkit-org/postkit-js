@@ -6,6 +6,7 @@
     {
       "slug": "introduction",
       "url": "/docs/introduction",
+      "markdownUrl": "/docs-md/introduction.md",
       "title": "Introduction",
       "summary": "What Postkit is, how its content contract, renderers and host application fit together, and which package to start with.",
       "category": "Get started",
@@ -15,6 +16,7 @@
     {
       "slug": "installation",
       "url": "/docs/installation",
+      "markdownUrl": "/docs-md/installation.md",
       "title": "Installation",
       "summary": "Install the Postkit packages your stack needs and check the framework, runtime, and module requirements.",
       "category": "Get started",
@@ -24,6 +26,7 @@
     {
       "slug": "quick-start",
       "url": "/docs/quick-start",
+      "markdownUrl": "/docs-md/quick-start.md",
       "title": "Quick start",
       "summary": "Mount the provider, render a first portable article component, and connect Markdown or MDX.",
       "category": "Get started",
@@ -33,6 +36,7 @@
     {
       "slug": "mdx",
       "url": "/docs/mdx",
+      "markdownUrl": "/docs-md/mdx.md",
       "title": "MDX",
       "summary": "Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.",
       "category": "Writing",
@@ -42,6 +46,7 @@
     {
       "slug": "markdown-directives",
       "url": "/docs/markdown-directives",
+      "markdownUrl": "/docs-md/markdown-directives.md",
       "title": "Markdown directives",
       "summary": "Author Postkit components in plain Markdown with literal-only directives and the Postkit Remark preset.",
       "category": "Writing",
@@ -51,6 +56,7 @@
     {
       "slug": "validation",
       "url": "/docs/validation",
+      "markdownUrl": "/docs-md/validation.md",
       "title": "Validation",
       "summary": "Find out what Postkit checks when a post compiles, what the errors say, and how to fix them.",
       "category": "Writing",
@@ -60,6 +66,7 @@
     {
       "slug": "portable-documents",
       "url": "/docs/portable-documents",
+      "markdownUrl": "/docs-md/portable-documents.md",
       "title": "Portable documents and feeds",
       "summary": "Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.",
       "category": "Writing",
@@ -69,6 +76,7 @@
     {
       "slug": "link-previews",
       "url": "/docs/link-previews",
+      "markdownUrl": "/docs-md/link-previews.md",
       "title": "Link previews and unfurling",
       "summary": "Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.",
       "category": "Writing",
@@ -78,6 +86,7 @@
     {
       "slug": "tokens",
       "url": "/docs/tokens",
+      "markdownUrl": "/docs-md/tokens.md",
       "title": "Tokens",
       "summary": "Layer Postkit over a host Chakra system so the site's tokens, fonts, and prose rhythm drive every component.",
       "category": "Customizing",
@@ -87,6 +96,7 @@
     {
       "slug": "part-styles",
       "url": "/docs/part-styles",
+      "markdownUrl": "/docs-md/part-styles.md",
       "title": "Part styles",
       "summary": "Restyle the named parts of Postkit components with scoped slot recipes, per-instance slot styles, or the host's Chakra recipes.",
       "category": "Customizing",
@@ -96,6 +106,7 @@
     {
       "slug": "chakra",
       "url": "/docs/chakra",
+      "markdownUrl": "/docs-md/chakra.md",
       "title": "Chakra",
       "summary": "Render Postkit components with @postkit/chakra, the Chakra UI renderer, and configure it through PostkitProvider.",
       "category": "Renderers",
@@ -105,6 +116,7 @@
     {
       "slug": "nextjs",
       "url": "/docs/nextjs",
+      "markdownUrl": "/docs-md/nextjs.md",
       "title": "Next.js",
       "summary": "Connect the Postkit component map to Next.js MDX with native next/link routing.",
       "category": "Frameworks",
@@ -114,6 +126,7 @@
     {
       "slug": "react-router",
       "url": "/docs/react-router",
+      "markdownUrl": "/docs-md/react-router.md",
       "title": "React Router",
       "summary": "Render Postkit MDX beneath React Router with router-native internal links.",
       "category": "Frameworks",
@@ -123,6 +136,7 @@
     {
       "slug": "tanstack-router",
       "url": "/docs/tanstack-router",
+      "markdownUrl": "/docs-md/tanstack-router.md",
       "title": "TanStack Router",
       "summary": "Render Postkit MDX beneath TanStack Router and map portable URLs into typed routes.",
       "category": "Frameworks",
@@ -132,6 +146,7 @@
     {
       "slug": "astro",
       "url": "/docs/astro",
+      "markdownUrl": "/docs-md/astro.md",
       "title": "Astro",
       "summary": "Render Postkit declarations in Astro MDX with server-rendered components and selective React hydration.",
       "category": "Frameworks",
@@ -141,6 +156,7 @@
     {
       "slug": "api-reference",
       "url": "/docs/api-reference",
+      "markdownUrl": "/docs-md/api-reference.md",
       "title": "API reference",
       "summary": "Browse generated TypeScript exports or consume the same API model as structured JSON.",
       "category": "Reference",
@@ -150,6 +166,7 @@
     {
       "slug": "compatibility",
       "url": "/docs/compatibility",
+      "markdownUrl": "/docs-md/compatibility.md",
       "title": "Compatibility and environments",
       "summary": "Check framework, runtime, rendering, module, and hydration support before integrating Postkit.",
       "category": "Reference",
@@ -159,6 +176,7 @@
     {
       "slug": "security",
       "url": "/docs/security",
+      "markdownUrl": "/docs-md/security.md",
       "title": "Security and trust boundaries",
       "summary": "Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.",
       "category": "Reference",
@@ -168,11 +186,224 @@
     {
       "slug": "troubleshooting",
       "url": "/docs/troubleshooting",
+      "markdownUrl": "/docs-md/troubleshooting.md",
       "title": "Troubleshooting",
       "summary": "Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.",
       "category": "Reference",
       "order": 8,
       "content": "## Components render with only host styling\n\nThis is the default. Postkit inherits the host Chakra system and does not apply\nits visual preset automatically. Pass `preset={postkitDefaultTheme}` for the\nstandalone appearance, register Postkit slot recipes in the host system, or use\n`theme={createPostkitTheme(...)}` for deliberate scoped overrides. The article\nmust still render beneath `PostkitProvider` so Chakra context is available.\nCodeBlock, CodeGroup, and Terminal retain semantic structural styling in this\nmode, but their opinionated dark palettes belong only to the standalone preset.\n\n## Internal links reload the page\n\nUse the framework adapter rather than the base React MDX map. Render the article\nbeneath the router provider and verify that the destination is considered an\ninternal URL by the adapter.\n\n## A plain Markdown directive is ignored\n\nEnable Postkit's Remark plugins and use the `postkit-` directive name. Use JSX\ninstead of directive brace syntax inside MDX files.\n\n## Astro hydration fails\n\nConfirm that the React and MDX integrations are enabled and that a custom Chakra\nsystem is exported from a module addressable by both server rendering and\nhydrated islands.\n\n## Link previews do not resolve\n\nRun the resolver on a server or at build time. Check the provider configuration,\nURL policy, response contract, and cache independently from the rendering\ncomponent.\n\nWhen reporting an issue, include the Postkit package version, framework and\nruntime versions, a minimal content sample, and whether the failure occurs at\nbuild time, server rendering, hydration, or client interaction."
+    }
+  ],
+  "components": [
+    {
+      "name": "Aside",
+      "url": "/components/aside",
+      "category": "Article structure",
+      "summary": "A semantic article aside with optional emphasis."
+    },
+    {
+      "name": "Callout",
+      "url": "/components/callout",
+      "category": "Article structure",
+      "summary": "A highlighted note, tip, warning, or caution."
+    },
+    {
+      "name": "CardGrid",
+      "url": "/components/card-grid",
+      "category": "Article structure",
+      "summary": "A deterministic grid of related navigation cards."
+    },
+    {
+      "name": "Disclosure",
+      "url": "/components/disclosure",
+      "category": "Article structure",
+      "summary": "Native expandable content for details and FAQs."
+    },
+    {
+      "name": "Gallery",
+      "url": "/components/gallery",
+      "category": "Media",
+      "summary": "A responsive image gallery with captions and links."
+    },
+    {
+      "name": "Steps",
+      "url": "/components/steps",
+      "category": "Article structure",
+      "summary": "An ordered sequence of titled instructions."
+    },
+    {
+      "name": "Tabs",
+      "url": "/components/tabs",
+      "category": "Article structure",
+      "summary": "Keyboard-operable switchable article panels."
+    },
+    {
+      "name": "CodeBlock",
+      "url": "/components/code-block",
+      "category": "Technical content",
+      "summary": "Source code rendered with Chakra CodeBlock, with adapter-driven syntax highlighting, filenames, line numbers, copying, and wrapping."
+    },
+    {
+      "name": "CodeGroup",
+      "url": "/components/code-group",
+      "category": "Technical content",
+      "summary": "A tabbed set of alternative code examples."
+    },
+    {
+      "name": "Diff",
+      "url": "/components/diff",
+      "category": "Technical content",
+      "summary": "A semantic unified diff with additions and deletions."
+    },
+    {
+      "name": "FileCard",
+      "url": "/components/file-card",
+      "category": "Technical content",
+      "summary": "A descriptive file link or download."
+    },
+    {
+      "name": "FileTree",
+      "url": "/components/file-tree",
+      "category": "Technical content",
+      "summary": "A compact, semantic repository or project tree."
+    },
+    {
+      "name": "Terminal",
+      "url": "/components/terminal",
+      "category": "Technical content",
+      "summary": "A terminal command and its optional output."
+    },
+    {
+      "name": "AudienceBoundary",
+      "url": "/components/audience-boundary",
+      "category": "Article structure",
+      "summary": "An authored audience marker with a host-controlled visibility boundary."
+    },
+    {
+      "name": "Comparison",
+      "url": "/components/comparison",
+      "category": "Technical content",
+      "summary": "An accessible feature and option comparison table."
+    },
+    {
+      "name": "KeyTakeaway",
+      "url": "/components/key-takeaway",
+      "category": "Article structure",
+      "summary": "A highlighted summary or list of essential points."
+    },
+    {
+      "name": "Poll",
+      "url": "/components/poll",
+      "category": "Engagement",
+      "summary": "An interactive reader poll whose submission handler is host-owned."
+    },
+    {
+      "name": "ProductCard",
+      "url": "/components/product-card",
+      "category": "Publishing",
+      "summary": "A product or recommendation card with explicit commercial linking."
+    },
+    {
+      "name": "PullQuote",
+      "url": "/components/pull-quote",
+      "category": "Article structure",
+      "summary": "A prominent quotation with optional attribution and citation."
+    },
+    {
+      "name": "RelatedContent",
+      "url": "/components/related-content",
+      "category": "Discovery",
+      "summary": "A semantic list of related articles or resources."
+    },
+    {
+      "name": "SeriesNavigation",
+      "url": "/components/series-navigation",
+      "category": "Discovery",
+      "summary": "Previous and next navigation for a named article series."
+    },
+    {
+      "name": "SponsorBlock",
+      "url": "/components/sponsor-block",
+      "category": "Publishing",
+      "summary": "A clearly disclosed sponsor message and destination."
+    },
+    {
+      "name": "Stat",
+      "url": "/components/stat",
+      "category": "Technical content",
+      "summary": "A prominent metric with context and trend."
+    },
+    {
+      "name": "AppearsOn",
+      "url": "/components/appears-on",
+      "category": "Discovery",
+      "summary": "A provenance-aware list of destinations where the post was syndicated."
+    },
+    {
+      "name": "Audio",
+      "url": "/components/audio",
+      "category": "Media",
+      "summary": "An accessible audio player with an optional caption."
+    },
+    {
+      "name": "AuthorCard",
+      "url": "/components/author-card",
+      "category": "Discovery",
+      "summary": "A semantic author biography with portrait and profile links."
+    },
+    {
+      "name": "CallToAction",
+      "url": "/components/call-to-action",
+      "category": "Engagement",
+      "summary": "A focused article callout with primary and secondary actions."
+    },
+    {
+      "name": "Carousel",
+      "url": "/components/carousel",
+      "category": "Media",
+      "summary": "A keyboard-operable image and content carousel."
+    },
+    {
+      "name": "Chart",
+      "url": "/components/chart",
+      "category": "Technical content",
+      "summary": "An accessible bar or line chart with optional data table."
+    },
+    {
+      "name": "Figure",
+      "url": "/components/figure",
+      "category": "Media",
+      "summary": "A responsive image with an optional caption and attribution."
+    },
+    {
+      "name": "LinkPreview",
+      "url": "/components/link-preview",
+      "category": "Discovery",
+      "summary": "A portable inline link, metadata card, native media player, or isolated rich embed."
+    },
+    {
+      "name": "NewsletterSignup",
+      "url": "/components/newsletter-signup",
+      "category": "Engagement",
+      "summary": "A provider-agnostic newsletter form connected by PostkitProvider."
+    },
+    {
+      "name": "ShareActions",
+      "url": "/components/share-actions",
+      "category": "Engagement",
+      "summary": "Reader-initiated native, copy, email, and configured social sharing actions."
+    },
+    {
+      "name": "SocialPost",
+      "url": "/components/social-post",
+      "category": "Discovery",
+      "summary": "A consistently styled social post card or consent-gated provider embed."
+    },
+    {
+      "name": "Video",
+      "url": "/components/video",
+      "category": "Media",
+      "summary": "A responsive HTML video player with caption support."
     }
   ],
   "packages": [

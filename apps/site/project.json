@@ -11,20 +11,62 @@
         {
           "projects": ["@postkit/content"],
           "target": "build"
-        }
+        },
+        "feeds"
       ]
     },
+    "feeds": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "{projectRoot}/scripts/build-feeds.mts",
+        "^production",
+        {
+          "externalDependencies": ["@chakra-docs/feed"]
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
+      ],
+      "outputs": ["{projectRoot}/public/feeds"],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-feeds.mts",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    },
     "build": {
+      "dependsOn": ["^build", "feeds"],
       "inputs": [
         "default",
         "^default",
-        { "externalDependencies": ["next"] },
-        { "dependentTasksOutputFiles": "**/*.d.ts", "transitive": true },
-        { "env": "NEXT_PUBLIC_FATHOM_SITE_ID" },
-        { "env": "NEXT_PUBLIC_SENTRY_DSN" },
-        { "env": "SENTRY_AUTH_TOKEN" },
-        { "env": "SENTRY_ORG" },
-        { "env": "SENTRY_PROJECT" }
+        {
+          "externalDependencies": ["next"]
+        },
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts",
+          "transitive": true
+        },
+        {
+          "env": "NEXT_PUBLIC_FATHOM_SITE_ID"
+        },
+        {
+          "env": "NEXT_PUBLIC_SENTRY_DSN"
+        },
+        {
+          "env": "SENTRY_AUTH_TOKEN"
+        },
+        {
+          "env": "SENTRY_ORG"
+        },
+        {
+          "env": "SENTRY_PROJECT"
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
       ],
       "options": {
         "env": {

@@ -44,6 +44,21 @@ const nextConfig = {
     POSTKIT_LATEST_RELEASE: readLatestReleasedVersion(),
   },
   poweredByHeader: false,
+  /**
+   * The feeds are static files in public/feeds (written by `nx run site:feeds`, PK-042).
+   * Extensions alone would serve RSS as application/xml and JSON Feed as application/json.
+   */
+  async headers() {
+    return [
+      ['/feeds/:name.xml', 'application/rss+xml; charset=utf-8'],
+      ['/feeds/:name.atom', 'application/atom+xml; charset=utf-8'],
+      ['/feeds/:name.json', 'application/feed+json; charset=utf-8'],
+      ['/docs-md/:slug.md', 'text/markdown; charset=utf-8'],
+    ].map(([source, contentType]) => ({
+      source,
+      headers: [{ key: 'Content-Type', value: contentType }],
+    }));
+  },
   async redirects() {
     return redirectFiles.flatMap((file) =>
       file.redirects.map(({ source, destination, permanent }) => ({

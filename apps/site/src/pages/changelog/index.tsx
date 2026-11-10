@@ -1,5 +1,6 @@
 import { chakra } from '@chakra-ui/react';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 import { useMemo, useState } from 'react';
 
 import { FollowReleases } from '../../components/changelog/follow-releases';
@@ -22,6 +23,21 @@ import {
   getChangelogEntries,
   getLatestChangelogRelease,
 } from '../../lib/changelog.server';
+
+/** 01 §10: the changelog feeds (built at deploy time, PK-042), as on /notes. */
+const changelogFeeds = [
+  { label: 'RSS', href: '/feeds/changelog.xml', type: 'application/rss+xml' },
+  {
+    label: 'Atom',
+    href: '/feeds/changelog.atom',
+    type: 'application/atom+xml',
+  },
+  {
+    label: 'JSON Feed',
+    href: '/feeds/changelog.json',
+    type: 'application/feed+json',
+  },
+] as const;
 
 interface ChangelogPageProps {
   readonly entries: readonly ChangelogEntrySummary[];
@@ -53,6 +69,17 @@ export default function ChangelogPage({
         title="Changelog"
         description="Every Postkit release, and what it means for your site: new components, theming, documents, adapters and tooling."
       />
+      <Head>
+        {changelogFeeds.map((feed) => (
+          <link
+            key={feed.href}
+            rel="alternate"
+            type={feed.type}
+            href={feed.href}
+            title={`Postkit changelog (${feed.label})`}
+          />
+        ))}
+      </Head>
       <BreadcrumbJsonLd items={[{ name: 'Changelog', path: '/changelog' }]} />
 
       <PageContainer
