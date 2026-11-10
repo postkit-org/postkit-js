@@ -7,7 +7,7 @@ since: '0.3.0'
 status: draft
 ---
 
-A kit is a named set of component definitions. Postkit's 35 components come in
+A kit is a named set of component definitions. Postkit's 36 components come in
 six kits, and you turn on the ones your writers use. Only those components are
 bundled, validated and described in your manifest.
 
@@ -17,7 +17,7 @@ bundled, validated and described in your manifest.
 | ------------ | -------------------------------- | ------------------------------------------------------------------------------------------- |
 | `article`    | `@postkit/react/kits/article`    | Aside, AudienceBoundary, Callout, CardGrid, Disclosure, KeyTakeaway, PullQuote, Steps, Tabs |
 | `technical`  | `@postkit/react/kits/technical`  | Chart, CodeBlock, CodeGroup, Comparison, Diff, FileCard, FileTree, Stat, Terminal           |
-| `media`      | `@postkit/react/kits/media`      | Audio, Carousel, Figure, Gallery, Video                                                     |
+| `media`      | `@postkit/react/kits/media`      | Audio, Carousel, Device, Figure, Gallery, Video                                             |
 | `discovery`  | `@postkit/react/kits/discovery`  | AppearsOn, AuthorCard, LinkPreview, RelatedContent, SeriesNavigation, SocialPost            |
 | `engagement` | `@postkit/react/kits/engagement` | CallToAction, NewsletterSignup, Poll, ShareActions                                          |
 | `publishing` | `@postkit/react/kits/publishing` | ProductCard, SponsorBlock                                                                   |

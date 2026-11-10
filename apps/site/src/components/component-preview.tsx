@@ -34,6 +34,7 @@ import {
   Tabs,
   Terminal,
   Video,
+  Device,
   type PostkitComponentName,
 } from '@postkit/chakra';
 import type { ComponentType, ReactNode } from 'react';
@@ -485,6 +486,17 @@ export const componentPreviewSamples: Readonly<
       poster: previewImage,
       title: 'Postkit in two minutes',
       caption: 'A quick tour of the portable publishing contract.',
+      duration: '2:00',
+      // The preview has no media (a poster only), so there's nothing to caption.
+      decorative: true,
+    },
+  },
+  Device: {
+    props: {
+      kind: 'iphone',
+      src: previewImage,
+      alt: 'Abstract Postkit editorial artwork on a phone screen',
+      caption: 'A screenshot in a plain, CSS-drawn frame.',
     },
   },
 };
@@ -530,6 +542,7 @@ const views = {
   Tabs,
   Terminal,
   Video,
+  Device,
 } as unknown as Readonly<Record<PostkitComponentName, PreviewView>>;
 
 export interface ComponentPreviewProps {

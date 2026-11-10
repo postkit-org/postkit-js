@@ -18,14 +18,14 @@ import { article, technical, media } from '@postkit/react/kits';
 import { chakra } from '@postkit/chakra'; // omit for headless views
 import NextLink from 'next/link';
 
-import { deviceDefinition, Device } from './components/device';
+import { showcaseDefinition, Showcase } from './components/showcase';
 import { CommuneFigure } from './components/figure';
 
 export const postkit = createPostkit({
   renderer: chakra,
   kits: [article, technical, media],
   exclude: ['Poll'],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
   defaults: { Callout: { variant: 'plain' } },
   overrides: {
     Figure: { view: CommuneFigure },

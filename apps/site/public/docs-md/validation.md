@@ -59,6 +59,25 @@ rely on them.
 Keep strict mode on for anything you publish. A dropped prop or an ignored
 component is a silent change to what the author asked for.
 
+## Aliases and warnings
+
+Some props accept another name. Callout's `tone` also answers to `type`, so
+callouts written for other tools work as they are: `:::postkit-callout{type="tip"}`
+is the same as `tone="tip"`. The alias is checked like the prop, and when both
+are set the prop wins and the build reports a warning.
+
+Some props are recommended rather than required. Leaving one out is a warning,
+never an error, in every mode, strict included. Today that's `Video`'s
+`captions`: a video without a captions track warns, in the build output and in
+the browser console during development, unless you mark it `decorative` (a
+silent loop, say) or pass `tracks`:
+
+```text
+Postkit Video: the "captions" prop is missing. Add a captions track (a WebVTT file), or mark the video decorative. (content/post.md:7:1-7:48)
+```
+
+These warnings carry the `ruleId` `recommended-prop`.
+
 ## Where an error points
 
 Errors are reported through the file being compiled (`vfile.fail`), so MDX,
@@ -105,7 +124,7 @@ own components to MDX through the component map, list them:
 
 ```ts
 export const remarkPlugins = createPostkitRemarkPlugins({
-  postkit: { components: ['Device', 'SiteBanner'] },
+  postkit: { components: ['Showcase', 'SiteBanner'] },
 });
 ```
 

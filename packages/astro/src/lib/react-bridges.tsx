@@ -28,6 +28,8 @@ import {
   type CodeGroupProps,
   Comparison as ComparisonView,
   type ComparisonProps,
+  Device as DeviceView,
+  type DeviceProps,
   Diff as DiffView,
   type DiffProps,
   Disclosure as DisclosureView,
@@ -128,6 +130,8 @@ export const CodeGroup =
 /** Comparison in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
 export const Comparison =
   withPostkitAstroProvider<ComparisonProps>(ComparisonView);
+/** Device in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
+export const Device = withPostkitAstroProvider<DeviceProps>(DeviceView);
 /** Diff in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
 export const Diff = withPostkitAstroProvider<DiffProps>(DiffView);
 /** Disclosure in Postkit's provider. Its Astro wrapper renders on the server only (runtime "native-controls"). */
