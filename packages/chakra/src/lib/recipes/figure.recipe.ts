@@ -43,9 +43,10 @@ export const postkitFigureRecipe = defineSlotRecipe({
     caption: {
       display: 'block',
     },
+    // The credit takes the caption's `fg.muted`. Dimming it further dropped it
+    // below 4.5:1 on the subtle surface.
     credit: {
       display: 'block',
-      opacity: '0.8',
     },
     creditLink: {
       color: 'inherit',

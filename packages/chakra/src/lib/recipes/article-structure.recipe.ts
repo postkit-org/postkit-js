@@ -41,7 +41,9 @@ export const postkitCalloutRecipe = defineSlotRecipe({
     },
     variant: {
       outline: { root: { borderColor: 'border', borderWidth: '1px' } },
-      subtle: { root: { background: 'bg.muted' } },
+      // The fill is the tone's tint (compound variants below). `fg.muted` drops
+      // below 4.5:1 on a tint, so the body takes `fg`.
+      subtle: { body: { color: 'fg' } },
       plain: {
         root: {
           borderInlineStartColor: 'colorPalette.solid',
@@ -60,6 +62,13 @@ export const postkitCalloutRecipe = defineSlotRecipe({
       caution: { icon: { background: 'tint.caution', color: 'tone.caution' } },
     },
   },
+  compoundVariants: (
+    ['note', 'tip', 'important', 'warning', 'caution'] as const
+  ).map((tone) => ({
+    variant: 'subtle' as const,
+    tone,
+    css: { root: { background: `tint.${tone}` } },
+  })),
   defaultVariants: { size: 'md', variant: 'subtle', tone: 'note' },
 });
 

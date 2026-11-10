@@ -36,7 +36,7 @@ export const postkitAppearsOnRecipe = defineSlotRecipe({
       justifyContent: 'center',
     },
     date: { color: 'fg.muted' },
-    status: { color: 'fg.subtle' },
+    status: { color: 'fg.muted' },
   },
   variants: {
     size: {

@@ -746,7 +746,7 @@ Existing normalized `metadata` values remain supported.
   socialServices={{
     linegraph: {
       label: 'Linegraph',
-      accent: '#6d5efc',
+      accent: 'purple.fg',
       createShareUrl: ({ url, title }) =>
         `https://linegraph.example/share?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title ?? '')}`,
     },
@@ -755,6 +755,11 @@ Existing normalized `metadata` values remain supported.
   {children}
 </PostkitProvider>
 ```
+
+`accent` colours the service's label text. The built-in services use
+mode-aware semantic tokens (`blue.fg`, `purple.fg`, `fg`), which keep 4.5:1 on
+Postkit's surfaces in light and dark; prefer a semantic token over a fixed
+colour for your own services too.
 
 `ShareActions` never loads third-party scripts. It uses the native share API,
 the clipboard, email, a configured `createShareUrl`, or a custom async `share`

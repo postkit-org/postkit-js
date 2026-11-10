@@ -52,7 +52,7 @@ export const postkitNewsletterSignupRecipe = defineSlotRecipe({
       _disabled: { cursor: 'not-allowed', opacity: '0.55' },
     },
     status: { color: 'fg.muted', fontSize: 'sm' },
-    privacy: { color: 'fg.subtle', fontSize: 'xs' },
+    privacy: { color: 'fg.muted', fontSize: 'xs' },
   },
   variants: {
     size: {

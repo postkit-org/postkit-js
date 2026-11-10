@@ -49,11 +49,16 @@ export type ChartProps = {
 } & RecipeVariantProps<typeof postkitChartRecipe> &
   UnstyledProp;
 
+/**
+ * Series colours when the author gives none: Chakra's `<palette>.fg` semantic
+ * tokens, which follow the colour mode and keep at least 3:1 against the page in
+ * light and dark. `currentColor` covers a host system without those tokens.
+ */
 const DEFAULT_COLORS = [
-  'var(--chakra-colors-blue-500, #3182ce)',
-  'var(--chakra-colors-purple-500, #805ad5)',
-  'var(--chakra-colors-teal-500, #319795)',
-  'var(--chakra-colors-orange-500, #dd6b20)',
+  'var(--chakra-colors-blue-fg, currentColor)',
+  'var(--chakra-colors-purple-fg, currentColor)',
+  'var(--chakra-colors-teal-fg, currentColor)',
+  'var(--chakra-colors-orange-fg, currentColor)',
 ] as const;
 
 function numericValue(datum: ChartDatum, key: string): number {
@@ -308,7 +313,7 @@ export function Chart({
                           cy={yFor(point.value)}
                           r="5"
                           fill={color}
-                          stroke="var(--chakra-colors-bg, white)"
+                          stroke="var(--chakra-colors-bg, Canvas)"
                           strokeWidth="2"
                           className={recipe.classNameMap.seriesMark}
                           css={[styles.seriesMark, slotStyles?.seriesMark]}

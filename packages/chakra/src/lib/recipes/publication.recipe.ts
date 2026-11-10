@@ -100,7 +100,11 @@ export const postkitKeyTakeawayRecipe = defineSlotRecipe({
       outline: {
         root: { borderColor: 'colorPalette.muted', borderWidth: '1px' },
       },
-      subtle: { root: { background: 'colorPalette.subtle' } },
+      subtle: {
+        root: { background: 'colorPalette.subtle' },
+        // `fg.muted` drops below 4.5:1 on the tinted surface.
+        body: { color: 'fg' },
+      },
       plain: {
         root: {
           borderInlineStartColor: 'colorPalette.solid',

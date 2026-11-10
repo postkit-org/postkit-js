@@ -86,7 +86,8 @@ export const postkitLinkPreviewRecipe = defineSlotRecipe({
       lineClamp: '3',
     },
     domain: {
-      color: 'fg.subtle',
+      // `fg.subtle` is below 4.5:1 on the card surfaces in both modes.
+      color: 'fg.muted',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',

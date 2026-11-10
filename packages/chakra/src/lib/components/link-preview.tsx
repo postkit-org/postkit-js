@@ -408,10 +408,20 @@ export function LinkPreview({
               styles.consent,
               availableImages[0]
                 ? {
-                    backgroundImage: `linear-gradient(rgba(0,0,0,.62), rgba(0,0,0,.62)), url("${availableImages[0].src.replaceAll('"', '\\"')}")`,
+                    // A dark scrim over the preview image in both modes, from semantic
+                    // tokens: the inverted surface in light mode and the page in dark.
+                    // At 70% the text keeps at least 4.5:1 over any image pixel.
+                    '--postkit-consent-scrim':
+                      'color-mix(in srgb, var(--chakra-colors-bg-inverted) 70%, transparent)',
+                    backgroundImage: `linear-gradient(var(--postkit-consent-scrim), var(--postkit-consent-scrim)), url("${availableImages[0].src.replaceAll('"', '\\"')}")`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
-                    color: 'white',
+                    color: 'fg.inverted',
+                    _dark: {
+                      '--postkit-consent-scrim':
+                        'color-mix(in srgb, var(--chakra-colors-bg) 70%, transparent)',
+                      color: 'fg',
+                    },
                   }
                 : undefined,
               slotStyles?.consent,
