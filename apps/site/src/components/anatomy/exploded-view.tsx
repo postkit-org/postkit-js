@@ -9,8 +9,10 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from 'react';
 
+import { segmentedOnSubtle } from '../components/usage-panel';
 import { SegmentedControl } from '../primitives';
 import {
   computeAnatomyLayout,
@@ -118,10 +120,21 @@ interface PlanesProps {
   readonly active: number | null;
   /** Phones: the numbers grow back toward a readable size as the diagram shrinks. */
   readonly badgeScale: number;
+  /** The live component, drawn on the root plane (see `ExplodedViewProps.preview`). */
+  readonly preview?: ReactNode;
 }
 
+/** Exploded, the live component shows this faintly on the root plane (as the boards draw it). */
+const PREVIEW_EXPLODED_OPACITY = 0.3;
+
 /** The skewed planes, guides, connectors and phone numbers. Decorative: the labels carry it. */
-function Planes({ layout, exploded, active, badgeScale }: PlanesProps) {
+function Planes({
+  layout,
+  exploded,
+  active,
+  badgeScale,
+  preview,
+}: PlanesProps) {
   const { stage, planes, plane, planeLeft, elbowX, labelLeft } = layout;
   const count = planes.length;
 
@@ -156,6 +169,8 @@ function Planes({ layout, exploded, active, badgeScale }: PlanesProps) {
       {planes.map(({ index, layer, isRoot, top }) => {
         const isolated = active === index;
         const dimmed = exploded && active !== null && !isolated;
+        // Assembled, the live component is the root plane's surface: no card behind it.
+        const showsComponent = isRoot && preview != null && !exploded;
         return (
           <chakra.div
             key={layer.part}
@@ -183,24 +198,56 @@ function Planes({ layout, exploded, active, badgeScale }: PlanesProps) {
                 md: 'var(--anatomy-rest-top)',
               },
               opacity: dimmed ? 0.15 : 1,
-              bg: isRoot
-                ? 'bg.raised'
-                : exploded
-                  ? 'bg.raised/50'
-                  : 'transparent',
+              bg: showsComponent
+                ? 'transparent'
+                : isRoot
+                  ? 'bg.raised'
+                  : exploded
+                    ? 'bg.raised/50'
+                    : 'transparent',
               outlineStyle: isolated ? 'solid' : isRoot ? 'solid' : 'dashed',
               outlineWidth: isolated ? '1.5px' : '1px',
               outlineColor: isolated
                 ? 'fg'
-                : isRoot
-                  ? 'border'
-                  : exploded
-                    ? 'border.faint'
-                    : 'transparent',
+                : showsComponent
+                  ? 'transparent'
+                  : isRoot
+                    ? 'border'
+                    : exploded
+                      ? 'border.faint'
+                      : 'transparent',
               transition: planeTransition,
               _motionReduce: { transition: 'none' },
             }}
           >
+            {isRoot && preview != null ? (
+              <chakra.div
+                data-anatomy-preview=""
+                aria-hidden="true"
+                inert
+                position="absolute"
+                inset="0"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                pointerEvents="none"
+                userSelect="none"
+                css={{
+                  opacity: exploded ? PREVIEW_EXPLODED_OPACITY : 1,
+                  transition: 'opacity 300ms ease',
+                  _motionReduce: { transition: 'none' },
+                  // The component fills the box's width at its natural height (centred, never
+                  // squeezed to the plane), with no outer margin.
+                  '& > *': {
+                    width: '100%',
+                    flexShrink: 0,
+                    marginBlock: '0 !important',
+                  },
+                }}
+              >
+                {preview}
+              </chakra.div>
+            ) : null}
             {!isRoot ? (
               <chakra.span
                 position="absolute"
@@ -278,6 +325,12 @@ function Planes({ layout, exploded, active, badgeScale }: PlanesProps) {
 export interface ExplodedViewProps {
   readonly componentName: string;
   readonly layers: readonly ComponentAnatomyLayer[];
+  /**
+   * The live component (`AnatomyDiagram`'s `preview`). Drawn flat at the root layer's box
+   * when assembled, and faintly on the root (bottom) plane when exploded. Illustrative only:
+   * it's `aria-hidden` and `inert`.
+   */
+  readonly preview?: ReactNode;
 }
 
 /**
@@ -285,7 +338,11 @@ export interface ExplodedViewProps {
  * isolate their layer on hover or focus, the Assemble/Explode toggle, and on phones the
  * numbers and legend.
  */
-export function ExplodedView({ componentName, layers }: ExplodedViewProps) {
+export function ExplodedView({
+  componentName,
+  layers,
+  preview,
+}: ExplodedViewProps) {
   const [view, setView] = useState<View>('exploded');
   const [hovered, setHovered] = useState<number | null>(null);
   const [focused, setFocused] = useState<number | null>(null);
@@ -380,7 +437,7 @@ export function ExplodedView({ componentName, layers }: ExplodedViewProps) {
         top="16px"
         insetInlineEnd="16px"
         zIndex="50"
-        css={{ '& [role=radiogroup]': { bg: 'bg.hover' } }}
+        css={segmentedOnSubtle}
       >
         <SegmentedControl
           aria-label={`${componentName} anatomy view`}
@@ -419,6 +476,7 @@ export function ExplodedView({ componentName, layers }: ExplodedViewProps) {
             exploded={exploded}
             active={active}
             badgeScale={Math.min(1.7, Math.max(1, 0.8 / scale))}
+            preview={preview}
           />
 
           <chakra.ol

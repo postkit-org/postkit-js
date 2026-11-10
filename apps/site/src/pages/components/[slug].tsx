@@ -18,7 +18,10 @@ import { useState } from 'react';
 import { Schema } from 'react-structured';
 
 import { AnatomyDiagram } from '../../components/anatomy-diagram';
-import { componentPreviewSamples } from '../../components/component-preview';
+import {
+  ComponentPreview,
+  componentPreviewSamples,
+} from '../../components/component-preview';
 import { ComponentBadges } from '../../components/components/component-badges';
 import { ComponentTile } from '../../components/components/component-tile';
 import { PageSection } from '../../components/components/page-section';
@@ -395,6 +398,11 @@ export default function ComponentPage({
                   componentName={component.name}
                   layers={layers ?? undefined}
                   parts={componentParts(component.name)}
+                  preview={
+                    layers?.length ? (
+                      <ComponentPreview name={component.name} />
+                    ) : undefined
+                  }
                 />
               </Box>
             </PageSection>

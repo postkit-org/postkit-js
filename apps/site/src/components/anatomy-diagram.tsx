@@ -1,11 +1,12 @@
 import { Box, chakra, Text } from '@chakra-ui/react';
 import type { ComponentAnatomyLayer } from '@postkit/content';
+import type { ReactNode } from 'react';
 
 import { ExplodedView } from './anatomy/exploded-view';
 
 /**
- * Props for `AnatomyDiagram`. This contract is fixed; PK-034 implements the exploded view
- * behind it without changing these props.
+ * Props for `AnatomyDiagram`. PK-034 implemented the exploded view behind this contract; the
+ * Phase 3 pass added `preview` so the assembled view shows the real component.
  */
 export interface AnatomyDiagramProps {
   /** The catalog name, `Callout`: used in labels ("Exploded view of Callout's 5 parts"). */
@@ -18,6 +19,14 @@ export interface AnatomyDiagramProps {
   readonly layers?: readonly ComponentAnatomyLayer[];
   /** Every named part (the manifest's slots), in manifest order. Always rendered as the grid. */
   readonly parts: readonly string[];
+  /**
+   * The live component, rendered with its default sample (`ComponentPreview`). Only used with
+   * `layers`: "Assemble" lands on it, drawn flat at the component's full box (the root
+   * layer's `box`), and while exploded it shows faintly on the root (bottom) plane. It's
+   * illustrative, so it renders `aria-hidden` and `inert`. Absent: the assembled view shows
+   * only the root plane's surface.
+   */
+  readonly preview?: ReactNode;
 }
 
 /**
@@ -25,7 +34,8 @@ export interface AnatomyDiagramProps {
  *
  * - With `layers`, renders the exploded diagram (skewed layers, numbered labels that isolate
  *   their layer on hover or focus, the Assemble/Explode toggle, the phone legend, reduced
- *   motion), followed by the "Every part" grid.
+ *   motion), followed by the "Every part" grid. Assembled, it shows `preview`, the live
+ *   component.
  * - Without `layers`, renders only the "Every part" grid of `parts`. This is the final
  *   fallback for components with no `anatomy` frontmatter.
  * - It renders no section heading: the page owns "Anatomy. Every part is yours to restyle."
@@ -34,6 +44,7 @@ export function AnatomyDiagram({
   componentName,
   layers,
   parts,
+  preview,
 }: AnatomyDiagramProps) {
   const hasLayers = Boolean(layers && layers.length > 0);
   if (!hasLayers && parts.length === 0) return null;
@@ -45,7 +56,11 @@ export function AnatomyDiagram({
   return (
     <Box data-anatomy-diagram="">
       {layers && hasLayers ? (
-        <ExplodedView componentName={componentName} layers={layers} />
+        <ExplodedView
+          componentName={componentName}
+          layers={layers}
+          preview={preview}
+        />
       ) : null}
 
       {parts.length > 0 ? (
