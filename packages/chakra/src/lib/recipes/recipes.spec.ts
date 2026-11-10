@@ -44,14 +44,18 @@ import {
 import {
   postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
+  postkitStandaloneCodeBlockRecipe,
+} from '../../components/code-block/code-block.recipe.js';
+import {
   postkitCodeGroupRecipe,
   postkitCodeGroupSlots,
-  postkitStandaloneCodeBlockRecipe,
   postkitStandaloneCodeGroupRecipe,
+} from '../../components/code-group/code-group.recipe.js';
+import {
   postkitStandaloneTerminalRecipe,
   postkitTerminalRecipe,
   postkitTerminalSlots,
-} from './technical-content.recipe.js';
+} from '../../components/terminal/terminal.recipe.js';
 import { postkitVideoRecipe, postkitVideoSlots } from './video.recipe.js';
 
 describe('Postkit slot recipes', () => {

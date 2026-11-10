@@ -10,7 +10,10 @@ import { postkitDefaultTheme } from '../theme.js';
 import { Chart } from './chart.js';
 import { postkitProseComponents } from './prose.js';
 import { Comparison, Stat } from './publication.js';
-import { CodeBlock, CodeGroup, Diff, Terminal } from './technical-content.js';
+import { CodeBlock } from '../../components/code-block/code-block.js';
+import { CodeGroup } from '../../components/code-group/code-group.js';
+import { Diff } from '../../components/diff/diff.js';
+import { Terminal } from '../../components/terminal/terminal.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);

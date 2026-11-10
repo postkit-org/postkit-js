@@ -19,7 +19,7 @@ import { LinkPreview } from './components/link-preview.js';
 import { NewsletterSignup } from './components/newsletter-signup.js';
 import { ShareActions } from './components/share-actions.js';
 import { SocialPost } from './components/social-post.js';
-import { CodeBlock } from './components/technical-content.js';
+import { CodeBlock } from '../components/code-block/code-block.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
 import {

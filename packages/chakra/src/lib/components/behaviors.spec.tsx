@@ -18,7 +18,8 @@ import { Tabs } from '../../components/tabs/tabs.js';
 import { Carousel } from './carousel.js';
 import { LinkPreview } from './link-preview.js';
 import { SocialPost } from './social-post.js';
-import { CodeBlock, CodeGroup } from './technical-content.js';
+import { CodeBlock } from '../../components/code-block/code-block.js';
+import { CodeGroup } from '../../components/code-group/code-group.js';
 
 /**
  * Runs the shared behaviour specs from `@postkit/core/behaviors/testing`

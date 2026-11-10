@@ -64,20 +64,27 @@ export {
 } from './lib/components/author-card.js';
 export {
   CodeBlock,
-  CodeGroup,
-  Diff,
-  FileCard,
-  FileTree,
-  Terminal,
   type CodeBlockProps,
+} from './components/code-block/code-block.js';
+export {
+  CodeGroup,
   type CodeGroupItem,
   type CodeGroupProps,
-  type DiffProps,
+} from './components/code-group/code-group.js';
+export { Diff, type DiffProps } from './components/diff/diff.js';
+export {
+  FileCard,
   type FileCardProps,
+} from './components/file-card/file-card.js';
+export {
+  FileTree,
   type FileTreeItem,
   type FileTreeProps,
+} from './components/file-tree/file-tree.js';
+export {
+  Terminal,
   type TerminalProps,
-} from './lib/components/technical-content.js';
+} from './components/terminal/terminal.js';
 export {
   AudienceBoundary,
   Comparison,
@@ -107,23 +114,33 @@ export {
 export {
   postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
+  type PostkitCodeBlockSlot,
+} from './components/code-block/code-block.recipe.js';
+export {
   postkitCodeGroupRecipe,
   postkitCodeGroupSlots,
+  type PostkitCodeGroupSlot,
+} from './components/code-group/code-group.recipe.js';
+export {
   postkitDiffRecipe,
   postkitDiffSlots,
+  type PostkitDiffSlot,
+} from './components/diff/diff.recipe.js';
+export {
   postkitFileCardRecipe,
   postkitFileCardSlots,
+  type PostkitFileCardSlot,
+} from './components/file-card/file-card.recipe.js';
+export {
   postkitFileTreeRecipe,
   postkitFileTreeSlots,
+  type PostkitFileTreeSlot,
+} from './components/file-tree/file-tree.recipe.js';
+export {
   postkitTerminalRecipe,
   postkitTerminalSlots,
-  type PostkitCodeBlockSlot,
-  type PostkitCodeGroupSlot,
-  type PostkitDiffSlot,
-  type PostkitFileCardSlot,
-  type PostkitFileTreeSlot,
   type PostkitTerminalSlot,
-} from './lib/recipes/technical-content.recipe.js';
+} from './components/terminal/terminal.recipe.js';
 export {
   postkitAudienceBoundaryRecipe,
   postkitAudienceBoundarySlots,

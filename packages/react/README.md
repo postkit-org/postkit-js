@@ -13,6 +13,11 @@ This package is new in 0.3.0 and grows component by component. It currently
 ships `Callout`, `Aside` and `Figure`, plus `postkitView` for building views
 from any `@postkit/core/components` definition.
 
+Technical content: `Terminal`, `Diff`, `FileTree` and `FileCard`.
+`CodeBlock` and `CodeGroup` are interactive and render only through
+`@postkit/chakra` until their behaviour hooks land; the `chakraOnly` export
+lists every such component.
+
 ## Install
 
 ```sh
@@ -87,6 +92,10 @@ Every view also accepts:
 
 `Figure` applies `aspectRatio`, `objectFit` and `objectPosition` as inline
 styles, since they describe the content rather than the theme.
+
+`FileTree` indents each item by its depth with an inline
+`padding-inline-start`, and each `Diff` line carries
+`data-diff="addition" | "deletion" | "context"`.
 
 ## Build a view from a definition
 
