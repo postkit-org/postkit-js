@@ -200,11 +200,14 @@ function withPostkitTypographyDefaults(
   );
 }
 
-type PostkitColorValue = { readonly base: string; readonly _dark: string };
+// `_light` / `_dark`, the same keys Chakra's own semantic tokens use. Chakra emits colour-mode
+// blocks in the order it first meets each condition, so a preset that used `base` + `_dark`
+// put the `.dark` block before `:root, .light` and light mode won everywhere.
+type PostkitColorValue = { readonly _light: string; readonly _dark: string };
 
 /** A colour that stays the same in both modes, stated as such on purpose. */
 function bothModes(value: string): { readonly value: PostkitColorValue } {
-  return { value: { base: value, _dark: value } };
+  return { value: { _light: value, _dark: value } };
 }
 
 /**
@@ -214,7 +217,7 @@ function bothModes(value: string): { readonly value: PostkitColorValue } {
 function tone(palette: string): { readonly value: PostkitColorValue } {
   return {
     value: {
-      base: `{colors.${palette}.700}`,
+      _light: `{colors.${palette}.700}`,
       _dark: `{colors.${palette}.300}`,
     },
   };
@@ -228,7 +231,7 @@ function tone(palette: string): { readonly value: PostkitColorValue } {
 function tint(name: string): { readonly value: PostkitColorValue } {
   return {
     value: {
-      base: `color-mix(in srgb, {colors.tone.${name}} 12%, {colors.bg})`,
+      _light: `color-mix(in srgb, {colors.tone.${name}} 12%, {colors.bg})`,
       _dark: `color-mix(in srgb, {colors.tone.${name}} 22%, {colors.bg})`,
     },
   };
@@ -236,7 +239,7 @@ function tint(name: string): { readonly value: PostkitColorValue } {
 
 /**
  * Semantic colours used by Postkit's default recipes. Every colour has a
- * `base` and a `_dark` value so components follow the host's colour mode.
+ * `_light` and a `_dark` value so components follow the host's colour mode.
  * Hosts override any of them by defining the same semantic token.
  */
 const postkitSemanticColors = {

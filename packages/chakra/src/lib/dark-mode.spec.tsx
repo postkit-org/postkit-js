@@ -183,7 +183,7 @@ describe('Postkit dark mode', () => {
     });
   });
 
-  it('gives every postkitDefaultTheme semantic colour a base and _dark value', () => {
+  it('gives every postkitDefaultTheme semantic colour a _light and _dark value', () => {
     const colors = postkitDefaultTheme.theme?.semanticTokens?.colors;
     const leaves: Array<[string, unknown]> = [];
     const walk = (node: unknown, path: string) => {
@@ -202,7 +202,7 @@ describe('Postkit dark mode', () => {
     for (const [path, value] of leaves) {
       expect({ path, value }).toEqual({
         path,
-        value: { base: expect.any(String), _dark: expect.any(String) },
+        value: { _light: expect.any(String), _dark: expect.any(String) },
       });
     }
     // Tints are computed from their tone, so host tones get matching tints.
@@ -210,7 +210,7 @@ describe('Postkit dark mode', () => {
       expect(leaves).toContainEqual([
         `tint.${tone}`,
         {
-          base: `color-mix(in srgb, {colors.tone.${tone}} 12%, {colors.bg})`,
+          _light: `color-mix(in srgb, {colors.tone.${tone}} 12%, {colors.bg})`,
           _dark: `color-mix(in srgb, {colors.tone.${tone}} 22%, {colors.bg})`,
         },
       ]);
@@ -334,5 +334,20 @@ describe('Postkit dark mode', () => {
       expect(resolved(lightTerminal, 'background')).toBe('#111111');
       expect(resolved(darkTerminal, 'background')).toBe('#111111');
     });
+  });
+  it('emits the light colour-mode block before the dark one', () => {
+    // Chakra writes colour-mode blocks in the order it first meets each condition. If the
+    // dark block comes first, `:root, .light` wins on <html class="dark"> and dark mode
+    // never shows. Check with Chakra's own tokens underneath, as a host has them.
+    const system = createPostkitSystem({ preset: postkitDefaultTheme });
+    const tokenCss = system.getTokenCss() as unknown as Record<
+      string,
+      Record<string, unknown>
+    >;
+    const blocks = Object.keys(tokenCss['@layer tokens'] ?? {});
+    const light = blocks.findIndex((selector) => selector.includes('.light'));
+    const dark = blocks.findIndex((selector) => selector.includes('.dark'));
+    expect(light).toBeGreaterThanOrEqual(0);
+    expect(dark).toBeGreaterThan(light);
   });
 });
