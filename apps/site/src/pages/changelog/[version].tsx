@@ -33,6 +33,7 @@ import {
   getChangelogEntry,
   getLatestChangelogRelease,
 } from '../../lib/changelog.server';
+import { changelogShareImage, shareImageMeta } from '../../lib/share-images';
 
 type PagerEntry = Pick<ChangelogEntrySummary, 'slug' | 'version' | 'subtitle'>;
 
@@ -112,6 +113,7 @@ export default function ChangelogEntryPage({
         title={entry.title}
         description={entry.summary}
         type="article"
+        image={shareImageMeta(changelogShareImage(entry))}
       />
       <BreadcrumbJsonLd
         items={[

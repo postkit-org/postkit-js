@@ -22,6 +22,7 @@ import {
 import { PageMeta, WebSiteJsonLd } from '../components/layout';
 import { trackGoal } from '../lib/analytics';
 import { assertSearchReady } from '../lib/search-records';
+import { homeShareImage, shareImageMeta } from '../lib/share-images';
 
 interface HomePageProps {
   readonly stats: HomeStats;
@@ -51,7 +52,10 @@ export default function IndexPage({
   return (
     <>
       {/* No title: the home page's is just "Postkit" (01 §12). */}
-      <PageMeta description="Give your writing callouts, code, figures and more without building any of them. Each post looks right on your site, in your newsletter and in your editor, from one plain-text file." />
+      <PageMeta
+        description="Give your writing callouts, code, figures and more without building any of them. Each post looks right on your site, in your newsletter and in your editor, from one plain-text file."
+        image={shareImageMeta(homeShareImage())}
+      />
       <WebSiteJsonLd />
       <SourceCodeJsonLd licence={stats.licence} />
 

@@ -12,7 +12,9 @@
           "projects": ["@postkit/content"],
           "target": "build"
         },
-        "feeds"
+        "feeds",
+        "icons",
+        "og-images"
       ]
     },
     "feeds": {
@@ -37,8 +39,60 @@
         }
       }
     },
+    "icons": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/build-icons.mts",
+        "{workspaceRoot}/docs/design/handoff/assets/brand/favicon.svg",
+        "^production",
+        {
+          "externalDependencies": ["sharp", "jiti"]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/public/favicon.svg",
+        "{projectRoot}/public/favicon.ico",
+        "{projectRoot}/public/apple-touch-icon.png",
+        "{projectRoot}/public/icon-192.png",
+        "{projectRoot}/public/icon-512.png",
+        "{projectRoot}/public/site.webmanifest"
+      ],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-icons.mts"
+      }
+    },
+    "og-images": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "{projectRoot}/og/**/*",
+        "{projectRoot}/scripts/build-og-images.mts",
+        "{projectRoot}/src/lib/components.ts",
+        "{projectRoot}/src/lib/docs-layout.ts",
+        "{projectRoot}/src/lib/notes.ts",
+        "{projectRoot}/src/lib/share-images.ts",
+        "{projectRoot}/src/lib/site-sections.ts",
+        "{projectRoot}/src/lib/site-url.ts",
+        "^production",
+        {
+          "externalDependencies": ["next", "react", "sharp", "jiti", "yaml"]
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
+      ],
+      "outputs": ["{projectRoot}/public/og"],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-og-images.mts",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    },
     "build": {
-      "dependsOn": ["^build", "feeds"],
+      "dependsOn": ["^build", "feeds", "icons", "og-images"],
       "inputs": [
         "default",
         "^default",

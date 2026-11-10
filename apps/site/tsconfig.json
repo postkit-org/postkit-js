@@ -21,7 +21,7 @@
       "content-collections": ["./.content-collections/generated"]
     },
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
@@ -29,6 +29,8 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
+    "og/**/*.ts",
+    "og/**/*.tsx",
     "src/content/*.json",
     "index.d.ts",
     "next-env.d.ts"

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { PageMeta as NextMeta, type MetaProviderProps } from 'next-meta';
 
+import { homeShareImage, shareImageMeta } from '../../lib/share-images';
 import {
   canonicalPath,
   SITE_DESCRIPTION,
@@ -29,7 +30,11 @@ export interface PageMetaProps {
    * fragment. Resolved against `NEXT_PUBLIC_SITE_URL` (default `https://postkit.org`).
    */
   readonly path?: string;
-  /** `og:image` plus `og:image:alt` (and the Twitter equivalents). 1200×630 per 05. */
+  /**
+   * `og:image` plus `og:image:alt` (and the Twitter equivalents). 1200×630 per 05; build it
+   * with `shareImageMeta` (`lib/share-images`). Pages without a share image of their own
+   * (indexes, legal pages, 404) use the home page's.
+   */
   readonly image?: PageMetaImage;
   /** `og:type`. Defaults to `website`; notes and changelog entries are `article`. */
   readonly type?: 'website' | 'article';
@@ -93,7 +98,7 @@ export function PageMeta({
       canonical={resolvedPath}
       url={resolvedPath}
       type={type}
-      images={image ? [{ ...image }] : undefined}
+      images={[{ ...(image ?? shareImageMeta(homeShareImage())) }]}
       twitter={{ card: 'summary_large_image' }}
     />
   );
