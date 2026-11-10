@@ -1,9 +1,7 @@
 import { defineCollection } from '@content-collections/core';
 import { z } from 'zod';
 
-import { contentSlugSchema } from './changelog.js';
-
-const nonEmptyString = z.string().trim().min(1);
+import { contentSlugSchema, nonEmptyString } from './shared.js';
 
 export const docsEntrySchema = z.object({
   title: nonEmptyString,

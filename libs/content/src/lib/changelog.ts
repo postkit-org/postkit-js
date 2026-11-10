@@ -1,21 +1,14 @@
 import { defineCollection } from '@content-collections/core';
 import { z } from 'zod';
 
-const nonEmptyString = z.string().trim().min(1);
-export const contentSlugSchema = z
-  .string()
-  .regex(
-    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-    'Content filenames must use lowercase URL-safe slugs.',
-  );
+import {
+  changelogDateSchema,
+  contentSlugSchema,
+  nonEmptyString,
+} from './shared.js';
 
-const changelogDateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Dates must use YYYY-MM-DD.')
-  .refine(
-    (date) => new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) === date,
-    'Dates must be valid calendar dates.',
-  );
+// Re-exported for existing imports from './changelog.js'.
+export { contentSlugSchema };
 
 export const changelogEntrySchema = z.object({
   title: nonEmptyString,

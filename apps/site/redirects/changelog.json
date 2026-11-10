@@ -1,0 +1,4 @@
+{
+  "$note": "Permanent redirects for changed changelog URLs (handoff 01 §3; source list in docs/design/handoff/content/redirects.json). permanent: true sends 308; permanent: false sends 307.",
+  "redirects": []
+}
