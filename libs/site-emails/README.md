@@ -9,7 +9,8 @@ with `@postkit/email` and Chakra Email:
 
 Each returns `{ from, subject, preheader, html, text, headers }`, with a hand-written plain-text
 part. Light only, 600px wide. The theme maps `@postkit/site-theme`'s raw `tokens` into Chakra
-Email's format (`emailTheme`); it doesn't import the site's Chakra system. Until `@postkit/email`
-ships tone palettes (package issue P9), the theme passes them explicitly.
+Email's format (`emailTheme`); it doesn't import the site's Chakra system. `@postkit/email`
+ships its own light tone colours; `emailToneColors` swaps in the site's tones on the same
+`tone.*` / `tint.*` keys, so callouts match the site (the home page's Email tab uses it too).
 
 Run `nx test site-emails` (HTML snapshots, plain text, no images or tracking, the postal address).

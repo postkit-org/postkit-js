@@ -29,3 +29,4 @@ export {
   PostkitEmailProvider,
   type PostkitEmailProviderProps,
 } from './lib/provider.js';
+export { postkitEmailTheme } from './lib/theme.js';

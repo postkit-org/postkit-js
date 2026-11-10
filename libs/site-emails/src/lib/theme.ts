@@ -30,28 +30,21 @@ function toEmailColors(
   return scale;
 }
 
-/**
- * `@postkit/email` styles its tones with `{palette}.50/.500/.900` (green for tip, blue for
- * note…), but Chakra Email's default theme has only `gray`, so they'd reach the HTML
- * unresolved (`background-color:green.50`, package issue P9). Until the package ships those
- * palettes, pass them explicitly, as the home page's Email tab does.
- */
-const tonePalettes = {
-  blue: tokens.tone.note,
-  green: tokens.tone.tip,
-  purple: tokens.tone.important,
-  yellow: tokens.tone.warning,
-  red: tokens.tone.caution,
-} as const;
+const toneNames = ['note', 'tip', 'important', 'warning', 'caution'] as const;
 
-function toToneColors(): ThemeScale {
-  return Object.fromEntries(
-    Object.entries(tonePalettes).map(([palette, tone]) => [
-      palette,
-      { 50: tone.tintLight, 500: tone.light, 900: tokens.color.fg.light },
-    ]),
-  );
-}
+/**
+ * The site's own tones, which differ from `@postkit/email`'s defaults (Chakra's palettes),
+ * on the package's `tone.*` and `tint.*` keys, light values only. The site's Chakra
+ * components use the same tokens, so a Callout looks the same on the page and in an inbox.
+ */
+export const emailToneColors = {
+  tone: Object.fromEntries(
+    toneNames.map((name) => [name, tokens.tone[name].light]),
+  ),
+  tint: Object.fromEntries(
+    toneNames.map((name) => [name, tokens.tone[name].tintLight]),
+  ),
+} satisfies ThemeScale;
 
 /**
  * The email font stack. The site's own stack starts with Suisse Int'l, which no mail client
@@ -63,8 +56,8 @@ export const EMAIL_FONT_STACK =
 /** Chakra Email theme for the site's emails. */
 export const emailTheme: ThemeInput = {
   colors: {
-    ...toToneColors(),
     ...toEmailColors(tokens.color),
+    ...emailToneColors,
   },
   fonts: {
     body: EMAIL_FONT_STACK,

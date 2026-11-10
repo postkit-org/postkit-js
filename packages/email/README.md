@@ -33,8 +33,32 @@ const html = await render(
 The same integration is compiled in CI from
 [`examples/email/render-newsletter.tsx`](../../examples/email/render-newsletter.tsx).
 
-`PostkitEmailProvider` accepts Chakra Email theme overrides. It does not load
-Chakra UI or install a client-side runtime.
+`PostkitEmailProvider` applies `postkitEmailTheme`, a light email theme with
+literal colours for every tone, over Chakra Email's defaults, then layers your
+`theme` prop on top. It does not load Chakra UI or install a client-side
+runtime.
+
+## Theme
+
+Email stays light; mail clients apply their own dark mode. Every colour is
+written inline as a literal value, never a CSS variable.
+
+| Key           | Used for                     | Default                                            |
+| ------------- | ---------------------------- | -------------------------------------------------- |
+| `tone.<tone>` | Callout and Aside border     | Chakra UI `<palette>.700`, as in `@postkit/chakra` |
+| `tint.<tone>` | Callout and Aside background | The tone at 12% over white                         |
+| `fg`          | Callout and Aside text       | `#18181b`                                          |
+
+Tones are `note`, `tip`, `important`, `warning` and `caution`. Override any of
+them with the same key:
+
+```tsx
+<PostkitEmailProvider
+  theme={{ colors: { tone: { tip: '#23794a' }, tint: { tip: '#e5efe9' } } }}
+>
+  {children}
+</PostkitEmailProvider>
+```
 
 ## Supported components
 

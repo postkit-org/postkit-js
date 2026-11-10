@@ -115,7 +115,9 @@ const html = await render(
 The package exports:
 
 - Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure` and `Video`.
-- `PostkitEmailProvider`, which accepts Chakra Email theme overrides.
+- `PostkitEmailProvider`, which applies `postkitEmailTheme` (light, with
+  literal `tone.*` and `tint.*` colours) and accepts Chakra Email theme
+  overrides on top, such as your own tones.
 - `createPostkitEmailMdxComponents()` and `postkitEmailMdxComponents`, the MDX
   map for the supported subset, for email builds that compile trusted MDX.
 - `createPostkitEmailAction`, `createPostkitEmailMediaModel` and

@@ -3,21 +3,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import {
-  Body,
-  Container,
-  Head,
-  Html,
-  render,
-  Text,
-  type ThemeInput,
-} from '@chakra-email/core';
-import { tokens } from '@postkit/site-theme';
+import { Body, Container, Head, Html, render, Text } from '@chakra-email/core';
 import {
   parsePostkitMarkdown,
   type PostkitDocument,
 } from '@postkit/chakra/document';
 import { Callout, PostkitEmailProvider } from '@postkit/email';
+import { emailToneColors } from '@postkit/site-emails';
 
 import {
   componentCategoryGroups,
@@ -109,39 +101,17 @@ export function getHomeStats(): HomeStats {
 }
 
 /**
- * `@postkit/email` styles its tones with `{palette}.50/.500/.900` tokens (green for tip, blue
- * for note…), but Chakra Email's default theme has only `gray`, so they reach the HTML
- * unresolved (`background-color:green.50`). Until the package ships those palettes, the
- * host fills them in through `PostkitEmailProvider`'s `theme` prop, which is the documented
- * way to theme it, with the site's light tone and tint tokens (emails are light only, 02 §3).
- */
-const emailTonePalettes = {
-  blue: tokens.tone.note,
-  green: tokens.tone.tip,
-  purple: tokens.tone.important,
-  yellow: tokens.tone.warning,
-  red: tokens.tone.caution,
-} as const;
-
-const emailToneTheme: ThemeInput = {
-  colors: Object.fromEntries(
-    Object.entries(emailTonePalettes).map(([palette, tone]) => [
-      palette,
-      { 50: tone.tintLight, 500: tone.light, 900: tokens.color.fg.light },
-    ]),
-  ),
-};
-
-/**
  * The renderer panel's article through `@postkit/email`, rendered to an HTML document with
  * Chakra Email's `render` (as `@postkit/email`'s README and `examples/email` do). The page
- * shows it in an `<iframe srcDoc>`.
+ * shows it in an `<iframe srcDoc>`. The package's light email theme supplies everything; the
+ * only override is the site's own tones (`emailToneColors`, shared with the site's emails), so
+ * the Callout matches the Chakra tab next to it.
  */
 export async function renderEmailArticle(): Promise<string> {
   const { lead, callout } = rendererArticle;
 
   return render(
-    <PostkitEmailProvider theme={emailToneTheme}>
+    <PostkitEmailProvider theme={{ colors: emailToneColors }}>
       <Html lang="en">
         <Head />
         <Body m={0} p={0}>

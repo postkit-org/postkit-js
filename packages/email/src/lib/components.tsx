@@ -15,27 +15,13 @@ import {
   createPostkitEmailMediaModel,
   numericEmailDimension,
 } from './models.js';
+import {
+  usePostkitEmailGrays,
+  usePostkitEmailToneColors,
+  type Tone,
+} from './theme.js';
 
-export type Tone = 'note' | 'tip' | 'important' | 'warning' | 'caution';
-
-const toneStyles: Record<
-  Tone,
-  Pick<ChakraEmailStyleProps, 'bg' | 'borderColor' | 'color'>
-> = {
-  note: { bg: 'blue.50', borderColor: 'blue.500', color: 'blue.900' },
-  tip: { bg: 'green.50', borderColor: 'green.500', color: 'green.900' },
-  important: {
-    bg: 'purple.50',
-    borderColor: 'purple.500',
-    color: 'purple.900',
-  },
-  warning: {
-    bg: 'yellow.50',
-    borderColor: 'yellow.500',
-    color: 'yellow.900',
-  },
-  caution: { bg: 'red.50', borderColor: 'red.500', color: 'red.900' },
-};
+export type { Tone } from './theme.js';
 
 export interface CalloutProps {
   readonly title?: string;
@@ -52,23 +38,27 @@ export function Callout({
   rootStyles,
   componentName = 'Callout',
 }: CalloutProps) {
+  const colors = usePostkitEmailToneColors(tone);
   return (
     <Section
       aria-label={title || tone}
       data-postkit-component={componentName}
       data-postkit-tone={tone}
-      borderLeft="4px solid"
+      // One literal shorthand: Chakra Email passes `borderLeft` through
+      // unresolved, and a separate `borderColor` would be reset by it.
+      borderLeft={`4px solid ${colors.tone}`}
+      bg={colors.tint}
+      color={colors.fg}
       p={4}
       mb={4}
-      {...toneStyles[tone]}
       {...rootStyles}
     >
       {title ? (
-        <Text fontWeight="bold" color="inherit" mb={2}>
+        <Text fontWeight="bold" color={colors.fg} mb={2}>
           {title}
         </Text>
       ) : null}
-      <Text as="div" color="inherit" mb={0}>
+      <Text as="div" color={colors.fg} mb={0}>
         {children}
       </Text>
     </Section>
@@ -104,14 +94,14 @@ export function CallToAction({
   children,
   rootStyles,
 }: CallToActionProps) {
+  const gray = usePostkitEmailGrays();
   const primary = createPostkitEmailAction(primaryLabel, primaryHref);
   const secondary = createPostkitEmailAction(secondaryLabel, secondaryHref);
   return (
     <Section
       data-postkit-component="CallToAction"
-      bg="gray.50"
-      border="1px solid"
-      borderColor="gray.200"
+      bg={gray[50]}
+      border={`1px solid ${gray[200]}`}
       rounded="lg"
       p={6}
       mb={4}
@@ -119,7 +109,7 @@ export function CallToAction({
     >
       {eyebrow ? (
         <Text
-          color="gray.600"
+          color={gray[600]}
           fontSize="sm"
           fontWeight="bold"
           textTransform="uppercase"
@@ -132,7 +122,7 @@ export function CallToAction({
         {title}
       </Heading>
       {children || description ? (
-        <Text as="div" color="gray.700" mb={4}>
+        <Text as="div" color={gray[700]} mb={4}>
           {children ?? description}
         </Text>
       ) : null}
@@ -175,6 +165,7 @@ export function Figure({
   height,
   rootStyles,
 }: FigureProps) {
+  const gray = usePostkitEmailGrays();
   const image = (
     <Img
       src={src}
@@ -188,12 +179,12 @@ export function Figure({
     <Section data-postkit-component="Figure" mb={4} {...rootStyles}>
       {href ? <Link href={href}>{image}</Link> : image}
       {caption ? (
-        <Text color="gray.700" fontSize="sm" mt={2} mb={0}>
+        <Text color={gray[700]} fontSize="sm" mt={2} mb={0}>
           {caption}
         </Text>
       ) : null}
       {credit ? (
-        <Text color="gray.600" fontSize="xs" mt={1} mb={0}>
+        <Text color={gray[600]} fontSize="xs" mt={1} mb={0}>
           {creditHref ? <Link href={creditHref}>{credit}</Link> : credit}
         </Text>
       ) : null}
@@ -216,6 +207,7 @@ export function Audio({
   actionLabel = 'Listen to audio',
   rootStyles,
 }: AudioProps) {
+  const gray = usePostkitEmailGrays();
   const model = createPostkitEmailMediaModel({
     src,
     title,
@@ -225,8 +217,7 @@ export function Audio({
   return (
     <Section
       data-postkit-component="Audio"
-      border="1px solid"
-      borderColor="gray.200"
+      border={`1px solid ${gray[200]}`}
       rounded="lg"
       p={4}
       mb={4}
@@ -236,7 +227,7 @@ export function Audio({
         {model.title}
       </Heading>
       {model.caption ? (
-        <Text color="gray.700" mb={3}>
+        <Text color={gray[700]} mb={3}>
           {model.caption}
         </Text>
       ) : null}
@@ -257,6 +248,7 @@ export function Video({
   actionLabel = 'Watch video',
   rootStyles,
 }: VideoProps) {
+  const gray = usePostkitEmailGrays();
   const model = createPostkitEmailMediaModel({
     src,
     title,
@@ -267,8 +259,7 @@ export function Video({
   return (
     <Section
       data-postkit-component="Video"
-      border="1px solid"
-      borderColor="gray.200"
+      border={`1px solid ${gray[200]}`}
       rounded="lg"
       p={4}
       mb={4}
@@ -283,7 +274,7 @@ export function Video({
         {model.title}
       </Heading>
       {model.caption ? (
-        <Text color="gray.700" mb={3}>
+        <Text color={gray[700]} mb={3}>
           {model.caption}
         </Text>
       ) : null}
