@@ -95,11 +95,11 @@ Use Nx generators for every new project: `nx g @nx/js:library`, `nx g @nx/react:
 
 ## Phase 4 — Search, feeds and llms.txt
 
-**PK-040 · Search index** (01 §8)
-- The build script, the synonyms file, the size budget (07).
+**PK-040 · Search records and API** (01 §8)
+- Build the search records from the content collections and the manifest, the `@chakra-docs/search` MiniSearch engine with the synonyms file, and `GET /api/search`. Tests per 07.
 
 **PK-041 · Search dialog** (SiteSearch, SiteSearchEmpty, PhoneSearch, SiteSearchDark)
-- MiniSearch, lazy-loaded; grouped results; keyboard; no-results suggestions; "Jump to" on an empty query; opens from ⌘K, the header and "Search docs".
+- Calls `/api/search` through `@chakra-docs/search/client` once open; grouped results; keyboard; no-results suggestions; "Jump to" on an empty query; opens from ⌘K, the header and "Search docs".
 
 **PK-042 · Feeds and llms.txt** (01 §10)
 

@@ -11,7 +11,7 @@ Boards are the source of truth for layout and copy. `reference/boards.md` maps e
 - **Name:** "Postkit" everywhere, never "PostKit" (PK-001 fixes the repo).
 - **Stack:** Nx (generators only), Next.js Pages Router, Chakra UI v3, `@postkit/chakra` for every component shown on the site, `next-meta`, `react-structured`, `react-fathom`, Sentry, Resend. Hosted on Vercel.
 - **Dogfood:** every Postkit component on the site, including component previews, the notes article and the release email, is rendered by the published Postkit packages from the same commit. The site never forks a component. If the site needs something a component can't do, that's a package ticket.
-- **Static first:** every page is statically generated. The only server code is the three subscription API routes (§9).
+- **Static first:** every page is statically generated. The only server code is the three newsletter API routes (§9) and the search API route (§8).
 - **Light and dark:** both themes from launch (§11, and `02-design-system.md` §3).
 - **Width targets:** 1440, 1199 (sidenote breakpoint), 760 (phone breakpoint) and 390. Check 320 for overflow.
 
@@ -230,10 +230,14 @@ In order: breadcrumb, title (name + grey value line), badges (kit, static/intera
 
 ## 8. Search
 
-- **Static index**, built after content collections. `scripts/build-search-index.ts` writes `/search-index.json` with one record per component, docs section (h2), note and changelog entry: `{ id, kind, title, section?, text, url }`.
-- **Client:** MiniSearch, with prefix and fuzzy matching (0.2). Field boosts: title ×4, section ×2, text ×1. The index loads on first open, never on page load.
-- **Synonyms** map common names to Postkit names (`content/search-synonyms.json`: accordion → Disclosure, admonition → Callout, tldr → KeyTakeaway, slideshow → Carousel, tweet → SocialPost, …). Every target must be a real component, doc or concept.
-- **Dialog:**
+- **Server search with `@chakra-docs/search`** (decided 10 Nov 2026, replacing the static index). The corpus is small (about 75 pages, a few hundred records with docs sections), so it lives in the server process and the browser downloads only results.
+  - **Records**, built at build time from the content collections and the manifest: one per component, docs section (h2), note and changelog entry, with collection IDs `components`, `docs`, `notes` and `changelog`. Drafts are left out in production; `upcoming` changelog entries are included.
+  - **Engine:** `createMiniSearchEngine` from `@chakra-docs/search/minisearch`: prefix and fuzzy matching (fuzzy distance 0.2), field weights favouring titles over section titles over text, and no more than two results per page.
+  - **Route:** `GET /api/search?q=…&collection=…` via `@chakra-docs/search/http` (`createFetchSearchHandler`), with its default limits (128-character queries, at most 20 results) and a short `Cache-Control`. The client uses `createHttpSearchProvider('/api/search')` and calls it only once the dialog is open, with cancellation as the reader types.
+  - The route logs nothing beyond Vercel's standard request log (covered by the Privacy page's hosting-logs line, 09).
+- **Synonyms** (passed to the engine's `synonyms`) map common names to Postkit names (`content/search-synonyms.json`: accordion → Disclosure, admonition → Callout, tldr → KeyTakeaway, slideshow → Carousel, tweet → SocialPost, …). Every target must be a real component, doc or concept.
+- **Dialog:** the boards' design (below). Use `@chakra-docs/chakra`'s search dialog if it can be styled to match them through its public API; otherwise build the site's own dialog on the same HTTP provider.
+- **Dialog behaviour:**
   - ⌘K or Ctrl K, or the header trigger, opens it. On phones it's full screen.
   - Results are grouped: Components, Docs, Notes, Changelog. Up to 4 per group, with the match highlighted in the snippet.
   - The first result is active. ↑/↓ move, ↵ opens, Esc closes.
