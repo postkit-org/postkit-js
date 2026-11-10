@@ -12,11 +12,14 @@ Builds the postkit.org notes and changelog feeds (PK-042, handoff 01 §3 and §1
   `content_html`.
 - Item HTML goes through `@postkit/core`: the body (directives turned into MDX
   tags by the Postkit remark preset) is parsed by core's safe MDX parser and
-  written by `serializePostkitHtml`. Root-relative links become absolute.
-- Core renders no markup for components whose content is only in props
-  (KeyTakeaway, Steps, PullQuote, Terminal, CodeBlock, LinkPreview, …). An entry
-  that uses one gets its summary and a link instead, and the build log says
-  which components caused it.
+  written by `serializePostkitHtml`, with the site as `baseUrl`, so relative
+  links and media become absolute.
+- Every entry is serialized in full. Each Postkit component becomes core's
+  static view: readable markup with its text, including text carried in props
+  (a Callout title, KeyTakeaway items, a Terminal command), annotated so
+  Postkit-aware readers can rebuild it. The feeds are public, so an
+  `AudienceBoundary` shows its fallback, and a `NewsletterSignup` links to
+  `/newsletter/subscribe`.
 - Every feed is validated before it is written (`validateRss`, `validateAtom`,
   `validateJsonFeed`, with a small strict XML reader). An invalid feed fails the
   build.

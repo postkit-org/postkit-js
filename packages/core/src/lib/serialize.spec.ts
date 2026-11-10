@@ -352,7 +352,8 @@ const article = true
       },
       {
         type: 'component',
-        name: 'Callout',
+        // A custom component: built-ins render their static view instead.
+        name: 'Notice',
         children: [{ type: 'text', value: 'Notice' }],
       },
     ]);
@@ -360,7 +361,7 @@ const article = true
     const html = serializePostkitHtml(document, {
       annotations: false,
       documentElement: 'article',
-      componentElement: (node) => (node.name === 'Callout' ? 'aside' : 'div'),
+      componentElement: (node) => (node.name === 'Notice' ? 'aside' : 'div'),
     });
 
     expect(html).toBe(

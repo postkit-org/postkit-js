@@ -37,3 +37,8 @@ export {
   type SerializePostkitMarkdownOptions,
   type SerializePostkitOptions,
 } from './lib/serialize.js';
+export {
+  serializePostkitText,
+  type SerializePostkitTextOptions,
+} from './lib/serialize-text.js';
+export type { PostkitStaticViewOptions } from './lib/serialize-views.js';
