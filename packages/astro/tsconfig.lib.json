@@ -13,6 +13,9 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.astro"],
   "references": [
     {
+      "path": "../core/tsconfig.lib.json"
+    },
+    {
       "path": "../chakra/tsconfig.lib.json"
     }
   ],

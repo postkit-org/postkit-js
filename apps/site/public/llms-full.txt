@@ -3411,6 +3411,13 @@ use `client:visible` and hydrate only when they approach the viewport. This
 keeps forms, sharing, runtime link resolution, and consent-gated embeds
 interactive without shipping a page-wide React root.
 
+The policy follows each component definition's `runtime`: `static` and
+`native-controls` render on the server only, while `client` and `resolver`
+hydrate with `client:visible`. The Astro wrappers in `src/components/` and the
+React bridges are generated from the definitions by
+`npm run components:generate`, and each wrapper states its policy in a
+comment.
+
 Poll selections are local unless the host supplies persistence. Host callbacks
 such as `onVote` belong inside a hydrated React wrapper; functions cannot be
 serialized as props across an Astro island boundary.

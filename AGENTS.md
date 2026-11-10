@@ -45,8 +45,10 @@ passed into the React provider and does not change the core dependency chain.
 ## Change invariants
 
 - A portable component or prop change must update its declaration, renderer,
-  tests, generated manifest, relevant package README, and Astro bridge when
-  supported there.
+  tests, generated manifest and relevant package README. The Astro wrappers
+  and bridges are generated from the definitions by
+  `npm run components:generate` (`catalog:check` fails on drift); never edit
+  them directly.
 - A public export must be reachable from the package's documented export map
   and must work from a packed clean consumer.
 - Remote provider credentials and origin fetching stay in server, build, or
