@@ -43,6 +43,28 @@ import { postkitFileTreeRecipe } from './file-tree/file-tree.recipe.js';
 import { Terminal } from './terminal/terminal.js';
 import { postkitTerminalRecipe } from './terminal/terminal.recipe.js';
 
+// Standalone components (03 step 7).
+import {
+  appearsOnDefinition,
+  audioDefinition,
+  authorCardDefinition,
+  callToActionDefinition,
+  chartDefinition,
+  videoDefinition,
+} from '@postkit/core/components';
+import { AppearsOn } from './appears-on/appears-on.js';
+import { postkitAppearsOnRecipe } from './appears-on/appears-on.recipe.js';
+import { Audio } from './audio/audio.js';
+import { postkitAudioRecipe } from './audio/audio.recipe.js';
+import { AuthorCard } from './author-card/author-card.js';
+import { postkitAuthorCardRecipe } from './author-card/author-card.recipe.js';
+import { CallToAction } from './call-to-action/call-to-action.js';
+import { postkitCallToActionRecipe } from './call-to-action/call-to-action.recipe.js';
+import { Chart } from './chart/chart.js';
+import { postkitChartRecipe } from './chart/chart.recipe.js';
+import { Video } from './video/video.js';
+import { postkitVideoRecipe } from './video/video.recipe.js';
+
 /*
  * Both renderers must emit the same anatomy (03 §5.1): the same parts, nested
  * the same way, with the same `data-postkit-*` and theme-variant state
@@ -692,4 +714,305 @@ describe('Postkit anatomy parity between @postkit/react and @postkit/chakra', ()
       },
     );
   });
+});
+
+describe('Standalone component anatomy parity (03 step 7)', () => {
+  const partTree = (nodes: readonly AnatomyNode[]): unknown[] =>
+    nodes.map((node) =>
+      node.children.length
+        ? {
+            [node.attributes['data-postkit-part'] ?? '']: partTree(
+              node.children,
+            ),
+          }
+        : node.attributes['data-postkit-part'],
+    );
+
+  const cases = [
+    {
+      name: 'AppearsOn',
+      definition: appearsOnDefinition,
+      headless: Headless.AppearsOn,
+      chakra: AppearsOn,
+      recipe: postkitAppearsOnRecipe,
+      variants: { presentation: [undefined, 'inline', 'list', 'badges'] },
+      shapes: [
+        { items: '[{"service":"bluesky","url":"https://bsky.app/1"}]' },
+        {
+          showDates: true,
+          items: [
+            {
+              service: 'bluesky',
+              url: 'https://bsky.app/1',
+              publishedAt: '2026-01-02',
+              status: 'pending',
+            },
+            { service: 'medium', url: 'https://medium.com/1', label: 'M' },
+          ],
+        },
+      ],
+      tree: [
+        {
+          root: [
+            'label',
+            {
+              list: [
+                { item: [{ link: ['icon'] }, 'date', 'status'] },
+                { item: [{ link: ['icon'] }] },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Audio',
+      definition: audioDefinition,
+      headless: Headless.Audio,
+      chakra: Audio,
+      recipe: postkitAudioRecipe,
+      variants: {},
+      shapes: [
+        { src: '/a.mp3', title: 'A' },
+        { src: '/a.mp3', title: 'A', caption: 'Caption', preload: 'none' },
+      ],
+      tree: [{ root: ['title', { player: ['fallback'] }, 'caption'] }],
+    },
+    {
+      name: 'AuthorCard',
+      definition: authorCardDefinition,
+      headless: Headless.AuthorCard,
+      chakra: AuthorCard,
+      recipe: postkitAuthorCardRecipe,
+      variants: { presentation: [undefined, 'card', 'compact', 'inline'] },
+      shapes: [
+        { name: 'Ada', avatarSrc: '/ada.jpg' },
+        { name: 'Ada', children: 'Bio' },
+        {
+          name: 'Ada',
+          role: 'Writer',
+          href: '/ada',
+          bio: 'Bio',
+          links: '[{"label":"Site","href":"/s","rel":"me"}]',
+        },
+      ],
+      tree: [
+        {
+          root: [
+            'avatar',
+            {
+              content: [
+                { header: [{ name: ['nameLink'] }, 'role'] },
+                'bio',
+                { links: ['link'] },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'CallToAction',
+      definition: callToActionDefinition,
+      headless: Headless.CallToAction,
+      chakra: CallToAction,
+      recipe: postkitCallToActionRecipe,
+      variants: { alignment: [undefined, 'start', 'center'] },
+      shapes: [
+        { title: 'T' },
+        { title: 'T', children: 'Body', primaryLabel: 'P' },
+        {
+          title: 'T',
+          eyebrow: 'E',
+          description: 'D',
+          primaryLabel: 'P',
+          primaryHref: '/p',
+          secondaryLabel: 'S',
+          secondaryHref: '/s',
+        },
+      ],
+      tree: [
+        {
+          root: [
+            { content: ['eyebrow', 'title', 'body'] },
+            { actions: ['primaryAction', 'secondaryAction'] },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Chart',
+      definition: chartDefinition,
+      headless: Headless.Chart,
+      chakra: Chart,
+      recipe: postkitChartRecipe,
+      variants: {},
+      shapes: [
+        { title: 'T', data: '[]' },
+        { title: 'T', data: [{ label: 'Jan', a: 1 }], type: 'line' },
+        {
+          title: 'T',
+          description: 'D',
+          showTable: 'true',
+          data: '[{"label":"Jan","a":1,"b":3},{"label":"Feb","a":2,"b":5}]',
+        },
+      ],
+      tree: [
+        {
+          root: [
+            'title',
+            'description',
+            {
+              legend: [
+                { legendItem: ['legendSwatch'] },
+                { legendItem: ['legendSwatch'] },
+              ],
+            },
+            {
+              plot: [
+                {
+                  svg: [
+                    ...Array.from({ length: 3 }, () => [
+                      'gridLine',
+                      'axisLabel',
+                    ]).flat(),
+                    'axisLabel',
+                    'axisLabel',
+                    'seriesMark',
+                    'seriesMark',
+                    'seriesMark',
+                    'seriesMark',
+                  ],
+                },
+              ],
+            },
+            {
+              tableContainer: [
+                {
+                  table: [
+                    'headerCell',
+                    'headerCell',
+                    'headerCell',
+                    'rowHeader',
+                    'dataCell',
+                    'dataCell',
+                    'rowHeader',
+                    'dataCell',
+                    'dataCell',
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Video',
+      definition: videoDefinition,
+      headless: Headless.Video,
+      chakra: Video,
+      recipe: postkitVideoRecipe,
+      variants: {},
+      shapes: [
+        { src: '/v.mp4', title: 'V' },
+        {
+          src: '/v.mp4',
+          title: 'V',
+          poster: '/p.jpg',
+          caption: 'C',
+          aspectRatio: '4 / 3',
+          tracks: [{ src: '/t.vtt', srcLang: 'en', label: 'English' }],
+        },
+      ],
+      tree: [{ root: [{ frame: [{ player: ['fallback'] }] }, 'caption'] }],
+    },
+  ] as const;
+
+  it.each(cases)(
+    '$name emits the same anatomy for every theme variant and content shape',
+    ({ name, definition, headless, chakra, variants: extra, shapes }) => {
+      const lists = [sizes, variants, ...Object.values(extra)] as const;
+      const names = ['size', 'variant', ...Object.keys(extra)];
+      for (const values of combinations<string | undefined>(...lists)) {
+        const themed = Object.fromEntries(
+          names.map((prop, index) => [prop, values[index]]),
+        );
+        // Every content shape with the defaults, the full matrix with the last.
+        const all = values.every((value) => value === undefined);
+        for (const shape of all ? shapes : shapes.slice(-1)) {
+          const [root] = expectSameAnatomy(
+            definition,
+            headless as ComponentType<never>,
+            chakra as ComponentType<never>,
+            { ...shape, ...themed },
+          );
+          const expected = Object.fromEntries(
+            names.map((prop) => [
+              Headless.postkitStateAttributeName(prop),
+              themed[prop] ??
+                (definition.props as AnyPostkitComponentDefinition['props'])[
+                  prop
+                ]?.default,
+            ]),
+          );
+          expect(root?.attributes).toMatchObject({
+            'data-postkit-component': name,
+            'data-postkit-part': 'root',
+            ...expected,
+          });
+        }
+      }
+    },
+    60_000,
+  );
+
+  it.each(cases)(
+    '$name emits its full part tree',
+    ({ definition, headless, chakra, shapes, tree }) => {
+      const anatomy = expectSameAnatomy(
+        definition,
+        headless as ComponentType<never>,
+        chakra as ComponentType<never>,
+        shapes[shapes.length - 1] as Record<string, unknown>,
+      );
+      expect(partTree(anatomy)).toEqual(tree);
+    },
+  );
+
+  it.each(cases)(
+    '$name matches unstyled and without a registered recipe',
+    ({ definition, headless, chakra, shapes }) => {
+      const [root] = expectSameAnatomy(
+        definition,
+        headless as ComponentType<never>,
+        chakra as ComponentType<never>,
+        { ...shapes[0], unstyled: true },
+      );
+      expect(root?.attributes['data-postkit-unstyled']).toBe('');
+      expectSameAnatomy(
+        definition,
+        headless as ComponentType<never>,
+        chakra as ComponentType<never>,
+        shapes[0] as Record<string, unknown>,
+        defaultSystem,
+      );
+    },
+  );
+
+  it.each(cases)(
+    "$name's recipe slots and defaults come from its definition (D12)",
+    ({ definition, recipe }) => {
+      expect(recipe.slots).toEqual(definition.slots);
+      expect(recipe.defaultVariants).toEqual(
+        Object.fromEntries(
+          definition.themeVariants.map((name) => [
+            name,
+            (definition.props as AnyPostkitComponentDefinition['props'])[name]
+              ?.default,
+          ]),
+        ),
+      );
+    },
+  );
 });

@@ -29,23 +29,23 @@ export type {
 import {
   postkitAudioRecipe,
   postkitAudioSlots,
-} from './recipes/audio.recipe.js';
+} from '../components/audio/audio.recipe.js';
 import {
   postkitAppearsOnRecipe,
   postkitAppearsOnSlots,
-} from './recipes/appears-on.recipe.js';
+} from '../components/appears-on/appears-on.recipe.js';
 import {
   postkitCarouselRecipe,
   postkitCarouselSlots,
-} from './recipes/carousel.recipe.js';
+} from '../components/carousel/carousel.recipe.js';
 import {
   postkitAuthorCardRecipe,
   postkitAuthorCardSlots,
-} from './recipes/author-card.recipe.js';
+} from '../components/author-card/author-card.recipe.js';
 import {
   postkitCallToActionRecipe,
   postkitCallToActionSlots,
-} from './recipes/call-to-action.recipe.js';
+} from '../components/call-to-action/call-to-action.recipe.js';
 import {
   postkitCardGridRecipe,
   postkitCardGridSlots,
@@ -73,7 +73,7 @@ import {
 import {
   postkitChartRecipe,
   postkitChartSlots,
-} from './recipes/chart.recipe.js';
+} from '../components/chart/chart.recipe.js';
 import {
   postkitFigureRecipe,
   postkitFigureSlots,
@@ -81,11 +81,11 @@ import {
 import {
   postkitLinkPreviewRecipe,
   postkitLinkPreviewSlots,
-} from './recipes/link-preview.recipe.js';
+} from '../components/link-preview/link-preview.recipe.js';
 import {
   postkitNewsletterSignupRecipe,
   postkitNewsletterSignupSlots,
-} from './recipes/newsletter-signup.recipe.js';
+} from '../components/newsletter-signup/newsletter-signup.recipe.js';
 import {
   postkitProseRecipe,
   postkitProseSlots,
@@ -93,15 +93,15 @@ import {
 import {
   postkitShareActionsRecipe,
   postkitShareActionsSlots,
-} from './recipes/share-actions.recipe.js';
+} from '../components/share-actions/share-actions.recipe.js';
 import {
   postkitSocialPostRecipe,
   postkitSocialPostSlots,
-} from './recipes/social-post.recipe.js';
+} from '../components/social-post/social-post.recipe.js';
 import {
   postkitVideoRecipe,
   postkitVideoSlots,
-} from './recipes/video.recipe.js';
+} from '../components/video/video.recipe.js';
 import {
   postkitCodeBlockSlots,
   postkitStandaloneCodeBlockRecipe,

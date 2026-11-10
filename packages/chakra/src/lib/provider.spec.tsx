@@ -15,10 +15,10 @@ import {
 } from '@chakra-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { LinkPreview } from './components/link-preview.js';
-import { NewsletterSignup } from './components/newsletter-signup.js';
-import { ShareActions } from './components/share-actions.js';
-import { SocialPost } from './components/social-post.js';
+import { LinkPreview } from '../components/link-preview/link-preview.js';
+import { NewsletterSignup } from '../components/newsletter-signup/newsletter-signup.js';
+import { ShareActions } from '../components/share-actions/share-actions.js';
+import { SocialPost } from '../components/social-post/social-post.js';
 import { CodeBlock } from '../components/code-block/code-block.js';
 import { PostkitProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';

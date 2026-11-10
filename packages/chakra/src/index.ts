@@ -3,8 +3,8 @@ export {
   AppearsOn,
   type AppearsOnProps,
   type SyndicationReference,
-} from './lib/components/appears-on.js';
-export { Audio, type AudioProps } from './lib/components/audio.js';
+} from './components/appears-on/appears-on.js';
+export { Audio, type AudioProps } from './components/audio/audio.js';
 export { Aside, type AsideProps } from './components/aside/aside.js';
 export { Callout, type CalloutProps } from './components/callout/callout.js';
 export {
@@ -61,7 +61,7 @@ export {
   AuthorCard,
   type AuthorCardProps,
   type AuthorLink,
-} from './lib/components/author-card.js';
+} from './components/author-card/author-card.js';
 export {
   CodeBlock,
   type CodeBlockProps,
@@ -209,28 +209,28 @@ export {
 export {
   CallToAction,
   type CallToActionProps,
-} from './lib/components/call-to-action.js';
+} from './components/call-to-action/call-to-action.js';
 export {
   Carousel,
   type CarouselItem,
   type CarouselProps,
-} from './lib/components/carousel.js';
+} from './components/carousel/carousel.js';
 export {
   Chart,
   type ChartDatum,
   type ChartProps,
   type ChartSeries,
-} from './lib/components/chart.js';
+} from './components/chart/chart.js';
 export { Figure, type FigureProps } from './components/figure/figure.js';
 export {
   LinkPreview,
   type LinkPreviewPresentation,
   type LinkPreviewProps,
-} from './lib/components/link-preview.js';
+} from './components/link-preview/link-preview.js';
 export {
   NewsletterSignup,
   type NewsletterSignupProps,
-} from './lib/components/newsletter-signup.js';
+} from './components/newsletter-signup/newsletter-signup.js';
 export {
   createPostkitProseLink,
   Prose,
@@ -243,18 +243,18 @@ export {
 export {
   ShareActions,
   type ShareActionsProps,
-} from './lib/components/share-actions.js';
+} from './components/share-actions/share-actions.js';
 export {
   SocialPost,
   type SocialPostProps,
   type SocialPostResolution,
   type SocialPostSnapshotInfo,
-} from './lib/components/social-post.js';
+} from './components/social-post/social-post.js';
 export {
   Video,
   type VideoProps,
   type VideoTrack,
-} from './lib/components/video.js';
+} from './components/video/video.js';
 export {
   POSTKIT_COMPONENT_CATALOG_VERSION,
   postkitComponentCatalog,
@@ -343,32 +343,32 @@ export {
   postkitAppearsOnRecipe,
   postkitAppearsOnSlots,
   type PostkitAppearsOnSlot,
-} from './lib/recipes/appears-on.recipe.js';
+} from './components/appears-on/appears-on.recipe.js';
 export {
   postkitAudioRecipe,
   postkitAudioSlots,
   type PostkitAudioSlot,
-} from './lib/recipes/audio.recipe.js';
+} from './components/audio/audio.recipe.js';
 export {
   postkitAuthorCardRecipe,
   postkitAuthorCardSlots,
   type PostkitAuthorCardSlot,
-} from './lib/recipes/author-card.recipe.js';
+} from './components/author-card/author-card.recipe.js';
 export {
   postkitCallToActionRecipe,
   postkitCallToActionSlots,
   type PostkitCallToActionSlot,
-} from './lib/recipes/call-to-action.recipe.js';
+} from './components/call-to-action/call-to-action.recipe.js';
 export {
   postkitCarouselRecipe,
   postkitCarouselSlots,
   type PostkitCarouselSlot,
-} from './lib/recipes/carousel.recipe.js';
+} from './components/carousel/carousel.recipe.js';
 export {
   postkitChartRecipe,
   postkitChartSlots,
   type PostkitChartSlot,
-} from './lib/recipes/chart.recipe.js';
+} from './components/chart/chart.recipe.js';
 export {
   postkitFigureRecipe,
   postkitFigureSlots,
@@ -378,12 +378,12 @@ export {
   postkitLinkPreviewRecipe,
   postkitLinkPreviewSlots,
   type PostkitLinkPreviewSlot,
-} from './lib/recipes/link-preview.recipe.js';
+} from './components/link-preview/link-preview.recipe.js';
 export {
   postkitNewsletterSignupRecipe,
   postkitNewsletterSignupSlots,
   type PostkitNewsletterSignupSlot,
-} from './lib/recipes/newsletter-signup.recipe.js';
+} from './components/newsletter-signup/newsletter-signup.recipe.js';
 export {
   postkitProseListRhythm,
   postkitProseRecipe,
@@ -395,12 +395,12 @@ export {
   postkitShareActionsRecipe,
   postkitShareActionsSlots,
   type PostkitShareActionsSlot,
-} from './lib/recipes/share-actions.recipe.js';
+} from './components/share-actions/share-actions.recipe.js';
 export {
   postkitSocialPostRecipe,
   postkitSocialPostSlots,
   type PostkitSocialPostSlot,
-} from './lib/recipes/social-post.recipe.js';
+} from './components/social-post/social-post.recipe.js';
 export type { PostkitSlotStyles } from './lib/recipes/types.js';
 export {
   postkitChakraView,
@@ -415,7 +415,7 @@ export {
   postkitVideoRecipe,
   postkitVideoSlots,
   type PostkitVideoSlot,
-} from './lib/recipes/video.recipe.js';
+} from './components/video/video.recipe.js';
 export {
   createPostkitTheme,
   createPostkitSystem,

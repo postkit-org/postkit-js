@@ -1,46 +1,60 @@
 import { postkitBuiltInDefinitions } from '@postkit/core/components';
 
 import { postkitDefaultTheme, postkitRecipeKeys } from '../theme.js';
-import { postkitAudioRecipe, postkitAudioSlots } from './audio.recipe.js';
+import {
+  postkitAudioRecipe,
+  postkitAudioSlots,
+} from '../../components/audio/audio.recipe.js';
 import {
   postkitAuthorCardRecipe,
   postkitAuthorCardSlots,
-} from './author-card.recipe.js';
+} from '../../components/author-card/author-card.recipe.js';
 import {
   postkitCallToActionRecipe,
   postkitCallToActionSlots,
-} from './call-to-action.recipe.js';
+} from '../../components/call-to-action/call-to-action.recipe.js';
 import {
   postkitCarouselRecipe,
   postkitCarouselSlots,
-} from './carousel.recipe.js';
-import { postkitChartRecipe, postkitChartSlots } from './chart.recipe.js';
+} from '../../components/carousel/carousel.recipe.js';
+import {
+  postkitChartRecipe,
+  postkitChartSlots,
+} from '../../components/chart/chart.recipe.js';
+import {
+  postkitLinkPreviewRecipe,
+  postkitLinkPreviewSlots,
+} from '../../components/link-preview/link-preview.recipe.js';
+import {
+  postkitNewsletterSignupRecipe,
+  postkitNewsletterSignupSlots,
+} from '../../components/newsletter-signup/newsletter-signup.recipe.js';
+import {
+  postkitShareActionsRecipe,
+  postkitShareActionsSlots,
+} from '../../components/share-actions/share-actions.recipe.js';
+import {
+  postkitSocialPostRecipe,
+  postkitSocialPostSlots,
+} from '../../components/social-post/social-post.recipe.js';
+import {
+  postkitVideoRecipe,
+  postkitVideoSlots,
+} from '../../components/video/video.recipe.js';
+import {
+  postkitAppearsOnRecipe,
+  postkitAppearsOnSlots,
+} from '../../components/appears-on/appears-on.recipe.js';
 import {
   postkitFigureRecipe,
   postkitFigureSlots,
 } from '../../components/figure/figure.recipe.js';
-import {
-  postkitLinkPreviewRecipe,
-  postkitLinkPreviewSlots,
-} from './link-preview.recipe.js';
-import {
-  postkitNewsletterSignupRecipe,
-  postkitNewsletterSignupSlots,
-} from './newsletter-signup.recipe.js';
 import {
   postkitProseListRhythm,
   postkitProseRecipe,
   postkitProseRhythm,
   postkitProseSlots,
 } from './prose.recipe.js';
-import {
-  postkitShareActionsRecipe,
-  postkitShareActionsSlots,
-} from './share-actions.recipe.js';
-import {
-  postkitSocialPostRecipe,
-  postkitSocialPostSlots,
-} from './social-post.recipe.js';
 import {
   postkitCodeBlockRecipe,
   postkitCodeBlockSlots,
@@ -56,7 +70,6 @@ import {
   postkitTerminalRecipe,
   postkitTerminalSlots,
 } from '../../components/terminal/terminal.recipe.js';
-import { postkitVideoRecipe, postkitVideoSlots } from './video.recipe.js';
 
 describe('Postkit slot recipes', () => {
   it.each([
@@ -178,10 +191,6 @@ describe('Postkit slot recipes', () => {
     });
   });
 });
-import {
-  postkitAppearsOnRecipe,
-  postkitAppearsOnSlots,
-} from './appears-on.recipe.js';
 
 describe('D12: subtle is the default variant', () => {
   // Aside shares the Callout recipe, so it has no recipe key of its own.

@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 
 import { PostkitProvider } from '../provider.js';
 import { postkitDefaultTheme } from '../theme.js';
-import { Chart } from './chart.js';
+import { Chart } from '../../components/chart/chart.js';
 import { postkitProseComponents } from './prose.js';
 import { CodeBlock } from '../../components/code-block/code-block.js';
 import { CodeGroup } from '../../components/code-group/code-group.js';

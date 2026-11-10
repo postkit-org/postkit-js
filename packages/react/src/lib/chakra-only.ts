@@ -14,6 +14,11 @@ export const chakraOnly = Object.freeze([
   'CodeBlock',
   'CodeGroup',
   'Poll',
+  'Carousel',
+  'LinkPreview',
+  'NewsletterSignup',
+  'ShareActions',
+  'SocialPost',
 ] as const);
 
 /** A built-in component that only `@postkit/chakra` renders today. */
