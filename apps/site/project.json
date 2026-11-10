@@ -12,7 +12,8 @@
           "projects": ["@postkit/content"],
           "target": "build"
         },
-        "feeds"
+        "feeds",
+        "icons"
       ]
     },
     "feeds": {
@@ -37,8 +38,31 @@
         }
       }
     },
+    "icons": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/build-icons.mts",
+        "{workspaceRoot}/docs/design/handoff/assets/brand/favicon.svg",
+        "^production",
+        {
+          "externalDependencies": ["sharp", "jiti"]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/public/favicon.svg",
+        "{projectRoot}/public/favicon.ico",
+        "{projectRoot}/public/apple-touch-icon.png",
+        "{projectRoot}/public/icon-192.png",
+        "{projectRoot}/public/icon-512.png",
+        "{projectRoot}/public/site.webmanifest"
+      ],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-icons.mts"
+      }
+    },
     "build": {
-      "dependsOn": ["^build", "feeds"],
+      "dependsOn": ["^build", "feeds", "icons"],
       "inputs": [
         "default",
         "^default",
