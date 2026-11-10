@@ -1,364 +1,500 @@
+import { Box, chakra, Flex, Grid, Link as ChakraLink } from '@chakra-ui/react';
 import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Link as ChakraLink,
-  SimpleGrid,
-  Stack,
-  Table,
-  Text,
-} from '@chakra-ui/react';
-import { CodeBlock, type PostkitComponentName } from '@postkit/chakra';
+  createPostkitRemarkPlugins,
+  type PostkitComponentName,
+} from '@postkit/chakra';
+import * as postkitEmail from '@postkit/email';
+import type { ComponentAnatomyLayer } from '@postkit/content';
+import { allComponentPages } from 'content-collections';
 import type {
   GetStaticPaths,
   GetStaticProps,
   InferGetStaticPropsType,
 } from 'next';
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
 import NextLink from 'next/link';
+import { useState } from 'react';
+import { Schema } from 'react-structured';
 
-import { ComponentPreview } from '../../components/component-preview';
-import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
+import { AnatomyDiagram } from '../../components/anatomy-diagram';
+import { componentPreviewSamples } from '../../components/component-preview';
+import { ComponentBadges } from '../../components/components/component-badges';
+import { ComponentTile } from '../../components/components/component-tile';
+import { PageSection } from '../../components/components/page-section';
+import { PreviewPanel } from '../../components/components/preview-controls';
+import { PropsTable } from '../../components/components/props-table';
+import { RenderersTable } from '../../components/components/renderers-table';
+import { UsagePanel } from '../../components/components/usage-panel';
 import {
-  componentEntries,
+  usageSource,
+  type UsageSyntax,
+} from '../../components/components/usage-source';
+import {
+  absoluteUrl,
+  BreadcrumbJsonLd,
+  MdxContent,
+  PageContainer,
+  PageMeta,
+  Toc,
+  TwoToneHeading,
+  type TocHeading,
+} from '../../components/layout';
+import { componentPropDefault } from '../../lib/component-defaults';
+import { getComponentPage } from '../../lib/component-pages';
+import {
   componentNameToSlug,
+  componentParts,
+  getComponentByName,
   getComponentBySlug,
+  getComponentKit,
+  orderedComponentEntries,
+  previewControls,
+  rendererSupport,
+  type RendererSupportRow,
 } from '../../lib/components';
+import { externalLinks } from '../../lib/site-sections';
+
+/** A section written in the component's Markdown file: its grey line and the rest. */
+interface BodySection {
+  readonly quiet: string | null;
+  readonly source: MDXRemoteSerializeResult | null;
+}
 
 interface ComponentPageProps {
   readonly name: PostkitComponentName;
+  readonly tagline: string;
+  readonly layers: readonly ComponentAnatomyLayer[] | null;
+  readonly related: readonly PostkitComponentName[];
+  readonly usage: BodySection | null;
+  readonly theming: BodySection | null;
+  readonly accessibility: BodySection | null;
+  readonly renderers: readonly RendererSupportRow[];
+  /** The content file's path under `libs/content/components`, for "Edit this page". */
+  readonly contentFile: string | null;
 }
 
-const variants = ['outline', 'subtle', 'plain'] as const;
-const sizes = ['sm', 'md', 'lg'] as const;
+interface ComponentPageParams extends Record<string, string> {
+  readonly slug: string;
+}
 
-export const getStaticPaths: GetStaticPaths = async () => ({
+export const getStaticPaths: GetStaticPaths<
+  ComponentPageParams
+> = async () => ({
   fallback: false,
-  paths: componentEntries.map((component) => ({
+  paths: orderedComponentEntries.map((component) => ({
     params: { slug: componentNameToSlug(component.name) },
   })),
 });
 
-export const getStaticProps: GetStaticProps<ComponentPageProps> = async ({
-  params,
-}) => {
-  const component = getComponentBySlug(String(params?.slug ?? ''));
+/**
+ * The body's `## Heading` sections, keyed by lower-cased heading. Each section's first
+ * paragraph is the heading's grey half (the boards' "Usage. Writers use it however they
+ * already write."); the rest renders under the section's own content.
+ */
+function splitBody(
+  body: string,
+): Map<string, { quiet: string | null; rest: string }> {
+  const sections = new Map<string, { quiet: string | null; rest: string }>();
+  const parts = body.split(/^##[ \t]+(.+?)[ \t]*$/m);
 
-  if (!component) return { notFound: true };
-  return { props: { name: component.name } };
+  for (let index = 1; index < parts.length; index += 2) {
+    const heading = parts[index].trim().toLowerCase();
+    const content = (parts[index + 1] ?? '').trim();
+    const [first = '', ...rest] = content.split(/\n\s*\n/);
+    const isPlainParagraph =
+      first !== '' && !/^([-*+>#|`]|\d+\.|<|:::)/.test(first);
+    sections.set(heading, {
+      quiet: isPlainParagraph ? first.replace(/\s+/g, ' ').trim() : null,
+      rest: (isPlainParagraph ? rest.join('\n\n') : content).trim(),
+    });
+  }
+  return sections;
+}
+
+async function bodySection(
+  sections: Map<string, { quiet: string | null; rest: string }>,
+  heading: string,
+): Promise<BodySection | null> {
+  const section = sections.get(heading);
+  if (!section) return null;
+  return {
+    quiet: section.quiet,
+    source: section.rest
+      ? await serialize(section.rest, {
+          mdxOptions: { remarkPlugins: createPostkitRemarkPlugins() },
+        })
+      : null,
+  };
+}
+
+export const getStaticProps: GetStaticProps<
+  ComponentPageProps,
+  ComponentPageParams
+> = async ({ params }) => {
+  const slug = params?.slug ?? '';
+  const component = getComponentBySlug(slug);
+  const page = getComponentPage(slug);
+  if (!component || !page) return { notFound: true };
+
+  // A ratio such as "4.5:1" reads as a `:1` text directive under the directive parser and
+  // renders as an empty block, so escape that colon (outside code spans).
+  const body = page.body
+    .split(/(`[^`\n]*`)/)
+    .map((part, index) =>
+      index % 2 ? part : part.replace(/(\d):(\d)/g, '$1\\:$2'),
+    )
+    .join('');
+  const sections = splitBody(body);
+  const kit = getComponentKit(component);
+  // Related: the content file's list, else the component's kit-mates (up to three).
+  const related = page.related.length
+    ? page.related
+    : kit.components
+        .filter((entry) => entry.name !== component.name)
+        .slice(0, 3)
+        .map((entry) => entry.name);
+  // 06 PK-032 stand-in for 03 step 9: email support is what `@postkit/email` exports.
+  const emailComponentNames = Object.keys(postkitEmail);
+  const contentFile =
+    allComponentPages.find((entry) => entry.slug === slug)?._meta.filePath ??
+    null;
+
+  return {
+    props: {
+      name: component.name,
+      tagline: page.tagline,
+      layers: page.anatomy?.layers ?? null,
+      related: related.filter(
+        (name): name is PostkitComponentName => !!getComponentByName(name),
+      ),
+      usage: await bodySection(sections, 'usage'),
+      theming: await bodySection(sections, 'theming'),
+      accessibility: await bodySection(sections, 'accessibility'),
+      renderers: rendererSupport(component, emailComponentNames),
+      contentFile,
+    },
+  };
 };
 
-function sectionHeading(eyebrow: string, title: string, description: string) {
-  return (
-    <Box maxW="3xl">
-      <Text
-        color="accent"
-        fontFamily="mono"
-        fontSize="xs"
-        fontWeight="700"
-        letterSpacing="0.1em"
-        textTransform="uppercase"
-      >
-        {eyebrow}
-      </Text>
-      <Heading
-        as="h2"
-        fontFamily="heading"
-        fontSize={{ base: '3xl', md: '4xl' }}
-        fontWeight="500"
-        letterSpacing="-0.035em"
-        marginTop="2"
-      >
-        {title}
-      </Heading>
-      <Text color="fg.secondary" lineHeight="1.7" marginTop="3">
-        {description}
-      </Text>
-    </Box>
-  );
-}
+/** The board's list style for the Accessibility notes: hairline rows, no bullets. */
+const ruledList = {
+  '& ul': {
+    margin: '24px 0 0',
+    padding: 0,
+    listStyleType: 'none',
+  },
+  '& ul > li': {
+    margin: 0,
+    paddingBlock: '12px',
+    borderTopWidth: '1px',
+    borderTopColor: 'border',
+  },
+  '& ul > li:last-child': {
+    borderBottomWidth: '1px',
+    borderBottomColor: 'border',
+  },
+} as const;
+
+const textLink = {
+  color: 'fg',
+  textDecoration: 'none',
+  _hover: { textDecoration: 'underline' },
+} as const;
 
 export default function ComponentPage({
   name,
+  tagline,
+  layers,
+  related,
+  usage,
+  theming,
+  accessibility,
+  renderers,
+  contentFile,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const component = componentEntries.find((entry) => entry.name === name);
+  const component = getComponentByName(name);
+  const controls = component ? previewControls(component) : [];
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      controls.map(({ prop, values: options }) => {
+        const sampled = component
+          ? componentPreviewSamples[component.name].props[prop]
+          : undefined;
+        const fallback = component
+          ? componentPropDefault(component.name, prop)
+          : undefined;
+        const value =
+          typeof sampled === 'string'
+            ? sampled
+            : typeof fallback === 'string'
+              ? fallback
+              : options[0];
+        return [prop, value];
+      }),
+    ),
+  );
+  const [syntax, setSyntax] = useState<UsageSyntax>('mdx');
 
   if (!component) return null;
 
-  const componentIndex = componentEntries.indexOf(component);
-  const previous = componentEntries[componentIndex - 1];
-  const next = componentEntries[componentIndex + 1];
+  const slug = componentNameToSlug(component.name);
+  const path = `/components/${slug}`;
+  const kit = getComponentKit(component);
+  const index = orderedComponentEntries.indexOf(component);
+  const next = orderedComponentEntries[index + 1];
+  // The source shows the controls' values that differ from the documented defaults.
+  const sourceValues = Object.fromEntries(
+    Object.entries(values).filter(
+      ([prop, value]) => componentPropDefault(component.name, prop) !== value,
+    ),
+  );
+  const source = usageSource(component, syntax, sourceValues);
+  const relatedComponents = related.flatMap((relatedName) => {
+    const entry = getComponentByName(relatedName);
+    return entry ? [entry] : [];
+  });
+
+  const headings: TocHeading[] = [
+    { id: 'preview', text: 'Preview' },
+    { id: 'usage', text: 'Usage' },
+    { id: 'props', text: 'Props' },
+    { id: 'anatomy', text: 'Anatomy' },
+    { id: 'renderers', text: 'Renderers' },
+    ...(theming ? [{ id: 'theming', text: 'Theming' }] : []),
+    ...(accessibility ? [{ id: 'accessibility', text: 'Accessibility' }] : []),
+    ...(relatedComponents.length ? [{ id: 'related', text: 'Related' }] : []),
+  ];
 
   return (
     <>
-      <PageMeta title={component.name} description={component.description} />
+      <PageMeta
+        title={component.name}
+        description={`${component.name}: ${tagline}`}
+        path={path}
+      />
       <BreadcrumbJsonLd
         items={[
           { name: 'Components', path: '/components' },
-          {
-            name: component.name,
-            path: `/components/${componentNameToSlug(component.name)}`,
-          },
+          { name: component.name, path },
         ]}
       />
+      <Schema
+        id="component-jsonld"
+        type="SoftwareSourceCode"
+        data={{
+          name: component.name,
+          description: component.description,
+          url: absoluteUrl(path),
+          codeSampleType: 'code snippet',
+          programmingLanguage: 'TypeScript',
+          isPartOf: {
+            '@type': 'SoftwareSourceCode',
+            name: 'Postkit',
+            codeRepository: externalLinks.github,
+          },
+        }}
+      />
 
-      <Container maxW="7xl" paddingBlock={{ base: '10', md: '16' }}>
-        <ChakraLink
-          asChild
-          color="fg.muted"
-          fontFamily="mono"
-          fontSize="xs"
-          fontWeight="700"
-          textDecoration="none"
-          _hover={{ color: 'accent' }}
+      <PageContainer
+        paddingTop={{ base: '48px', md: '88px' }}
+        paddingBottom={{ base: '64px', md: '120px' }}
+      >
+        <Grid
+          templateColumns={{
+            base: 'minmax(0, 1fr)',
+            md: 'minmax(0, 1fr) 168px',
+            lg: 'minmax(0, 800px) 200px',
+          }}
+          justifyContent="space-between"
+          columnGap={{ md: '40px', lg: '64px' }}
+          alignItems="start"
         >
-          <NextLink href="/components">← All components</NextLink>
-        </ChakraLink>
-
-        <SimpleGrid
-          columns={{ base: 1, lg: 2 }}
-          gap={{ base: '10', lg: '16' }}
-          marginTop="8"
-        >
-          <Box>
-            <Text
-              color="accent"
-              fontFamily="mono"
-              fontSize="sm"
-              fontWeight="700"
-              letterSpacing="0.12em"
-              textTransform="uppercase"
+          <Box minWidth="0">
+            <chakra.nav
+              aria-label="Breadcrumb"
+              margin="0 0 18px"
+              fontSize="15px"
             >
-              {component.category}
-            </Text>
-            <Heading
+              <chakra.ol
+                display="flex"
+                flexWrap="wrap"
+                margin="0"
+                padding="0"
+                listStyleType="none"
+                color="fg.muted"
+              >
+                <li>
+                  <ChakraLink asChild {...textLink}>
+                    <NextLink href="/components">Components</NextLink>
+                  </ChakraLink>
+                </li>
+                <li>
+                  <chakra.span aria-hidden="true" paddingInline="0.3em">
+                    /
+                  </chakra.span>
+                  <ChakraLink asChild {...textLink}>
+                    <NextLink href={`/components#${kit.id}`}>
+                      {kit.name}
+                    </NextLink>
+                  </ChakraLink>
+                </li>
+              </chakra.ol>
+            </chakra.nav>
+
+            <TwoToneHeading
               as="h1"
-              fontFamily="heading"
-              fontSize={{ base: '5xl', md: '6xl' }}
-              fontWeight="500"
-              letterSpacing="-0.045em"
-              marginTop="3"
+              textStyle="pageTitle"
+              fontSize="clamp(44px, 5.6vw, 72px)"
+              title={`${component.name}.`}
+              quiet={tagline}
+            />
+            <ComponentBadges component={component} />
+
+            <PreviewPanel
+              component={component}
+              controls={controls}
+              values={values}
+              onChange={(prop, value) =>
+                setValues((current) => ({ ...current, [prop]: value }))
+              }
+            />
+
+            <PageSection
+              id="usage"
+              title="Usage"
+              quiet={usage?.quiet ?? undefined}
             >
-              {component.name}
-            </Heading>
-            <Text
-              color="fg.secondary"
-              fontSize={{ base: 'lg', md: 'xl' }}
-              lineHeight="1.7"
-              marginTop="5"
+              <UsagePanel
+                syntax={syntax}
+                onSyntaxChange={setSyntax}
+                source={source}
+              />
+              {usage?.source ? (
+                <Box marginTop="20px">
+                  <MdxContent source={usage.source} />
+                </Box>
+              ) : null}
+            </PageSection>
+
+            <PageSection
+              id="props"
+              title="Props"
+              quiet="Always in step with the code."
             >
-              {component.description}
-            </Text>
-            <Flex gap="2" marginTop="6" wrap="wrap">
-              <Badge variant="subtle">{component.runtime}</Badge>
-              <Badge colorPalette="green" variant="subtle">
-                React: {component.support.react}
-              </Badge>
-              <Badge variant="outline">Astro: {component.support.astro}</Badge>
+              <PropsTable component={component} />
+            </PageSection>
+
+            <PageSection
+              id="anatomy"
+              title="Anatomy"
+              quiet="Every part is yours to restyle."
+            >
+              <Box marginTop="28px">
+                <AnatomyDiagram
+                  componentName={component.name}
+                  layers={layers ?? undefined}
+                  parts={componentParts(component.name)}
+                />
+              </Box>
+            </PageSection>
+
+            <PageSection
+              id="renderers"
+              title="Renderers"
+              quiet="One component, everywhere you publish."
+            >
+              <RenderersTable rows={renderers} />
+            </PageSection>
+
+            {theming ? (
+              <PageSection
+                id="theming"
+                title="Theming"
+                quiet={theming.quiet ?? undefined}
+              >
+                {theming.source ? (
+                  <Box marginTop="24px">
+                    <MdxContent source={theming.source} />
+                  </Box>
+                ) : null}
+              </PageSection>
+            ) : null}
+
+            {accessibility ? (
+              <PageSection
+                id="accessibility"
+                title="Accessibility"
+                quiet={accessibility.quiet ?? undefined}
+              >
+                {accessibility.source ? (
+                  <Box css={ruledList}>
+                    <MdxContent source={accessibility.source} />
+                  </Box>
+                ) : null}
+              </PageSection>
+            ) : null}
+
+            {relatedComponents.length ? (
+              <PageSection id="related" title="Related">
+                <Grid
+                  as="ul"
+                  margin="24px 0 0"
+                  padding="0"
+                  listStyleType="none"
+                  templateColumns="repeat(auto-fit, minmax(200px, 1fr))"
+                  gap="28px 20px"
+                >
+                  {relatedComponents.map((entry) => (
+                    <chakra.li key={entry.name} minWidth="0">
+                      <ComponentTile component={entry} />
+                    </chakra.li>
+                  ))}
+                </Grid>
+              </PageSection>
+            ) : null}
+
+            <Flex
+              marginTop="72px"
+              paddingTop="20px"
+              borderTopWidth="1px"
+              borderTopColor="border"
+              wrap="wrap"
+              justify="space-between"
+              gap="16px"
+              fontSize="15px"
+            >
+              {contentFile ? (
+                <ChakraLink
+                  href={`${externalLinks.github}/edit/main/libs/content/components/${contentFile}`}
+                  color="fg.muted"
+                  textDecoration="none"
+                  _hover={{ color: 'fg', textDecoration: 'underline' }}
+                >
+                  Edit this page on GitHub
+                </ChakraLink>
+              ) : (
+                <span />
+              )}
+              {next ? (
+                <ChakraLink asChild {...textLink}>
+                  <NextLink
+                    href={`/components/${componentNameToSlug(next.name)}`}
+                  >
+                    Next · {next.name} ›
+                  </NextLink>
+                </ChakraLink>
+              ) : null}
             </Flex>
           </Box>
 
-          <Box
-            bg="bg.subtle"
-            borderColor="border"
-            borderRadius="2xl"
-            borderWidth="1px"
-            minW="0"
-            padding={{ base: '5', md: '8' }}
-          >
-            <Text
-              color="fg.quiet"
-              fontFamily="mono"
-              fontSize="xs"
-              fontWeight="700"
-              marginBottom="6"
-              textTransform="uppercase"
-            >
-              Live preview
-            </Text>
-            <ComponentPreview name={component.name} />
-          </Box>
-        </SimpleGrid>
-      </Container>
-
-      <Box borderBlockColor="border" borderBlockWidth="1px">
-        <Container maxW="7xl" paddingBlock={{ base: '14', md: '20' }}>
-          {sectionHeading(
-            'Presentation',
-            'Variants',
-            'Every component supports the same three visual treatments. Recipe overrides can reshape each one without changing authored content.',
-          )}
-          <SimpleGrid columns={{ base: 1, xl: 3 }} gap="5" marginTop="8">
-            {variants.map((variant) => (
-              <Box
-                bg="bg.subtle"
-                borderColor="border"
-                borderRadius="xl"
-                borderWidth="1px"
-                key={variant}
-                minW="0"
-                padding="5"
-              >
-                <Text
-                  color="fg.muted"
-                  fontFamily="mono"
-                  fontSize="xs"
-                  fontWeight="700"
-                  marginBottom="5"
-                >
-                  variant=&quot;{variant}&quot;
-                </Text>
-                <ComponentPreview
-                  key={`${component.name}-${variant}`}
-                  name={component.name}
-                  size="sm"
-                  variant={variant}
-                />
-              </Box>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </Box>
-
-      <Container maxW="7xl" paddingBlock={{ base: '14', md: '20' }}>
-        <Stack gap={{ base: '16', md: '20' }}>
-          <Box as="section">
-            {sectionHeading(
-              'Density',
-              'Sizes',
-              'Use a shared size vocabulary to fit the component to its surrounding editorial surface.',
-            )}
-            <Stack gap="5" marginTop="8">
-              {sizes.map((size) => (
-                <Box
-                  borderColor="border"
-                  borderRadius="xl"
-                  borderWidth="1px"
-                  key={size}
-                  minW="0"
-                  padding={{ base: '5', md: '7' }}
-                >
-                  <Text
-                    color="fg.muted"
-                    fontFamily="mono"
-                    fontSize="xs"
-                    fontWeight="700"
-                    marginBottom="5"
-                  >
-                    size=&quot;{size}&quot;
-                  </Text>
-                  <ComponentPreview
-                    key={`${component.name}-${size}`}
-                    name={component.name}
-                    size={size}
-                  />
-                </Box>
-              ))}
-            </Stack>
-          </Box>
-
-          <Box as="section">
-            {sectionHeading(
-              'Authoring',
-              'Use it in content',
-              'Postkit supports the same semantic component through MDX and portable Markdown directives.',
-            )}
-            <SimpleGrid columns={{ base: 1, lg: 2 }} gap="5" marginTop="8">
-              <CodeBlock
-                code={component.example.jsx}
-                filename={`${component.name}.mdx`}
-                language="mdx"
-                lineNumbers={false}
-              />
-              <CodeBlock
-                code={component.example.directive}
-                filename="article.md"
-                language="markdown"
-                lineNumbers={false}
-              />
-            </SimpleGrid>
-          </Box>
-
-          <Box as="section">
-            {sectionHeading(
-              'Reference',
-              'Authoring props',
-              'Direct component props take precedence over provider defaults. Presentation props flow through Postkit recipes and the host Chakra theme.',
-            )}
-            <Box
-              borderColor="border"
-              borderRadius="xl"
-              borderWidth="1px"
-              marginTop="8"
-              overflowX="auto"
-            >
-              <Table.Root size="md" variant="line">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeader>Prop</Table.ColumnHeader>
-                    <Table.ColumnHeader>Type</Table.ColumnHeader>
-                    <Table.ColumnHeader>Required</Table.ColumnHeader>
-                    <Table.ColumnHeader>Description</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {Object.entries(component.props).map(([propName, prop]) => (
-                    <Table.Row key={propName}>
-                      <Table.Cell fontFamily="mono" fontWeight="700">
-                        {propName}
-                      </Table.Cell>
-                      <Table.Cell fontFamily="mono" fontSize="sm">
-                        {prop.kind === 'enum'
-                          ? prop.values
-                              ?.map((value) => `'${value}'`)
-                              .join(' | ')
-                          : prop.kind}
-                      </Table.Cell>
-                      <Table.Cell>{prop.required ? 'Yes' : 'No'}</Table.Cell>
-                      <Table.Cell color="fg.secondary" minW="18rem">
-                        {prop.description}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
-            </Box>
-          </Box>
-
-          <Flex
-            align={{ base: 'stretch', sm: 'center' }}
-            borderTopColor="border"
-            borderTopWidth="1px"
-            direction={{ base: 'column', sm: 'row' }}
-            gap="3"
-            justify="space-between"
-            paddingTop="8"
-          >
-            {previous ? (
-              <Button asChild justifyContent="flex-start" variant="ghost">
-                <NextLink
-                  href={`/components/${componentNameToSlug(previous.name)}`}
-                >
-                  ← {previous.name}
-                </NextLink>
-              </Button>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Button asChild justifyContent="flex-end" variant="ghost">
-                <NextLink
-                  href={`/components/${componentNameToSlug(next.name)}`}
-                >
-                  {next.name} →
-                </NextLink>
-              </Button>
-            ) : null}
-          </Flex>
-        </Stack>
-      </Container>
+          <Toc
+            headings={headings}
+            position="sticky"
+            top="calc({sizes.header} + 32px)"
+          />
+        </Grid>
+      </PageContainer>
     </>
   );
 }

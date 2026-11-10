@@ -1,190 +1,48 @@
+import { chakra } from '@chakra-ui/react';
+
+import { ComponentCatalog } from '../../components/components/component-catalog';
 import {
-  Badge,
-  Box,
-  Container,
-  Flex,
-  Heading,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
-import NextLink from 'next/link';
+  BreadcrumbJsonLd,
+  PageContainer,
+  PageMeta,
+  TwoToneHeading,
+} from '../../components/layout';
+import { componentEntries, componentKits } from '../../lib/components';
 
-import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
-import {
-  componentCategoryGroups,
-  componentEntries,
-  componentNameToSlug,
-} from '../../lib/components';
+const lede =
+  'Each one works in MDX and plain Markdown, takes on your site’s design, and holds up in email. Install only the kits you need.';
 
-const stats = [
-  { label: 'Components', value: componentEntries.length },
-  { label: 'Categories', value: componentCategoryGroups.length },
-  { label: 'Built-in variants', value: 3 },
-] as const;
-
+/** `/components` (01 §6.2; SiteComponents, PhoneComponents). Every count is the manifest's. */
 export default function ComponentsPage() {
   return (
     <>
-      <PageMeta
-        title="Components"
-        description="Explore live previews, variants, sizes, authoring syntax, and props for every Postkit publishing component."
-      />
+      <PageMeta title="Components" description={lede} path="/components" />
       <BreadcrumbJsonLd items={[{ name: 'Components', path: '/components' }]} />
 
-      <Box borderBottomColor="border" borderBottomWidth="1px">
-        <Container maxW="7xl" paddingBlock={{ base: '16', md: '24' }}>
-          <SimpleGrid columns={{ base: 1, lg: 2 }} gap="12">
-            <Box maxW="3xl">
-              <Text
-                color="accent"
-                fontFamily="mono"
-                fontSize="sm"
-                fontWeight="700"
-                letterSpacing="0.12em"
-                textTransform="uppercase"
-              >
-                Component library
-              </Text>
-              <Heading
-                as="h1"
-                fontFamily="heading"
-                fontSize={{ base: '5xl', md: '6xl' }}
-                fontWeight="500"
-                letterSpacing="-0.045em"
-                marginTop="3"
-              >
-                Publishing primitives, in the open.
-              </Heading>
-              <Text
-                color="fg.secondary"
-                fontSize={{ base: 'lg', md: 'xl' }}
-                lineHeight="1.7"
-                marginTop="5"
-              >
-                Browse every component in the portable content contract. Each
-                reference includes live examples, visual variants, sizes,
-                authoring syntax, and supported props.
-              </Text>
-            </Box>
+      <PageContainer
+        paddingTop={{ base: '64px', md: '112px' }}
+        paddingBottom={{ base: '64px', md: '120px' }}
+      >
+        <TwoToneHeading
+          as="h1"
+          textStyle="pageTitle"
+          fontSize="clamp(40px, 6vw, 80px)"
+          maxWidth="22ch"
+          title="Components."
+          quiet={`${componentEntries.length} building blocks your writers can use today.`}
+        />
+        <chakra.p
+          margin="24px 0 0"
+          maxWidth="36em"
+          fontSize={{ base: '17px', md: '19px' }}
+          lineHeight="1.55"
+          color="fg.muted"
+        >
+          {lede}
+        </chakra.p>
 
-            <SimpleGrid alignSelf="end" columns={3} gap="3">
-              {stats.map((stat) => (
-                <Box
-                  borderColor="border"
-                  borderRadius="xl"
-                  borderWidth="1px"
-                  key={stat.label}
-                  padding={{ base: '4', md: '5' }}
-                >
-                  <Text
-                    fontFamily="heading"
-                    fontSize={{ base: '2xl', md: '3xl' }}
-                    fontWeight="500"
-                  >
-                    {stat.value}
-                  </Text>
-                  <Text
-                    color="fg.muted"
-                    fontFamily="mono"
-                    fontSize="xs"
-                    marginTop="1"
-                  >
-                    {stat.label}
-                  </Text>
-                </Box>
-              ))}
-            </SimpleGrid>
-          </SimpleGrid>
-        </Container>
-      </Box>
-
-      <Container maxW="7xl" paddingBlock={{ base: '14', md: '20' }}>
-        <Stack gap={{ base: '14', md: '18' }}>
-          {componentCategoryGroups.map((group) => (
-            <Box as="section" key={group.category}>
-              <Flex
-                align="baseline"
-                borderBottomColor="border"
-                borderBottomWidth="1px"
-                justify="space-between"
-                marginBottom="6"
-                paddingBottom="3"
-              >
-                <Heading
-                  as="h2"
-                  fontFamily="heading"
-                  fontSize={{ base: '2xl', md: '3xl' }}
-                  fontWeight="500"
-                >
-                  {group.category}
-                </Heading>
-                <Text color="fg.quiet" fontFamily="mono" fontSize="xs">
-                  {group.components.length.toString().padStart(2, '0')}
-                </Text>
-              </Flex>
-
-              <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="4">
-                {group.components.map((component) => (
-                  <LinkBox
-                    as="article"
-                    bg="bg.subtle"
-                    borderColor="border"
-                    borderRadius="xl"
-                    borderWidth="1px"
-                    key={component.name}
-                    minH="11rem"
-                    padding="6"
-                    transition="border-color 160ms ease, transform 160ms ease, background 160ms ease"
-                    _hover={{
-                      bg: 'bg.hover',
-                      borderColor: 'accent',
-                      transform: 'translateY(-2px)',
-                    }}
-                  >
-                    <Flex align="start" justify="space-between" gap="3">
-                      <Heading
-                        as="h3"
-                        fontFamily="heading"
-                        fontSize="xl"
-                        fontWeight="600"
-                      >
-                        <LinkOverlay asChild>
-                          <NextLink
-                            href={`/components/${componentNameToSlug(component.name)}`}
-                          >
-                            {component.name}
-                          </NextLink>
-                        </LinkOverlay>
-                      </Heading>
-                      <Badge variant="subtle">{component.runtime}</Badge>
-                    </Flex>
-                    <Text
-                      color="fg.secondary"
-                      fontSize="sm"
-                      lineHeight="1.7"
-                      marginTop="4"
-                    >
-                      {component.description}
-                    </Text>
-                    <Text
-                      color="accent"
-                      fontFamily="mono"
-                      fontSize="xs"
-                      fontWeight="700"
-                      marginTop="5"
-                    >
-                      Preview component →
-                    </Text>
-                  </LinkBox>
-                ))}
-              </SimpleGrid>
-            </Box>
-          ))}
-        </Stack>
-      </Container>
+        <ComponentCatalog kits={componentKits} />
+      </PageContainer>
     </>
   );
 }

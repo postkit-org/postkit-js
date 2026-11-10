@@ -47,6 +47,9 @@
   ],
   "references": [
     {
+      "path": "../../packages/email"
+    },
+    {
       "path": "../../libs/site-theme"
     },
     {
