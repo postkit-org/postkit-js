@@ -456,7 +456,8 @@ export function CodeGroup({
         setSelected(Number(nextValue))
       }
       size={size ?? 'md'}
-      variant={variant ?? 'outline'}
+      // D12: subtle is the default variant; it matches the recipe's defaultVariants.
+      variant={variant ?? 'subtle'}
       data-postkit-component="CodeGroup"
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}

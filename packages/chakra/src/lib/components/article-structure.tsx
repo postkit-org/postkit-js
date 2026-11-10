@@ -404,7 +404,8 @@ export function Tabs({
         setSelected(nextValue)
       }
       size={size ?? 'md'}
-      variant={variant ?? 'outline'}
+      // D12: subtle is the default variant; it matches the recipe's defaultVariants.
+      variant={variant ?? 'subtle'}
       data-postkit-component="Tabs"
       className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
       css={[styles.root, slotStyles?.root, rootCss]}
