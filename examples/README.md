@@ -7,6 +7,7 @@ silently invalidate the documented integrations.
 | Example                                        | What it demonstrates                                                                      | Validation                                    |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------- |
 | [`astro`](astro)                               | A complete Astro MDX site, custom Chakra system module, and selective hydration           | Production build and rendered HTML assertions |
+| [`behaviors`](behaviors)                       | Tabs and embed consent from `@postkit/core/behaviors`, driven with plain DOM              | TypeScript                                    |
 | [`component-definition`](component-definition) | A custom component defined with `@postkit/core/components`, and the types derived from it | TypeScript                                    |
 | [`email`](email)                               | Chakra Email rendering with Postkit's email-safe component fallbacks                      | TypeScript                                    |
 | [`next`](next)                                 | Next.js's native `mdx-components.tsx` entry point                                         | TypeScript                                    |

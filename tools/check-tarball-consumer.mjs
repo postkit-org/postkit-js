@@ -110,6 +110,8 @@ if (chakraManifest.version !== '3.29.0') {
 const packages = await Promise.all([
   import('@postkit/core'),
   import('@postkit/core/components'),
+  import('@postkit/core/behaviors'),
+  import('@postkit/core/behaviors/testing'),
   import('@postkit/unfurl'),
   import('@postkit/chakra'),
   import('@postkit/chakra/theme'),
@@ -126,6 +128,51 @@ if (packages.some((entry) => Object.keys(entry).length === 0)) {
   throw new Error('A Postkit package exported no public members.');
 }
 console.log('Postkit tarball runtime entry points loaded with Chakra UI 3.29.0.');
+
+// Behaviours run framework-free on the host's (Chakra's) single Zag copy.
+const behaviors = await import('@postkit/core/behaviors');
+const tabs = behaviors.createTabs({ id: 'smoke', values: ['a', 'b'], initialIndex: '1' });
+const consent = behaviors.createEmbedConsent();
+if (tabs.api.value !== 'b' || consent.api.shouldRenderFrame !== false) {
+  throw new Error('@postkit/core/behaviors did not configure its behaviours.');
+}
+const { createRequire } = await import('node:module');
+const requireFromCore = createRequire(
+  new URL('./node_modules/@postkit/core/package.json', import.meta.url),
+);
+const requireFromArk = createRequire(
+  new URL('./node_modules/@ark-ui/react/package.json', import.meta.url),
+);
+for (const zagPackage of ['@zag-js/carousel', '@zag-js/tabs', '@zag-js/clipboard', '@zag-js/core']) {
+  const fromCore = requireFromCore.resolve(\`\${zagPackage}/package.json\`);
+  const fromArk = requireFromArk.resolve(\`\${zagPackage}/package.json\`);
+  if (fromCore !== fromArk) {
+    throw new Error(\`\${zagPackage} resolves to two copies: \${fromCore} and \${fromArk}.\`);
+  }
+}
+
+// Core's root and components entries must not load Zag; only /behaviors may.
+const coreDist = new URL('./node_modules/@postkit/core/dist/', import.meta.url);
+async function zagImports(entry, seen = new Set()) {
+  if (seen.has(entry.href)) return [];
+  seen.add(entry.href);
+  const source = await readFile(entry, 'utf8');
+  const found = [];
+  for (const [, specifier] of source.matchAll(/(?:from|import)\\s*['"]([^'"]+)['"]/g)) {
+    if (specifier.startsWith('@zag-js/')) found.push(specifier);
+    else if (specifier.startsWith('.')) {
+      found.push(...(await zagImports(new URL(specifier, entry), seen)));
+    }
+  }
+  return found;
+}
+for (const entry of ['index.js', 'components/index.js']) {
+  const found = await zagImports(new URL(entry, coreDist));
+  if (found.length > 0) {
+    throw new Error(\`@postkit/core/\${entry} imports \${found.join(', ')}.\`);
+  }
+}
+console.log('@postkit/core behaviours share the host Zag copy; the root entry loads no Zag.');
 `,
   );
   run(process.execPath, ['smoke.mjs']);
@@ -138,6 +185,15 @@ import {
   definePostkitComponent,
   type PostkitPropsOf,
 } from '@postkit/core/components';
+import {
+  createCarousel,
+  type CarouselBehaviorApi,
+} from '@postkit/core/behaviors';
+import {
+  tabsBehaviorSpec,
+  type BehaviorDriver,
+  type TabsBehaviorFixture,
+} from '@postkit/core/behaviors/testing';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
@@ -157,6 +213,11 @@ void serializePostkitJson;
 void definePostkitComponent;
 const _calloutProps: PostkitPropsOf<typeof calloutDefinition> = { tone: 'tip' };
 void _calloutProps;
+const _carouselApi: CarouselBehaviorApi = createCarousel({ id: 'c', slideCount: 2 }).api;
+void _carouselApi;
+const _tabsDriver = null as unknown as BehaviorDriver<TabsBehaviorFixture>;
+void tabsBehaviorSpec;
+void _tabsDriver;
 void createLinkResolverRegistry;
 void PostkitProvider;
 void DocumentRenderer;
