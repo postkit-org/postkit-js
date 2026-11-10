@@ -59,10 +59,16 @@
       "path": "../../libs/site-telemetry"
     },
     {
+      "path": "../../libs/site-search"
+    },
+    {
+      "path": "../../libs/site-newsletter"
+    },
+    {
       "path": "../../libs/site-feeds"
     },
     {
-      "path": "../../libs/site-search"
+      "path": "../../libs/site-emails"
     },
     {
       "path": "../../packages/shiki"
