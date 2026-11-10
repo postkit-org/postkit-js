@@ -1,6 +1,5 @@
 import { Box, chakra } from '@chakra-ui/react';
 import { gradients } from '@postkit/site-theme';
-import { version as latestVersion } from '@postkit/chakra/package.json';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -45,6 +44,9 @@ function countWord(count: number): string {
   return numberWords[count] ?? String(count);
 }
 
+/** Inlined at build by next.config.js from the newest released changelog entry (01 §5.2). */
+const latestReleasedVersion = process.env.POSTKIT_LATEST_RELEASE;
+
 const rows: readonly {
   section: SiteSection;
   href: string;
@@ -74,8 +76,10 @@ const rows: readonly {
     section: 'changelog',
     href: '/changelog',
     label: 'Changelog',
-    // The site builds against the packages at this commit, so their version is the latest release.
-    description: `Latest: ${latestVersion}`,
+    // The newest released changelog entry (01 §5.2); upcoming entries never count.
+    description: latestReleasedVersion
+      ? `Latest: ${latestReleasedVersion}`
+      : 'Release notes',
   },
 ];
 

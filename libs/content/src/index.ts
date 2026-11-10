@@ -6,8 +6,16 @@ export {
 } from './lib/shared.js';
 export {
   changelogEntrySchema,
+  changelogStatusSchema,
+  changelogVersionSchema,
+  changelogVersionSlug,
+  compareChangelogVersions,
   createChangelogCollection,
+  getLatestChangelogRelease,
+  getReleasedChangelogEntries,
+  sortChangelogEntries,
   type ChangelogEntryData,
+  type ChangelogStatus,
 } from './lib/changelog.js';
 export {
   createDocsCollection,
