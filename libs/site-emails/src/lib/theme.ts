@@ -62,6 +62,7 @@ export const emailTheme: ThemeInput = {
   fonts: {
     body: EMAIL_FONT_STACK,
     heading: EMAIL_FONT_STACK,
+    mono: tokens.font.mono.value,
   },
   fontWeights: {
     normal: tokens.fontWeight.regular,

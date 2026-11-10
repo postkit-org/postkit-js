@@ -34,6 +34,8 @@ export interface EmailLayoutProps {
   readonly homeUrl: string;
   /** Footer links, in order (04 §3: Unsubscribe before Privacy). */
   readonly footerLinks: readonly FooterLink[];
+  /** "Why you got this". Defaults to the confirm emails' reason. */
+  readonly footerReason?: string;
   readonly children: ReactNode;
 }
 
@@ -48,6 +50,7 @@ export function EmailLayout({
   preheader,
   homeUrl,
   footerLinks,
+  footerReason = FOOTER_REASON,
   children,
 }: EmailLayoutProps) {
   return (
@@ -100,7 +103,7 @@ export function EmailLayout({
               {children}
             </Section>
             <Section pt="24px" px="8px">
-              <FooterText>{FOOTER_REASON}</FooterText>
+              <FooterText>{footerReason}</FooterText>
               <FooterText mt="8px">
                 {footerLinks.map((link, index) => (
                   <Fragment key={link.href}>

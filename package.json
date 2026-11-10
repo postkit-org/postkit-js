@@ -62,6 +62,7 @@
     "site:check": "npm run docs:generate && npm run site:typecheck && nx run-many -t lint build --projects=site",
     "site:typecheck": "nx run-many -t typecheck test lint --projects=site-theme,site-telemetry,site-feeds,site-search,site-emails,site-newsletter",
     "verify:release": "node tools/verify-release.mjs",
+    "release:email": "nx run site:release-email --",
     "release:test": "node --test tools/publication-plan.test.mjs"
   },
   "private": true,

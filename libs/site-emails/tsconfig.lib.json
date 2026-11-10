@@ -13,6 +13,12 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../content/tsconfig.lib.json"
+    },
+    {
+      "path": "../../packages/core/tsconfig.lib.json"
+    },
+    {
       "path": "../site-theme/tsconfig.lib.json"
     },
     {

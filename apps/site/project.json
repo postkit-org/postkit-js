@@ -91,6 +91,15 @@
         }
       }
     },
+    "release-email": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "cache": false,
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/release-email.mts"
+      }
+    },
     "build": {
       "dependsOn": ["^build", "feeds", "icons", "og-images"],
       "inputs": [
