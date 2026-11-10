@@ -15,12 +15,7 @@ import {
 import { ArticleHeader } from '../../components/notes/article-header';
 import { NoteBody } from '../../components/notes/note-body';
 import { NoteEnd } from '../../components/notes/note-end';
-import {
-  hasGradientCover,
-  noteHref,
-  type NoteEntry,
-  type NoteSummary,
-} from '../../lib/notes';
+import { noteHref, type NoteEntry, type NoteSummary } from '../../lib/notes';
 import { getNote, getNotes } from '../../lib/notes.server';
 import { noteShareImage, shareImageMeta } from '../../lib/share-images';
 
@@ -85,9 +80,8 @@ export default function NotePage({
           mainEntityOfPage: absoluteUrl(path),
           datePublished: note.date,
           author: { '@type': 'Person', name: note.author.name },
-          // 01 §7 wants the note's share image here; those arrive in PK-061. Until then an
-          // image cover stands in, and a gradient cover leaves `image` out.
-          ...(hasGradientCover(note) ? {} : { image: absoluteUrl(note.cover) }),
+          // 01 §7: the note's share image (PK-061).
+          image: absoluteUrl(noteShareImage(note).imagePath),
         }}
       />
       <BreadcrumbJsonLd
