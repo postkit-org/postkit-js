@@ -66,7 +66,7 @@ The full table is in `tokens.json` → `color`, and on the **Colour tokens** boa
 
 ## 4. Layout
 
-- **Widths:** content 1120 (24px gutters), docs 1280, docs main column 720, prose 680.
+- **Widths:** one site width, content 1280 (24px gutters), shared by every page, the header, the footer and the docs shell, so the chrome doesn't shift as readers move around the site (decided 10 Nov 2026; the boards draw most pages at 1120). Docs main column 720, prose 680.
 - **Notes sidenotes:** 192px wide, 28px from the column. They switch to end notes at 1199px.
 - **Breakpoints:** phone is `max-width: 760px` (Chakra `md` = 761px and up), `xl` 1200 (sidenotes), plus two local media queries: the Commune band at 767 and the Made with OSS rows at 1100.
 - **Rhythm:**

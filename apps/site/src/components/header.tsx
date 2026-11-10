@@ -60,7 +60,7 @@ export function Header({ onOpenSearch }: HeaderProps) {
         }}
       >
         <Container
-          // The boards' content-box: 1120px of content inside the 24px gutters.
+          // The site width (`sizes.content`, 1280px) inside the 24px gutters, shared by every page.
           maxW="calc({sizes.content} + 2 * {spacing.gutter})"
           paddingInline="gutter"
           height="header"

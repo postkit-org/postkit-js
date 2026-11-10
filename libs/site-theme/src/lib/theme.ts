@@ -118,7 +118,9 @@ export const siteConfig = defineConfig({
         full: { value: '999px' },
       },
       sizes: {
-        content: { value: '1120px' },
+        // One width for every page, the header and the footer (decided Nov 10, 2026), so the
+        // chrome doesn't shift between docs and the rest of the site. `docs` matches it.
+        content: { value: '1280px' },
         docs: { value: '1280px' },
         prose: { value: '680px' },
         docsMain: { value: '720px' },

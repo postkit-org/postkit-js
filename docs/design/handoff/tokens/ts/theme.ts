@@ -48,7 +48,7 @@ const config = defineConfig({
         xl: { value: '16px' }, '2xl': { value: '20px' }, '3xl': { value: '28px' }, full: { value: '999px' },
       },
       sizes: {
-        content: { value: '1120px' }, docs: { value: '1280px' }, prose: { value: '680px' }, docsMain: { value: '720px' },
+        content: { value: '1280px' }, docs: { value: '1280px' }, prose: { value: '680px' }, docsMain: { value: '720px' },
         sidenote: { value: '192px' }, sidenoteGap: { value: '28px' }, header: { value: '56px' }, tap: { value: '44px' },
       },
       durations: { hover: { value: '120ms' }, anatomy: { value: '550ms' }, copyRevert: { value: '1600ms' } },

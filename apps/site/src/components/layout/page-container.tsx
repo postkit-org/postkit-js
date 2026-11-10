@@ -1,6 +1,6 @@
 import { Box, type BoxProps } from '@chakra-ui/react';
 
-/** `content` 1120px (most pages), `docs` 1280px (docs shell), `prose` 680px (note text). */
+/** `content` 1280px (every page, header and footer), `docs` 1280px (same; the docs shell), `prose` 680px (note text). */
 export type PageContainerWidth = 'content' | 'docs' | 'prose';
 
 export interface PageContainerProps extends Omit<BoxProps, 'width' | 'maxW'> {
