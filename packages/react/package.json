@@ -1,0 +1,62 @@
+{
+  "name": "@postkit/react",
+  "version": "0.2.0",
+  "description": "Headless, styleable React views for Postkit components",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "headless",
+    "mdx",
+    "content-components",
+    "article-components"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "@postkit/core": "0.2.0",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:react"
+    ]
+  }
+}

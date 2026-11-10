@@ -11,6 +11,7 @@ examples live in `examples/`, and validation and release programs live in
 | -------------------------- | -------------------------------------------------------------------------------- |
 | `@postkit/core`            | Versioned portable documents, safe parsers, and format serializers               |
 | `@postkit/unfurl`          | Provider-neutral server/build-time metadata resolution                           |
+| `@postkit/react`           | Headless React views emitting the component anatomy; no Chakra or Emotion        |
 | `@postkit/chakra`          | Portable declarations, React renderers, Markdown/MDX tooling, and Chakra recipes |
 | `@postkit/email`           | Email-safe renderers and fallbacks built on Chakra Email primitives              |
 | `@postkit/shiki`           | Lazy Shiki adapter and curated syntax-highlighting defaults                      |
@@ -19,7 +20,8 @@ examples live in `examples/`, and validation and release programs live in
 | `@postkit/tanstack-router` | TanStack Router link and MDX adapter                                             |
 | `@postkit/astro`           | Astro integration, components, React bridges, and hydration policy               |
 
-Dependency order is `core` and `unfurl` → renderers (`chakra`, `email`) → framework
+Dependency order is `core` and `unfurl` → `react` (headless) → renderers (`chakra`,
+`email`) → framework
 adapters. Keep application
 layout, route definitions, credentials, asset storage, and persistence outside
 the portable component layer. `@postkit/shiki` is an optional companion adapter

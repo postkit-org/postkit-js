@@ -111,6 +111,7 @@ const packages = await Promise.all([
   import('@postkit/core'),
   import('@postkit/core/components'),
   import('@postkit/unfurl'),
+  import('@postkit/react'),
   import('@postkit/chakra'),
   import('@postkit/chakra/theme'),
   import('@postkit/chakra/remark'),
@@ -139,6 +140,7 @@ import {
   type PostkitPropsOf,
 } from '@postkit/core/components';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
+import { Callout as HeadlessCallout, postkitView, type CalloutProps } from '@postkit/react';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
@@ -158,6 +160,10 @@ void definePostkitComponent;
 const _calloutProps: PostkitPropsOf<typeof calloutDefinition> = { tone: 'tip' };
 void _calloutProps;
 void createLinkResolverRegistry;
+void HeadlessCallout;
+void postkitView;
+const _headlessCalloutProps: CalloutProps = { tone: 'tip', classNames: { icon: 'mark' } };
+void _headlessCalloutProps;
 void PostkitProvider;
 void DocumentRenderer;
 void createPostkitTheme;
