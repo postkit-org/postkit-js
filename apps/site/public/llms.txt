@@ -14,6 +14,7 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 
 - [MDX](/docs/mdx): Author Postkit components as JSX in MDX, and configure the code blocks that fenced Markdown renders.
 - [Markdown directives](/docs/markdown-directives): Author Postkit components in plain Markdown with literal-only directives and the Postkit Remark preset.
+- [Validation](/docs/validation): Find out what Postkit checks when a post compiles, what the errors say, and how to fix them.
 - [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
 - [Link previews and unfurling](/docs/link-previews): Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.
 

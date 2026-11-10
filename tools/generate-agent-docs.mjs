@@ -57,6 +57,11 @@ function requiredCategory(data, filename) {
   return category;
 }
 
+// MDX comments (`{/* TODO … */}`) are notes for maintainers, not reader content.
+function stripMdxComments(markdown) {
+  return markdown.replace(/^[ \t]*\{\/\*[\s\S]*?\*\/\}[ \t]*\n?/gm, '').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+}
+
 const documents = readdirSync(docsDirectory)
   .filter((filename) => filename.endsWith('.md'))
   .map((filename) => {
@@ -83,7 +88,7 @@ const documents = readdirSync(docsDirectory)
       summary: requiredString(data, 'summary', filename),
       category: requiredCategory(data, filename),
       order: data.order,
-      content: content.trim(),
+      content: stripMdxComments(content).trim(),
     };
   })
   .filter((document) => document !== null)

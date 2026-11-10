@@ -1,0 +1,151 @@
+---
+title: New components
+summary: Scaffold a component of your own that gets a directive, validation and a manifest entry for free.
+category: Customizing
+order: 6
+since: '0.3.0'
+status: draft
+---
+
+# New components
+
+When Postkit doesn't have what you need, define it yourself. This is rung 8 of
+the customization ladder. Your component is defined the same way Postkit's
+built-in ones are, so it gets a Markdown directive, validation, theming and a
+manifest entry for free, and Prismark can offer it to writers.
+
+## Scaffold it
+
+```sh
+npx postkit new device
+```
+
+```text
+✓ device/device.definition.ts
+✓ device/device.tsx
+✓ device/device.css
+✓ device/device.behavior.spec.ts
+
+Use it as <Device /> or :::postkit-device in Markdown.
+```
+
+You get a definition, a headless view, its styles and a behaviour spec. In an
+Nx workspace, the generator does the same with your generators' conventions:
+
+```sh
+nx g @postkit/nx:component device
+```
+
+## Define it
+
+The definition is the contract: the component's name, directive, props and
+named parts. It's framework-free, so the manifest and editors can read it
+without React. See [definePostkitComponent](/docs/define-postkit-component) for
+every field.
+
+```ts
+// device/device.definition.ts
+import {
+  definePostkitComponent,
+  prop,
+  presentation,
+} from '@postkit/core/components';
+
+export const deviceDefinition = definePostkitComponent({
+  name: 'Device',
+  directive: 'postkit-device',
+  category: 'media',
+  description: 'A screenshot framed in a phone, tablet or laptop.',
+  runtime: 'static',
+  stability: 'experimental',
+  props: {
+    ...presentation,
+    kind: prop.enum(['iphone', 'ipad', 'mac'], {
+      description: 'The device frame.',
+      default: 'iphone',
+      themeVariant: true,
+    }),
+    src: prop.string('The screenshot URL.'),
+    alt: prop.string('Text alternative for the screenshot.'),
+    caption: prop.string('An optional caption.'),
+  },
+  slots: ['root', 'frame', 'screen', 'caption'],
+  keywords: ['device', 'screenshot', 'mockup'],
+  example: {
+    props: { kind: 'iphone', src: '/shots/home.png', alt: 'The home screen' },
+  },
+});
+```
+
+{/* TODO(0.3.0): confirm how a prop is marked required (src and alt should be), whether `children` can be omitted for components without content, and what `category` a site's own component should use. Spec 03 §2.2 only shows prop.string(description) and prop.enum(values, options). */}
+
+## Write the view
+
+Build the view with `postkitView`, so it emits the anatomy and picks up
+defaults, slot overrides and part styles like any other component:
+
+```tsx
+// device/device.tsx
+import { postkitView } from '@postkit/react';
+
+import { deviceDefinition } from './device.definition';
+
+export const Device = postkitView(deviceDefinition, ({ props, part }) => (
+  <figure {...part('root')}>
+    <div {...part('frame')}>
+      <img {...part('screen')} src={props.src} alt={props.alt} />
+    </div>
+    {props.caption && (
+      <figcaption {...part('caption')}>{props.caption}</figcaption>
+    )}
+  </figure>
+));
+```
+
+## Register it
+
+Add the definition and view to `components`, next to your kits:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+import { Device } from './device/device';
+import { deviceDefinition } from './device/device.definition';
+
+export const postkit = createPostkit({
+  kits: [article, media],
+  components: [{ definition: deviceDefinition, view: Device }],
+});
+```
+
+Writers can now use it in either syntax:
+
+```mdx
+<Device kind="mac" src="/shots/editor.png" alt="The editor with a post open" />
+```
+
+```md
+::postkit-device{kind="mac" src="/shots/editor.png" alt="The editor with a post open"}
+```
+
+## What you get
+
+From the one definition:
+
+- Typed props for your view, with `PostkitPropsOf<typeof deviceDefinition>`.
+- A directive, validated like Postkit's own (see [Validation](/docs/validation)).
+- An entry in `postkit.manifest()`, so editors like Prismark can offer it.
+- Slot and variant types derived from its parts and theme-variant props, and
+  the recipe key `postkitDevice` if you write a Chakra view and recipe for it
+  with `postkitChakraView`.
+- Anatomy attributes on every part, so [part styles](/docs/part-styles) work
+  the same as for built-in components.
+
+## Share it
+
+A component package exports `{ definition, view }` pairs and a manifest. A
+site turns it on by adding those pairs to `components`, and Prismark reads the
+manifest through its per-workspace component packages setting. A component
+that proves itself can be proposed upstream to Postkit.
