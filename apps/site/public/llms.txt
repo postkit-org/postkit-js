@@ -54,6 +54,8 @@ Postkit separates a structured publishing contract from its React, Next.js, Reac
 - [AudienceBoundary](/components/audience-boundary): An authored audience marker with a host-controlled visibility boundary.
 - [KeyTakeaway](/components/key-takeaway): A highlighted summary or list of essential points.
 - [PullQuote](/components/pull-quote): A prominent quotation with optional attribution and citation.
+- [Footnote](/components/footnote): A reference mark in the text: a link to its note, numbered by order of first use.
+- [Footnotes](/components/footnotes): The list of notes, each with a way back to its references. Closes the article unless placed.
 
 ### Media
 

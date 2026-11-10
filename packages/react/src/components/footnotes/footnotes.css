@@ -1,0 +1,144 @@
+/* Footnotes: the list of notes (03 §7.1). Subtle fills a quiet surface,
+   outline draws an edge, plain keeps a short rule above the list. A note
+   jumped to stays tinted until the reader returns with ↩. */
+@scope ([data-postkit-component='Footnotes']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    clear: both;
+    color: var(--postkit-footnote-text-color);
+    display: block;
+    font-size: var(--postkit-footnote-text-size);
+    line-height: var(--postkit-leading);
+    margin-block: var(--postkit-space-8) 0;
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-footnote-text-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-footnote-text-size: var(--postkit-text-md);
+  }
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-lg);
+    padding: var(--postkit-space-4) var(--postkit-space-5);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    padding: var(--postkit-space-4) var(--postkit-space-5);
+  }
+
+  :where([data-postkit-part='title']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+    line-height: var(--postkit-leading-tight);
+    margin: 0 0 var(--postkit-space-2);
+  }
+  :where([data-postkit-part='rule']) {
+    border: 0;
+    display: none;
+    margin: 0;
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='rule']) {
+    border-block-start: var(--postkit-footnote-rule);
+    display: block;
+    margin-block-end: var(--postkit-space-3);
+    width: var(--postkit-footnote-rule-width);
+  }
+  :where([data-postkit-part='list']) {
+    display: grid;
+    gap: var(--postkit-space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  :where([data-postkit-part='item']) {
+    border-radius: var(--postkit-radius-md);
+    column-gap: var(--postkit-space-1);
+    display: grid;
+    grid-template-columns: 1.75em minmax(0, 1fr);
+    margin-inline: calc(-1 * var(--postkit-space-2));
+    padding: var(--postkit-space-1) var(--postkit-space-2);
+    scroll-margin-block: var(--postkit-space-8);
+    transition: background-color 1.5s ease-out;
+  }
+  :where(
+    [data-postkit-part='item']:target,
+    [data-postkit-part='item'][data-targeted]
+  ) {
+    background: var(--postkit-footnote-target-bg);
+    transition-duration: 0s;
+  }
+  :where([data-postkit-part='item']:focus) {
+    outline: none;
+  }
+  :where([data-postkit-part='item']:focus-visible) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-footnote-number-color);
+    font-size: var(--postkit-footnote-number-size);
+    font-variant-numeric: tabular-nums;
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+  }
+  :where([data-postkit-part='content'] > *) {
+    margin-block: 0;
+  }
+  :where([data-postkit-part='content'] > * + *) {
+    margin-block-start: var(--postkit-space-2);
+  }
+  /* ↩ follows the note's last line. */
+  :where([data-postkit-part='content'] > p:last-of-type) {
+    display: inline;
+  }
+  :where([data-postkit-part='backlink']) {
+    color: var(--postkit-footnote-accent);
+    white-space: nowrap;
+  }
+  :where(a[data-postkit-part='backlink'], [data-postkit-part='backlink'] a) {
+    border-radius: var(--postkit-radius-sm);
+    color: var(--postkit-footnote-accent);
+    display: inline-block;
+    line-height: 1;
+    margin-inline-start: 0.25em;
+    position: relative;
+    text-decoration: none;
+  }
+  :where(
+    a[data-postkit-part='backlink'],
+    [data-postkit-part='backlink'] a
+  )::after {
+    content: '';
+    height: 24px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+  }
+  :where(
+    a[data-postkit-part='backlink']:focus-visible,
+    [data-postkit-part='backlink'] a:focus-visible
+  ) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+
+  /* Sidenotes replace the list on screen; print keeps it. */
+  :where(:scope[data-active-placement='side']) {
+    display: none;
+  }
+  @media print {
+    :where(:scope[data-active-placement='side']) {
+      display: block;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-postkit-part='item']) {
+      transition: none;
+    }
+  }
+}

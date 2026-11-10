@@ -15,7 +15,7 @@ describe('Postkit Astro adapter', () => {
       Callout: () => undefined,
     });
 
-    expect(Object.keys(postkitAstroComponents)).toHaveLength(35);
+    expect(Object.keys(postkitAstroComponents)).toHaveLength(37);
     expect(Object.keys(postkitAstroComponents)).toEqual(
       expect.arrayContaining([
         'AppearsOn',

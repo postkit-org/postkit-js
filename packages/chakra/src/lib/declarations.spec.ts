@@ -23,6 +23,21 @@ const snapshot = JSON.parse(
   readonly manifest: { readonly components: Record<string, unknown> };
 };
 
+/** Components added since 0.2 (03 §7): the 0.2 snapshot doesn't have them. */
+const addedSince02: ReadonlySet<string> = new Set(['Footnote', 'Footnotes']);
+
+/** The manifest without the components added since 0.2. */
+function manifestAsOf02() {
+  return {
+    ...postkitDeclarationManifest,
+    components: Object.fromEntries(
+      Object.entries(postkitDeclarationManifest.components).filter(
+        ([name]) => !addedSince02.has(name),
+      ),
+    ),
+  };
+}
+
 describe('Postkit declaration manifest', () => {
   it('publishes stable names and directives for the initial article components', () => {
     expect(POSTKIT_DECLARATION_VERSION).toBe(7);
@@ -67,6 +82,8 @@ describe('Postkit declaration manifest', () => {
       ['ShareActions', 'postkit-share-actions'],
       ['SocialPost', 'postkit-social-post'],
       ['Video', 'postkit-video'],
+      ['Footnote', 'postkit-footnote'],
+      ['Footnotes', 'postkit-footnotes'],
     ]);
   });
 
@@ -149,7 +166,9 @@ describe('Postkit declaration manifest', () => {
   });
 
   it('builds every declaration from its definition, identical to 0.2', () => {
-    const definitions = Object.entries(postkitBuiltInDefinitions);
+    const definitions = Object.entries(postkitBuiltInDefinitions).filter(
+      ([name]) => !addedSince02.has(name),
+    );
     expect(definitions.map(([name]) => name)).toEqual(
       Object.keys(snapshot.manifest.components),
     );
@@ -161,10 +180,10 @@ describe('Postkit declaration manifest', () => {
         JSON.stringify(snapshot.manifest.components[name]),
       );
     }
-    expect(JSON.parse(JSON.stringify(postkitDeclarationManifest))).toEqual(
+    expect(JSON.parse(JSON.stringify(manifestAsOf02()))).toEqual(
       snapshot.manifest,
     );
-    expect(JSON.stringify(postkitDeclarationManifest)).toBe(
+    expect(JSON.stringify(manifestAsOf02())).toBe(
       JSON.stringify(snapshot.manifest),
     );
     expect(JSON.stringify(postkitPresentationProps)).toBe(
@@ -174,7 +193,9 @@ describe('Postkit declaration manifest', () => {
   });
 
   it('keeps the 0.2 public types', () => {
-    expectTypeOf<PostkitComponentName>().toEqualTypeOf<
+    expectTypeOf<
+      Exclude<PostkitComponentName, 'Footnote' | 'Footnotes'>
+    >().toEqualTypeOf<
       | 'AppearsOn'
       | 'AudienceBoundary'
       | 'Aside'

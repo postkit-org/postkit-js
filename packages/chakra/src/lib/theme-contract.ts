@@ -33,6 +33,8 @@ import {
   tabsDefinition,
   terminalDefinition,
   videoDefinition,
+  footnoteDefinition,
+  footnotesDefinition,
 } from '@postkit/core/components';
 
 /**
@@ -143,6 +145,8 @@ const postkitThemeSlots = {
   tabs: tabsDefinition.$slot,
   terminal: terminalDefinition.$slot,
   video: videoDefinition.$slot,
+  footnote: footnoteDefinition.$slot,
+  footnotes: footnotesDefinition.$slot,
 } as const;
 
 /** `LinkPreview`'s theme variants plus its recipe-only `compact` variant. */
@@ -188,6 +192,8 @@ const postkitThemeVariants = {
   tabs: tabsDefinition.$themeVariant,
   terminal: terminalDefinition.$themeVariant,
   video: videoDefinition.$themeVariant,
+  footnote: footnoteDefinition.$themeVariant,
+  footnotes: footnotesDefinition.$themeVariant,
 } as const;
 
 type PostkitDefinitionThemeSlots = typeof postkitThemeSlots;
@@ -232,6 +238,8 @@ export interface PostkitThemeSlotMap {
   readonly tabs: PostkitDefinitionThemeSlots['tabs'];
   readonly terminal: PostkitDefinitionThemeSlots['terminal'];
   readonly video: PostkitDefinitionThemeSlots['video'];
+  readonly footnote: PostkitDefinitionThemeSlots['footnote'];
+  readonly footnotes: PostkitDefinitionThemeSlots['footnotes'];
   readonly prose:
     | 'root'
     | 'h1'
@@ -316,6 +324,8 @@ export interface PostkitThemeVariantMap {
   readonly tabs: PostkitDefinitionThemeVariants['tabs'];
   readonly terminal: PostkitDefinitionThemeVariants['terminal'];
   readonly video: PostkitDefinitionThemeVariants['video'];
+  readonly footnote: PostkitDefinitionThemeVariants['footnote'];
+  readonly footnotes: PostkitDefinitionThemeVariants['footnotes'];
   readonly prose: never;
 }
 
@@ -363,4 +373,6 @@ export interface PostkitThemeOverrides {
   readonly tabs?: PostkitOverrideFor<'tabs'>;
   readonly terminal?: PostkitOverrideFor<'terminal'>;
   readonly video?: PostkitOverrideFor<'video'>;
+  readonly footnote?: PostkitOverrideFor<'footnote'>;
+  readonly footnotes?: PostkitOverrideFor<'footnotes'>;
 }

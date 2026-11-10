@@ -4,6 +4,14 @@ import {
   type PostkitBuiltInComponentName,
 } from '@postkit/core/components';
 
+import {
+  transformPostkitFootnotes,
+  type PostkitFootnoteSyntaxNode,
+  type PostkitRemarkFootnoteDefaults,
+} from './remark-footnotes.js';
+
+export type { PostkitRemarkFootnoteDefaults } from './remark-footnotes.js';
+
 type PostkitComponentDeclaration = AnyPostkitComponentDefinition;
 
 type DirectiveAttributeValue = string | null | undefined;
@@ -95,6 +103,34 @@ export interface RemarkPostkitOptions {
    * build in every mode, with this reason.
    */
   readonly unavailable?: readonly PostkitUnavailableComponent[];
+  /**
+   * Footnotes (03 §7.1): GFM `[^id]`, `:footnote[…]` and
+   * `<Footnote>…</Footnote>` become `Footnote` references and one
+   * `Footnotes` list, placed by `::footnotes` / `<Footnotes />` or at the
+   * end. A reference with no definition fails in every mode; a definition
+   * nobody references is a warning. Runs when `Footnote` and `Footnotes`
+   * are enabled; `false` leaves GFM's own footnotes alone.
+   */
+  readonly footnotes?: false | RemarkPostkitFootnoteOptions;
+}
+
+/** Footnote options for {@link remarkPostkit}. */
+export interface RemarkPostkitFootnoteOptions {
+  /**
+   * Prefixes the note ids (`fn-{scope}-1`) so pages that show several
+   * documents never repeat one: a slug, or a function of the file. Defaults
+   * to the file's `data.slug` or front-matter `slug`, then its file name.
+   */
+  readonly scope?:
+    string | ((file: PostkitVFileLike | undefined) => string | undefined);
+  /**
+   * The site's footnote settings, such as
+   * `{ placement: { base: 'inline', md: 'end', xl: 'side' } }`. A document
+   * overrides them with front matter (`footnotes:`, when the host puts it on
+   * `file.data.matter` or `file.data.frontmatter`) or an authored
+   * `::footnotes{…}` / `<Footnotes … />`.
+   */
+  readonly defaults?: PostkitRemarkFootnoteDefaults;
 }
 
 /** A component the site's renderer can't render, and why. */
@@ -691,6 +727,42 @@ function documentBindings(tree: PostkitDirectiveNode): Set<string> {
   return names;
 }
 
+function frontMatter(
+  file: PostkitVFileLike | undefined,
+): Record<string, unknown> | undefined {
+  const data = (file as { data?: Record<string, unknown> } | undefined)?.data;
+  const matter = data?.['matter'] ?? data?.['frontmatter'];
+  return matter && typeof matter === 'object'
+    ? (matter as Record<string, unknown>)
+    : undefined;
+}
+
+/** Per-document footnote settings from front matter (`footnotes:`). */
+function frontMatterFootnotes(
+  file: PostkitVFileLike | undefined,
+): PostkitRemarkFootnoteDefaults {
+  const value = frontMatter(file)?.['footnotes'];
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as PostkitRemarkFootnoteDefaults)
+    : {};
+}
+
+/** The footnote id scope for a file (see {@link RemarkPostkitFootnoteOptions}). */
+function footnoteScope(
+  options: RemarkPostkitFootnoteOptions,
+  file: PostkitVFileLike | undefined,
+): string | undefined {
+  if (typeof options.scope === 'function') return options.scope(file);
+  if (typeof options.scope === 'string') return options.scope;
+  const data = (file as { data?: Record<string, unknown> } | undefined)?.data;
+  const matter = (data?.['matter'] ?? data?.['frontmatter']) as
+    Record<string, unknown> | undefined;
+  const slug = data?.['slug'] ?? matter?.['slug'];
+  if (typeof slug === 'string') return slug;
+  const stem = (file as { stem?: unknown } | undefined)?.stem;
+  return typeof stem === 'string' && stem !== 'index' ? stem : undefined;
+}
+
 /**
  * Remark-compatible transformer for Postkit directives. Pair it with a
  * directive parser (for example `remark-directive`) before this plugin.
@@ -725,7 +797,29 @@ export function remarkPostkit(options: RemarkPostkitOptions = {}) {
     unavailable,
   };
 
+  const footnotes =
+    options.footnotes !== false &&
+    resolved.names.has('Footnote') &&
+    resolved.names.has('Footnotes')
+      ? (options.footnotes ?? {})
+      : undefined;
+
   return (tree: PostkitDirectiveNode, file?: PostkitVFileLike): void => {
+    if (footnotes) {
+      const context = { file };
+      transformPostkitFootnotes(tree as PostkitFootnoteSyntaxNode, {
+        output: resolved.output,
+        scope: footnoteScope(footnotes, file),
+        defaults: { ...footnotes.defaults, ...frontMatterFootnotes(file) },
+        source: readSource(file),
+        report: {
+          fail: (node, ruleId, reason) =>
+            fail(context, node as PostkitDirectiveNode, ruleId, reason),
+          warn: (node, ruleId, reason) =>
+            warn(context, node as PostkitDirectiveNode, ruleId, reason),
+        },
+      });
+    }
     visitChildren(tree, {
       options: resolved,
       file,

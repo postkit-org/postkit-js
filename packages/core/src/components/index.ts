@@ -47,3 +47,6 @@ export {
 } from './props.js';
 export * from './built-ins.js';
 export * from './manifest.js';
+export * from './footnote/footnote.model.js';
+export { postkitFootnoteSharedProps } from './footnote/footnote.definition.js';
+export { sidenoteDefinition } from './sidenote/sidenote.definition.js';

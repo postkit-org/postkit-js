@@ -5,6 +5,8 @@ export {
   type PostkitComponentNode,
   type PostkitDocument,
   type PostkitElementNode,
+  type PostkitFootnoteDefinitionNode,
+  type PostkitFootnoteReferenceNode,
   type PostkitJsonValue,
   type PostkitNode,
   type PostkitTextNode,
@@ -41,4 +43,15 @@ export {
   serializePostkitText,
   type SerializePostkitTextOptions,
 } from './lib/serialize-text.js';
-export type { PostkitStaticViewOptions } from './lib/serialize-views.js';
+export type {
+  PostkitStaticFootnoteOptions,
+  PostkitStaticViewOptions,
+} from './lib/serialize-views.js';
+export {
+  normalizePostkitFootnoteIdentifier,
+  resolvePostkitFootnotes,
+  validatePostkitFootnotes,
+  type PostkitFootnoteProblem,
+  type PostkitFootnoteResolution,
+  type PostkitResolvedFootnote,
+} from './lib/footnotes.js';

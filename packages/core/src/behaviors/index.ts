@@ -128,3 +128,4 @@ export {
   type ShareServiceRegistry,
   type ShareWithServiceOptions,
 } from './share-actions/share-actions.behavior.js';
+export * from './footnotes/footnotes.behavior.js';

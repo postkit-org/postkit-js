@@ -38,3 +38,4 @@ export {
   type UseShareActionsOptions,
   type UseShareActionsReturn,
 } from './use-share-actions.js';
+export * from './use-footnotes.js';

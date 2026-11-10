@@ -17,6 +17,8 @@ import Disclosure from '../components/Disclosure.astro';
 import Figure from '../components/Figure.astro';
 import FileCard from '../components/FileCard.astro';
 import FileTree from '../components/FileTree.astro';
+import Footnote from '../components/Footnote.astro';
+import Footnotes from '../components/Footnotes.astro';
 import Gallery from '../components/Gallery.astro';
 import KeyTakeaway from '../components/KeyTakeaway.astro';
 import LinkPreview from '../components/LinkPreview.astro';
@@ -54,6 +56,8 @@ export interface PostkitAstroComponents {
   readonly Figure: typeof Figure;
   readonly FileCard: typeof FileCard;
   readonly FileTree: typeof FileTree;
+  readonly Footnote: typeof Footnote;
+  readonly Footnotes: typeof Footnotes;
   readonly Gallery: typeof Gallery;
   readonly KeyTakeaway: typeof KeyTakeaway;
   readonly LinkPreview: typeof LinkPreview;
@@ -92,6 +96,8 @@ export const postkitAstroComponents: PostkitAstroComponents = Object.freeze({
   Figure,
   FileCard,
   FileTree,
+  Footnote,
+  Footnotes,
   Gallery,
   KeyTakeaway,
   LinkPreview,

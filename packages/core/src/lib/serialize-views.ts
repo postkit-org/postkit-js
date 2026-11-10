@@ -3,6 +3,11 @@ import {
   type PostkitBuiltInComponentName,
 } from '../components/built-ins.js';
 import type { AnyPostkitComponentDefinition } from '../components/definition.js';
+import {
+  formatPostkitFootnoteNumber,
+  type PostkitFootnoteMarker,
+  type PostkitFootnoteNumbering,
+} from '../components/footnote/footnote.model.js';
 import type {
   PostkitComponentNode,
   PostkitJsonValue,
@@ -30,6 +35,31 @@ export interface PostkitStaticViewOptions {
    * it; without one, the signup is left out (a form can't work statically).
    */
   readonly newsletterUrl?: string;
+  /**
+   * How footnotes render (03 §7.1). A `Footnotes` component in the document
+   * overrides these with its own props.
+   */
+  readonly footnotes?: PostkitStaticFootnoteOptions;
+}
+
+/** Footnote options for static output (HTML, Markdown fallbacks, text). */
+export interface PostkitStaticFootnoteOptions {
+  /**
+   * Prefixes the ids (`fn-{scope}-1`), usually the document's slug, so a
+   * feed or index page that shows several documents never repeats an id.
+   */
+  readonly scope?: string;
+  /** Defaults to `decimal`. */
+  readonly numbering?: PostkitFootnoteNumbering;
+  /** Defaults to `superscript`. */
+  readonly marker?: PostkitFootnoteMarker;
+  /** The list heading. Defaults to "Notes"; `false` hides it. */
+  readonly title?: string | false;
+  /**
+   * Whether references are links and notes link back to them. Defaults to
+   * `true`; email turns them off, since in-message anchors are unreliable.
+   */
+  readonly links?: boolean;
 }
 
 /** @internal An attribute a static view sets. `undefined` and `false` are omitted. */
@@ -275,6 +305,27 @@ function codeTitle(...parts: (string | undefined)[]): string | undefined {
  * embed, iframe, form or script.
  */
 const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
+  // A reference written as a component node. Footnote nodes
+  // (`footnoteReference`) are numbered and linked by the serializers.
+  Footnote: ({ props }) => {
+    const marker = str(props['marker']) ?? 'superscript';
+    const index = num(props['index']);
+    const mark =
+      index === undefined
+        ? '*'
+        : formatPostkitFootnoteNumber(
+            index,
+            (str(props['numbering']) ?? 'decimal') as PostkitFootnoteNumbering,
+          );
+    return h(
+      marker === 'superscript' ? 'sup' : 'span',
+      'root',
+      { 'data-marker': marker },
+      h('span', 'marker', null, marker === 'bracket' ? `[${mark}]` : mark),
+    );
+  },
+  // The serializers render the list where this component sits.
+  Footnotes: () => undefined,
   Aside: calloutView,
   Callout: calloutView,
 

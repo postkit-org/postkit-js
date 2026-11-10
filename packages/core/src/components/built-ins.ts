@@ -33,6 +33,8 @@ import { stepsDefinition } from './steps/steps.definition.js';
 import { tabsDefinition } from './tabs/tabs.definition.js';
 import { terminalDefinition } from './terminal/terminal.definition.js';
 import { videoDefinition } from './video/video.definition.js';
+import { footnoteDefinition } from './footnote/footnote.definition.js';
+import { footnotesDefinition } from './footnotes/footnotes.definition.js';
 
 export {
   appearsOnDefinition,
@@ -70,6 +72,8 @@ export {
   tabsDefinition,
   terminalDefinition,
   videoDefinition,
+  footnoteDefinition,
+  footnotesDefinition,
 };
 
 /**
@@ -112,6 +116,8 @@ export const postkitBuiltInDefinitions = Object.freeze({
   ShareActions: shareActionsDefinition,
   SocialPost: socialPostDefinition,
   Video: videoDefinition,
+  Footnote: footnoteDefinition,
+  Footnotes: footnotesDefinition,
 });
 
 /** The name of a built-in Postkit component. */

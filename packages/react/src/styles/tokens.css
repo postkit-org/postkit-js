@@ -96,11 +96,11 @@
   --postkit-focus-offset: 2px;
   --postkit-duration: 150ms;
 
-  /* Footnotes and sidenotes (§7.1); reserved for Kit 1. */
+  /* Footnotes and sidenotes (§7.1). */
   --postkit-footnote-marker-size: 0.75em;
   --postkit-footnote-number-size: var(--postkit-text-sm);
   --postkit-footnote-text-size: var(--postkit-text-sm);
-  --postkit-footnote-rule-width: var(--postkit-border-width);
+  --postkit-footnote-rule-width: 64px;
   --postkit-sidenote-width: 232px;
   --postkit-sidenote-gap: 48px;
 }
@@ -114,7 +114,8 @@
   --postkit-footnote-marker-color: var(--postkit-color-fg-muted);
   --postkit-footnote-number-color: var(--postkit-color-fg-muted);
   --postkit-footnote-text-color: var(--postkit-color-fg-muted);
-  --postkit-footnote-rule: var(--postkit-color-border);
+  --postkit-footnote-rule: var(--postkit-border-width) solid
+    var(--postkit-color-border);
   --postkit-footnote-target-bg: var(--postkit-color-highlight);
 }
 

@@ -103,6 +103,15 @@ import {
   postkitVideoSlots,
 } from '../components/video/video.recipe.js';
 import {
+  postkitFootnoteRecipe,
+  postkitFootnoteSlots,
+} from '../components/footnote/footnote.recipe.js';
+import {
+  postkitFootnotesRecipe,
+  postkitFootnotesSlots,
+} from '../components/footnotes/footnotes.recipe.js';
+import { postkitSidenoteRecipe } from '../components/sidenote/sidenote.recipe.js';
+import {
   postkitCodeBlockSlots,
   postkitStandaloneCodeBlockRecipe,
 } from '../components/code-block/code-block.recipe.js';
@@ -203,6 +212,10 @@ export const postkitRecipeKeys = Object.freeze({
   tabs: 'postkitTabs',
   terminal: 'postkitTerminal',
   video: 'postkitVideo',
+  footnote: 'postkitFootnote',
+  footnotes: 'postkitFootnotes',
+  /** The internal Sidenote view (footnotes beside their references). */
+  sidenote: 'postkitSidenote',
 } as const);
 
 export type PostkitRecipeKey =
@@ -362,6 +375,9 @@ export const postkitDefaultTheme = defineConfig({
       [postkitRecipeKeys.tabs]: postkitTabsRecipe,
       [postkitRecipeKeys.terminal]: postkitStandaloneTerminalRecipe,
       [postkitRecipeKeys.video]: postkitVideoRecipe,
+      [postkitRecipeKeys.footnote]: postkitFootnoteRecipe,
+      [postkitRecipeKeys.footnotes]: postkitFootnotesRecipe,
+      [postkitRecipeKeys.sidenote]: postkitSidenoteRecipe,
     }),
   },
 });
@@ -604,6 +620,18 @@ export function createPostkitTheme(
     slotRecipes[postkitRecipeKeys.video] = overrideRecipe(
       postkitVideoSlots,
       overrides.video,
+    );
+  }
+  if (overrides.footnote) {
+    slotRecipes[postkitRecipeKeys.footnote] = overrideRecipe(
+      postkitFootnoteSlots,
+      overrides.footnote,
+    );
+  }
+  if (overrides.footnotes) {
+    slotRecipes[postkitRecipeKeys.footnotes] = overrideRecipe(
+      postkitFootnotesSlots,
+      overrides.footnotes,
     );
   }
 

@@ -38,6 +38,10 @@ import {
   type FileCardProps,
   FileTree as FileTreeView,
   type FileTreeProps,
+  Footnote as FootnoteView,
+  type FootnoteProps,
+  Footnotes as FootnotesView,
+  type FootnotesProps,
   Gallery as GalleryView,
   type GalleryProps,
   KeyTakeaway as KeyTakeawayView,
@@ -139,6 +143,11 @@ export const Figure = withPostkitAstroProvider<FigureProps>(FigureView);
 export const FileCard = withPostkitAstroProvider<FileCardProps>(FileCardView);
 /** FileTree in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
 export const FileTree = withPostkitAstroProvider<FileTreeProps>(FileTreeView);
+/** Footnote in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
+export const Footnote = withPostkitAstroProvider<FootnoteProps>(FootnoteView);
+/** Footnotes in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
+export const Footnotes =
+  withPostkitAstroProvider<FootnotesProps>(FootnotesView);
 /** Gallery in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */
 export const Gallery = withPostkitAstroProvider<GalleryProps>(GalleryView);
 /** KeyTakeaway in Postkit's provider. Its Astro wrapper renders on the server only (runtime "static"). */

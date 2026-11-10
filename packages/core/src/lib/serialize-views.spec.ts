@@ -303,6 +303,13 @@ const fixtures: Record<string, PostkitComponentNode> = {
   }),
 };
 
+/**
+ * Footnotes are document-level (a mark in a paragraph, a list of the
+ * document's notes), so they have no single-node fixture:
+ * `footnotes.spec.ts` covers them with whole documents.
+ */
+const documentLevel = ['Footnote', 'Footnotes'];
+
 const documentOf = (...nodes: PostkitNode[]): PostkitDocument =>
   createPostkitDocument(nodes);
 
@@ -347,7 +354,7 @@ function expectInert(html: string): void {
 
 describe('static component views', () => {
   it('cover every built-in definition', () => {
-    expect(Object.keys(fixtures).sort()).toEqual(
+    expect([...Object.keys(fixtures), ...documentLevel].sort()).toEqual(
       Object.keys(postkitBuiltInDefinitions).sort(),
     );
   });

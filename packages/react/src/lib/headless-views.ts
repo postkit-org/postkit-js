@@ -34,6 +34,8 @@ import { Poll } from '../components/poll/poll.js';
 import { ShareActions } from '../components/share-actions/share-actions.js';
 import { SocialPost } from '../components/social-post/social-post.js';
 import { Tabs } from '../components/tabs/tabs.js';
+import { Footnote } from '../components/footnote/footnote.js';
+import { Footnotes } from '../components/footnotes/footnotes.js';
 
 /**
  * The headless views `@postkit/react` exports, keyed by component name. The
@@ -78,4 +80,6 @@ export const postkitHeadlessViews: Readonly<
   Tabs,
   Figure,
   Video,
+  Footnote,
+  Footnotes,
 });

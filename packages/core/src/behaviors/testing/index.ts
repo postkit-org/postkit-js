@@ -60,3 +60,4 @@ export {
   shareActionsBehaviorSpec,
   type ShareActionsBehaviorFixture,
 } from '../share-actions/share-actions.behavior.spec-suite.js';
+export * from '../footnotes/footnotes.behavior.spec-suite.js';

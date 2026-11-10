@@ -3306,6 +3306,227 @@
         "astro": "static",
         "email": "not-defined"
       }
+    },
+    "Footnote": {
+      "name": "Footnote",
+      "directive": "postkit-footnote",
+      "description": "A reference mark in the text: a link to its note, numbered by order of first use.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": ["directives", "postkit"],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": ["sm", "md", "lg"],
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
+        },
+        "variant": {
+          "kind": "enum",
+          "values": ["outline", "subtle", "plain"],
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
+        },
+        "identifier": {
+          "kind": "string",
+          "description": "The note id from the source ([^id]). Set by the Markdown tooling.",
+          "themeVariant": false
+        },
+        "index": {
+          "kind": "number",
+          "description": "The note number, by order of first reference. Set by the Markdown tooling.",
+          "themeVariant": false
+        },
+        "occurrence": {
+          "kind": "number",
+          "description": "Which reference to the note this is, from 1. A shared note links back to each as a, b, …",
+          "themeVariant": false
+        },
+        "references": {
+          "kind": "number",
+          "description": "How many references a note has, on a note inside Footnotes. Set by the Markdown tooling.",
+          "themeVariant": false
+        },
+        "marker": {
+          "kind": "enum",
+          "values": ["superscript", "bracket", "pill"],
+          "description": "How the reference is marked: a raised number (superscript, the default), [1] on the baseline (bracket), or a filled mark (pill).",
+          "themeVariant": false
+        },
+        "numbering": {
+          "kind": "enum",
+          "values": ["decimal", "lower-roman", "lower-alpha", "symbol"],
+          "description": "How notes are numbered: decimal (the default), lower-roman, lower-alpha or symbol (*, †, ‡…). React views also take a function.",
+          "themeVariant": false
+        },
+        "placement": {
+          "kind": "json",
+          "description": "Where notes appear: end (the default), side, popover or inline, or one per breakpoint ({ \"base\": \"inline\", \"md\": \"end\", \"xl\": \"side\" }). Side falls back to end below sideBreakpoint or when the margin runs out; popover and inline enhance the end list and never replace it.",
+          "themeVariant": false
+        },
+        "sideBreakpoint": {
+          "kind": "number",
+          "description": "The viewport width, in px, below which side notes fall back to the end list. Defaults to 1024.",
+          "themeVariant": false
+        },
+        "scope": {
+          "kind": "string",
+          "description": "Prefixes the ids (fn-{scope}-1) so several documents on one page never collide; usually the slug. Set by the Markdown tooling.",
+          "themeVariant": false
+        }
+      },
+      "slots": ["root", "marker"],
+      "variants": ["size", "variant"],
+      "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
+      "keywords": [
+        "footnote",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "identifier",
+        "index",
+        "occurrence",
+        "references",
+        "marker",
+        "numbering",
+        "placement",
+        "side",
+        "breakpoint",
+        "scope",
+        "note",
+        "reference",
+        "citation",
+        "sidenote"
+      ],
+      "example": {
+        "props": { "index": 1 },
+        "jsx": "<Footnote index={1}>\n  Markdown with directives, or MDX.\n</Footnote>",
+        "directive": ":::postkit-footnote{index=\"1\"}\nMarkdown with directives, or MDX.\n:::"
+      },
+      "preview": { "kind": "live", "label": "Footnote component preview" },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
+    },
+    "Footnotes": {
+      "name": "Footnotes",
+      "directive": "postkit-footnotes",
+      "description": "The list of notes, each with a way back to its references. Closes the article unless placed.",
+      "childMode": "mdx",
+      "directiveRemarkPlugins": ["directives", "postkit"],
+      "props": {
+        "size": {
+          "kind": "enum",
+          "values": ["sm", "md", "lg"],
+          "description": "The component density and type scale.",
+          "default": "md",
+          "themeVariant": true
+        },
+        "variant": {
+          "kind": "enum",
+          "values": ["outline", "subtle", "plain"],
+          "description": "The component visual treatment.",
+          "default": "subtle",
+          "themeVariant": true
+        },
+        "title": {
+          "kind": "json",
+          "description": "The list heading. Defaults to \"Notes\"; false hides it, and the list keeps \"Notes\" as its accessible name.",
+          "default": "Notes",
+          "themeVariant": false
+        },
+        "backlinks": {
+          "kind": "boolean",
+          "description": "Whether each note links back to its references (↩, then a, b, … for a shared note).",
+          "default": true,
+          "themeVariant": false
+        },
+        "marker": {
+          "kind": "enum",
+          "values": ["superscript", "bracket", "pill"],
+          "description": "How the reference is marked: a raised number (superscript, the default), [1] on the baseline (bracket), or a filled mark (pill).",
+          "themeVariant": false
+        },
+        "numbering": {
+          "kind": "enum",
+          "values": ["decimal", "lower-roman", "lower-alpha", "symbol"],
+          "description": "How notes are numbered: decimal (the default), lower-roman, lower-alpha or symbol (*, †, ‡…). React views also take a function.",
+          "themeVariant": false
+        },
+        "placement": {
+          "kind": "json",
+          "description": "Where notes appear: end (the default), side, popover or inline, or one per breakpoint ({ \"base\": \"inline\", \"md\": \"end\", \"xl\": \"side\" }). Side falls back to end below sideBreakpoint or when the margin runs out; popover and inline enhance the end list and never replace it.",
+          "themeVariant": false
+        },
+        "sideBreakpoint": {
+          "kind": "number",
+          "description": "The viewport width, in px, below which side notes fall back to the end list. Defaults to 1024.",
+          "themeVariant": false
+        },
+        "scope": {
+          "kind": "string",
+          "description": "Prefixes the ids (fn-{scope}-1) so several documents on one page never collide; usually the slug. Set by the Markdown tooling.",
+          "themeVariant": false
+        }
+      },
+      "slots": [
+        "root",
+        "title",
+        "rule",
+        "list",
+        "item",
+        "number",
+        "content",
+        "backlink"
+      ],
+      "variants": ["size", "variant"],
+      "category": "Article structure",
+      "kit": "article",
+      "package": "@postkit/core",
+      "keywords": [
+        "footnotes",
+        "article",
+        "structure",
+        "size",
+        "variant",
+        "title",
+        "backlinks",
+        "marker",
+        "numbering",
+        "placement",
+        "side",
+        "breakpoint",
+        "scope",
+        "endnotes",
+        "notes",
+        "references",
+        "sidenotes"
+      ],
+      "example": {
+        "props": { "title": "Notes" },
+        "jsx": "<Footnotes title=\"Notes\">\n  Example content.\n</Footnotes>",
+        "directive": ":::postkit-footnotes{title=\"Notes\"}\nExample content.\n:::"
+      },
+      "preview": { "kind": "live", "label": "Footnotes component preview" },
+      "runtime": "static",
+      "stability": "initial",
+      "support": {
+        "react": "supported",
+        "headless": "supported",
+        "chakra": "supported",
+        "astro": "static",
+        "email": "not-defined"
+      }
     }
   }
 }

@@ -436,3 +436,9 @@ export {
   type PostkitTypography,
 } from './lib/theme.js';
 export * from './lib/chakra-renderer.js';
+export * from './components/footnote/footnote.js';
+export * from './components/footnote/footnote.recipe.js';
+export * from './components/footnotes/footnotes.js';
+export * from './components/footnotes/footnotes.recipe.js';
+export * from './components/sidenote/sidenote.js';
+export * from './components/sidenote/sidenote.recipe.js';

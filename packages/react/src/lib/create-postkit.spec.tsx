@@ -90,9 +90,12 @@ describe('kits', () => {
       'publishing',
     ]);
     expect(article.definitions).toContain(calloutDefinition);
+    expect(article.definitions.map(({ name }) => name)).toEqual(
+      expect.arrayContaining(['Footnote', 'Footnotes']),
+    );
     expect(
       postkitKits.flatMap((kit) => kit.definitions).map(({ name }) => name),
-    ).toHaveLength(35);
+    ).toHaveLength(37);
     for (const kit of postkitKits) {
       expect(kit.package).toBe('@postkit/core');
       expect(Object.isFrozen(kit.definitions)).toBe(true);

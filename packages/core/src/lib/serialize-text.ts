@@ -4,6 +4,12 @@ import {
   type PostkitNode,
 } from './document.js';
 import { PostkitParseError } from './parse-error.js';
+import {
+  createPostkitFootnoteContext,
+  postkitFootnoteFor,
+  postkitFootnoteMark,
+  type PostkitFootnoteRenderContext,
+} from './serialize-footnotes.js';
 import { safePostkitUrl } from './serialize-url.js';
 import {
   renderPostkitStaticView,
@@ -28,6 +34,8 @@ interface Scope {
 
 interface Context {
   readonly options: SerializePostkitTextOptions;
+  /** The document's numbered notes, when it has any. */
+  readonly footnotes?: PostkitFootnoteRenderContext;
 }
 
 const blockElements = new Set([
@@ -145,6 +153,9 @@ function rawText(
       switch (node.type) {
         case 'text':
           return node.value;
+        case 'footnoteReference':
+        case 'footnoteDefinition':
+          return '';
         case 'slot':
           return rawText(scope?.children ?? [], context, scope?.outer);
         case 'component': {
@@ -177,12 +188,30 @@ function visit(
     case 'text':
       writer.text(node.value);
       return;
+    case 'footnoteReference': {
+      // `[1]` marks (03 §7.1); the notes follow as a numbered list.
+      const note =
+        context.footnotes && postkitFootnoteFor(context.footnotes, node);
+      writer.text(
+        note && context.footnotes
+          ? ` [${postkitFootnoteMark(context.footnotes, note)}]`
+          : ` [${node.label ?? node.identifier}]`,
+      );
+      return;
+    }
+    case 'footnoteDefinition':
+      // Listed with the other notes.
+      return;
     case 'slot':
       for (const child of scope?.children ?? []) {
         visit(child, writer, context, scope?.outer);
       }
       return;
     case 'component': {
+      if (node.name === 'Footnotes' && context.footnotes) {
+        writeFootnotes(writer, context);
+        return;
+      }
       const view = renderPostkitStaticView(node, context.options);
       if (!view) {
         // A custom component: its authored content is the readable part.
@@ -356,6 +385,21 @@ function visitElement(
   if (block) writer.flush();
 }
 
+/** `[1] Note text`, one note per line, where the list is placed or at the end. */
+function writeFootnotes(writer: TextWriter, context: Context): void {
+  const footnotes = context.footnotes;
+  if (!footnotes || footnotes.rendered) return;
+  footnotes.rendered = true;
+  const lines = footnotes.resolution.notes.flatMap((note) => {
+    if (!note.definition) return [];
+    const text = renderBlocks(note.definition.children, context, undefined)
+      .join(' ')
+      .replace(/\s*\n\s*/g, ' ');
+    return [`[${postkitFootnoteMark(footnotes, note)}] ${text}`];
+  });
+  if (lines.length > 0) writer.block(lines.join('\n'));
+}
+
 /**
  * Writes a document as readable plain text, for email text parts and `llms`
  * files. Paragraphs are separated by blank lines, lists keep their markers,
@@ -376,8 +420,14 @@ export function serializePostkitText(
       `Postkit output requires a version ${POSTKIT_DOCUMENT_VERSION} document.`,
     );
   }
-  const text = renderBlocks(document.children, { options }, undefined).join(
-    '\n\n',
-  );
+  const footnotes = createPostkitFootnoteContext(document, options.footnotes);
+  const context: Context = { options, ...(footnotes ? { footnotes } : {}) };
+  const writer = new TextWriter();
+  for (const node of document.children) {
+    visit(node, writer, context, undefined);
+  }
+  writeFootnotes(writer, context);
+  writer.flush();
+  const text = writer.blocks.join('\n\n');
   return text ? `${text}\n` : '';
 }
