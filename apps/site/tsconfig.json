@@ -50,6 +50,9 @@
       "path": "../../libs/site-theme"
     },
     {
+      "path": "../../libs/site-telemetry"
+    },
+    {
       "path": "../../packages/shiki"
     },
     {

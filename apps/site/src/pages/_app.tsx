@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { MetaProvider } from 'next-meta';
 
 import { siteMetaDefaults } from '../components/layout/page-meta';
+import { SiteAnalytics } from '../components/site-analytics';
 import { SiteShell } from '../components/site-shell';
 import { SearchProvider } from '../lib/search';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
@@ -35,11 +36,13 @@ function CustomApp({ Component, pageProps }: AppProps) {
         </style>
         {/* Title, description, canonical and social defaults; each page's PageMeta overrides them. */}
         <MetaProvider {...siteMetaDefaults(asPath)}>
-          <SearchProvider>
-            <SiteShell>
-              <Component {...pageProps} />
-            </SiteShell>
-          </SearchProvider>
+          <SiteAnalytics>
+            <SearchProvider>
+              <SiteShell>
+                <Component {...pageProps} />
+              </SiteShell>
+            </SearchProvider>
+          </SiteAnalytics>
         </MetaProvider>
       </PostkitProvider>
     </ThemeProvider>
