@@ -14,13 +14,11 @@ import { Audio } from './audio.js';
 import { Aside } from '../../components/aside/aside.js';
 import { Callout } from '../../components/callout/callout.js';
 import { Figure } from '../../components/figure/figure.js';
-import {
-  CardGrid,
-  Disclosure,
-  Gallery,
-  Steps,
-  Tabs,
-} from './article-structure.js';
+import { CardGrid } from '../../components/card-grid/card-grid.js';
+import { Disclosure } from '../../components/disclosure/disclosure.js';
+import { Gallery } from '../../components/gallery/gallery.js';
+import { Steps } from '../../components/steps/steps.js';
+import { Tabs } from '../../components/tabs/tabs.js';
 import { AuthorCard } from './author-card.js';
 import { CallToAction } from './call-to-action.js';
 import { Carousel } from './carousel.js';

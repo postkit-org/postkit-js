@@ -8,8 +8,8 @@ import {
 } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
-import { PostkitProvider } from '../provider.js';
-import { Tabs } from './article-structure.js';
+import { PostkitProvider } from '../../lib/provider.js';
+import { Tabs } from './tabs.js';
 
 afterEach(cleanup);
 

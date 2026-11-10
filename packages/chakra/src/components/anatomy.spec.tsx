@@ -2,7 +2,11 @@ import { defaultSystem, type SystemContext } from '@chakra-ui/react';
 import {
   asideDefinition,
   calloutDefinition,
+  cardGridDefinition,
+  disclosureDefinition,
   figureDefinition,
+  galleryDefinition,
+  stepsDefinition,
   type AnyPostkitComponentDefinition,
 } from '@postkit/core/components';
 import * as Headless from '@postkit/react';
@@ -16,6 +20,14 @@ import { Callout } from './callout/callout.js';
 import { postkitCalloutRecipe } from './callout/callout.recipe.js';
 import { Figure } from './figure/figure.js';
 import { postkitFigureRecipe } from './figure/figure.recipe.js';
+import { CardGrid } from './card-grid/card-grid.js';
+import { postkitCardGridRecipe } from './card-grid/card-grid.recipe.js';
+import { Disclosure } from './disclosure/disclosure.js';
+import { postkitDisclosureRecipe } from './disclosure/disclosure.recipe.js';
+import { Gallery } from './gallery/gallery.js';
+import { postkitGalleryRecipe } from './gallery/gallery.recipe.js';
+import { Steps } from './steps/steps.js';
+import { postkitStepsRecipe } from './steps/steps.recipe.js';
 
 /*
  * Both renderers must emit the same anatomy (03 §5.1): the same parts, nested
@@ -277,4 +289,209 @@ describe('Postkit anatomy parity between @postkit/react and @postkit/chakra', ()
       expect(recipe.defaultVariants).toEqual(definitionDefaults);
     },
   );
+  describe('article structure (03 step 7)', () => {
+    const galleryItems = [
+      { src: '/a.jpg', alt: 'A', caption: 'Caption', width: 800 },
+      { src: '/b.jpg', alt: '', href: '/b-full.jpg' },
+      { src: '/c.jpg', alt: 'C', href: '/c', caption: 'Linked' },
+    ];
+    const cardItems = [
+      {
+        title: 'One',
+        description: 'First',
+        href: '/one',
+        linkLabel: 'Read',
+        image: { src: '/one.jpg', alt: 'One' },
+        meta: '5 min',
+      },
+      { title: 'Two', href: '/two' },
+      { title: 'Three' },
+    ];
+    const stepItems = [
+      { title: 'Install', description: 'Add the package.' },
+      { title: 'Render' },
+    ];
+
+    const cases = [
+      [
+        'Gallery',
+        galleryDefinition,
+        Headless.Gallery,
+        Gallery,
+        [
+          { items: galleryItems },
+          { items: galleryItems, title: 'Title' },
+          { items: JSON.stringify(galleryItems), description: 'D', columns: 3 },
+        ],
+      ],
+      [
+        'Disclosure',
+        disclosureDefinition,
+        Headless.Disclosure,
+        Disclosure,
+        [
+          { summary: 'More', children: 'Body' },
+          { summary: 'Open', open: true, children: 'Body' },
+        ],
+      ],
+      [
+        'Steps',
+        stepsDefinition,
+        Headless.Steps,
+        Steps,
+        [{ items: stepItems }, { items: [] }],
+      ],
+      [
+        'CardGrid',
+        cardGridDefinition,
+        Headless.CardGrid,
+        CardGrid,
+        [
+          { items: cardItems },
+          { items: cardItems, title: 'Title', description: 'D', columns: 4 },
+          { items: JSON.stringify(cardItems), description: 'Only' },
+        ],
+      ],
+    ] as const;
+
+    it.each(cases)(
+      '%s emits the same anatomy for every variant, size and content shape',
+      (name, definition, HeadlessView, ChakraView, shapes) => {
+        for (const [variant, size] of combinations<string | undefined>(
+          variants,
+          sizes,
+        )) {
+          for (const shape of variant || size ? shapes.slice(-1) : shapes) {
+            const anatomy = expectSameAnatomy(
+              definition,
+              HeadlessView as ComponentType<never>,
+              ChakraView as ComponentType<never>,
+              { variant, size, ...shape },
+            );
+            expect(anatomy[0]?.attributes).toMatchObject({
+              'data-postkit-component': name,
+              'data-postkit-part': 'root',
+              'data-variant': variant ?? 'subtle',
+              'data-size': size ?? 'md',
+            });
+          }
+        }
+        for (const system of [presetSystem, defaultSystem]) {
+          const [root] = expectSameAnatomy(
+            definition,
+            HeadlessView as ComponentType<never>,
+            ChakraView as ComponentType<never>,
+            { unstyled: true, ...shapes[0] },
+            system,
+          );
+          expect(root?.attributes['data-postkit-unstyled']).toBe('');
+        }
+      },
+      60_000,
+    );
+
+    it('emits the full part trees', () => {
+      const parts = (nodes: readonly AnatomyNode[]): unknown[] =>
+        nodes.map((node) =>
+          node.children.length
+            ? {
+                [node.attributes['data-postkit-part'] ?? '']: parts(
+                  node.children,
+                ),
+              }
+            : node.attributes['data-postkit-part'],
+        );
+      const tree = (
+        definition: AnyPostkitComponentDefinition,
+        HeadlessView: unknown,
+        ChakraView: unknown,
+        props: Record<string, unknown>,
+      ) =>
+        parts(
+          expectSameAnatomy(
+            definition,
+            HeadlessView as ComponentType<never>,
+            ChakraView as ComponentType<never>,
+            props,
+          ),
+        );
+
+      expect(
+        tree(galleryDefinition, Headless.Gallery, Gallery, {
+          title: 'T',
+          description: 'D',
+          items: [{ src: '/a.jpg', alt: 'A', href: '/a', caption: 'C' }],
+        }),
+      ).toEqual([
+        {
+          root: [
+            { header: ['title', 'description'] },
+            { grid: [{ item: [{ imageLink: ['image'] }, 'caption'] }] },
+          ],
+        },
+      ]);
+      expect(
+        tree(disclosureDefinition, Headless.Disclosure, Disclosure, {
+          summary: 'S',
+          children: 'C',
+        }),
+      ).toEqual([{ root: [{ summary: ['indicator'] }, 'content'] }]);
+      expect(
+        tree(stepsDefinition, Headless.Steps, Steps, {
+          items: [{ title: 'T', description: 'D' }],
+        }),
+      ).toEqual([
+        { root: [{ item: ['marker', { content: ['title', 'description'] }] }] },
+      ]);
+      expect(
+        tree(cardGridDefinition, Headless.CardGrid, CardGrid, {
+          title: 'T',
+          description: 'D',
+          items: [cardItems[0]],
+        }),
+      ).toEqual([
+        {
+          root: [
+            { header: ['title', 'description'] },
+            {
+              grid: [
+                {
+                  card: [
+                    'image',
+                    {
+                      cardBody: [
+                        'cardTitle',
+                        'cardDescription',
+                        'meta',
+                        'link',
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it.each([
+      ['Gallery', galleryDefinition, postkitGalleryRecipe],
+      ['Disclosure', disclosureDefinition, postkitDisclosureRecipe],
+      ['Steps', stepsDefinition, postkitStepsRecipe],
+      ['CardGrid', cardGridDefinition, postkitCardGridRecipe],
+    ] as const)(
+      "%s's recipe defaults match its definition's defaults (D12)",
+      (_, definition, recipe) => {
+        const definitionDefaults = Object.fromEntries(
+          definition.themeVariants.map((name) => [
+            name,
+            (definition.props as AnyPostkitComponentDefinition['props'])[name]
+              ?.default,
+          ]),
+        );
+        expect(recipe.defaultVariants).toEqual(definitionDefaults);
+      },
+    );
+  });
 });

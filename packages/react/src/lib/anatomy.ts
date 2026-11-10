@@ -162,8 +162,10 @@ function propProblem(
         ? undefined
         : 'must be a boolean';
     case 'enum':
-      if (typeof value === 'string') {
-        return prop.values.includes(value)
+      // A number passes when its string form is allowed, such as
+      // `columns={3}` for a `'1' | '2' | '3' | '4'` enum.
+      if (typeof value === 'string' || typeof value === 'number') {
+        return prop.values.includes(String(value))
           ? undefined
           : `must be one of ${prop.values.map((entry) => JSON.stringify(entry)).join(', ')}`;
       }
@@ -180,7 +182,8 @@ function propProblem(
  * Checks authored props against a definition and returns one message per
  * problem: a missing required prop, or a value of the wrong kind. Number and
  * boolean props accept their string forms (`"1600"`, `"true"`), as authored
- * MDX attributes are strings. Undeclared props aren't checked.
+ * MDX attributes are strings, and enum props accept a number whose string
+ * form is allowed (`3` for `"3"`). Undeclared props aren't checked.
  */
 export function validatePostkitProps(
   definition: AnyPostkitComponentDefinition,

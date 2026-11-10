@@ -133,6 +133,21 @@ describe('validatePostkitProps', () => {
     ).toEqual([]);
   });
 
+  it('accepts a number for an enum whose values are numeric strings', () => {
+    const grid = definePostkitComponent({
+      name: 'ProbeGrid',
+      directive: 'postkit-probe-grid',
+      category: 'media',
+      description: 'A probe grid.',
+      props: { columns: prop.enum(['1', '2'], 'Columns.') },
+      slots: ['root'],
+    });
+    expect(validatePostkitProps(grid, { columns: 2 })).toEqual([]);
+    expect(validatePostkitProps(grid, { columns: 3 })).toEqual([
+      'ProbeGrid: the "columns" prop must be one of "1", "2"; received 3.',
+    ]);
+  });
+
   it('reports missing required props and wrong kinds', () => {
     expect(
       validatePostkitProps(definition, {

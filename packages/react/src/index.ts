@@ -44,3 +44,27 @@ export {
   type FigureProps,
   type FigureSlot,
 } from './components/figure/figure.js';
+export {
+  CardGrid,
+  type CardGridProps,
+  type CardGridSlot,
+  type CardItem,
+} from './components/card-grid/card-grid.js';
+export {
+  Disclosure,
+  type DisclosureProps,
+  type DisclosureSlot,
+} from './components/disclosure/disclosure.js';
+export {
+  Gallery,
+  type GalleryItem,
+  type GalleryProps,
+  type GallerySlot,
+} from './components/gallery/gallery.js';
+export {
+  Steps,
+  type StepItem,
+  type StepsProps,
+  type StepsSlot,
+} from './components/steps/steps.js';
+export { chakraOnly, type ChakraOnlyComponentName } from './lib/chakra-only.js';

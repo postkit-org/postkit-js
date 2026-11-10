@@ -14,7 +14,7 @@ import { act, cleanup, render, waitFor } from '@testing-library/react';
 import type { ReactElement } from 'react';
 
 import { PostkitProvider } from '../provider.js';
-import { Tabs } from './article-structure.js';
+import { Tabs } from '../../components/tabs/tabs.js';
 import { Carousel } from './carousel.js';
 import { LinkPreview } from './link-preview.js';
 import { SocialPost } from './social-post.js';

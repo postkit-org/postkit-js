@@ -49,15 +49,23 @@ import {
 import {
   postkitCardGridRecipe,
   postkitCardGridSlots,
+} from '../components/card-grid/card-grid.recipe.js';
+import {
   postkitDisclosureRecipe,
   postkitDisclosureSlots,
+} from '../components/disclosure/disclosure.recipe.js';
+import {
   postkitGalleryRecipe,
   postkitGallerySlots,
+} from '../components/gallery/gallery.recipe.js';
+import {
   postkitStepsRecipe,
   postkitStepsSlots,
+} from '../components/steps/steps.recipe.js';
+import {
   postkitTabsRecipe,
   postkitTabsSlots,
-} from './recipes/article-structure.recipe.js';
+} from '../components/tabs/tabs.recipe.js';
 import {
   postkitCalloutRecipe,
   postkitCalloutSlots,

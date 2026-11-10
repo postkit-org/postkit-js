@@ -14,37 +14,49 @@ export {
 } from './components/callout/callout.recipe.js';
 export {
   CardGrid,
-  Disclosure,
-  Gallery,
-  Steps,
-  Tabs,
   type CardGridProps,
   type CardItem,
-  type DisclosureProps,
-  type GalleryItem,
-  type GalleryProps,
-  type StepItem,
-  type StepsProps,
-  type TabItem,
-  type TabsProps,
-} from './lib/components/article-structure.js';
+} from './components/card-grid/card-grid.js';
 export {
   postkitCardGridRecipe,
   postkitCardGridSlots,
+  type PostkitCardGridSlot,
+} from './components/card-grid/card-grid.recipe.js';
+export {
+  Disclosure,
+  type DisclosureProps,
+} from './components/disclosure/disclosure.js';
+export {
   postkitDisclosureRecipe,
   postkitDisclosureSlots,
+  type PostkitDisclosureSlot,
+} from './components/disclosure/disclosure.recipe.js';
+export {
+  Gallery,
+  type GalleryItem,
+  type GalleryProps,
+} from './components/gallery/gallery.js';
+export {
   postkitGalleryRecipe,
   postkitGallerySlots,
+  type PostkitGallerySlot,
+} from './components/gallery/gallery.recipe.js';
+export {
+  Steps,
+  type StepItem,
+  type StepsProps,
+} from './components/steps/steps.js';
+export {
   postkitStepsRecipe,
   postkitStepsSlots,
+  type PostkitStepsSlot,
+} from './components/steps/steps.recipe.js';
+export { Tabs, type TabItem, type TabsProps } from './components/tabs/tabs.js';
+export {
   postkitTabsRecipe,
   postkitTabsSlots,
-  type PostkitCardGridSlot,
-  type PostkitDisclosureSlot,
-  type PostkitGallerySlot,
-  type PostkitStepsSlot,
   type PostkitTabsSlot,
-} from './lib/recipes/article-structure.recipe.js';
+} from './components/tabs/tabs.recipe.js';
 export {
   AuthorCard,
   type AuthorCardProps,
