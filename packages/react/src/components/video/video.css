@@ -27,6 +27,18 @@
     font-size: var(--postkit-text-sm);
     margin-block-start: var(--postkit-space-2);
   }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+  :where([data-postkit-part='duration']) {
+    font-variant-numeric: tabular-nums;
+    margin-inline-start: 0.5em;
+  }
+  :where([data-postkit-part='duration']:first-child) {
+    margin-inline-start: 0;
+  }
   :where(:scope[data-size='sm'] [data-postkit-part='caption']) {
     font-size: var(--postkit-text-xs);
   }

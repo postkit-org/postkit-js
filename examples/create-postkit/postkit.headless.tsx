@@ -1,8 +1,8 @@
 import { createPostkit, type PostkitSlotProps } from '@postkit/react';
 import { article, media, technical } from '@postkit/react/kits';
 
-import { deviceDefinition } from '../component-definition/device.definition';
-import { HeadlessDevice } from './device';
+import { showcaseDefinition } from '../component-definition/showcase.definition';
+import { HeadlessShowcase } from './showcase';
 
 /** A slot override (rung 5): it receives the icon part's props. */
 function InkMark(props: PostkitSlotProps) {
@@ -10,7 +10,7 @@ function InkMark(props: PostkitSlotProps) {
 }
 
 /**
- * The headless set: three kits plus the site's own Device. Omitting
+ * The headless set: three kits plus the site's own Showcase. Omitting
  * `renderer` uses `@postkit/react`'s views; style them with `styles.css` or
  * the site's CSS on the anatomy.
  */
@@ -19,10 +19,10 @@ export const postkit = createPostkit({
   // Carousel) stay out of the manifest, and using one fails the build with
   // an error naming it.
   kits: [article, technical, media],
-  components: [{ definition: deviceDefinition, view: HeadlessDevice }],
+  components: [{ definition: showcaseDefinition, view: HeadlessShowcase }],
   defaults: {
     Callout: { variant: 'plain' },
-    Device: { frame: 'laptop' },
+    Showcase: { frame: 'laptop' },
   },
   overrides: { Callout: { slots: { icon: InkMark } } },
   link: { openExternalInNewTab: true },
@@ -33,12 +33,12 @@ export const mdxOptions = { remarkPlugins: postkit.remarkPlugins };
 export const mdxComponents = postkit.mdxComponents;
 
 export function HeadlessArticle({ children }: { readonly children: string }) {
-  const { Callout, Device } = postkit.mdxComponents;
+  const { Callout, Showcase } = postkit.mdxComponents;
   return (
     <postkit.Provider>
       <article>
         <Callout tone="tip">{children}</Callout>
-        <Device screens={[{ src: '/media/editor.png', alt: 'The editor' }]} />
+        <Showcase screens={[{ src: '/media/editor.png', alt: 'The editor' }]} />
       </article>
     </postkit.Provider>
   );

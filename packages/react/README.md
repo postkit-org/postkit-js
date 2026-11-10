@@ -101,7 +101,7 @@ optional baseline once, at your app's root:
 import '@postkit/react/styles.css';
 ```
 
-It styles all 35 built-in components: structure, prose rhythm and restrained
+It styles every built-in component: structure, prose rhythm and restrained
 monochrome, with `subtle` (the default), `outline` and `plain` variants, `sm`,
 `md` and `lg` sizes, and Callout tones. It is built only from the anatomy
 attributes and `--postkit-*` custom properties, and follows the colour mode:
@@ -300,7 +300,7 @@ function InkMark(props: PostkitSlotProps) {
 export const postkit = createPostkit({
   kits: [article, technical, media],
   exclude: ['Gallery'],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
   defaults: { Callout: { variant: 'plain' } },
   overrides: {
     Callout: {
@@ -317,6 +317,10 @@ export const postkit = createPostkit({
   one at a time from `@postkit/react/kits/article`, `/technical`, `/media`,
   `/discovery`, `/engagement` and `/publishing`.
 - `defaults` apply beneath `postkit.Provider`; an author's prop always wins.
+- `<postkit.Provider figures="numbered">` numbers Figure, Video and Device
+  ("Fig. 1", "Fig. 2") in reading order. A Carousel or Gallery is one figure
+  whose items read "Fig. 3", "Fig. 3b", "Fig. 3c". `figureLabel` changes
+  "Fig.". `@postkit/chakra`'s `PostkitProvider` takes the same props.
 - `remarkPlugins` validates directives against the enabled set. A
   `chakra-only` component on the headless renderer fails the build, and
   throws if rendered, with an error naming it.

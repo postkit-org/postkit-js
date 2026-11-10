@@ -181,6 +181,12 @@ export {
   type VideoSlot,
   type VideoTrack,
 } from './components/video/video.js';
+export {
+  Device,
+  type DeviceKind,
+  type DeviceProps,
+  type DeviceSlot,
+} from './components/device/device.js';
 export * from './hooks/index.js';
 export * from './components/interactive.js';
 export * from './lib/create-postkit.js';

@@ -11,7 +11,7 @@ describe('headless Gallery', () => {
     expect(
       renderToStaticMarkup(<Gallery items={[{ src: '/a.jpg', alt: 'A' }]} />),
     ).toBe(
-      '<div data-postkit-component="Gallery" data-postkit-part="root" data-size="md" data-variant="subtle">' +
+      '<div data-postkit-component="Gallery" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="grid">' +
         '<div data-postkit-part="grid" style="--postkit-gallery-columns:2">' +
         '<figure data-postkit-part="item">' +
         '<img data-postkit-part="image" src="/a.jpg" alt="A" loading="lazy" decoding="async"/>' +

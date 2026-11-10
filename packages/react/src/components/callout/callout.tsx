@@ -25,6 +25,11 @@ export type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
 export type CalloutProps = PostkitViewProps<typeof calloutDefinition> & {
   /** Replaces the tone's mark. */
   readonly icon?: ReactNode;
+  /**
+   * An alias of `tone`, for content written with `type` (Prismark vaults,
+   * D6). `tone` is canonical and wins when both are set.
+   */
+  readonly type?: CalloutTone;
 };
 
 /**

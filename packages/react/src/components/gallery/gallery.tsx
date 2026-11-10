@@ -4,6 +4,7 @@ import {
 } from '@postkit/core/components';
 import type { CSSProperties } from 'react';
 
+import { usePostkitFigureNumber } from '../../lib/figures.js';
 import { postkitJsonItems } from '../../lib/json-items.js';
 import { postkitView, type PostkitViewProps } from '../../lib/view.js';
 import { postkitImageDimension } from '../figure/figure.js';
@@ -32,13 +33,18 @@ export type GalleryProps = Omit<
 /**
  * A responsive image gallery with captions and links: headless markup only.
  * The column count is the `--postkit-gallery-columns` custom property on the
- * grid part.
+ * grid part. `presentation: 'row'` sets 2–3 related items side by side (a
+ * horizontal snap rail on phones, focusable so keyboards can scroll it).
+ * Beneath `figures="numbered"`, the gallery is one figure: its items read
+ * "Fig. 1", "Fig. 1b", "Fig. 1c"….
  */
 export const Gallery = postkitView<typeof galleryDefinition, GalleryProps>(
   galleryDefinition,
   ({ props, part }) => {
-    const { title, description, columns } = props;
+    const { title, description, columns, presentation } = props;
     const items = postkitJsonItems<GalleryItem>(props.items, 'Gallery items');
+    const figure = usePostkitFigureNumber();
+    const row = presentation === 'row';
     return (
       <div {...part('root')}>
         {title || description ? (
@@ -51,6 +57,13 @@ export const Gallery = postkitView<typeof galleryDefinition, GalleryProps>(
           {...part('grid', {
             style: { '--postkit-gallery-columns': columns } as CSSProperties,
           })}
+          {...(row
+            ? {
+                role: 'group',
+                'aria-label': title ?? 'Images',
+                tabIndex: 0,
+              }
+            : undefined)}
         >
           {items.map((item, index) => {
             const image = (
@@ -77,8 +90,13 @@ export const Gallery = postkitView<typeof galleryDefinition, GalleryProps>(
                 ) : (
                   image
                 )}
-                {item.caption ? (
-                  <figcaption {...part('caption')}>{item.caption}</figcaption>
+                {item.caption || figure ? (
+                  <figcaption {...part('caption')}>
+                    {figure ? (
+                      <span {...part('number')}>{figure.label(index)}</span>
+                    ) : null}
+                    {item.caption}
+                  </figcaption>
                 ) : null}
               </figure>
             );

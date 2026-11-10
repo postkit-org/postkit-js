@@ -42,6 +42,14 @@
     font-size: 0.875em;
     margin-block-start: var(--postkit-space-1);
   }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+  :where([data-postkit-part='number'] + [data-postkit-part='caption']) {
+    display: inline;
+  }
 
   :where(:scope[data-variant='subtle']) {
     background: var(--postkit-color-surface);
