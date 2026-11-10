@@ -14,6 +14,10 @@ const contractDeclaration = readFileSync(
 
 const forbiddenDeclarationPatterns = [
   [/from ['"].*\/recipes\//, 'recipe module import'],
+  [/from ['"].*\.recipe(\.js)?['"]/, 'recipe module import'],
+  // The theme maps must emit resolved unions, not definition lookups.
+  [/from ['"]@postkit\/core/, 'definition import'],
+  [/PostkitSlotOf<|PostkitThemeVariantOf</, 'definition-indexed theme map'],
   [/PostkitRecipeOverride<typeof /, 'recipe-derived public override'],
   [/type DeepPartial</, 'recursive DeepPartial helper'],
   [/import .*SystemStyleObject/, 'recursive Chakra style import'],

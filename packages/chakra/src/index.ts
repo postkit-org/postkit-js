@@ -5,16 +5,19 @@ export {
   type SyndicationReference,
 } from './lib/components/appears-on.js';
 export { Audio, type AudioProps } from './lib/components/audio.js';
+export { Aside, type AsideProps } from './components/aside/aside.js';
+export { Callout, type CalloutProps } from './components/callout/callout.js';
 export {
-  Aside,
-  Callout,
+  postkitCalloutRecipe,
+  postkitCalloutSlots,
+  type PostkitCalloutSlot,
+} from './components/callout/callout.recipe.js';
+export {
   CardGrid,
   Disclosure,
   Gallery,
   Steps,
   Tabs,
-  type AsideProps,
-  type CalloutProps,
   type CardGridProps,
   type CardItem,
   type DisclosureProps,
@@ -26,8 +29,6 @@ export {
   type TabsProps,
 } from './lib/components/article-structure.js';
 export {
-  postkitCalloutRecipe,
-  postkitCalloutSlots,
   postkitCardGridRecipe,
   postkitCardGridSlots,
   postkitDisclosureRecipe,
@@ -38,7 +39,6 @@ export {
   postkitStepsSlots,
   postkitTabsRecipe,
   postkitTabsSlots,
-  type PostkitCalloutSlot,
   type PostkitCardGridSlot,
   type PostkitDisclosureSlot,
   type PostkitGallerySlot,
@@ -159,7 +159,7 @@ export {
   type ChartProps,
   type ChartSeries,
 } from './lib/components/chart.js';
-export { Figure, type FigureProps } from './lib/components/figure.js';
+export { Figure, type FigureProps } from './components/figure/figure.js';
 export {
   LinkPreview,
   type LinkPreviewPresentation,
@@ -311,7 +311,7 @@ export {
   postkitFigureRecipe,
   postkitFigureSlots,
   type PostkitFigureSlot,
-} from './lib/recipes/figure.recipe.js';
+} from './components/figure/figure.recipe.js';
 export {
   postkitLinkPreviewRecipe,
   postkitLinkPreviewSlots,
@@ -340,6 +340,15 @@ export {
   type PostkitSocialPostSlot,
 } from './lib/recipes/social-post.recipe.js';
 export type { PostkitSlotStyles } from './lib/recipes/types.js';
+export {
+  postkitChakraView,
+  type PostkitChakraPartOptions,
+  type PostkitChakraPartProps,
+  type PostkitChakraViewContext,
+  type PostkitChakraViewOptions,
+  type PostkitChakraViewOwnProps,
+  type PostkitChakraViewProps,
+} from './lib/view.js';
 export {
   postkitVideoRecipe,
   postkitVideoSlots,

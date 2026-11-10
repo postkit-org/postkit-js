@@ -12,9 +12,10 @@ import type {
 } from './theme-contract.js';
 
 /*
- * The theme maps are written out for type-check speed (see theme-contract.ts).
- * These assertions keep them identical to the definitions' anatomy and
- * theme-variant props.
+ * The theme maps are derived from the definitions through their type-only
+ * `$slot` and `$themeVariant` unions (see theme-contract.ts). These assertions
+ * check that derivation against the type-position helpers, and that no themed
+ * component is missing.
  */
 
 type Definitions = typeof postkitBuiltInDefinitions;

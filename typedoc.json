@@ -5,6 +5,7 @@
   "entryPoints": [
     "packages/core",
     "packages/unfurl",
+    "packages/react",
     "packages/chakra",
     "packages/email",
     "packages/shiki",

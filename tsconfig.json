@@ -53,6 +53,9 @@
     },
     {
       "path": "./libs/site-emails"
+    },
+    {
+      "path": "./packages/react"
     }
   ],
   "compilerOptions": {}

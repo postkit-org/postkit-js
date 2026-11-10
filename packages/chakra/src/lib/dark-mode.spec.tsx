@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import type { SystemContext } from '@chakra-ui/react';
 import { render } from '@testing-library/react';
 
-import { Callout } from './components/article-structure.js';
+import { Callout } from '../components/callout/callout.js';
 import { Terminal } from './components/technical-content.js';
 import { PostkitProvider } from './provider.js';
 import {

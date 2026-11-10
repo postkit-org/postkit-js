@@ -113,6 +113,7 @@ const packages = await Promise.all([
   import('@postkit/core/behaviors'),
   import('@postkit/core/behaviors/testing'),
   import('@postkit/unfurl'),
+  import('@postkit/react'),
   import('@postkit/chakra'),
   import('@postkit/chakra/theme'),
   import('@postkit/chakra/remark'),
@@ -195,6 +196,7 @@ import {
   type TabsBehaviorFixture,
 } from '@postkit/core/behaviors/testing';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
+import { Callout as HeadlessCallout, postkitView, type CalloutProps } from '@postkit/react';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
@@ -219,6 +221,10 @@ const _tabsDriver = null as unknown as BehaviorDriver<TabsBehaviorFixture>;
 void tabsBehaviorSpec;
 void _tabsDriver;
 void createLinkResolverRegistry;
+void HeadlessCallout;
+void postkitView;
+const _headlessCalloutProps: CalloutProps = { tone: 'tip', classNames: { icon: 'mark' } };
+void _headlessCalloutProps;
 void PostkitProvider;
 void DocumentRenderer;
 void createPostkitTheme;

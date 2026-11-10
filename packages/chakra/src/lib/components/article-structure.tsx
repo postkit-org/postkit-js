@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Alert,
   Box,
   Card,
   chakra,
@@ -19,13 +18,11 @@ import { useState, type ComponentProps, type ReactNode } from 'react';
 
 import { parseJsonProp } from '../json-props.js';
 import {
-  postkitCalloutRecipe,
   postkitCardGridRecipe,
   postkitDisclosureRecipe,
   postkitGalleryRecipe,
   postkitStepsRecipe,
   postkitTabsRecipe,
-  type PostkitCalloutSlot,
   type PostkitCardGridSlot,
   type PostkitDisclosureSlot,
   type PostkitGallerySlot,
@@ -51,108 +48,6 @@ type SharedRootProps<Slot extends string> = {
 function rootParts(rootProps?: BoxProps) {
   const { css, className, ...rest } = rootProps ?? {};
   return { rootCss: css, rootClassName: className, restRootProps: rest };
-}
-
-const calloutMarks = {
-  note: 'i',
-  tip: '✓',
-  important: '!',
-  warning: '!',
-  caution: '×',
-} as const;
-
-export type CalloutProps = {
-  readonly title?: string;
-  readonly children?: ReactNode;
-  readonly icon?: ReactNode;
-  readonly componentName?: 'Aside' | 'Callout';
-} & SharedRootProps<PostkitCalloutSlot> &
-  RecipeVariantProps<typeof postkitCalloutRecipe> &
-  UnstyledProp;
-
-export function Callout({
-  title,
-  children,
-  icon,
-  componentName = 'Callout',
-  rootProps,
-  slotStyles,
-  size,
-  variant,
-  tone = 'note',
-  unstyled,
-}: CalloutProps) {
-  const recipe = usePostkitSlotRecipe(
-    postkitRecipeKeys.callout,
-    postkitCalloutRecipe,
-  );
-  const styles: PostkitSlotStyles<PostkitCalloutSlot> = unstyled
-    ? {}
-    : recipe({ size, tone, variant });
-  const resolvedTone =
-    typeof tone === 'string' && tone in calloutMarks ? tone : 'note';
-  const { rootCss, rootClassName, restRootProps } = rootParts(rootProps);
-  return (
-    <Alert.Root
-      as="aside"
-      status={
-        resolvedTone === 'tip'
-          ? 'success'
-          : resolvedTone === 'warning'
-            ? 'warning'
-            : resolvedTone === 'caution'
-              ? 'error'
-              : resolvedTone === 'important'
-                ? 'neutral'
-                : 'info'
-      }
-      data-postkit-component={componentName}
-      data-postkit-tone={resolvedTone}
-      {...restRootProps}
-      className={postkitSlotClassName(recipe.classNameMap.root, rootClassName)}
-      css={[styles.root, slotStyles?.root, rootCss]}
-    >
-      <Alert.Indicator
-        aria-hidden="true"
-        className={recipe.classNameMap.icon}
-        css={[styles.icon, slotStyles?.icon]}
-      >
-        {icon ?? calloutMarks[resolvedTone]}
-      </Alert.Indicator>
-      <Alert.Content
-        className={recipe.classNameMap.content}
-        css={[styles.content, slotStyles?.content]}
-      >
-        {title ? (
-          <Alert.Title asChild>
-            <Heading
-              as="p"
-              size={postkitHeadingSize(size, {
-                sm: 'sm',
-                md: 'md',
-                lg: 'lg',
-              })}
-              className={recipe.classNameMap.title}
-              css={[styles.title, slotStyles?.title]}
-            >
-              {title}
-            </Heading>
-          </Alert.Title>
-        ) : null}
-        <Alert.Description
-          className={recipe.classNameMap.body}
-          css={[styles.body, slotStyles?.body]}
-        >
-          {children}
-        </Alert.Description>
-      </Alert.Content>
-    </Alert.Root>
-  );
-}
-
-export type AsideProps = CalloutProps;
-export function Aside(props: AsideProps) {
-  return <Callout {...props} componentName="Aside" />;
 }
 
 export interface GalleryItem {

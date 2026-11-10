@@ -15,7 +15,10 @@ import {
   postkitCarouselSlots,
 } from './carousel.recipe.js';
 import { postkitChartRecipe, postkitChartSlots } from './chart.recipe.js';
-import { postkitFigureRecipe, postkitFigureSlots } from './figure.recipe.js';
+import {
+  postkitFigureRecipe,
+  postkitFigureSlots,
+} from '../../components/figure/figure.recipe.js';
 import {
   postkitLinkPreviewRecipe,
   postkitLinkPreviewSlots,
