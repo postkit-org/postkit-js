@@ -135,3 +135,43 @@ values the definition doesn't allow, and in development warns once about a
 missing required prop or a value of the wrong kind (`validatePostkitProps`).
 `resolvePostkitViewState` and `postkitPartAttributes` expose the same logic
 for other renderers.
+
+## Configure a site with `createPostkit`
+
+`createPostkit` configures a site from the set it uses: kits, its own
+components, defaults and overrides. Omit `renderer` for these headless views,
+or pass `chakra` from `@postkit/chakra`.
+
+```tsx
+import { createPostkit, type PostkitSlotProps } from '@postkit/react';
+import { article, technical, media } from '@postkit/react/kits';
+
+function InkMark(props: PostkitSlotProps) {
+  return <span {...props} className={`ink ${props.className ?? ''}`} />;
+}
+
+export const postkit = createPostkit({
+  kits: [article, technical, media],
+  exclude: ['Gallery'],
+  components: [{ definition: deviceDefinition, view: Device }],
+  defaults: { Callout: { variant: 'plain' } },
+  overrides: {
+    Callout: {
+      slots: { icon: InkMark },
+      classNames: { title: 'font-display' },
+    },
+  },
+});
+
+// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+```
+
+- Kits are renderer-neutral lists of definitions: `@postkit/react/kits`, or
+  one at a time from `@postkit/react/kits/article`, `/technical`, `/media`,
+  `/discovery`, `/engagement` and `/publishing`.
+- `defaults` apply beneath `postkit.Provider`; an author's prop always wins.
+- `remarkPlugins` validates directives against the enabled set. A
+  `chakra-only` component on the headless renderer fails the build, and
+  throws if rendered, with an error naming it.
+- The Markdown tooling is also available on its own from
+  `@postkit/react/remark`.

@@ -37,13 +37,33 @@ The package is ESM-only and includes TypeScript declarations.
 ## What it exports
 
 - Chakra-backed article and publishing components
+- `chakra`, the renderer for `createPostkit` from `@postkit/react`
 - `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
 - `createPostkitMdxComponents`
 - `DocumentRenderer` and the `@postkit/chakra/document` interchange entry point
 - `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
 - `postkitDeclarationManifest` for editor integrations
-- `postkitComponentCatalog` and `component-manifest.json` for component
-  discovery
+- `postkitComponentCatalog` and `component-manifest.json` (manifest v2) for
+  component discovery
+
+With `createPostkit` from `@postkit/react`, pass `renderer: chakra` for these
+views. `postkit.Provider` then takes `PostkitProvider`'s props, and the site's
+theme-variant `defaults` (`variant`, `size`, `tone`, …) are written into the
+recipes' `defaultVariants`; other defaults become view defaults.
+
+```tsx
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, media],
+  defaults: { Callout: { variant: 'plain' } },
+});
+
+<postkit.Provider system={siteSystem}>{article}</postkit.Provider>;
+```
 
 Shared theme libraries should import from `@postkit/chakra/theme`, and Markdown
 build pipelines can import from `@postkit/chakra/remark`. These focused entry

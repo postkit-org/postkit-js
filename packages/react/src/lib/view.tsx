@@ -1,6 +1,7 @@
 import type {
   AnyPostkitComponentDefinition,
-  PostkitPropsOf,
+  PostkitAuthoredPropsOf,
+  PostkitDefaultedPropNameOf,
   PostkitSlotOf,
 } from '@postkit/core/components';
 import type {
@@ -16,6 +17,8 @@ import {
   warnPostkitProps,
   type PostkitPartAttributes,
 } from './anatomy.js';
+import { usePostkitComponentConfig } from './config.js';
+import { applyPostkitSlotOverrides } from './slot-overrides.js';
 
 /** Attributes for a headless view's root element. */
 export type PostkitRootProps = HTMLAttributes<HTMLElement> & {
@@ -49,7 +52,7 @@ export type PostkitChildrenPropsOf<
 
 /** The default props of a headless view built from `Definition`. */
 export type PostkitViewProps<Definition extends AnyPostkitComponentDefinition> =
-  PostkitPropsOf<Definition> &
+  PostkitAuthoredPropsOf<Definition> &
     PostkitChildrenPropsOf<Definition> &
     PostkitViewOwnProps<PostkitSlotOf<Definition>>;
 
@@ -72,6 +75,21 @@ export type PostkitPartGetter<
   Result = PostkitPartProps,
 > = (name: Slot, options?: Options) => Result;
 
+/**
+ * A view's props after defaults resolve: the view's own props, with every
+ * prop the definition gives a `default` non-optional (as `PostkitPropsOf`
+ * types it), keeping the view's own type for that prop.
+ */
+export type PostkitResolvedViewProps<
+  Definition extends AnyPostkitComponentDefinition,
+  Props,
+  OwnProps extends string = keyof PostkitViewOwnProps<string>,
+> = Omit<Props, OwnProps> & {
+  readonly [
+    Name in PostkitDefaultedPropNameOf<Definition> & keyof Props
+  ]-?: Exclude<Props[Name], undefined>;
+};
+
 /** The argument to a headless view's render function. */
 export interface PostkitViewContext<
   Definition extends AnyPostkitComponentDefinition,
@@ -79,12 +97,13 @@ export interface PostkitViewContext<
 > {
   readonly definition: Definition;
   /**
-   * The authored props with the definition's defaults applied. Enum values
-   * the definition doesn't allow fall back to the default. The view-owned
-   * props (`classNames`, `slotStyles`, `rootProps`, `unstyled`) are consumed
-   * by `part()` and removed.
+   * The authored props with defaults applied: the site's (`createPostkit`
+   * `defaults`), then the definition's, so a prop with a `default` is never
+   * `undefined`. Enum values the definition doesn't allow fall back to the
+   * default. The view-owned props (`classNames`, `slotStyles`, `rootProps`,
+   * `unstyled`) are consumed by `part()` and removed.
    */
-  readonly props: Omit<Props, keyof PostkitViewOwnProps<string>>;
+  readonly props: PostkitResolvedViewProps<Definition, Props>;
   /** The anatomy, `classNames`, `slotStyles` and `rootProps` for one part. */
   readonly part: PostkitPartGetter<PostkitSlotOf<Definition>>;
 }
@@ -118,9 +137,9 @@ function mergeStyles(
 /**
  * Builds a headless React view from a definition (03 §2.3).
  *
- * The view validates its props in development, applies the definition's
- * defaults, and hands `render` a `part(name)` that returns everything a part
- * needs: the anatomy attributes (`data-postkit-component` and the
+ * The view validates its props in development, applies the site's and the
+ * definition's defaults, and hands `render` a `part(name)` that returns
+ * everything a part needs: the anatomy attributes (`data-postkit-component` and the
  * theme-variant state on the root, `data-postkit-part` on every part), the
  * `classNames` entry, `slotStyles` and, on the root, `rootProps`.
  *
@@ -132,6 +151,10 @@ function mergeStyles(
  *
  * Pass `Props` to widen the view's props beyond the definition's, such as an
  * `icon` node.
+ *
+ * Beneath `createPostkit().Provider`, the view also reads the site's
+ * `defaults` for the component (an author's prop wins) and its slot
+ * overrides, which replace the matching parts.
  */
 export function postkitView<
   const Definition extends AnyPostkitComponentDefinition,
@@ -144,11 +167,13 @@ export function postkitView<
   function PostkitView(props: Props) {
     const { classNames, slotStyles, rootProps, unstyled, ...authored } =
       props as Props & PostkitViewOwnProps<string>;
-    warnPostkitProps(definition, authored);
+    const config = usePostkitComponentConfig(definition.name);
     const { props: resolved, state } = resolvePostkitViewState(
       definition,
       authored,
+      { defaults: config?.defaults },
     );
+    warnPostkitProps(definition, { ...config?.defaults, ...authored });
     const {
       className: rootClassName,
       style: rootStyle,
@@ -161,6 +186,7 @@ export function postkitView<
         ...postkitPartAttributes(definition, name, state, { unstyled }),
         ...(isRoot ? restRootProps : undefined),
         className: joinClassNames(
+          config?.classNames?.[name],
           classNames?.[name],
           isRoot ? rootClassName : undefined,
         ),
@@ -172,11 +198,14 @@ export function postkitView<
       } as PostkitPartProps;
     };
 
-    return render({
-      definition,
-      props: resolved as PostkitViewContext<Definition, Props>['props'],
-      part,
-    });
+    return applyPostkitSlotOverrides(
+      render({
+        definition,
+        props: resolved as PostkitViewContext<Definition, Props>['props'],
+        part,
+      }),
+      config?.slots,
+    );
   }
 
   PostkitView.displayName = options.displayName ?? definition.name;

@@ -9,6 +9,7 @@ silently invalidate the documented integrations.
 | [`astro`](astro)                               | A complete Astro MDX site, custom Chakra system module, and selective hydration           | Production build and rendered HTML assertions |
 | [`behaviors`](behaviors)                       | Tabs and embed consent from `@postkit/core/behaviors`, driven with plain DOM              | TypeScript                                    |
 | [`component-definition`](component-definition) | A custom component defined with `@postkit/core/components`, and the types derived from it | TypeScript                                    |
+| [`create-postkit`](create-postkit)             | `createPostkit` with three kits and a custom component, headless and Chakra (03 step 8)   | TypeScript and `consumer:check`               |
 | [`email`](email)                               | Chakra Email rendering with Postkit's email-safe component fallbacks                      | TypeScript                                    |
 | [`next`](next)                                 | Next.js's native `mdx-components.tsx` entry point                                         | TypeScript                                    |
 | [`react-router`](react-router)                 | An MDX component map beneath React Router                                                 | TypeScript                                    |

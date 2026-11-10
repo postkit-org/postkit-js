@@ -14,6 +14,7 @@
   "include": [
     "behaviors/**/*.ts",
     "component-definition/**/*.ts",
+    "create-postkit/**/*.tsx",
     "email/**/*.ts",
     "email/**/*.tsx",
     "next/**/*.ts",

@@ -80,7 +80,13 @@ The set you enable is the set everything else uses:
 - `postkit.manifest()` describes exactly the enabled set, so editors like
   Prismark offer writers only what your site renders.
 
-{/* TODO(0.3.0): confirm that an excluded or not-enabled component fails strict validation like an unknown one (03 §3.1 "Unknown components keep today's behaviour"). */}
+An excluded or not-enabled component fails strict validation like an
+unknown one, and the error says it isn't enabled. With `strict: false` it's a
+warning, as for any unknown component.
+
+On the headless renderer, a `chakra-only` component in a kit (an interactive
+component still waiting for its headless view) stays out of the manifest.
+Using it fails the build in every mode, with an error naming the component.
 
 ## Add your own
 

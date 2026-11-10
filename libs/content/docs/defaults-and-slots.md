@@ -45,7 +45,9 @@ another one. A prop written in the post always wins over a default.
 Without `defaults`, every component uses its definition's defaults. The
 `variant` default is `subtle` for every component.
 
-{/* TODO(0.3.0): confirm whether site defaults are reflected in postkit.manifest() per-prop `default`, or only the definition's default is. */}
+The [manifest](/docs/manifest)'s per-prop `default` is the definition's
+default, not your site's: the manifest describes the components, and your
+defaults are a rendering choice.
 
 ### How each renderer applies them
 
@@ -55,6 +57,9 @@ The same `defaults` object works with both renderers:
 - **Chakra:** props that are theme variants (`variant`, `size`, `tone`) are
   written into the recipe's `defaultVariants`. Other props become the view's
   defaults.
+
+If you set the same variant default in both places, `createPostkit`'s
+`defaults` wins.
 
 Because Chakra variant defaults live in the recipe, you can also set them with
 [part styles](/docs/part-styles), next to the rest of a component's look:
@@ -79,11 +84,10 @@ The part names are the component's anatomy, listed on each component page.
 
 ```tsx
 // lib/postkit.tsx
-import type { ComponentProps } from 'react';
-import { createPostkit } from '@postkit/react';
+import { createPostkit, type PostkitSlotProps } from '@postkit/react';
 import { article } from '@postkit/react/kits';
 
-function InkMark(props: ComponentProps<'span'>) {
+function InkMark(props: PostkitSlotProps) {
   return (
     <span {...props}>
       <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
@@ -103,12 +107,16 @@ export const postkit = createPostkit({
 });
 ```
 
-Your part receives the slot's props and styles: the anatomy attributes, the
-class names from your part styles and, with Chakra, the recipe's styles for
-that part. Spread them onto your root element so the part still carries its
-name and still picks up your CSS.
+Your part receives the slot's props and styles, typed as `PostkitSlotProps`:
+the anatomy attributes (`data-postkit-part` and any state), the part's
+`className` and `style`, and its children. With Chakra, the recipe's styles
+for that part arrive in `className` too. Spread them onto your root element
+so the part still carries its name and still picks up your CSS.
 
-{/* TODO(0.3.0): confirm the props type a slot component receives (03 §4 rung 5 says only "the slot's props and styles"), and replace ComponentProps<'span'> with the exported type. */}
+Slots replace the parts a view renders itself. A view not built with
+`postkitView` or `postkitChakraView` (in 0.3.0, Chakra's `CodeBlock`,
+`CodeGroup`, `LinkPreview` and `SocialPost`) can't take slot overrides yet,
+and `createPostkit` says so; override its view instead.
 
 ## When to go further
 

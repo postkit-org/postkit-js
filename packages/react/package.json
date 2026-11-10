@@ -11,7 +11,9 @@
     "headless",
     "mdx",
     "content-components",
-    "article-components"
+    "article-components",
+    "markdown",
+    "remark"
   ],
   "license": "MIT",
   "sideEffects": false,
@@ -35,6 +37,54 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./remark": {
+      "@postkit/source": "./src/remark.ts",
+      "types": "./dist/remark.d.ts",
+      "import": "./dist/remark.js",
+      "default": "./dist/remark.js"
+    },
+    "./kits": {
+      "@postkit/source": "./src/kits/index.ts",
+      "types": "./dist/kits/index.d.ts",
+      "import": "./dist/kits/index.js",
+      "default": "./dist/kits/index.js"
+    },
+    "./kits/article": {
+      "@postkit/source": "./src/kits/article.ts",
+      "types": "./dist/kits/article.d.ts",
+      "import": "./dist/kits/article.js",
+      "default": "./dist/kits/article.js"
+    },
+    "./kits/technical": {
+      "@postkit/source": "./src/kits/technical.ts",
+      "types": "./dist/kits/technical.d.ts",
+      "import": "./dist/kits/technical.js",
+      "default": "./dist/kits/technical.js"
+    },
+    "./kits/media": {
+      "@postkit/source": "./src/kits/media.ts",
+      "types": "./dist/kits/media.d.ts",
+      "import": "./dist/kits/media.js",
+      "default": "./dist/kits/media.js"
+    },
+    "./kits/discovery": {
+      "@postkit/source": "./src/kits/discovery.ts",
+      "types": "./dist/kits/discovery.d.ts",
+      "import": "./dist/kits/discovery.js",
+      "default": "./dist/kits/discovery.js"
+    },
+    "./kits/engagement": {
+      "@postkit/source": "./src/kits/engagement.ts",
+      "types": "./dist/kits/engagement.d.ts",
+      "import": "./dist/kits/engagement.js",
+      "default": "./dist/kits/engagement.js"
+    },
+    "./kits/publishing": {
+      "@postkit/source": "./src/kits/publishing.ts",
+      "types": "./dist/kits/publishing.d.ts",
+      "import": "./dist/kits/publishing.js",
+      "default": "./dist/kits/publishing.js"
     }
   },
   "files": [
@@ -43,7 +93,11 @@
   ],
   "dependencies": {
     "@postkit/core": "0.2.0",
-    "tslib": "^2.3.0"
+    "remark-directive": "^4.0.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "tslib": "^2.3.0",
+    "unified": "^11.0.5"
   },
   "peerDependencies": {
     "react": "^19.1.0"

@@ -83,8 +83,31 @@ export function useMDXComponents(): MDXComponents {
 }
 ```
 
+## With `createPostkit`
+
+The `createPostkit` preset configures a site from its kits, components,
+defaults and overrides, with internal links routed through Next.js:
+
+```ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/next';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+```
+
+It needs `@postkit/react` installed alongside `@postkit/chakra`.
+
 ## Public API
 
+- `createPostkit(options)`: `createPostkit` from `@postkit/react` with `link`
+  set to the Next.js link (pass link options or a component as `link`)
+- `CreatePostkitNextOptions`
+- `createPostkitNextLink(options?)`
 - `createPostkitNextComponents(options?)`
 - `PostkitNextComponentsOptions`
 - `PostkitNextLinkOptions`

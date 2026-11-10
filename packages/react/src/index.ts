@@ -23,6 +23,7 @@ export {
   type PostkitPartGetter,
   type PostkitPartOptions,
   type PostkitPartProps,
+  type PostkitResolvedViewProps,
   type PostkitRootProps,
   type PostkitViewComponent,
   type PostkitViewContext,
@@ -180,3 +181,4 @@ export {
   type VideoSlot,
   type VideoTrack,
 } from './components/video/video.js';
+export * from './lib/create-postkit.js';
