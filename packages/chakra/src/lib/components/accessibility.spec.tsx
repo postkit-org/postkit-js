@@ -9,7 +9,8 @@ import { PostkitProvider } from '../provider.js';
 import { postkitDefaultTheme } from '../theme.js';
 import { Chart } from './chart.js';
 import { postkitProseComponents } from './prose.js';
-import { Comparison, Stat } from './publication.js';
+import { Comparison } from '../../components/comparison/comparison.js';
+import { Stat } from '../../components/stat/stat.js';
 import { CodeBlock, CodeGroup, Diff, Terminal } from './technical-content.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>

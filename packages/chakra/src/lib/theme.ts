@@ -111,25 +111,43 @@ import {
 import {
   postkitAudienceBoundaryRecipe,
   postkitAudienceBoundarySlots,
+} from '../components/audience-boundary/audience-boundary.recipe.js';
+import {
   postkitComparisonRecipe,
   postkitComparisonSlots,
+} from '../components/comparison/comparison.recipe.js';
+import {
   postkitKeyTakeawayRecipe,
   postkitKeyTakeawaySlots,
+} from '../components/key-takeaway/key-takeaway.recipe.js';
+import {
   postkitPollRecipe,
   postkitPollSlots,
+} from '../components/poll/poll.recipe.js';
+import {
   postkitProductCardRecipe,
   postkitProductCardSlots,
+} from '../components/product-card/product-card.recipe.js';
+import {
   postkitPullQuoteRecipe,
   postkitPullQuoteSlots,
+} from '../components/pull-quote/pull-quote.recipe.js';
+import {
   postkitRelatedContentRecipe,
   postkitRelatedContentSlots,
+} from '../components/related-content/related-content.recipe.js';
+import {
   postkitSeriesNavigationRecipe,
   postkitSeriesNavigationSlots,
+} from '../components/series-navigation/series-navigation.recipe.js';
+import {
   postkitSponsorBlockRecipe,
   postkitSponsorBlockSlots,
+} from '../components/sponsor-block/sponsor-block.recipe.js';
+import {
   postkitStatRecipe,
   postkitStatSlots,
-} from './recipes/publication.recipe.js';
+} from '../components/stat/stat.recipe.js';
 
 export const postkitRecipeKeys = Object.freeze({
   audienceBoundary: 'postkitAudienceBoundary',
