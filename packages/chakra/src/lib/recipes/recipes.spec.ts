@@ -180,12 +180,7 @@ import {
 } from './appears-on.recipe.js';
 
 describe('D12: subtle is the default variant', () => {
-  /*
-   * Figure is being migrated to `postkitChakraView` (03 step 5) and still
-   * defaults to plain; it joins this check when that lands. Aside shares the
-   * Callout recipe, so it has no recipe key of its own.
-   */
-  const pending = new Set<string>(['Figure']);
+  // Aside shares the Callout recipe, so it has no recipe key of its own.
   const themed = Object.values(postkitBuiltInDefinitions).filter(
     (definition) => definition.name !== 'Aside',
   );
@@ -203,7 +198,6 @@ describe('D12: subtle is the default variant', () => {
 
       expect(recipe).toBeDefined();
       expect(props.variant?.default).toBe('subtle');
-      if (pending.has(name)) return;
       expect(recipe?.defaultVariants?.variant).toBe('subtle');
       // Subtle fills a quiet surface, so it must style something.
       expect(
