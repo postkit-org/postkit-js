@@ -1,7 +1,22 @@
-import { Box, Container, Heading, Stack, Text } from '@chakra-ui/react';
+import { chakra } from '@chakra-ui/react';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { ChangelogCard } from '../../components/changelog-card';
-import { BreadcrumbJsonLd, PageMeta } from '../../components/layout';
+import { useMemo, useState } from 'react';
+
+import { FollowReleases } from '../../components/changelog/follow-releases';
+import { githubReleasesUrl } from '../../components/changelog/release-links';
+import { ReleaseRow } from '../../components/changelog/release-row';
+import {
+  ALL_TAGS,
+  collectTags,
+  TagFilter,
+} from '../../components/changelog/tag-filter';
+import {
+  BreadcrumbJsonLd,
+  PageContainer,
+  PageMeta,
+  TwoToneHeading,
+} from '../../components/layout';
+import { TextLink } from '../../components/legal/text-link';
 import type { ChangelogEntrySummary } from '../../lib/changelog';
 import {
   getChangelogEntries,
@@ -25,57 +40,71 @@ export default function ChangelogPage({
   entries,
   latestSlug,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const tags = useMemo(() => collectTags(entries), [entries]);
+  const [tag, setTag] = useState(ALL_TAGS);
+  const shown =
+    tag === ALL_TAGS
+      ? entries
+      : entries.filter((entry) => entry.tags.includes(tag));
+
   return (
     <>
       <PageMeta
         title="Changelog"
-        description="Release notes and changes across the Postkit packages."
+        description="Every Postkit release, and what it means for your site: new components, theming, documents, adapters and tooling."
       />
       <BreadcrumbJsonLd items={[{ name: 'Changelog', path: '/changelog' }]} />
 
-      <Container maxW="5xl" paddingBlock={{ base: '16', md: '24' }}>
-        <Box maxW="3xl">
-          <Text
-            color="accent"
-            fontFamily="mono"
-            fontSize="sm"
-            fontWeight="700"
-            letterSpacing="0.12em"
-            textTransform="uppercase"
-          >
-            Release notes
-          </Text>
-          <Heading
-            as="h1"
-            fontFamily="heading"
-            fontSize={{ base: '5xl', md: '6xl' }}
-            fontWeight="500"
-            letterSpacing="-0.045em"
-            marginTop="3"
-          >
-            Changelog
-          </Heading>
-          <Text
-            color="fg.secondary"
-            fontSize={{ base: 'lg', md: 'xl' }}
-            lineHeight="1.7"
-            marginTop="5"
-          >
-            New components, framework integrations, and improvements to the
-            portable publishing contract.
-          </Text>
-        </Box>
+      <PageContainer
+        paddingTop={{ base: '64px', md: '96px' }}
+        paddingBottom="section"
+      >
+        <TwoToneHeading
+          as="h1"
+          textStyle="pageTitle"
+          fontSize="clamp(44px, 6vw, 80px)"
+          maxW="22ch"
+          title="Changelog."
+          quiet="Every release, and what it means for your site."
+        />
 
-        <Stack gap="6" marginTop={{ base: '12', md: '16' }}>
-          {entries.map((entry) => (
-            <ChangelogCard
-              entry={entry}
+        <chakra.div marginTop="32px">
+          <FollowReleases />
+        </chakra.div>
+
+        <chakra.div marginTop="40px">
+          <TagFilter tags={tags} value={tag} onValueChange={setTag} />
+        </chakra.div>
+
+        <chakra.p srOnly aria-live="polite">
+          {tag === ALL_TAGS
+            ? `${entries.length} releases`
+            : `${shown.length} of ${entries.length} releases tagged ${tag}`}
+        </chakra.p>
+
+        <chakra.ul
+          margin="0"
+          marginTop="40px"
+          padding="0"
+          listStyleType="none"
+          borderBottomWidth="1px"
+          borderColor="border"
+        >
+          {shown.map((entry) => (
+            <ReleaseRow
               key={entry.slug}
+              entry={entry}
               latest={entry.slug === latestSlug}
             />
           ))}
-        </Stack>
-      </Container>
+        </chakra.ul>
+
+        <chakra.p margin="0" marginTop="32px" fontSize="md" color="fg.muted">
+          Every release is also tagged on{' '}
+          <TextLink href={githubReleasesUrl}>GitHub</TextLink>, with npm
+          provenance for each package.
+        </chakra.p>
+      </PageContainer>
     </>
   );
 }

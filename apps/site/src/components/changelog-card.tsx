@@ -13,6 +13,8 @@ import {
   formatChangelogRelease,
   type ChangelogEntrySummary,
 } from '../lib/changelog';
+import { asStatement } from './changelog/release-row';
+import { ReleaseStatusBadge } from './changelog/release-status-badge';
 
 export interface ChangelogCardProps {
   readonly entry: ChangelogEntrySummary;
@@ -26,7 +28,6 @@ export function ChangelogCard({
   featured = false,
   latest = false,
 }: ChangelogCardProps) {
-  const upcoming = entry.status === 'upcoming';
   return (
     <Box
       as="article"
@@ -34,7 +35,7 @@ export function ChangelogCard({
       borderColor={featured ? 'fg' : 'border'}
       borderRadius="2xl"
       borderWidth="1px"
-      color={featured ? 'white' : 'fg'}
+      color={featured ? 'fg.inverted' : 'fg'}
       padding={{ base: '6', md: featured ? '9' : '7' }}
     >
       <Flex
@@ -54,15 +55,7 @@ export function ChangelogCard({
           >
             {formatChangelogRelease(entry)}
           </Text>
-          {upcoming ? (
-            <Badge colorPalette="orange" variant="subtle">
-              In development
-            </Badge>
-          ) : latest ? (
-            <Badge colorPalette="green" variant="subtle">
-              Latest
-            </Badge>
-          ) : null}
+          <ReleaseStatusBadge status={entry.status} latest={latest} />
         </Flex>
         <Flex gap="2" flexWrap="wrap">
           {entry.tags.map((tag) => (
@@ -85,7 +78,7 @@ export function ChangelogCard({
         fontWeight="500"
         marginTop="5"
       >
-        {entry.title}{' '}
+        {asStatement(entry.title)}{' '}
         <Text as="span" color={featured ? 'fg.inverted' : 'fg.muted'}>
           {entry.subtitle}
         </Text>
