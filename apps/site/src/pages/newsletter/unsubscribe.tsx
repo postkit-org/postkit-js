@@ -119,9 +119,32 @@ function NoScriptForm({ token }: { readonly token: string }) {
   );
 }
 
+/** Couldn't unsubscribe (network, 5xx, or the API's `#error` redirect). Try again needs the token. */
+function FailedView({ onRetry }: { readonly onRetry?: () => void }) {
+  return (
+    <WorkingView
+      actions={
+        onRetry ? (
+          <Button type="button" variant="primary" size="lg" onClick={onRetry}>
+            Try again
+          </Button>
+        ) : null
+      }
+    >
+      <CautionAlert
+        marginInline="auto"
+        maxW="460px"
+        title="We couldn’t take you off the list just now."
+      >
+        Try again in a minute.
+      </CautionAlert>
+    </WorkingView>
+  );
+}
+
 /**
  * What the server sends when there's no token: the API's form-post redirect lands on
- * `#done` or `#invalid`, which the server never sees. `:target` shows the right state before
+ * `#done`, `#invalid` or `#error`, which the server never sees. `:target` shows the right state before
  * (or without) JavaScript; with no fragment it's the Bad link state.
  */
 function FragmentStates() {
@@ -141,6 +164,9 @@ function FragmentStates() {
       </div>
       <div id="invalid" data-fragment="">
         <BadLinkView />
+      </div>
+      <div id="error" data-fragment="">
+        <FailedView />
       </div>
       <div data-fallback="">
         <BadLinkView />
@@ -174,6 +200,7 @@ export default function UnsubscribePage({
     if (token) replaceUrl(`${PATH}${hash}`);
 
     if (hash === '#done') setState('done');
+    else if (hash === '#error') setState('failed');
     else if (hash === '#invalid' || !token) setState('invalid');
     else void unsubscribe(token);
   }, [token]);
@@ -195,28 +222,7 @@ export default function UnsubscribePage({
     content = <BadLinkView />;
   } else {
     content = (
-      <WorkingView
-        actions={
-          token ? (
-            <Button
-              type="button"
-              variant="primary"
-              size="lg"
-              onClick={() => void unsubscribe(token)}
-            >
-              Try again
-            </Button>
-          ) : null
-        }
-      >
-        <CautionAlert
-          marginInline="auto"
-          maxW="460px"
-          title="We couldn’t take you off the list just now."
-        >
-          Try again in a minute.
-        </CautionAlert>
-      </WorkingView>
+      <FailedView onRetry={token ? () => void unsubscribe(token) : undefined} />
     );
   }
 

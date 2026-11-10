@@ -46,6 +46,8 @@ Every ticket, before it's marked done:
 - [ ] Privacy facts verified (09, "Facts the copy depends on"), including the hosting-logs line (09, "Copy changes since the boards"); `[DATE]` filled in, and `[contact address]` is `hello@postkit.org`
 - [ ] The postal address (09 Q5) is in every email footer, and no `[Postal address]` remains
 - [ ] `hello@postkit.org` receives mail (MX for `postkit.org` alongside Resend's SPF, DKIM and DMARC)
+- [ ] Resend account set up for the newsletter (PK-050): the `unsubscribe_token` contact property defined (type string) before first use; open and click tracking off on the `postkit.org` sending domain (Resend sets this per domain, not per email); confirm whether `unsubscribed` is account-wide under Resend's segments model (it would affect any other list on the account); confirm Broadcasts render `{{{contact.unsubscribe_token}}}` (04 §4), else switch the release footer to `{{{RESEND_UNSUBSCRIBE_URL}}}`
+- [ ] Rate limits are per serverless instance (3/address, 20/IP per hour); add a Vercel Firewall rule for `/api/newsletter/*` if abuse shows up
 - [ ] Resend domain verified; subscribe, confirm and unsubscribe (footer link and one-click) tested on production with a real inbox
 - [ ] Fathom site live; goals created; Sentry receiving events with no PII
 - [ ] OG images checked with a share debugger (Bluesky, X, LinkedIn, Slack)
