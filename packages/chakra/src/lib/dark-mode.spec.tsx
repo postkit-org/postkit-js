@@ -326,15 +326,76 @@ describe('Postkit dark mode', () => {
         'color-mix(in srgb, #a3cfff 22%, #09090B)',
       );
 
-      // Ordinary surfaces follow Chakra's semantic tokens.
-      expect(resolved(lightCallout, 'background')).toBe('#f4f4f5');
-      expect(resolved(darkCallout, 'background')).toBe('#18181b');
+      // A subtle callout fills with its tone's tint, not a grey surface.
+      expect(declared(lightCallout, 'background')).toBe(
+        'var(--chakra-colors-tint-note)',
+      );
+      expect(resolved(lightCallout, 'background')).toBe(
+        'color-mix(in srgb, #173da6 12%, #FFFFFF)',
+      );
+      expect(resolved(darkCallout, 'background')).toBe(
+        'color-mix(in srgb, #a3cfff 22%, #09090B)',
+      );
 
       // The terminal keeps its own dark surface in both modes.
       expect(resolved(lightTerminal, 'background')).toBe('#111111');
       expect(resolved(darkTerminal, 'background')).toBe('#111111');
     });
+
+    it.each(['light', 'dark'] as const)(
+      'fills every subtle callout tone with its tint in %s mode',
+      (mode) => {
+        const tones = [
+          'note',
+          'tip',
+          'important',
+          'warning',
+          'caution',
+        ] as const;
+        const { container } = render(
+          <div className={mode}>
+            <PostkitProvider preset={postkitDefaultTheme}>
+              {tones.map((tone) => (
+                <Callout key={tone} tone={tone} variant="subtle" title={tone}>
+                  Body
+                </Callout>
+              ))}
+              <Callout tone="tip" variant="outline">
+                Outline
+              </Callout>
+            </PostkitProvider>
+          </div>,
+        );
+        const roots = Array.from(
+          container.querySelectorAll('.postkit-callout__root'),
+        );
+        const share = mode === 'light' ? '12%' : '22%';
+        const page = mode === 'light' ? '#FFFFFF' : '#09090B';
+        const toneColors = {
+          light: ['#173da6', '#116932', '#641ba3', '#92310a', '#991919'],
+          dark: ['#a3cfff', '#86efac', '#d8b4fe', '#fdba74', '#fca5a5'],
+        }[mode];
+
+        expect(
+          roots
+            .slice(0, tones.length)
+            .map((root) => declared(root, 'background')),
+        ).toEqual(tones.map((tone) => `var(--chakra-colors-tint-${tone})`));
+        expect(
+          roots
+            .slice(0, tones.length)
+            .map((root) => resolved(root, 'background')),
+        ).toEqual(
+          toneColors.map(
+            (color) => `color-mix(in srgb, ${color} ${share}, ${page})`,
+          ),
+        );
+        // Only the subtle variant is filled.
+        expect(declared(roots[tones.length], 'background')).not.toMatch(/tint/);
+      },
+    );
   });
+
   it('emits the light colour-mode block before the dark one', () => {
     // Chakra writes colour-mode blocks in the order it first meets each condition. If the
     // dark block comes first, `:root, .light` wins on <html class="dark"> and dark mode

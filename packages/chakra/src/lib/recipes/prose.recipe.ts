@@ -186,6 +186,8 @@ export const postkitProseRecipe = defineSlotRecipe({
     table: {
       borderCollapse: 'collapse',
       display: 'block',
+      // Focusable so keyboard users can scroll it; show where focus is.
+      focusVisibleRing: 'inside',
       maxWidth: '100%',
       overflowX: 'auto',
       width: 'max-content',

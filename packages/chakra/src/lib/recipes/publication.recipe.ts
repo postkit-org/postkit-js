@@ -100,7 +100,11 @@ export const postkitKeyTakeawayRecipe = defineSlotRecipe({
       outline: {
         root: { borderColor: 'colorPalette.muted', borderWidth: '1px' },
       },
-      subtle: { root: { background: 'colorPalette.subtle' } },
+      subtle: {
+        root: { background: 'colorPalette.subtle' },
+        // `fg.muted` drops below 4.5:1 on the tinted surface.
+        body: { color: 'fg' },
+      },
       plain: {
         root: {
           borderInlineStartColor: 'colorPalette.solid',
@@ -173,7 +177,8 @@ export const postkitComparisonRecipe = defineSlotRecipe({
     root: { display: 'grid', gap: '2' },
     title: {},
     description: { color: 'fg.muted' },
-    scroller: { marginTop: '2', overflowX: 'auto' },
+    // Focusable so keyboard users can scroll it; show where focus is.
+    scroller: { focusVisibleRing: 'inside', marginTop: '2', overflowX: 'auto' },
     table: {
       borderCollapse: 'collapse',
       minWidth: '100%',

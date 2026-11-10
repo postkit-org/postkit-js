@@ -18,7 +18,9 @@ export const postkitShareActionsRecipe = defineSlotRecipe({
     root: { display: 'grid' },
     label: { fontWeight: 'semibold' },
     actions: { display: 'flex', flexWrap: 'wrap' },
-    action: { cursor: 'pointer' },
+    // The actions are Chakra Buttons, whose solid variant sets white text. Every
+    // Postkit variant replaces the fill, so the text and hover fill follow it.
+    action: { color: 'fg', cursor: 'pointer' },
     icon: {
       alignItems: 'center',
       display: 'inline-flex',
@@ -56,10 +58,22 @@ export const postkitShareActionsRecipe = defineSlotRecipe({
           background: 'bg',
           borderColor: 'border',
           borderWidth: '1px',
+          _hover: { background: 'bg.muted' },
         },
       },
-      subtle: { action: { background: 'bg.muted' } },
-      plain: { action: { paddingInline: '1' } },
+      subtle: {
+        action: {
+          background: 'bg.muted',
+          _hover: { background: 'bg.emphasized' },
+        },
+      },
+      plain: {
+        action: {
+          background: 'transparent',
+          paddingInline: '1',
+          _hover: { background: 'bg.muted' },
+        },
+      },
     },
     layout: {
       inline: {

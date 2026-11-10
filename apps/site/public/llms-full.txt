@@ -2605,7 +2605,7 @@ Existing normalized `metadata` values remain supported.
   socialServices={{
     linegraph: {
       label: 'Linegraph',
-      accent: '#6d5efc',
+      accent: 'purple.fg',
       createShareUrl: ({ url, title }) =>
         `https://linegraph.example/share?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title ?? '')}`,
     },
@@ -2614,6 +2614,11 @@ Existing normalized `metadata` values remain supported.
   {children}
 </PostkitProvider>
 ```
+
+`accent` colours the service's label text. The built-in services use
+mode-aware semantic tokens (`blue.fg`, `purple.fg`, `fg`), which keep 4.5:1 on
+Postkit's surfaces in light and dark; prefer a semantic token over a fixed
+colour for your own services too.
 
 `ShareActions` never loads third-party scripts. It uses the native share API,
 the clipboard, email, a configured `createShareUrl`, or a custom async `share`
@@ -2868,6 +2873,12 @@ export function App({ children }: { children: React.ReactNode }) {
 The default preset loads `astro`, `bash`, `json`, `markdown`, `mdx`, `tsx`, and
 `typescript`, plus GitHub light and dark themes. Shiki aliases such as `sh`,
 `md`, and `ts` work through their canonical grammars.
+
+Postkit's code surface is dark in both colour modes. GitHub Dark's comment grey
+(`#6a737d`) is below 4.5:1 there, so the adapter maps it to `#959da5` with
+Shiki's `colorReplacements`, scoped to `github-dark`; every other token colour
+is unchanged. Pass your own `highlightOptions.colorReplacements` for a theme to
+override it.
 
 ## Customize the bundle
 

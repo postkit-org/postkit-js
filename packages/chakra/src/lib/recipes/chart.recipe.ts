@@ -46,6 +46,8 @@ export const postkitChartRecipe = defineSlotRecipe({
       borderRadius: 'sm',
     },
     plot: {
+      // Focusable so keyboard users can scroll it; show where focus is.
+      focusVisibleRing: 'inside',
       overflowX: 'auto',
     },
     svg: {

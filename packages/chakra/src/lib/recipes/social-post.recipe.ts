@@ -71,7 +71,7 @@ export const postkitSocialPostRecipe = defineSlotRecipe({
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
     },
-    timestamp: { color: 'fg.subtle' },
+    timestamp: { color: 'fg.muted' },
     content: { whiteSpace: 'pre-wrap' },
     media: {
       background: 'bg.muted',
@@ -102,10 +102,10 @@ export const postkitSocialPostRecipe = defineSlotRecipe({
     snapshotInfo: {
       borderColor: 'border.muted',
       borderTopWidth: '1px',
-      color: 'fg.subtle',
+      color: 'fg.muted',
       display: 'grid',
     },
-    snapshotLabel: { color: 'fg.subtle' },
+    snapshotLabel: { color: 'fg.muted' },
     snapshotTime: { fontWeight: 'medium' },
     embedFrame: {
       aspectRatio: '16 / 9',

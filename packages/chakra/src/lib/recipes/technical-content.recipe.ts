@@ -340,6 +340,8 @@ export const postkitDiffRecipe = defineSlotRecipe({
     code: {
       display: 'block',
       fontFamily: 'mono',
+      // Focusable so keyboard users can scroll it; show where focus is.
+      focusVisibleRing: 'inside',
       overflowX: 'auto',
       paddingBlock: '3',
     },
