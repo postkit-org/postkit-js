@@ -8,7 +8,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import publicPackages from './public-packages.json' with { type: 'json' };
 
 const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -653,7 +653,32 @@ console.log('An ejected Chakra Figure still validates ::postkit-figure and rende
       throw new Error(`postkit manifest wrote ${components.join(', ')}.`);
     }
 
-    console.log('@postkit/cli works from its tarball.');
+    // `@postkit/nx` loads, and its generator writes postkit new's files.
+    const nx = await import(
+      pathToFileURL(
+        join(
+          consumerRoot,
+          'node_modules',
+          '@postkit',
+          'nx',
+          'dist',
+          'index.js',
+        ),
+      ).href
+    );
+    const written = new Map();
+    nx.componentGenerator(
+      {
+        root: consumerRoot,
+        exists: (path) => written.has(path),
+        write: (path, content) => written.set(path, content),
+      },
+      { name: 'device' },
+    );
+    if (!written.has('src/postkit/device/device.definition.ts')) {
+      throw new Error(`@postkit/nx wrote ${[...written.keys()].join(', ')}.`);
+    }
+    console.log('@postkit/cli and @postkit/nx work from their tarballs.');
   }
 
   process.stdout.write('Postkit tarball consumer verification passed.\n');

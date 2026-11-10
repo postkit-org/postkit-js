@@ -9,5 +9,6 @@
   "@postkit/react-router",
   "@postkit/tanstack-router",
   "@postkit/astro",
-  "@postkit/cli"
+  "@postkit/cli",
+  "@postkit/nx"
 ]

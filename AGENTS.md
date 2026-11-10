@@ -20,11 +20,12 @@ examples live in `examples/`, and validation and release programs live in
 | `@postkit/tanstack-router` | TanStack Router link and MDX adapter                                             |
 | `@postkit/astro`           | Astro integration, components, React bridges, and hydration policy               |
 | `@postkit/cli`             | The `postkit` command: add, eject, diff, new and manifest; `core` + file tooling |
+| `@postkit/nx`              | Nx `component` generator sharing `postkit new`'s templates (used in this repo)   |
 
 Dependency order is `core` and `unfurl` → `react` (headless) → renderers (`chakra`,
 `email`) → framework
 adapters. `cli` depends only on `core` at runtime (it reads the renderers'
-`dist/eject/` assets from the user's install). Keep application
+`dist/eject/` assets from the user's install), and `nx` on `cli`. Keep application
 layout, route definitions, credentials, asset storage, and persistence outside
 the portable component layer. `@postkit/shiki` is an optional companion adapter
 passed into the React provider and does not change the core dependency chain.
