@@ -17,7 +17,7 @@ export type PostkitScaffoldLayout = 'postkit' | 'site';
 
 /** Options for {@link postkitComponentScaffold}. */
 export interface PostkitComponentScaffoldOptions {
-  /** The component name: `device`, `Device`, `code-sample`… */
+  /** The component name: `showcase`, `Showcase`, `code-sample`… */
   readonly name: string;
   /** Also write a Chakra view and slot recipe. */
   readonly chakra?: boolean;
@@ -47,7 +47,7 @@ export interface PostkitScaffoldFile {
 
 /** What {@link postkitComponentScaffold} returns. */
 export interface PostkitComponentScaffold {
-  /** The folder name, such as `device`. */
+  /** The folder name, such as `showcase`. */
   readonly folder: string;
   readonly name: string;
   readonly directive: string;

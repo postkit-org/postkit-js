@@ -3463,7 +3463,7 @@
         "headless": "supported",
         "chakra": "supported",
         "astro": "static",
-        "email": "not-defined"
+        "email": { "fallback": "text" }
       }
     }
   }

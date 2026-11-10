@@ -150,9 +150,9 @@ export const postkit = createPostkit({ kits: Object.values(kits) });
   });
 
   it('rejects names that are not kits or components', async () => {
-    const { code, stderr } = await fixture.run('add', 'device');
+    const { code, stderr } = await fixture.run('add', 'showcase');
     expect(code).toBe(1);
-    expect(stderr).toContain('postkit new device');
+    expect(stderr).toContain('postkit new showcase');
   });
 });
 
@@ -320,7 +320,7 @@ describe('postkit new', () => {
     fixture.write('lib/postkit.ts', chakraConfig);
     const { code, stdout } = await fixture.run(
       'new',
-      'device',
+      'showcase',
       '--chakra',
       '--spec',
       '--category',
@@ -328,51 +328,51 @@ describe('postkit new', () => {
     );
     expect(code).toBe(0);
     for (const file of [
-      'device.definition.ts',
-      'device.tsx',
-      'device.css',
-      'device.recipe.ts',
-      'device.chakra.tsx',
-      'device.spec.tsx',
-      'device.chakra.spec.tsx',
+      'showcase.definition.ts',
+      'showcase.tsx',
+      'showcase.css',
+      'showcase.recipe.ts',
+      'showcase.chakra.tsx',
+      'showcase.spec.tsx',
+      'showcase.chakra.spec.tsx',
     ]) {
-      expect(stdout).toContain(`✓ src/postkit/device/${file}`);
+      expect(stdout).toContain(`✓ src/postkit/showcase/${file}`);
     }
     expect(stdout).toContain(
-      `import { Device } from '../src/postkit/device/device.chakra';`,
+      `import { Showcase } from '../src/postkit/showcase/showcase.chakra';`,
     );
     expect(stdout).toContain(
-      'components: [{ definition: deviceDefinition, view: Device }]',
+      'components: [{ definition: showcaseDefinition, view: Showcase }]',
     );
 
-    const { deviceDefinition } = await load<{
-      deviceDefinition: {
+    const { showcaseDefinition } = await load<{
+      showcaseDefinition: {
         name: string;
         directive: string;
         category: string;
         slots: string[];
       };
-    }>(fixture.path('src/postkit/device/device.definition.ts'));
-    expect(deviceDefinition).toMatchObject({
-      name: 'Device',
-      directive: 'postkit-device',
+    }>(fixture.path('src/postkit/showcase/showcase.definition.ts'));
+    expect(showcaseDefinition).toMatchObject({
+      name: 'Showcase',
+      directive: 'postkit-showcase',
       category: 'media',
       slots: ['root', 'title', 'body'],
     });
 
     const { createElement } = await import('react');
     const { renderToStaticMarkup } = await import('react-dom/server');
-    const { Device } = await load<{
-      Device: ComponentType<{ title?: string; children?: ReactNode }>;
-    }>(fixture.path('src/postkit/device/device.tsx'));
+    const { Showcase } = await load<{
+      Showcase: ComponentType<{ title?: string; children?: ReactNode }>;
+    }>(fixture.path('src/postkit/showcase/showcase.tsx'));
     const html = renderToStaticMarkup(
-      createElement(Device, { title: 'Hi' }, 'Body'),
+      createElement(Showcase, { title: 'Hi' }, 'Body'),
     );
-    expect(html).toContain('data-postkit-component="Device"');
+    expect(html).toContain('data-postkit-component="Showcase"');
     expect(html).toContain('data-postkit-part="title"');
     expect(html).toContain('data-variant="subtle"');
 
-    const again = await fixture.run('new', 'device');
+    const again = await fixture.run('new', 'showcase');
     expect(again.code).toBe(1);
   });
 });
@@ -383,18 +383,18 @@ describe('postkit manifest', () => {
   });
 
   it('writes the v2 manifest of the configured set, with a custom component', async () => {
-    await fixture.run('new', 'device', '--to', 'lib');
+    await fixture.run('new', 'showcase', '--to', 'lib');
     fixture.write(
       'lib/postkit.ts',
       `import { createPostkit } from '@postkit/react';
 import { media } from '@postkit/react/kits';
 
-import { Device } from './device/device';
-import { deviceDefinition } from './device/device.definition';
+import { Showcase } from './showcase/showcase';
+import { showcaseDefinition } from './showcase/showcase.definition';
 
 export const postkit = createPostkit({
   kits: [media],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
 });
 `,
     );
@@ -403,7 +403,7 @@ export const postkit = createPostkit({
     const manifest = JSON.parse(stdout);
     expect(manifest.version).toBe(2);
     expect(Object.keys(manifest.components)).toEqual(
-      expect.arrayContaining(['Figure', 'Device']),
+      expect.arrayContaining(['Figure', 'Showcase']),
     );
     expect(Object.keys(manifest.components)).not.toContain('Callout');
 
@@ -418,7 +418,7 @@ export const postkit = createPostkit({
     );
     expect(written.stderr).toContain('✓ public/postkit.json');
     expect(
-      JSON.parse(fixture.read('public/postkit.json')).components.Device,
+      JSON.parse(fixture.read('public/postkit.json')).components.Showcase,
     ).toBeDefined();
   });
 

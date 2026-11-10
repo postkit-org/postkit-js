@@ -33,7 +33,7 @@ npx postkit eject --help
 | `postkit add`      | Turn on a kit or component and update your config | `npx postkit add media`    |
 | `postkit eject`    | Copy a component's view into your repo to own it  | `npx postkit eject figure` |
 | `postkit diff`     | See what changed upstream since you ejected       | `npx postkit diff figure`  |
-| `postkit new`      | Scaffold a component of your own                  | `npx postkit new device`   |
+| `postkit new`      | Scaffold a component of your own                  | `npx postkit new showcase`   |
 | `postkit manifest` | Write the catalog for editors like Prismark       | `npx postkit manifest`     |
 
 Names work in any case: `figure`, `Figure`, `code-block` and `CodeBlock` all
@@ -151,17 +151,17 @@ Scaffold a component with its definition, headless view and styles. It gets a
 Markdown directive, validation and a manifest entry for free.
 
 ```sh
-npx postkit new device
+npx postkit new showcase
 ```
 
 ```text
-✓ src/postkit/device/device.definition.ts
-✓ src/postkit/device/device.tsx
-✓ src/postkit/device/device.css
+✓ src/postkit/showcase/showcase.definition.ts
+✓ src/postkit/showcase/showcase.tsx
+✓ src/postkit/showcase/showcase.css
 
 Register it with createPostkit({ components }) in lib/postkit.ts:
 …
-Use it as <Device /> in MDX or :::postkit-device in Markdown.
+Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
 ```
 
 | Flag                 | Default             | Meaning                                      |
@@ -174,7 +174,7 @@ Use it as <Device /> in MDX or :::postkit-device in Markdown.
 | `--description`      |                     | The one line editors and the catalog show    |
 | `--import-extension` | `none`              | `js` for Node's `nodenext` module resolution |
 
-In an Nx workspace, `nx g @postkit/nx:component device` writes the same files
+In an Nx workspace, `nx g @postkit/nx:component showcase` writes the same files
 from the same templates. See [New components](/docs/new-components).
 
 ## postkit manifest

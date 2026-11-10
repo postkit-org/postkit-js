@@ -15,22 +15,22 @@ manifest entry for free, and Prismark can offer it to writers.
 ## Scaffold it
 
 ```sh
-npx postkit new device --category media
+npx postkit new showcase --category media
 ```
 
 ```text
-✓ src/postkit/device/device.definition.ts
-✓ src/postkit/device/device.tsx
-✓ src/postkit/device/device.css
+✓ src/postkit/showcase/showcase.definition.ts
+✓ src/postkit/showcase/showcase.tsx
+✓ src/postkit/showcase/showcase.css
 
 Register it with createPostkit({ components }) in lib/postkit.ts:
 …
-Use it as <Device /> in MDX or :::postkit-device in Markdown.
+Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
 ```
 
 You get a definition, a headless view and its styles, as a starting point
 with a `title` prop and `root`, `title` and `body` parts. `--chakra` adds a
-Chakra view (`device.chakra.tsx`) and slot recipe (`device.recipe.ts`), and
+Chakra view (`showcase.chakra.tsx`) and slot recipe (`showcase.recipe.ts`), and
 `--spec` adds a spec per view. The CSS targets the anatomy attributes; import
 it from your global stylesheet. See [CLI](/docs/cli#postkit-new) for every
 flag.
@@ -39,7 +39,7 @@ In an Nx workspace, the generator writes the same files from the same
 templates:
 
 ```sh
-nx g @postkit/nx:component device --category=media --directory=libs/site/src/postkit
+nx g @postkit/nx:component showcase --category=media --directory=libs/site/src/postkit
 ```
 
 ## Define it
@@ -50,16 +50,16 @@ without React. See [definePostkitComponent](/docs/define-postkit-component) for
 every field.
 
 ```ts
-// device/device.definition.ts
+// showcase/showcase.definition.ts
 import {
   definePostkitComponent,
   prop,
   presentation,
 } from '@postkit/core/components';
 
-export const deviceDefinition = definePostkitComponent({
-  name: 'Device',
-  directive: 'postkit-device',
+export const showcaseDefinition = definePostkitComponent({
+  name: 'Showcase',
+  directive: 'postkit-showcase',
   category: 'media',
   description: 'A screenshot framed in a phone, tablet or laptop.',
   runtime: 'static',
@@ -67,7 +67,7 @@ export const deviceDefinition = definePostkitComponent({
   props: {
     ...presentation,
     kind: prop.enum(['iphone', 'ipad', 'mac'], {
-      description: 'The device frame.',
+      description: 'The showcase frame.',
       default: 'iphone',
       themeVariant: true,
     }),
@@ -78,7 +78,7 @@ export const deviceDefinition = definePostkitComponent({
     caption: prop.string('An optional caption.'),
   },
   slots: ['root', 'frame', 'screen', 'caption'],
-  keywords: ['device', 'screenshot', 'mockup'],
+  keywords: ['showcase', 'screenshot', 'mockup'],
   example: {
     props: { kind: 'iphone', src: '/shots/home.png', alt: 'The home screen' },
   },
@@ -99,12 +99,12 @@ Build the view with `postkitView`, so it emits the anatomy and picks up
 defaults, slot overrides and part styles like any other component:
 
 ```tsx
-// device/device.tsx
+// showcase/showcase.tsx
 import { postkitView } from '@postkit/react';
 
-import { deviceDefinition } from './device.definition';
+import { showcaseDefinition } from './showcase.definition';
 
-export const Device = postkitView(deviceDefinition, ({ props, part }) => (
+export const Showcase = postkitView(showcaseDefinition, ({ props, part }) => (
   <figure {...part('root')}>
     <div {...part('frame')}>
       <img {...part('screen')} src={props.src} alt={props.alt} />
@@ -125,34 +125,34 @@ Add the definition and view to `components`, next to your kits:
 import { createPostkit } from '@postkit/react';
 import { article, media } from '@postkit/react/kits';
 
-import { Device } from './device/device';
-import { deviceDefinition } from './device/device.definition';
+import { Showcase } from './showcase/showcase';
+import { showcaseDefinition } from './showcase/showcase.definition';
 
 export const postkit = createPostkit({
   kits: [article, media],
-  components: [{ definition: deviceDefinition, view: Device }],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
 });
 ```
 
 Writers can now use it in either syntax:
 
 ```mdx
-<Device kind="mac" src="/shots/editor.png" alt="The editor with a post open" />
+<Showcase kind="mac" src="/shots/editor.png" alt="The editor with a post open" />
 ```
 
 ```md
-::postkit-device{kind="mac" src="/shots/editor.png" alt="The editor with a post open"}
+::postkit-showcase{kind="mac" src="/shots/editor.png" alt="The editor with a post open"}
 ```
 
 ## What you get
 
 From the one definition:
 
-- Typed props for your view, with `PostkitPropsOf<typeof deviceDefinition>`.
+- Typed props for your view, with `PostkitPropsOf<typeof showcaseDefinition>`.
 - A directive, validated like Postkit's own (see [Validation](/docs/validation)).
 - An entry in `postkit.manifest()`, so editors like Prismark can offer it.
 - Slot and variant types derived from its parts and theme-variant props, and
-  the recipe key `postkitDevice` if you write a Chakra view and recipe for it
+  the recipe key `postkitShowcase` if you write a Chakra view and recipe for it
   with `postkitChakraView`.
 - Anatomy attributes on every part, so [part styles](/docs/part-styles) work
   the same as for built-in components.
