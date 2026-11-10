@@ -1,8 +1,27 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { postkitBuiltInDefinitions } from '@postkit/core/components';
+import { expectTypeOf } from 'vitest';
 import {
   POSTKIT_DECLARATION_VERSION,
   postkitDeclarationFor,
+  postkitDeclarationFromDefinition,
   postkitDeclarationManifest,
+  postkitPresentationProps,
+  type PostkitComponentDeclaration,
+  type PostkitComponentName,
 } from './declarations.js';
+
+/** The declarations exactly as the hand-written 0.2 code produced them. */
+const snapshot = JSON.parse(
+  readFileSync(
+    join(__dirname, 'testing', 'declarations-0.2.snapshot.json'),
+    'utf8',
+  ),
+) as {
+  readonly presentationProps: unknown;
+  readonly manifest: { readonly components: Record<string, unknown> };
+};
 
 describe('Postkit declaration manifest', () => {
   it('publishes stable names and directives for the initial article components', () => {
@@ -127,5 +146,84 @@ describe('Postkit declaration manifest', () => {
       'directives',
       'postkit',
     ]);
+  });
+
+  it('builds every declaration from its definition, identical to 0.2', () => {
+    const definitions = Object.entries(postkitBuiltInDefinitions);
+    expect(definitions.map(([name]) => name)).toEqual(
+      Object.keys(snapshot.manifest.components),
+    );
+    for (const [name, definition] of definitions) {
+      const declaration = postkitDeclarationFromDefinition(definition);
+      expect(declaration).toStrictEqual(snapshot.manifest.components[name]);
+      // Key order reaches the generated manifest, so compare it too.
+      expect(JSON.stringify(declaration)).toBe(
+        JSON.stringify(snapshot.manifest.components[name]),
+      );
+    }
+    expect(JSON.parse(JSON.stringify(postkitDeclarationManifest))).toEqual(
+      snapshot.manifest,
+    );
+    expect(JSON.stringify(postkitDeclarationManifest)).toBe(
+      JSON.stringify(snapshot.manifest),
+    );
+    expect(JSON.stringify(postkitPresentationProps)).toBe(
+      JSON.stringify(snapshot.presentationProps),
+    );
+    expect(Object.isFrozen(postkitDeclarationManifest)).toBe(true);
+  });
+
+  it('keeps the 0.2 public types', () => {
+    expectTypeOf<PostkitComponentName>().toEqualTypeOf<
+      | 'AppearsOn'
+      | 'AudienceBoundary'
+      | 'Aside'
+      | 'Audio'
+      | 'AuthorCard'
+      | 'Callout'
+      | 'CallToAction'
+      | 'CardGrid'
+      | 'Carousel'
+      | 'Chart'
+      | 'CodeBlock'
+      | 'CodeGroup'
+      | 'Comparison'
+      | 'Diff'
+      | 'Disclosure'
+      | 'Figure'
+      | 'FileCard'
+      | 'FileTree'
+      | 'Gallery'
+      | 'KeyTakeaway'
+      | 'LinkPreview'
+      | 'NewsletterSignup'
+      | 'Poll'
+      | 'ProductCard'
+      | 'PullQuote'
+      | 'RelatedContent'
+      | 'ShareActions'
+      | 'SeriesNavigation'
+      | 'SocialPost'
+      | 'Steps'
+      | 'SponsorBlock'
+      | 'Stat'
+      | 'Tabs'
+      | 'Terminal'
+      | 'Video'
+    >();
+    const { components } = postkitDeclarationManifest;
+    expectTypeOf(components.Callout.name).toEqualTypeOf<'Callout'>();
+    expectTypeOf(components.Callout.childMode).toEqualTypeOf<'mdx'>();
+    expectTypeOf(components.Callout.props.tone.kind).toEqualTypeOf<'enum'>();
+    expectTypeOf(components.Callout.props.tone.values).toEqualTypeOf<
+      string[]
+    >();
+    expectTypeOf(components.Video.props.src.required).toEqualTypeOf<true>();
+    expectTypeOf(components.Poll.props.question.kind).toEqualTypeOf<'string'>();
+    expectTypeOf(components.Poll).toExtend<PostkitComponentDeclaration>();
+    expectTypeOf(postkitPresentationProps.size.values).toEqualTypeOf<
+      string[]
+    >();
+    expectTypeOf(postkitPresentationProps.size.kind).toEqualTypeOf<'enum'>();
   });
 });

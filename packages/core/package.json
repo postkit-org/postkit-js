@@ -1,7 +1,7 @@
 {
   "name": "@postkit/core",
   "version": "0.2.0",
-  "description": "Portable Postkit document model, parsers, and serializers",
+  "description": "Portable Postkit document model, parsers, serializers, and component definitions",
   "keywords": [
     "postkit",
     "publishing",
@@ -33,6 +33,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./components": {
+      "@postkit/source": "./src/components/index.ts",
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
     }
   },
   "files": [
@@ -58,6 +64,12 @@
       "npm:public",
       "scope:postkit",
       "layer:foundation"
+    ]
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/index.ts",
+      "src/components/index.ts"
     ]
   }
 }

@@ -1,22 +1,30 @@
 import {
-  postkitDeclarationManifest,
+  postkitBuiltInDefinitions,
+  postkitComponentCategories,
+  type AnyPostkitComponentDefinition,
+  type PostkitComponentCategoryId,
+  type PostkitComponentRuntime as CorePostkitComponentRuntime,
+  type PostkitPropDefinition,
+} from '@postkit/core/components';
+import {
+  POSTKIT_DECLARATION_VERSION,
+  postkitDeclarationFromDefinition,
   type PostkitComponentDeclaration,
   type PostkitComponentName,
-  type PostkitPropDeclaration,
 } from './declarations.js';
+
+/*
+ * The v1 component catalog (`component-manifest.json`), built from the
+ * definitions in `@postkit/core/components`. Its output is byte-identical to
+ * 0.2; manifest v2 (03 §3.2) replaces it.
+ */
 
 export const POSTKIT_COMPONENT_CATALOG_VERSION = 1 as const;
 
 export type PostkitComponentCategory =
-  | 'Article structure'
-  | 'Discovery'
-  | 'Engagement'
-  | 'Media'
-  | 'Publishing'
-  | 'Technical content';
+  (typeof postkitComponentCategories)[PostkitComponentCategoryId];
 
-export type PostkitComponentRuntime =
-  'client' | 'native-controls' | 'resolver' | 'static';
+export type PostkitComponentRuntime = CorePostkitComponentRuntime;
 
 export interface PostkitComponentExample {
   readonly props: Readonly<Record<string, unknown>>;
@@ -54,79 +62,7 @@ export interface PostkitComponentCatalog {
   >;
 }
 
-const categories = {
-  'Article structure': [
-    'Aside',
-    'AudienceBoundary',
-    'Callout',
-    'CardGrid',
-    'Disclosure',
-    'KeyTakeaway',
-    'PullQuote',
-    'Steps',
-    'Tabs',
-  ],
-  'Technical content': [
-    'Chart',
-    'CodeBlock',
-    'CodeGroup',
-    'Comparison',
-    'Diff',
-    'FileCard',
-    'FileTree',
-    'Stat',
-    'Terminal',
-  ],
-  Media: ['Audio', 'Carousel', 'Figure', 'Gallery', 'Video'],
-  Discovery: [
-    'AppearsOn',
-    'AuthorCard',
-    'LinkPreview',
-    'RelatedContent',
-    'SeriesNavigation',
-    'SocialPost',
-  ],
-  Engagement: ['CallToAction', 'NewsletterSignup', 'Poll', 'ShareActions'],
-  Publishing: ['ProductCard', 'SponsorBlock'],
-} as const satisfies Readonly<
-  Record<PostkitComponentCategory, readonly PostkitComponentName[]>
->;
-
-const categoryByName = new Map<PostkitComponentName, PostkitComponentCategory>(
-  Object.entries(categories).flatMap(([category, names]) =>
-    names.map((name) => [name, category as PostkitComponentCategory] as const),
-  ),
-);
-
-const clientComponents = new Set<PostkitComponentName>([
-  'Carousel',
-  'CodeBlock',
-  'CodeGroup',
-  'NewsletterSignup',
-  'Poll',
-  'ShareActions',
-  'Tabs',
-]);
-const nativeControlComponents = new Set<PostkitComponentName>([
-  'Audio',
-  'Disclosure',
-  'Video',
-]);
-const resolverComponents = new Set<PostkitComponentName>([
-  'LinkPreview',
-  'SocialPost',
-]);
-const astroHydratedComponents = new Set<PostkitComponentName>([
-  'Carousel',
-  'CodeBlock',
-  'CodeGroup',
-  'LinkPreview',
-  'NewsletterSignup',
-  'Poll',
-  'ShareActions',
-  'SocialPost',
-  'Tabs',
-]);
+const exampleChildren = 'Example content.';
 
 function words(value: string): string[] {
   return value
@@ -136,7 +72,7 @@ function words(value: string): string[] {
     .filter(Boolean);
 }
 
-function sampleJson(name: PostkitComponentName, prop: string): unknown {
+function sampleJson(name: string, prop: string): unknown {
   if (prop === 'columns') return ['Starter', 'Pro'];
   if (prop === 'data') return [{ label: 'January', value: 12 }];
   if (prop === 'items') {
@@ -155,7 +91,7 @@ function sampleJson(name: PostkitComponentName, prop: string): unknown {
   return {};
 }
 
-function sampleString(name: PostkitComponentName, prop: string): string {
+function sampleString(name: string, prop: string): string {
   switch (prop) {
     case 'alt':
       return 'A descriptive example';
@@ -194,15 +130,15 @@ function sampleString(name: PostkitComponentName, prop: string): string {
 }
 
 function sampleValue(
-  name: PostkitComponentName,
+  name: string,
   prop: string,
-  declaration: PostkitPropDeclaration,
+  definition: PostkitPropDefinition,
 ): unknown {
-  switch (declaration.kind) {
+  switch (definition.kind) {
     case 'boolean':
       return true;
     case 'enum':
-      return declaration.values?.[0] ?? '';
+      return definition.values[0] ?? '';
     case 'json':
       return sampleJson(name, prop);
     case 'number':
@@ -210,6 +146,18 @@ function sampleValue(
     case 'string':
       return sampleString(name, prop);
   }
+}
+
+/** A definition's own example, or sample values for its required props. */
+function exampleProps(
+  definition: AnyPostkitComponentDefinition,
+): Record<string, unknown> {
+  if (definition.example) return { ...definition.example.props };
+  return Object.fromEntries(
+    Object.entries(definition.props)
+      .filter(([, prop]) => prop.required)
+      .map(([name, prop]) => [name, sampleValue(definition.name, name, prop)]),
+  );
 }
 
 function jsxAttribute(key: string, value: unknown): string {
@@ -225,88 +173,94 @@ function directiveAttribute(key: string, value: unknown): string {
 }
 
 function createExample(
-  declaration: PostkitComponentDeclaration,
+  definition: AnyPostkitComponentDefinition,
 ): PostkitComponentExample {
-  const props = Object.fromEntries(
-    Object.entries(declaration.props)
-      .filter(([, prop]) => prop.required)
-      .map(([name, prop]) => [name, sampleValue(declaration.name, name, prop)]),
-  );
+  const props = exampleProps(definition);
   const jsxProps = Object.entries(props)
     .map(([name, value]) => jsxAttribute(name, value))
     .join(' ');
   const directiveProps = Object.entries(props)
     .map(([name, value]) => directiveAttribute(name, value))
     .join(' ');
-  const children =
-    declaration.childMode === 'mdx' ? '\n  Example content.\n' : '';
+  const { name, directive } = definition;
+  const children = definition.example?.children ?? exampleChildren;
 
   return {
     props: Object.freeze(props),
     jsx:
-      declaration.childMode === 'mdx'
-        ? `<${declaration.name}${jsxProps ? ` ${jsxProps}` : ''}>${children}</${declaration.name}>`
-        : `<${declaration.name}${jsxProps ? ` ${jsxProps}` : ''} />`,
+      definition.children === 'mdx'
+        ? `<${name}${jsxProps ? ` ${jsxProps}` : ''}>\n  ${children}\n</${name}>`
+        : `<${name}${jsxProps ? ` ${jsxProps}` : ''} />`,
     directive:
-      declaration.childMode === 'mdx'
-        ? `:::${declaration.directive}${directiveProps ? `{${directiveProps}}` : ''}\nExample content.\n:::`
-        : `::${declaration.directive}${directiveProps ? `{${directiveProps}}` : ''}`,
+      definition.children === 'mdx'
+        ? `:::${directive}${directiveProps ? `{${directiveProps}}` : ''}\n${children}\n:::`
+        : `::${directive}${directiveProps ? `{${directiveProps}}` : ''}`,
   };
 }
 
-function runtimeFor(name: PostkitComponentName): PostkitComponentRuntime {
-  if (resolverComponents.has(name)) return 'resolver';
-  if (nativeControlComponents.has(name)) return 'native-controls';
-  if (clientComponents.has(name)) return 'client';
-  return 'static';
-}
-
 function createCatalogEntry(
-  declaration: PostkitComponentDeclaration,
+  definition: AnyPostkitComponentDefinition,
 ): PostkitComponentCatalogEntry {
-  const category = categoryByName.get(declaration.name);
-  if (!category) {
-    throw new TypeError(
-      `Postkit component "${declaration.name}" has no catalog category.`,
-    );
-  }
+  const declaration = postkitDeclarationFromDefinition(definition);
+  const category = postkitComponentCategories[definition.category];
 
   return Object.freeze({
     ...declaration,
     category,
     keywords: Object.freeze([
       ...new Set([
-        ...words(declaration.name),
+        ...words(definition.name),
         ...words(category),
-        ...Object.keys(declaration.props).flatMap(words),
+        ...Object.keys(definition.props).flatMap(words),
+        ...definition.keywords,
       ]),
     ]),
-    example: Object.freeze(createExample(declaration)),
+    example: Object.freeze(createExample(definition)),
     preview: Object.freeze({
       kind: 'live' as const,
-      label: `${declaration.name} component preview`,
+      label: `${definition.name} component preview`,
     }),
-    runtime: runtimeFor(declaration.name),
-    stability: 'initial' as const,
+    runtime: definition.runtime,
+    // v1 has one stability; manifest v2 publishes the definition's own.
+    stability: definition.stability as 'initial',
     support: Object.freeze({
       react: 'supported' as const,
-      astro: astroHydratedComponents.has(declaration.name)
-        ? ('hydrated' as const)
-        : ('static' as const),
+      // Astro hydrates every component with client behaviour or a resolver.
+      astro:
+        definition.runtime === 'client' || definition.runtime === 'resolver'
+          ? ('hydrated' as const)
+          : ('static' as const),
       email: 'not-defined' as const,
     }),
   });
 }
 
-export const postkitComponentCatalog = Object.freeze({
-  id: 'postkit.component-catalog',
-  version: POSTKIT_COMPONENT_CATALOG_VERSION,
-  declarationVersion: postkitDeclarationManifest.version,
-  components: Object.freeze(
-    Object.fromEntries(
-      Object.entries(postkitDeclarationManifest.components).map(
-        ([name, declaration]) => [name, createCatalogEntry(declaration)],
-      ),
-    ) as Record<PostkitComponentName, PostkitComponentCatalogEntry>,
-  ),
-} satisfies PostkitComponentCatalog);
+/** Builds a v1 catalog from definitions, keyed and ordered as given. */
+export function createPostkitComponentCatalog(
+  definitions: Readonly<Record<string, AnyPostkitComponentDefinition>>,
+): PostkitComponentCatalog & {
+  readonly declarationVersion: typeof POSTKIT_DECLARATION_VERSION;
+} {
+  return Object.freeze({
+    id: 'postkit.component-catalog',
+    version: POSTKIT_COMPONENT_CATALOG_VERSION,
+    declarationVersion: POSTKIT_DECLARATION_VERSION,
+    components: Object.freeze(
+      Object.fromEntries(
+        Object.entries(definitions).map(([name, definition]) => [
+          name,
+          createCatalogEntry(definition),
+        ]),
+      ) as Record<PostkitComponentName, PostkitComponentCatalogEntry>,
+    ),
+  });
+}
+
+export const postkitComponentCatalog: Readonly<{
+  id: 'postkit.component-catalog';
+  version: typeof POSTKIT_COMPONENT_CATALOG_VERSION;
+  declarationVersion: typeof POSTKIT_DECLARATION_VERSION;
+  components: Readonly<
+    Record<PostkitComponentName, PostkitComponentCatalogEntry>
+  >;
+}> = createPostkitComponentCatalog(postkitBuiltInDefinitions);
