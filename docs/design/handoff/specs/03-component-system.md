@@ -3,7 +3,7 @@
 The package-side spec the site depends on. It was written before the site design and has been updated for it (v4, 7 Nov 2026: §5.5, §6.1, D14 confirmed, D15–D17; v5, 10 Nov 2026: §8 restructured so everything ships in 0.3.0 with the site launch, D18–D19). The site tickets in 06 that need package work point here.
 
 **Repo:** github.com/postkit-org/postkit-js (`main` @ `1bed29a`, v0.2.0)
-**Status:** v5. D1–D19 decided between 5 and 10 Nov 2026. Branch `v0.3.0` (`973776a`) holds the `@postkit/chakra` rename.
+**Status:** v5. D1–D20 decided between 5 and 10 Nov 2026. Branch `v0.3.0` (`973776a`) holds the `@postkit/chakra` rename.
 **Consumers to keep working:** Prismark (Spec 19, `@postkit/prismark`), prismark.app site, commune.software (COM-015 media blocks), playstack.dev
 
 ---
@@ -327,7 +327,7 @@ These follow from consumers we've already specced:
 |---|---|---|
 | `Carousel` `presentation: 'peek'` (centred item, neighbours at 35%, arrows only, caption in `aria-live`, no auto-advance) | Commune entry hero | COM-015 |
 | `Gallery` `presentation: 'row'` (2–3 items, snap rail on phone) instead of a new `FigureRow` | Same need, fewer components | COM-015 |
-| `Video`: `captions` (track src), `duration`; build fails without captions unless `decorative` | A11y rule already in the Commune spec | COM-015, Commune §11 |
+| `Video`: `captions` (track src), `duration`; a missing `captions` track gives a validation **warning** (development and build output) unless `decorative`, and never fails the build, even in strict mode (D20) | A11y rule already in the Commune spec, softened so sites can embed video they didn't make | COM-015, Commune §11 |
 | `Device` (`kind: iphone \| ipad \| mac`, `src`, `alt`, `caption`) | Product pages, Prismark site | COM-015 |
 | Figure auto-numbering (`<PostkitProvider figures="numbered">`) | Commune "Fig. 1, 1b…" | Commune §6.10 |
 | `Callout`: `tone` stays canonical; accept `type` as an alias in directives | Resolves Prismark Spec 19 Q1 without breaking either side | Prismark Q1 |
@@ -424,5 +424,6 @@ Steps follow their dependencies, and the ones the site is blocked on are pulled 
 |---|---|
 | D18 | Site-wide prop defaults are `defaults` in `createPostkit`, keyed by component (`{ Callout: { variant: 'plain' } }`), not `defaultProps`. Chakra v3 has no theme-level `defaultProps` (that was v2); it sets variant defaults with a recipe's `defaultVariants`. So `@postkit/chakra` writes theme-variant defaults into `defaultVariants`, which `createPostkitTheme` already exposes, and keeps other props as view defaults. The same `defaults` object works for the headless renderer |
 | D19 | **0.3.0 ships everything in §8, steps 1–12, and postkit.org launches with it** (resolves site 09 Q2). The plan is ordered by dependency with site blockers first, and nothing publishes until step 12 |
+| D20 | A `Video` without `captions` warns rather than failing the build, in every mode; `decorative` silences the warning. Not a breaking change in 0.3.0 (decided 10 Nov 2026) |
 
 **Consequence of D11:** 0.3.0 can't publish `@postkit/react` until the headless layer exists. The plan in §8 gates the release (step 12) on that. Either every component has a headless view, or the 0.3.0 headless set is limited to the components that do, with the rest marked `support.react: 'chakra-only'` in the manifest. Default: ship 0.3.0 with all static components headless (most of the catalog). Interactive components whose behaviour isn't in `@postkit/core/behaviors` yet are `chakra-only` until 0.3.x.
