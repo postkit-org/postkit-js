@@ -51,11 +51,13 @@ export const postkitCalloutRecipe = defineSlotRecipe({
       },
     },
     tone: {
-      note: { icon: { background: 'blue.subtle', color: 'blue.fg' } },
-      tip: { icon: { background: 'green.subtle', color: 'green.fg' } },
-      important: { icon: { background: 'purple.subtle', color: 'purple.fg' } },
-      warning: { icon: { background: 'orange.subtle', color: 'orange.fg' } },
-      caution: { icon: { background: 'red.subtle', color: 'red.fg' } },
+      note: { icon: { background: 'tint.note', color: 'tone.note' } },
+      tip: { icon: { background: 'tint.tip', color: 'tone.tip' } },
+      important: {
+        icon: { background: 'tint.important', color: 'tone.important' },
+      },
+      warning: { icon: { background: 'tint.warning', color: 'tone.warning' } },
+      caution: { icon: { background: 'tint.caution', color: 'tone.caution' } },
     },
   },
   defaultVariants: { size: 'md', variant: 'subtle', tone: 'note' },

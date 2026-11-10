@@ -200,12 +200,91 @@ function withPostkitTypographyDefaults(
   );
 }
 
+type PostkitColorValue = { readonly base: string; readonly _dark: string };
+
+/** A colour that stays the same in both modes, stated as such on purpose. */
+function bothModes(value: string): { readonly value: PostkitColorValue } {
+  return { value: { base: value, _dark: value } };
+}
+
+/**
+ * A callout tone. Light is Chakra's `<palette>.fg` step; dark is the palette's
+ * lifted step, so tones stay legible over a dark page.
+ */
+function tone(palette: string): { readonly value: PostkitColorValue } {
+  return {
+    value: {
+      base: `{colors.${palette}.700}`,
+      _dark: `{colors.${palette}.300}`,
+    },
+  };
+}
+
+/**
+ * A tone's tint: the tone mixed over the page, 12% in light and 22% in dark.
+ * It references the tone and `bg` rather than a palette step, so a host that
+ * sets its own `tone.*` or `bg` still gets matching tints in both modes.
+ */
+function tint(name: string): { readonly value: PostkitColorValue } {
+  return {
+    value: {
+      base: `color-mix(in srgb, {colors.tone.${name}} 12%, {colors.bg})`,
+      _dark: `color-mix(in srgb, {colors.tone.${name}} 22%, {colors.bg})`,
+    },
+  };
+}
+
+/**
+ * Semantic colours used by Postkit's default recipes. Every colour has a
+ * `base` and a `_dark` value so components follow the host's colour mode.
+ * Hosts override any of them by defining the same semantic token.
+ */
+const postkitSemanticColors = {
+  bg: {
+    // CodeBlock, CodeGroup and Terminal keep their own dark surface in both
+    // modes (03-component-system §5.5), so these are dark in light mode too.
+    code: bothModes('{colors.gray.950}'),
+    codeMuted: bothModes('{colors.gray.900}'),
+    codeSelected: bothModes('{colors.whiteAlpha.200}'),
+    // Video letterboxing is black in both modes, like any media player.
+    letterbox: bothModes('{colors.black}'),
+  },
+  fg: {
+    onCode: bothModes('{colors.gray.100}'),
+    onCodeEmphasized: bothModes('{colors.white}'),
+    onCodeMuted: bothModes('{colors.gray.400}'),
+    onCodeSubtle: bothModes('{colors.gray.500}'),
+    onCodeFaint: bothModes('{colors.gray.600}'),
+    onCodeSuccess: bothModes('{colors.green.300}'),
+    onLetterbox: bothModes('{colors.white}'),
+  },
+  border: {
+    code: bothModes('{colors.gray.800}'),
+    codeDivider: bothModes('{colors.whiteAlpha.300}'),
+  },
+  tone: {
+    note: tone('blue'),
+    tip: tone('green'),
+    important: tone('purple'),
+    warning: tone('orange'),
+    caution: tone('red'),
+  },
+  tint: {
+    note: tint('note'),
+    tip: tint('tip'),
+    important: tint('important'),
+    warning: tint('warning'),
+    caution: tint('caution'),
+  },
+};
+
 /**
  * Postkit's component-scoped Chakra defaults. The stable slot-recipe keys let
  * a host override Postkit without changing unrelated Chakra components.
  */
 export const postkitDefaultTheme = defineConfig({
   theme: {
+    semanticTokens: { colors: postkitSemanticColors },
     slotRecipes: withPostkitTypographyDefaults({
       [postkitRecipeKeys.audienceBoundary]: postkitAudienceBoundaryRecipe,
       [postkitRecipeKeys.appearsOn]: postkitAppearsOnRecipe,
