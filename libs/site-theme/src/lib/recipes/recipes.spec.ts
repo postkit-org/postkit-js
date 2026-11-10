@@ -116,7 +116,17 @@ describe('site recipes', () => {
       background: v('colors-bg-raised'),
       boxShadow: v('shadows-segment'),
     });
-    expect(segmented.variantMap).toEqual({ fullWidth: ['true', 'false'] });
+    expect(segmented.variantMap).toEqual({
+      size: ['md', 'icon'],
+      fullWidth: ['true', 'false'],
+    });
+    const icon = segmented({ size: 'icon' });
+    expect(layer(icon.root)).toMatchObject({ padding: '2px' });
+    expect(layer(icon.item)).toMatchObject({
+      width: '30px',
+      height: '24px',
+      color: v('colors-fg-quiet'),
+    });
 
     const field = siteSystem.getSlotRecipeFn('siteTextField');
     expect(field.variantMap).toEqual({
