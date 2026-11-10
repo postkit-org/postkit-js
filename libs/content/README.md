@@ -1,7 +1,7 @@
-# PostKit content
+# Postkit content
 
 `@postkit/content` owns reusable first-party content and its validation rules.
-It is a private workspace library, not a published PostKit package.
+It is a private workspace library, not a published Postkit package.
 
 ## Collections
 

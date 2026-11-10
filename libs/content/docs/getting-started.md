@@ -1,13 +1,13 @@
 ---
 title: Getting started
-summary: Install PostKit, mount its provider, and render a first portable article component.
+summary: Install Postkit, mount its provider, and render a first portable article component.
 category: Start here
 order: 10
 ---
 
 # Getting started
 
-PostKit gives articles a portable component vocabulary while leaving the host
+Postkit gives articles a portable component vocabulary while leaving the host
 application in control of routing, layout, assets, and remote services.
 
 ## Install the React package
@@ -26,7 +26,7 @@ export function Article() {
   return (
     <PostkitProvider preset={postkitDefaultTheme}>
       <article>
-        <h1>My first PostKit article</h1>
+        <h1>My first Postkit article</h1>
         <Callout title="Portable by default" tone="tip">
           Keep the content. Change the renderer.
         </Callout>
@@ -36,10 +36,10 @@ export function Article() {
 }
 ```
 
-The preset gives a standalone article PostKit's visual defaults. In an existing
+The preset gives a standalone article Postkit's visual defaults. In an existing
 Chakra application, omit `preset` and pass the site's system through `system`.
-PostKit then uses the host's component recipes for headings, links, buttons,
-inputs, tables, tabs, code, and other primitives. Add PostKit's preset only when
+Postkit then uses the host's component recipes for headings, links, buttons,
+inputs, tables, tabs, code, and other primitives. Add Postkit's preset only when
 its content-specific visual defaults are wanted.
 
 ## Add Markdown or MDX

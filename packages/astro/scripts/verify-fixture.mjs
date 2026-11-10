@@ -55,4 +55,4 @@ for (const name of interactive) {
   }
 }
 
-process.stdout.write('PostKit Astro example verified.\n');
+process.stdout.write('Postkit Astro example verified.\n');

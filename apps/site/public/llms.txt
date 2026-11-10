@@ -1,13 +1,13 @@
-# PostKit
+# Postkit
 
 > Portable article components, Markdown tooling, link metadata resolvers, and framework adapters.
 
-PostKit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.
+Postkit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.
 
 ## Start here
 
-- [Getting started](/docs/getting-started): Install PostKit, mount its provider, and render a first portable article component.
-- [Choosing a package](/docs/choosing-a-package): Match each PostKit package to the rendering environment and integration boundary it owns.
+- [Getting started](/docs/getting-started): Install Postkit, mount its provider, and render a first portable article component.
+- [Choosing a package](/docs/choosing-a-package): Match each Postkit package to the rendering environment and integration boundary it owns.
 
 ## Concepts
 
@@ -15,13 +15,13 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 
 ## Authoring
 
-- [Components](/docs/components): Learn how PostKit components, declarations, props, and presentation variants work together.
-- [Markdown and MDX](/docs/markdown-and-mdx): Author PostKit declarations in MDX or literal-only plain Markdown directives.
+- [Components](/docs/components): Learn how Postkit components, declarations, props, and presentation variants work together.
+- [Markdown and MDX](/docs/markdown-and-mdx): Author Postkit declarations in MDX or literal-only plain Markdown directives.
 - [Portable documents and feeds](/docs/portable-documents): Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
 
 ## Integration
 
-- [Theming](/docs/theming): Layer PostKit recipes over a Chakra system while preserving the host application's design tokens.
+- [Theming](/docs/theming): Layer Postkit recipes over a Chakra system while preserving the host application's design tokens.
 - [Framework guides](/docs/framework-guides): Connect the portable component map to Next.js, React Router, TanStack Router, or Astro.
 
 ## Services
@@ -31,7 +31,7 @@ PostKit separates a structured publishing contract from its React, Next.js, Reac
 ## Reference
 
 - [API reference](/docs/api-reference): Browse generated TypeScript exports or consume the same API model as structured JSON.
-- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating PostKit.
+- [Compatibility and environments](/docs/compatibility): Check framework, runtime, rendering, module, and hydration support before integrating Postkit.
 - [Security and trust boundaries](/docs/security): Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
 
 ## Help

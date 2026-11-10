@@ -4,12 +4,12 @@ import {
 } from './changelog.js';
 
 const validEntry = {
-  title: 'PostKit 0.2.0',
+  title: 'Postkit 0.2.0',
   version: '0.2.0',
   date: '2026-08-01',
   summary: 'A short release summary.',
   tags: ['components'],
-  content: '# PostKit 0.2.0',
+  content: '# Postkit 0.2.0',
 };
 
 describe('changelogEntrySchema', () => {
@@ -17,7 +17,7 @@ describe('changelogEntrySchema', () => {
     expect(
       changelogEntrySchema.parse({
         ...validEntry,
-        title: '  PostKit 0.2.0  ',
+        title: '  Postkit 0.2.0  ',
         tags: ['  components  '],
       }),
     ).toEqual(validEntry);

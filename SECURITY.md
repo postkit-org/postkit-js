@@ -1,4 +1,4 @@
-# PostKit security policy
+# Postkit security policy
 
 ## Reporting a vulnerability
 
@@ -20,7 +20,7 @@ or publishing the report before a fix and disclosure plan are available.
 
 ## Supported versions
 
-PostKit is in its initial pre-1.0 release series. Security fixes target the
+Postkit is in its initial pre-1.0 release series. Security fixes target the
 latest published release. Older releases may receive a backport when the fix is
 low risk, but consumers should plan to upgrade.
 
@@ -36,14 +36,14 @@ low risk, but consumers should plan to upgrade.
 - Treat authored URLs as untrusted. Applications that fetch origins directly
   must enforce allowed protocols, redirect limits, timeouts, response-size
   limits, and private-network protections.
-- Provider `embed.rawHtml` is untrusted. PostKit's React renderer does not
+- Provider `embed.rawHtml` is untrusted. Postkit's React renderer does not
   inject it; a host that uses it owns sanitization and isolation.
 - Normalized metadata and saved social snapshots remain untrusted content and
   must be rendered through escaping component boundaries.
 - Plain Markdown directives accept allowlisted literal data and do not execute
   authored JavaScript.
 - Host-supplied MDX components, resolver callbacks, iframe policies, and media
-  pipelines are outside PostKit's trust boundary.
+  pipelines are outside Postkit's trust boundary.
 
 See the [security guide](libs/content/docs/security.md) for integration
 guidance.

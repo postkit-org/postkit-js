@@ -1,6 +1,6 @@
 ---
 title: Choosing a package
-summary: Match each PostKit package to the rendering environment and integration boundary it owns.
+summary: Match each Postkit package to the rendering environment and integration boundary it owns.
 category: Start here
 order: 20
 ---

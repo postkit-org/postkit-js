@@ -26,7 +26,7 @@ function fail(message) {
 }
 
 if (nxConfiguration.release?.projectsRelationship !== 'fixed') {
-  fail('Public PostKit packages must use a fixed Nx release relationship.');
+  fail('Public Postkit packages must use a fixed Nx release relationship.');
 }
 if (
   JSON.stringify(nxConfiguration.release?.projects) !==
@@ -200,5 +200,5 @@ for (const packageName of publicPackages) {
 }
 
 process.stdout.write(
-  `Validated ${publicPackages.length} public PostKit packages.\n`,
+  `Validated ${publicPackages.length} public Postkit packages.\n`,
 );

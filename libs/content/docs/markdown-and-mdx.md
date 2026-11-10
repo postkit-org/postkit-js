@@ -1,6 +1,6 @@
 ---
 title: Markdown and MDX
-summary: Author PostKit declarations in MDX or literal-only plain Markdown directives.
+summary: Author Postkit declarations in MDX or literal-only plain Markdown directives.
 category: Authoring
 order: 50
 ---
@@ -17,12 +17,12 @@ Use JSX declarations in MDX:
 <Audio src="/media/episode.mp3" title="Episode 12" />
 ```
 
-Register PostKit's component map with the framework's MDX runtime. Framework
+Register Postkit's component map with the framework's MDX runtime. Framework
 adapters supply the same components with native internal-link behavior.
 
 ## Code blocks
 
-Fenced code blocks are automatically rendered with PostKit's Chakra CodeBlock
+Fenced code blocks are automatically rendered with Postkit's Chakra CodeBlock
 component. They have plain-text output, copying, wrapping, and line-number
 support without requiring a syntax-highlighting dependency.
 
@@ -127,7 +127,7 @@ The content remains regular **Markdown**.
 :::
 ```
 
-Enable PostKit's Remark preset in the Markdown pipeline. Directive props are
+Enable Postkit's Remark preset in the Markdown pipeline. Directive props are
 literal values rather than arbitrary JavaScript, which keeps the format
 portable and suitable for untrusted authoring environments.
 

@@ -94,7 +94,7 @@ export function ComponentPreview({
       return (
         <AudienceBoundary
           {...presentation}
-          audience="PostKit members"
+          audience="Postkit members"
           authorized
           showLabel
         >
@@ -155,7 +155,7 @@ export function ComponentPreview({
       return (
         <CardGrid
           {...presentation}
-          title="Explore PostKit"
+          title="Explore Postkit"
           description="Choose the path that matches your publishing workflow."
           columns={3}
           items={[
@@ -229,7 +229,7 @@ export function ComponentPreview({
       return (
         <CodeGroup
           {...presentation}
-          label="Install PostKit"
+          label="Install Postkit"
           items={[
             {
               label: 'npm',
@@ -269,7 +269,7 @@ export function ComponentPreview({
       return (
         <Disclosure
           {...presentation}
-          summary="What makes PostKit portable?"
+          summary="What makes Postkit portable?"
           open
         >
           Its authored component contract is independent from the framework
@@ -281,9 +281,9 @@ export function ComponentPreview({
         <Figure
           {...presentation}
           src={previewImage}
-          alt="Abstract PostKit editorial artwork"
+          alt="Abstract Postkit editorial artwork"
           caption="A portable story can retain its meaning across renderers."
-          credit="PostKit"
+          credit="Postkit"
           aspectRatio="16 / 9"
         />
       );
@@ -358,9 +358,9 @@ export function ComponentPreview({
           href={previewHref}
           title="Designing content that travels well"
           description="A field guide to portable semantics, host-owned themes, and renderer boundaries."
-          siteName="PostKit Journal"
+          siteName="Postkit Journal"
           image={previewImage}
-          imageAlt="Abstract PostKit editorial artwork"
+          imageAlt="Abstract Postkit editorial artwork"
         />
       );
     case 'NewsletterSignup':
@@ -426,7 +426,7 @@ export function ComponentPreview({
             {
               title: 'Composing a host-owned theme',
               description:
-                'Layer PostKit recipes into an existing Chakra system.',
+                'Layer Postkit recipes into an existing Chakra system.',
               meta: '5 min read',
               href: previewHref,
             },
@@ -449,7 +449,7 @@ export function ComponentPreview({
         <ShareActions
           {...presentation}
           url="https://postkit.test/components"
-          title="PostKit component library"
+          title="Postkit component library"
           text="Publishing components that travel well."
           services={['copy', 'email']}
           label="Share this guide"
@@ -461,7 +461,7 @@ export function ComponentPreview({
           {...presentation}
           href={previewHref}
           service="bluesky"
-          authorName="PostKit"
+          authorName="Postkit"
           authorHandle="@postkit.test"
           authorAvatar={previewImage}
           text="A portable component contract lets the same story feel at home in every renderer."
@@ -498,7 +498,7 @@ export function ComponentPreview({
             { title: 'Install', description: 'Add the React package.' },
             {
               title: 'Provide',
-              description: 'Connect PostKit to your Chakra system.',
+              description: 'Connect Postkit to your Chakra system.',
             },
             {
               title: 'Publish',
@@ -515,7 +515,7 @@ export function ComponentPreview({
           items={[
             {
               label: 'MDX',
-              content: 'Map authored tags to PostKit components.',
+              content: 'Map authored tags to Postkit components.',
             },
             {
               label: 'Markdown',
@@ -544,7 +544,7 @@ export function ComponentPreview({
           {...presentation}
           src={posterOnlyVideo}
           poster={previewImage}
-          title="PostKit in two minutes"
+          title="Postkit in two minutes"
           caption="A quick tour of the portable publishing contract."
         />
       );

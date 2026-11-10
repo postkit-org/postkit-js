@@ -122,9 +122,9 @@ const packages = await Promise.all([
   import('@postkit/astro'),
 ]);
 if (packages.some((entry) => Object.keys(entry).length === 0)) {
-  throw new Error('A PostKit package exported no public members.');
+  throw new Error('A Postkit package exported no public members.');
 }
-console.log('PostKit tarball runtime entry points loaded with Chakra UI 3.29.0.');
+console.log('Postkit tarball runtime entry points loaded with Chakra UI 3.29.0.');
 `,
   );
   run(process.execPath, ['smoke.mjs']);
@@ -189,7 +189,7 @@ type _AstroReactBridge = typeof Audio;
     'tsconfig.json',
   ]);
 
-  process.stdout.write('PostKit tarball consumer verification passed.\n');
+  process.stdout.write('Postkit tarball consumer verification passed.\n');
 } finally {
   rmSync(consumerRoot, { recursive: true, force: true });
 }

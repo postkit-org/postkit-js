@@ -107,6 +107,6 @@ for (const packageEntry of packages) {
 
 process.stdout.write(
   command === 'push'
-    ? `Pushed ${packages.length} PostKit packages to registered yalc consumers.\n`
-    : `Published ${packages.length} PostKit packages to the local yalc store.\n`,
+    ? `Pushed ${packages.length} Postkit packages to registered yalc consumers.\n`
+    : `Published ${packages.length} Postkit packages to the local yalc store.\n`,
 );

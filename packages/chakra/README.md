@@ -18,7 +18,7 @@ composable Remark preset, and a literal-only Markdown directive transformer.
 
 Use this package directly for a React application or a framework-neutral
 Markdown/MDX pipeline. Next.js, React Router, TanStack Router, and Astro
-applications should begin with their PostKit adapter, which depends on this
+applications should begin with their Postkit adapter, which depends on this
 component system and adds native framework behavior.
 
 ## Install

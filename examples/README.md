@@ -1,4 +1,4 @@
-# PostKit examples
+# Postkit examples
 
 These examples use the same portable article contract at different application
 boundaries. They are checked in CI so package and framework changes cannot
@@ -15,8 +15,8 @@ silently invalidate the documented integrations.
 
 The Astro article is the canonical sample content. Other framework examples
 focus on the adapter boundary rather than duplicating the authored document.
-The PostKit documentation site in `apps/site` is also a complete Next.js
-application using local PostKit packages.
+The Postkit documentation site in `apps/site` is also a complete Next.js
+application using local Postkit packages.
 
 Run every example check from the repository root:
 

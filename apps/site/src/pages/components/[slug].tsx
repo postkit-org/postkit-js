@@ -94,7 +94,7 @@ export default function ComponentPage({
   return (
     <>
       <Head>
-        <title>{component.name} · Components · PostKit</title>
+        <title>{component.name} · Components · Postkit</title>
         <meta name="description" content={component.description} />
       </Head>
 
@@ -257,7 +257,7 @@ export default function ComponentPage({
             {sectionHeading(
               'Authoring',
               'Use it in content',
-              'PostKit supports the same semantic component through MDX and portable Markdown directives.',
+              'Postkit supports the same semantic component through MDX and portable Markdown directives.',
             )}
             <SimpleGrid columns={{ base: 1, lg: 2 }} gap="5" marginTop="8">
               <CodeBlock
@@ -279,7 +279,7 @@ export default function ComponentPage({
             {sectionHeading(
               'Reference',
               'Authoring props',
-              'Direct component props take precedence over provider defaults. Presentation props flow through PostKit recipes and the host Chakra theme.',
+              'Direct component props take precedence over provider defaults. Presentation props flow through Postkit recipes and the host Chakra theme.',
             )}
             <Box
               borderColor="blackAlpha.200"

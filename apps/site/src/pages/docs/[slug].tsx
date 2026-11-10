@@ -70,7 +70,7 @@ export default function DocsEntryPage({
   return (
     <>
       <Head>
-        <title>{entry.title} · PostKit documentation</title>
+        <title>{entry.title} · Postkit documentation</title>
         <meta name="description" content={entry.summary} />
       </Head>
 

@@ -7,7 +7,7 @@ order: 30
 
 # Core concepts
 
-PostKit separates authored meaning from application infrastructure.
+Postkit separates authored meaning from application infrastructure.
 
 ## The content contract
 
@@ -39,7 +39,7 @@ The application owns:
 - Secrets and remote provider credentials
 - Caching and persistence
 
-PostKit provides explicit extension points for these responsibilities instead
+Postkit provides explicit extension points for these responsibilities instead
 of assuming one deployment architecture.
 
 ## Resolver boundaries

@@ -16,11 +16,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta
           name="description"
-          content="PostKit is a portable publishing component system for React and the web."
+          content="Postkit is a portable publishing component system for React and the web."
         />
         <meta name="theme-color" content="#f4f1e8" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <title>PostKit</title>
+        <title>Postkit</title>
       </Head>
       <SiteShell>
         <Component {...pageProps} />

@@ -17,7 +17,7 @@ in a browser component.
 2. A trusted server validates it against the application's URL policy.
 3. `@postkit/unfurl` calls the configured provider.
 4. The application caches the normalized result.
-5. A PostKit component renders the normalized snapshot.
+5. A Postkit component renders the normalized snapshot.
 
 Provider credentials remain at the resolver boundary.
 

@@ -42,7 +42,7 @@ const capabilities = [
   {
     eyebrow: 'Own the system',
     title: 'Chakra foundations',
-    copy: 'Compose PostKit with Chakra tokens and recipes instead of working around a sealed theme.',
+    copy: 'Compose Postkit with Chakra tokens and recipes instead of working around a sealed theme.',
   },
 ] as const;
 
@@ -52,7 +52,7 @@ export default function IndexPage({
   return (
     <>
       <Head>
-        <title>PostKit — portable publishing components</title>
+        <title>Postkit — portable publishing components</title>
       </Head>
 
       <Box
@@ -105,7 +105,7 @@ export default function IndexPage({
                 lineHeight="1.7"
                 maxW="2xl"
               >
-                PostKit gives product teams a shared, typed vocabulary for rich
+                Postkit gives product teams a shared, typed vocabulary for rich
                 publishing—without tying authored content to one renderer.
               </Text>
               <Flex gap="3" flexWrap="wrap">
@@ -183,7 +183,7 @@ export default function IndexPage({
           <Callout title="Documentation" tone="tip">
             Follow the guided setup, choose a framework adapter, or browse the
             component and Markdown concepts in the{' '}
-            <NextLink href="/docs">PostKit documentation</NextLink>.
+            <NextLink href="/docs">Postkit documentation</NextLink>.
           </Callout>
 
           {latestEntry ? (

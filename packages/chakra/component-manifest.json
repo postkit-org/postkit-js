@@ -450,9 +450,9 @@
         "height"
       ],
       "example": {
-        "props": { "code": "console.log('Hello, PostKit')" },
-        "jsx": "<CodeBlock code=\"console.log('Hello, PostKit')\" />",
-        "directive": "::postkit-code-block{code=\"console.log('Hello, PostKit')\"}"
+        "props": { "code": "console.log('Hello, Postkit')" },
+        "jsx": "<CodeBlock code=\"console.log('Hello, Postkit')\" />",
+        "directive": "::postkit-code-block{code=\"console.log('Hello, Postkit')\"}"
       },
       "preview": { "kind": "live", "label": "CodeBlock component preview" },
       "runtime": "client",

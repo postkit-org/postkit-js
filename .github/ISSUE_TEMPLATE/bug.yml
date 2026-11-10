@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem in a PostKit package or integration.
+description: Report a reproducible problem in a Postkit package or integration.
 title: '[Bug]: '
 labels:
   - bug
@@ -7,12 +7,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve PostKit. Do not include credentials or private provider responses. Report security issues privately through the repository security page.
+        Thanks for helping improve Postkit. Do not include credentials or private provider responses. Report security issues privately through the repository security page.
   - type: input
     id: packages
     attributes:
       label: Packages and versions
-      description: List every PostKit package involved and its exact version.
+      description: List every Postkit package involved and its exact version.
       placeholder: '@postkit/chakra@0.1.1, @postkit/next@0.1.1'
     validations:
       required: true
@@ -61,7 +61,7 @@ body:
     attributes:
       label: Checks
       options:
-        - label: I reproduced this with the latest PostKit release.
+        - label: I reproduced this with the latest Postkit release.
           required: true
         - label: I removed credentials and private content.
           required: true

@@ -1,6 +1,6 @@
-# PostKit repository guide
+# Postkit repository guide
 
-PostKit is a portable publishing toolkit. Public packages live under
+Postkit is a portable publishing toolkit. Public packages live under
 `packages/`, the Next.js documentation site lives in `apps/site`, executable
 examples live in `examples/`, and validation and release programs live in
 `tools/`.
@@ -49,7 +49,7 @@ passed into the React provider and does not change the core dependency chain.
   and must work from a packed clean consumer.
 - Remote provider credentials and origin fetching stay in server, build, or
   trusted-editor code. React components consume normalized data.
-- Provider `rawHtml` is untrusted and must not be injected by PostKit
+- Provider `rawHtml` is untrusted and must not be injected by Postkit
   renderers.
 - Plain Markdown directives accept allowlisted literal data, never authored
   JavaScript expressions.

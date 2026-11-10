@@ -162,7 +162,7 @@ function sampleString(name: PostkitComponentName, prop: string): string {
     case 'audience':
       return 'members';
     case 'code':
-      return "console.log('Hello, PostKit')";
+      return "console.log('Hello, Postkit')";
     case 'command':
       return 'npm install @postkit/chakra';
     case 'diff':
@@ -267,7 +267,7 @@ function createCatalogEntry(
   const category = categoryByName.get(declaration.name);
   if (!category) {
     throw new TypeError(
-      `PostKit component "${declaration.name}" has no catalog category.`,
+      `Postkit component "${declaration.name}" has no catalog category.`,
     );
   }
 

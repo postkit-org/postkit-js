@@ -2,7 +2,7 @@ import { createDocsCollection, docsEntrySchema } from './docs.js';
 
 const validEntry = {
   title: 'Getting started',
-  summary: 'Install PostKit and render your first article.',
+  summary: 'Install Postkit and render your first article.',
   category: 'Introduction',
   order: 1,
   content: '# Getting started',

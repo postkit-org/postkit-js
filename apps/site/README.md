@@ -1,7 +1,7 @@
-# PostKit site
+# Postkit site
 
-The PostKit website is a Next.js Pages Router application built with Chakra UI
-and the local PostKit packages.
+The Postkit website is a Next.js Pages Router application built with Chakra UI
+and the local Postkit packages.
 
 From the workspace root:
 
@@ -31,7 +31,7 @@ with lowercase, URL-safe filenames. Every entry requires this frontmatter:
 
 ```yaml
 ---
-title: PostKit 0.2.0
+title: Postkit 0.2.0
 version: 0.2.0
 date: 2026-08-01
 summary: A short release summary.
@@ -40,15 +40,15 @@ tags:
 ---
 ```
 
-The build renders semantic Markdown with PostKit prose components. Rich PostKit
+The build renders semantic Markdown with Postkit prose components. Rich Postkit
 components are available through literal-only directives:
 
 ```md
 :::postkit-callout{title="Release status" tone="tip"}
-This content is rendered by PostKit.
+This content is rendered by Postkit.
 :::
 ```
 
 Content Collections validates the entry metadata and generates the typed
 collection consumed by the site. Unknown component props fail the build so
-changelog content cannot drift from the PostKit component contract.
+changelog content cannot drift from the Postkit component contract.

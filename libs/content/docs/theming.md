@@ -1,15 +1,15 @@
 ---
 title: Theming
-summary: Layer PostKit recipes over a Chakra system while preserving the host application's design tokens.
+summary: Layer Postkit recipes over a Chakra system while preserving the host application's design tokens.
 category: Integration
 order: 60
 ---
 
 # Theming
 
-PostKit is host-native by default. Its semantic components use Chakra
+Postkit is host-native by default. Its semantic components use Chakra
 primitives internally, allowing an existing application's Heading, Link,
-Button, Input, Table, Tabs, Code, and related recipes to flow through. PostKit
+Button, Input, Table, Tabs, Code, and related recipes to flow through. Postkit
 adds no visual preset unless the host opts into one. The `Prose` wrapper still
 provides structural content rhythm in either mode.
 
@@ -64,20 +64,20 @@ supported.
 ## Choose a styling mode
 
 - Host-native: pass the site's `system` and omit `preset`. Chakra primitive
-  recipes and any host-registered PostKit slot recipes control presentation;
+  recipes and any host-registered Postkit slot recipes control presentation;
   wrapper-owned prose spacing and semantic technical-content structure remain
   active.
-- Standalone preset: pass `preset={postkitDefaultTheme}` for PostKit's complete
+- Standalone preset: pass `preset={postkitDefaultTheme}` for Postkit's complete
   visual treatment, including its dark CodeBlock, CodeGroup, and Terminal
   palettes.
 - Scoped customization: add `theme={createPostkitTheme(...)}` to either mode.
 
 Markdown headings render through Chakra `Heading` with `as="h1"` through
-`as="h6"`. PostKit does not override the Heading recipe's font weight, family,
+`as="h6"`. Postkit does not override the Heading recipe's font weight, family,
 line height, letter spacing, or color. Markdown blockquotes and semantic lists,
 including lists inside publishing components, render through Chakra
 `Blockquote` and `List`. Code-block copy actions similarly render through
-Chakra `Button` while retaining PostKit's copy behavior.
+Chakra `Button` while retaining Postkit's copy behavior.
 
 Structured controls also retain their Chakra recipe boundaries:
 `NewsletterSignup` composes `Field`, `PullQuote` composes `Blockquote`, `Stat`
@@ -86,12 +86,12 @@ compose a read-only `RatingGroup`.
 
 Card-like surfaces use Chakra `Card` roots and parts where their content model
 matches, author imagery uses `Avatar`, callouts and takeaways use `Alert`, and
-responsive video or embed frames use `AspectRatio`. PostKit retains semantic
+responsive video or embed frames use `AspectRatio`. Postkit retains semantic
 `article` and `aside` roots through Chakra's polymorphic rendering. Carousels
 delegate paging, pointer dragging, and accessible controls to Chakra
-`Carousel`, so the host's Carousel recipe flows through while PostKit retains
+`Carousel`, so the host's Carousel recipe flows through while Postkit retains
 its article item model and content slots. Instructional `Steps` compose Chakra
-`List`, allowing the host List recipe to flow through beneath PostKit's numbered
+`List`, allowing the host List recipe to flow through beneath Postkit's numbered
 marker treatment. `Disclosure` intentionally remains native `details` and
 `summary`, preserving built-in toggle behavior without client-side JavaScript.
 
@@ -105,7 +105,7 @@ and `lineContent` slot names remain compatibility aliases.
 External spacing belongs to the `Prose` wrapper rather than the individual
 Heading, paragraph, table, or code components. Eight custom properties provide
 the default flow and internal list scales and can be changed through a scoped
-PostKit theme:
+Postkit theme:
 
 ```tsx
 const documentationTheme = createPostkitTheme({

@@ -31,10 +31,10 @@ export default function DocsPage({
   return (
     <>
       <Head>
-        <title>Documentation · PostKit</title>
+        <title>Documentation · Postkit</title>
         <meta
           name="description"
-          content="Learn how to use PostKit components, Markdown tooling, framework adapters, and metadata resolvers."
+          content="Learn how to use Postkit components, Markdown tooling, framework adapters, and metadata resolvers."
         />
       </Head>
 

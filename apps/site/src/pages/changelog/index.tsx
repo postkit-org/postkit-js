@@ -20,10 +20,10 @@ export default function ChangelogPage({
   return (
     <>
       <Head>
-        <title>Changelog · PostKit</title>
+        <title>Changelog · Postkit</title>
         <meta
           name="description"
-          content="Release notes and changes across the PostKit packages."
+          content="Release notes and changes across the Postkit packages."
         />
       </Head>
 

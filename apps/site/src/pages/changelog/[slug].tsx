@@ -61,7 +61,7 @@ export default function ChangelogEntryPage({
   return (
     <>
       <Head>
-        <title>{entry.title} · PostKit changelog</title>
+        <title>{entry.title} · Postkit changelog</title>
         <meta name="description" content={entry.summary} />
       </Head>
 

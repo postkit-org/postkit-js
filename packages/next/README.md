@@ -1,11 +1,11 @@
 # `@postkit/next`
 
-PostKit article components, MDX mapping, and internal-link routing for Next.js.
+Postkit article components, MDX mapping, and internal-link routing for Next.js.
 
 ## When to use it
 
 Use this adapter when a Next.js application renders Markdown or MDX with
-PostKit. It layers `next/link` over `@postkit/chakra` while preserving native
+Postkit. It layers `next/link` over `@postkit/chakra` while preserving native
 anchors for external URLs, protocol links, hashes, downloads, and explicit
 non-default targets.
 
@@ -91,12 +91,12 @@ export function useMDXComponents(): MDXComponents {
 - `PostkitNextLinkProps`
 
 The returned value is an MDX component map. Components supplied through
-`options.components` override PostKit defaults.
+`options.components` override Postkit defaults.
 
 ## Troubleshooting
 
-- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
-  register PostKit slot recipes in the host Chakra system.
+- If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register Postkit slot recipes in the host Chakra system.
 - If internal links reload the page, confirm this adapter's component map is
   passed to the MDX runtime.
 - If a site component is ignored, pass it through `components` in the same map

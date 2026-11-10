@@ -16,7 +16,7 @@ export const docsEntrySchema = z.object({
 export type DocsEntryData = z.infer<typeof docsEntrySchema>;
 
 /**
- * Creates the shared PostKit documentation collection for a consuming site.
+ * Creates the shared Postkit documentation collection for a consuming site.
  *
  * The directory is relative to that site's content-collections.ts file.
  */

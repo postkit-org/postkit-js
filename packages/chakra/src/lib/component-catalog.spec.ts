@@ -136,7 +136,7 @@ describe('Postkit component catalog', () => {
     }));
 
     await expect(import('./component-catalog.js')).rejects.toThrow(
-      'PostKit component "Unknown" has no catalog category.',
+      'Postkit component "Unknown" has no catalog category.',
     );
 
     vi.doUnmock('./declarations.js');

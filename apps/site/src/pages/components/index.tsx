@@ -29,10 +29,10 @@ export default function ComponentsPage() {
   return (
     <>
       <Head>
-        <title>Components · PostKit</title>
+        <title>Components · Postkit</title>
         <meta
           name="description"
-          content="Explore live previews, variants, sizes, authoring syntax, and props for every PostKit publishing component."
+          content="Explore live previews, variants, sizes, authoring syntax, and props for every Postkit publishing component."
         />
       </Head>
 

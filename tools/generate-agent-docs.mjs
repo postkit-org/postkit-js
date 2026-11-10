@@ -93,11 +93,11 @@ for (const document of documents) {
 }
 
 const indexLines = [
-  '# PostKit',
+  '# Postkit',
   '',
   '> Portable article components, Markdown tooling, link metadata resolvers, and framework adapters.',
   '',
-  'PostKit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.',
+  'Postkit separates a structured publishing contract from its React, Next.js, React Router, TanStack Router, and Astro renderers.',
   '',
 ];
 
@@ -132,9 +132,9 @@ indexLines.push(
 );
 
 const fullLines = [
-  '# PostKit full documentation',
+  '# Postkit full documentation',
   '',
-  'Generated from the canonical PostKit guides and public package READMEs.',
+  'Generated from the canonical Postkit guides and public package READMEs.',
   '',
 ];
 for (const document of documents) {

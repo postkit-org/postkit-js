@@ -1,13 +1,13 @@
 ---
 title: Components
-summary: Learn how PostKit components, declarations, props, and presentation variants work together.
+summary: Learn how Postkit components, declarations, props, and presentation variants work together.
 category: Authoring
 order: 40
 ---
 
 # Components
 
-PostKit includes article structure, technical content, media, discovery,
+Postkit includes article structure, technical content, media, discovery,
 sharing, and conversion components.
 
 Common components include:
@@ -26,7 +26,7 @@ Portable components share compact presentation controls:
 - `size`: `sm`, `md`, or `lg`
 - `variant`: `outline`, `subtle`, or `plain`
 
-Site-wide visual decisions belong in the Chakra system or PostKit theme rather
+Site-wide visual decisions belong in the Chakra system or Postkit theme rather
 than repeated content props.
 
 ## Declarations

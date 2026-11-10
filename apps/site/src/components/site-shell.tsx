@@ -44,7 +44,7 @@ export function SiteShell({ children }: SiteShellProps) {
               textDecoration="none"
             >
               <NextLink href="/">
-                PostKit
+                Postkit
                 <Box as="span" color="postkitAccent">
                   .
                 </Box>
@@ -112,7 +112,7 @@ export function SiteShell({ children }: SiteShellProps) {
               Portable publishing components for the open web.
             </Text>
             <Text color="blackAlpha.600" fontFamily="mono" fontSize="xs">
-              MIT licensed · Built with PostKit
+              MIT licensed · Built with Postkit
             </Text>
           </Flex>
         </Container>

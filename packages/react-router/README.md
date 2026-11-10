@@ -1,12 +1,12 @@
 # `@postkit/react-router`
 
-PostKit article components, MDX mapping, and internal-link routing for React
+Postkit article components, MDX mapping, and internal-link routing for React
 Router.
 
 ## When to use it
 
 Use this adapter when a React Router application renders Markdown or MDX with
-PostKit. It routes internal destinations through React Router and leaves
+Postkit. It routes internal destinations through React Router and leaves
 external URLs, protocol links, hashes, downloads, and explicit non-default
 targets as native anchors.
 
@@ -89,8 +89,8 @@ export const mdxComponents = createPostkitReactRouterComponents({
 
 - If React Router reports missing context, move the rendered article beneath
   the router provider.
-- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
-  register PostKit slot recipes in the host Chakra system.
+- If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register Postkit slot recipes in the host Chakra system.
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 

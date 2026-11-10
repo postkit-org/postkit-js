@@ -11,7 +11,7 @@ const fixtureResolver = createCallbackResolver(
     url,
     title: 'Portable publishing',
     description: 'A normalized response owned by the server boundary.',
-    siteName: 'PostKit example',
+    siteName: 'Postkit example',
     images: [],
     audio: [],
     video: [],

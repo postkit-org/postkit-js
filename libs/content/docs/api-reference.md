@@ -7,7 +7,7 @@ order: 85
 
 # API reference
 
-PostKit generates its API reference from the public exports of every published
+Postkit generates its API reference from the public exports of every published
 package.
 
 - [Browse the TypeScript API reference](/api/)

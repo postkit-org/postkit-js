@@ -330,7 +330,7 @@ describe('Postkit article components', () => {
       />,
     );
     const disclosure = render(
-      <Disclosure summary="What is PostKit?" open>
+      <Disclosure summary="What is Postkit?" open>
         Article components for Markdown and MDX.
       </Disclosure>,
     );

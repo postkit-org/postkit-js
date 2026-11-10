@@ -29,7 +29,7 @@ export const changelogEntrySchema = z.object({
 export type ChangelogEntryData = z.infer<typeof changelogEntrySchema>;
 
 /**
- * Creates the shared PostKit changelog collection for a consuming site.
+ * Creates the shared Postkit changelog collection for a consuming site.
  *
  * The directory is relative to that site's content-collections.ts file.
  */

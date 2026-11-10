@@ -1,12 +1,12 @@
 # `@postkit/tanstack-router`
 
-PostKit article components, MDX mapping, and internal-link routing for TanStack
+Postkit article components, MDX mapping, and internal-link routing for TanStack
 Router.
 
 ## When to use it
 
 Use this adapter when a TanStack Router application renders Markdown or MDX
-with PostKit. It converts internal Markdown destinations into router links and
+with Postkit. It converts internal Markdown destinations into router links and
 keeps external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.
 
@@ -35,7 +35,7 @@ export const mdxComponents = createPostkitTanStackRouterComponents();
 Render the article beneath the application's TanStack Router provider and
 `PostkitProvider`. The application owns its generated route tree, data loading,
 and page layout. `PostkitProvider` is host-native by default; pass
-`preset={postkitDefaultTheme}` only when PostKit's standalone visual treatment
+`preset={postkitDefaultTheme}` only when Postkit's standalone visual treatment
 is wanted.
 
 ## Recover typed routes
@@ -86,8 +86,8 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If router context is missing, move the article beneath the router provider.
 - If a generated route rejects a portable string, translate it in
   `mapLinkProps`.
-- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
-  register PostKit slot recipes in the host Chakra system.
+- If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register Postkit slot recipes in the host Chakra system.
 
 See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked

@@ -18,7 +18,7 @@ const versions = new Set(
 );
 
 if (versions.size !== 1) {
-  throw new Error('Every public PostKit package must use one release version.');
+  throw new Error('Every public Postkit package must use one release version.');
 }
 
 const [version] = versions;

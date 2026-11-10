@@ -13,7 +13,7 @@ Read `AGENTS.md` first: package boundaries, sources of truth, change invariants 
 ## Conventions
 
 - Create projects with Nx generators (`nx g @nx/js:library`, `nx g @nx/react:library`, …), never by hand.
-- The brand is "Postkit". `git grep PostKit` should always be empty.
+- The brand is "Postkit", with a lowercase k. Searching the repo for the camel-cased spelling should find nothing outside `docs/design/` (which quotes it on purpose).
 - The site uses the packages from this commit. Don't copy component code into the site; fix the package instead (`docs/design/handoff/specs/03-component-system.md`).
 - Queue slow or external work where the reader isn't waiting for it. Subscribe emails are the one documented exception (`docs/design/handoff/specs/09-content-callouts.md` Q1).
 

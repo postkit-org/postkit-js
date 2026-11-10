@@ -6,7 +6,7 @@ hydrates only components that require a React runtime.
 
 ## When to use it
 
-Use this adapter when an Astro site needs the PostKit component contract in
+Use this adapter when an Astro site needs the Postkit component contract in
 imported MDX or content collections. It owns the Astro-to-React bridge and
 selective hydration policy while leaving content loading, layouts, and asset
 handling to the site.
@@ -63,7 +63,7 @@ postkitAstro({
 });
 ```
 
-Opt into PostKit's standalone preset from that module when desired:
+Opt into Postkit's standalone preset from that module when desired:
 
 ```ts
 import { createPostkitSystem, postkitDefaultTheme } from '@postkit/chakra';
