@@ -28,8 +28,6 @@ related:
   - Aside
   - KeyTakeaway
   - Disclosure
-# TODO(PK-020): the "Writing with directives" link assumes the Markdown directives page lands
-# at /docs/markdown-directives; update it if the docs IA settles on another slug.
 ---
 
 ## Usage
