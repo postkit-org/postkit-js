@@ -38,6 +38,17 @@ array so code that reads it keeps working.
 npm install @postkit/react react react-dom
 ```
 
+The interactive components and hooks run on [Zag](https://zagjs.com). If your
+site uses `@postkit/chakra` (or Chakra UI), Zag is already installed through
+Chakra and Postkit uses that same copy. Headless-only sites install it too:
+
+```sh
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
+
+The Zag packages are optional peer dependencies so a Chakra site never ends up
+with two copies (03 D7).
+
 The package is ESM-only, includes TypeScript declarations, and supports
 React 19. The behaviour hooks run on [Zag](https://zagjs.com) machines, which
 `@postkit/react` takes as peer dependencies (`@zag-js/react`, `@zag-js/tabs`,
@@ -111,15 +122,15 @@ Set any of these on `:root` (or any element, for a subtree) to retheme every
 component. The baseline declares them with zero specificity, so your own rule
 wins whatever the order. Give each colour you change a dark value too.
 
-| Group | Tokens |
-| --- | --- |
-| Colour | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
-| Tone | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface` |
-| Chart | `--postkit-chart-1` … `--postkit-chart-4` (series without an authored colour) |
-| Code surface | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring` |
-| Type | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}` |
-| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration` |
-| Footnotes (reserved) | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap` |
+| Group                | Tokens                                                                                                                                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Colour               | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone                 | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
+| Chart                | `--postkit-chart-1` … `--postkit-chart-4` (series without an authored colour)                                                                                                                                                                                |
+| Code surface         | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
+| Type                 | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`              |
+| Space and shape      | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
+| Footnotes (reserved) | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
 
 ```css
 :root {

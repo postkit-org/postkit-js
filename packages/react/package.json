@@ -92,5 +92,25 @@
         }
       }
     }
+  },
+  "peerDependenciesMeta": {
+    "@zag-js/carousel": {
+      "optional": true
+    },
+    "@zag-js/clipboard": {
+      "optional": true
+    },
+    "@zag-js/core": {
+      "optional": true
+    },
+    "@zag-js/react": {
+      "optional": true
+    },
+    "@zag-js/tabs": {
+      "optional": true
+    },
+    "@zag-js/types": {
+      "optional": true
+    }
   }
 }
