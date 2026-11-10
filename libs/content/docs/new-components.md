@@ -15,23 +15,31 @@ manifest entry for free, and Prismark can offer it to writers.
 ## Scaffold it
 
 ```sh
-npx postkit new device
+npx postkit new device --category media
 ```
 
 ```text
-✓ device/device.definition.ts
-✓ device/device.tsx
-✓ device/device.css
-✓ device/device.behavior.spec.ts
+✓ src/postkit/device/device.definition.ts
+✓ src/postkit/device/device.tsx
+✓ src/postkit/device/device.css
 
-Use it as <Device /> or :::postkit-device in Markdown.
+Register it with createPostkit({ components }) in lib/postkit.ts:
+…
+Use it as <Device /> in MDX or :::postkit-device in Markdown.
 ```
 
-You get a definition, a headless view, its styles and a behaviour spec. In an
-Nx workspace, the generator does the same with your generators' conventions:
+You get a definition, a headless view and its styles, as a starting point
+with a `title` prop and `root`, `title` and `body` parts. `--chakra` adds a
+Chakra view (`device.chakra.tsx`) and slot recipe (`device.recipe.ts`), and
+`--spec` adds a spec per view. The CSS targets the anatomy attributes; import
+it from your global stylesheet. See [CLI](/docs/cli#postkit-new) for every
+flag.
+
+In an Nx workspace, the generator writes the same files from the same
+templates:
 
 ```sh
-nx g @postkit/nx:component device
+nx g @postkit/nx:component device --category=media --directory=libs/site/src/postkit
 ```
 
 ## Define it
@@ -63,8 +71,10 @@ export const deviceDefinition = definePostkitComponent({
       default: 'iphone',
       themeVariant: true,
     }),
-    src: prop.string('The screenshot URL.'),
-    alt: prop.string('Text alternative for the screenshot.'),
+    src: prop.string('The screenshot URL.', { required: true }),
+    alt: prop.string('Text alternative for the screenshot.', {
+      required: true,
+    }),
     caption: prop.string('An optional caption.'),
   },
   slots: ['root', 'frame', 'screen', 'caption'],
@@ -75,7 +85,13 @@ export const deviceDefinition = definePostkitComponent({
 });
 ```
 
-{/* TODO(0.3.0): confirm how a prop is marked required (src and alt should be), whether `children` can be omitted for components without content, and what `category` a site's own component should use. Spec 03 §2.2 only shows prop.string(description) and prop.enum(values, options). */}
+- **Required props** take `{ required: true }`. A directive or MDX element
+  without them fails validation, and the view receives them as non-optional.
+- **`children`** can be left out, as here: it defaults to `'none'`. Set
+  `children: 'mdx'` when the component wraps authored content.
+- **`category`** is one of Postkit's six: `article-structure`,
+  `technical-content`, `media`, `discovery`, `engagement` or `publishing`.
+  Pick the closest; it groups the component in the manifest and in editors.
 
 ## Write the view
 

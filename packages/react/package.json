@@ -131,7 +131,8 @@
         ],
         "inputs": [
           "production",
-          "^production"
+          "^production",
+          "{workspaceRoot}/tools/generate-eject-assets.mjs"
         ],
         "outputs": [
           "{projectRoot}/dist"
@@ -140,7 +141,8 @@
           "cwd": "packages/react",
           "commands": [
             "tsc --build tsconfig.lib.json",
-            "node scripts/build-styles.mjs"
+            "node scripts/build-styles.mjs",
+            "node ../../tools/generate-eject-assets.mjs packages/react headless"
           ],
           "parallel": false
         }

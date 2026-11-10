@@ -1,5 +1,11 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -463,6 +469,192 @@ type _AstroReactBridge = typeof Audio;
     '--project',
     'tsconfig.json',
   ]);
+
+  // 03 step 11, done when "an ejected Chakra Figure still validates
+  // directives": eject Figure with the packed `postkit` bin, register it
+  // through createPostkit's overrides, and show that a bad prop on
+  // ::postkit-figure still fails while a good one renders the ejected view.
+  {
+    mkdirSync(join(consumerRoot, 'lib'), { recursive: true });
+    writeFileSync(
+      join(consumerRoot, 'lib', 'postkit.ts'),
+      `import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+import { chakra } from '@postkit/chakra';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, media],
+});
+`,
+    );
+    // The consumer has other createPostkit calls, so a config file says
+    // which one the CLI uses; it follows the re-export to lib/postkit.ts.
+    writeFileSync(
+      join(consumerRoot, 'postkit.config.ts'),
+      "export { postkit as default } from './lib/postkit';\n",
+    );
+    const postkitBin = join(consumerRoot, 'node_modules', '.bin', 'postkit');
+    run(postkitBin, [
+      'eject',
+      'figure',
+      '--renderer',
+      'chakra',
+      '--to',
+      'libs/postkit',
+    ]);
+    const config = readFileSync(
+      join(consumerRoot, 'lib', 'postkit.ts'),
+      'utf8',
+    );
+    const view = readFileSync(
+      join(consumerRoot, 'libs', 'postkit', 'figure', 'figure.tsx'),
+      'utf8',
+    );
+    const lock = JSON.parse(
+      readFileSync(join(consumerRoot, '.postkit-eject.json'), 'utf8'),
+    );
+    if (
+      !config.includes('overrides: { Figure: { view: Figure } }') ||
+      !config.includes("from '../libs/postkit/figure/figure'")
+    ) {
+      throw new Error(`postkit eject didn't register the view:\n${config}`);
+    }
+    if (
+      !view.includes("from '@postkit/core/components'") ||
+      /from '\.\.\//.test(view) ||
+      lock.components?.Figure?.package !== '@postkit/chakra' ||
+      !/^sha256-/.test(lock.components?.Figure?.hash ?? '')
+    ) {
+      throw new Error('postkit eject wrote an unexpected view or lockfile.');
+    }
+    run(postkitBin, ['diff', 'figure', '--exit-code']);
+
+    // The ejected view and the edited config typecheck against the packed
+    // packages' public types.
+    writeFileSync(
+      join(consumerRoot, 'tsconfig.eject.json'),
+      `${JSON.stringify(
+        {
+          compilerOptions: {
+            jsx: 'react-jsx',
+            lib: ['ESNext', 'DOM'],
+            module: 'ESNext',
+            moduleResolution: 'Bundler',
+            noEmit: true,
+            skipLibCheck: true,
+            strict: true,
+            target: 'ES2022',
+            types: [],
+          },
+          include: [
+            'postkit.config.ts',
+            'lib/**/*.ts',
+            'libs/**/*.ts',
+            'libs/**/*.tsx',
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    run(process.execPath, [
+      join(consumerRoot, 'node_modules', 'typescript', 'bin', 'tsc'),
+      '--project',
+      'tsconfig.eject.json',
+    ]);
+
+    writeFileSync(
+      join(consumerRoot, 'eject-smoke.mjs'),
+      `import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { createJiti } from 'jiti';
+import { remarkPostkit } from '@postkit/react/remark';
+import { postkitDefaultTheme } from '@postkit/chakra';
+
+const jiti = createJiti(import.meta.url, { jsx: { runtime: 'automatic' } });
+const { postkit } = await jiti.import('./lib/postkit.ts');
+const { Figure: EjectedFigure } = await jiti.import(
+  './libs/postkit/figure/figure.tsx',
+);
+if (postkit.mdxComponents.Figure !== EjectedFigure) {
+  throw new Error('createPostkit did not use the ejected Figure view.');
+}
+
+const [, options] = postkit.remarkPlugins.find(
+  (plugin) => Array.isArray(plugin) && plugin[0] === remarkPostkit,
+);
+const directive = (attributes) => ({
+  type: 'root',
+  children: [
+    { type: 'leafDirective', name: 'postkit-figure', attributes, children: [] },
+  ],
+});
+
+// A bad prop fails the build, exactly as for the upstream view.
+for (const attributes of [
+  { src: '/a.png', alt: 'A', layout: 'sideways' },
+  { src: '/a.png' },
+]) {
+  let failed = false;
+  try {
+    remarkPostkit(options)(directive(attributes));
+  } catch {
+    failed = true;
+  }
+  if (!failed) {
+    throw new Error(\`::postkit-figure accepted \${JSON.stringify(attributes)}.\`);
+  }
+}
+
+// A good one becomes <Figure>, which renders the ejected view.
+const tree = directive({ src: '/a.png', alt: 'A harbour', caption: 'At dawn', layout: 'wide' });
+remarkPostkit(options)(tree);
+const [node] = tree.children;
+if (node.type !== 'mdxJsxFlowElement' || node.name !== 'Figure') {
+  throw new Error(\`::postkit-figure became \${node.type} \${node.name}.\`);
+}
+const props = Object.fromEntries(node.attributes.map((entry) => [entry.name, entry.value]));
+const markup = renderToStaticMarkup(
+  createElement(
+    postkit.Provider,
+    { preset: postkitDefaultTheme },
+    createElement(postkit.mdxComponents[node.name], props),
+  ),
+);
+for (const expected of [
+  'data-postkit-component="Figure"',
+  'data-layout="wide"',
+  'alt="A harbour"',
+  'At dawn',
+  'postkit-figure__root',
+]) {
+  if (!markup.includes(expected)) {
+    throw new Error(\`The ejected Figure did not render \${expected}:\\n\${markup}\`);
+  }
+}
+console.log('An ejected Chakra Figure still validates ::postkit-figure and renders.');
+`,
+    );
+    run(process.execPath, ['eject-smoke.mjs']);
+
+    // The manifest command loads the same config, ejected view included.
+    const manifest = spawnSync(postkitBin, ['manifest'], {
+      cwd: consumerRoot,
+      encoding: 'utf8',
+      env: process.env,
+    });
+    if (manifest.status !== 0) {
+      process.stderr.write(manifest.stderr);
+      throw new Error('postkit manifest failed.');
+    }
+    const components = Object.keys(JSON.parse(manifest.stdout).components);
+    if (!components.includes('Figure') || !components.includes('Callout')) {
+      throw new Error(`postkit manifest wrote ${components.join(', ')}.`);
+    }
+
+    console.log('@postkit/cli works from its tarball.');
+  }
 
   process.stdout.write('Postkit tarball consumer verification passed.\n');
 } finally {
