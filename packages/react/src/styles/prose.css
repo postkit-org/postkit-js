@@ -1,0 +1,137 @@
+/*
+ * Shared structure and prose rhythm for every Postkit component.
+ *
+ * Each component's rules sit in an `@scope` keyed by its
+ * `data-postkit-component`, ending at any nested component, so a part rule
+ * never reaches a part of a component placed inside it. Instances marked
+ * `data-postkit-unstyled` are skipped. Every selector is wrapped in `:where()`
+ * (zero specificity), so one host class overrides any rule here.
+ */
+
+@scope ([data-postkit-component]:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-inset: var(--postkit-space-4);
+    --postkit-tone: var(--postkit-color-fg);
+    --postkit-tone-surface: var(--postkit-color-surface);
+    box-sizing: border-box;
+    color: var(--postkit-color-fg);
+    color-scheme: var(--postkit-color-scheme);
+    font-family: var(--postkit-font-body);
+    line-height: var(--postkit-leading);
+    margin-block: var(--postkit-space-flow);
+    margin-inline: 0;
+    min-width: 0;
+  }
+
+  /* Sizes: the inset (padding) and type step every component shares. */
+  :where(:scope[data-size='sm']) {
+    --postkit-inset: var(--postkit-space-3);
+    font-size: var(--postkit-text-sm);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-inset: var(--postkit-space-5);
+    font-size: var(--postkit-text-lg);
+  }
+
+  /* Tones: `--postkit-tone` and its tint, from the tone tokens. */
+  :where(:scope[data-tone='note']) {
+    --postkit-tone: var(--postkit-tone-note);
+    --postkit-tone-surface: var(--postkit-tone-note-surface);
+  }
+  :where(:scope[data-tone='tip']) {
+    --postkit-tone: var(--postkit-tone-tip);
+    --postkit-tone-surface: var(--postkit-tone-tip-surface);
+  }
+  :where(:scope[data-tone='important']) {
+    --postkit-tone: var(--postkit-tone-important);
+    --postkit-tone-surface: var(--postkit-tone-important-surface);
+  }
+  :where(:scope[data-tone='warning']) {
+    --postkit-tone: var(--postkit-tone-warning);
+    --postkit-tone-surface: var(--postkit-tone-warning-surface);
+  }
+  :where(:scope[data-tone='caution']) {
+    --postkit-tone: var(--postkit-tone-caution);
+    --postkit-tone-surface: var(--postkit-tone-caution-surface);
+  }
+
+  /* Parts start from a clean box; each component adds its own spacing. */
+  :where([data-postkit-part]) {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  :where([data-postkit-part][hidden]) {
+    display: none !important;
+  }
+
+  /* Prose rhythm inside parts that hold authored content (not between parts). */
+  :where([data-postkit-part] > :first-child:not([data-postkit-part])) {
+    margin-block-start: 0;
+  }
+  :where([data-postkit-part] > :last-child:not([data-postkit-part])) {
+    margin-block-end: 0;
+  }
+  :where(
+    [data-postkit-part]
+      > :is(p, ul, ol, pre, blockquote):not([data-postkit-part])
+      + :not([data-postkit-part])
+  ) {
+    margin-block-start: 0.75em;
+  }
+
+  /* Links inside components read as links in a monochrome palette. */
+  :where(a) {
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  :where(a:hover) {
+    text-decoration-thickness: 2px;
+  }
+
+  :where(img, svg, video, audio, iframe) {
+    max-width: 100%;
+  }
+
+  :where(button, input, select, textarea) {
+    font: inherit;
+  }
+
+  /* A visible focus ring on every focusable element. */
+  :where(
+    :scope:focus-visible,
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible
+  ) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+}
+
+/* Motion only when the reader hasn't asked for less. */
+@media (prefers-reduced-motion: no-preference) {
+  @scope ([data-postkit-component]:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where(a, button, summary, [data-postkit-part]) {
+      transition-duration: var(--postkit-duration);
+      transition-property: background-color, border-color, color, opacity;
+      transition-timing-function: ease-out;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @scope ([data-postkit-component]:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where(:scope, [data-postkit-part]) {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

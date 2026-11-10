@@ -72,6 +72,80 @@ The Callout renders:
 `@postkit/chakra` stamps the same attributes on the same parts, so selectors
 written against the anatomy work with either renderer.
 
+## Styling
+
+The views ship no styles. For a quiet, neutral starting point, import the
+optional baseline once, at your app's root:
+
+```ts
+import '@postkit/react/styles.css';
+```
+
+It styles all 35 built-in components: structure, prose rhythm and restrained
+monochrome, with `subtle` (the default), `outline` and `plain` variants, `sm`,
+`md` and `lg` sizes, and Callout tones. It is built only from the anatomy
+attributes and `--postkit-*` custom properties, and follows the colour mode:
+
+- dark values apply under `@media (prefers-color-scheme: dark)`, unless the
+  root has `class="light"` or `data-theme="light"`;
+- and under `.dark` or `[data-theme="dark"]`, for class-based hosts such as
+  next-themes. A `.light` or `[data-theme="light"]` subtree inside a dark page
+  switches back.
+
+A light-only site that ignores the reader's OS setting should mark its root
+`class="light"` (or `data-theme="light"`), so the components stay light too.
+CodeBlock, CodeGroup and Terminal keep their own dark surface in both modes.
+
+### Tokens
+
+Set any of these on `:root` (or any element, for a subtree) to retheme every
+component. The baseline declares them with zero specificity, so your own rule
+wins whatever the order. Give each colour you change a dark value too.
+
+| Group | Tokens |
+| --- | --- |
+| Colour | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface` |
+| Chart | `--postkit-chart-1` … `--postkit-chart-4` (series without an authored colour) |
+| Code surface | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring` |
+| Type | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}` |
+| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration` |
+| Footnotes (reserved) | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap` |
+
+```css
+:root {
+  --postkit-font-heading: 'Fraunces', serif;
+  --postkit-color-accent: #3b2f8f;
+  --postkit-radius-xl: 0.25rem;
+}
+.dark {
+  --postkit-color-accent: #c9c1ff;
+}
+```
+
+Inside a component, `--postkit-inset` (padding for the size) and
+`--postkit-tone` / `--postkit-tone-surface` (the resolved tone) are set on the
+root, so part overrides can reuse them.
+
+### Override a part
+
+Every rule is wrapped in `:where()`, so a single class or attribute selector
+beats it:
+
+```css
+[data-postkit-component='Callout'] [data-postkit-part='icon'] {
+  border-radius: 0.25rem;
+}
+```
+
+Or pass a class with `classNames={{ icon: 'rounded-sm' }}`. To opt one
+instance out, pass `unstyled`; to keep the baseline below your own layers, import
+it into one: `@import '@postkit/react/styles.css' layer(postkit);`.
+
+The baseline scopes each component with CSS `@scope`, ending at any nested
+component, so a Callout's rules never reach a component placed inside it.
+Browsers without `@scope` show the semantic markup unstyled.
+
 ## Style the anatomy
 
 The root carries `data-postkit-component` and one attribute per theme-variant

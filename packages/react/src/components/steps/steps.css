@@ -1,0 +1,60 @@
+/* Steps: a numbered procedure. */
+@scope ([data-postkit-component='Steps']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-marker-size: 1.75rem;
+    display: grid;
+    gap: var(--postkit-space-4);
+    list-style: none;
+    padding: 0;
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-marker-size: 1.5rem;
+    gap: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-marker-size: 2rem;
+    gap: var(--postkit-space-5);
+  }
+  :where([data-postkit-part='item']) {
+    align-items: flex-start;
+    border-radius: var(--postkit-radius-lg);
+    display: grid;
+    gap: var(--postkit-space-3);
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+  }
+  :where([data-postkit-part='marker']) {
+    align-items: center;
+    background: var(--postkit-color-accent);
+    border-radius: var(--postkit-radius-full);
+    color: var(--postkit-color-accent-fg);
+    display: inline-flex;
+    font-size: var(--postkit-text-sm);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--postkit-weight-bold);
+    height: var(--postkit-marker-size);
+    justify-content: center;
+    width: var(--postkit-marker-size);
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+    padding-block-start: 0.125rem;
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    margin-block-start: var(--postkit-space-1);
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='item']) {
+    background: var(--postkit-color-surface);
+    padding: var(--postkit-space-3);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='marker']) {
+    background: transparent;
+    border: var(--postkit-border-width) solid var(--postkit-color-fg);
+    color: var(--postkit-color-fg);
+  }
+}

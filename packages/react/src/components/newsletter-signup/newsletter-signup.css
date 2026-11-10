@@ -1,0 +1,126 @@
+/* NewsletterSignup: an email field and submit button, with status and privacy notes. */
+@scope ([data-postkit-component='NewsletterSignup']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-control-height: 2.5rem;
+    display: grid;
+    gap: var(--postkit-space-5);
+    padding: var(--postkit-space-6);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-control-height: 2.25rem;
+    gap: var(--postkit-space-4);
+    padding: var(--postkit-space-4);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-control-height: 3rem;
+    gap: var(--postkit-space-6);
+    padding: var(--postkit-space-8);
+  }
+  :where([data-postkit-part='content']) {
+    display: grid;
+    gap: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.25em;
+    font-weight: var(--postkit-weight-semibold);
+    line-height: var(--postkit-leading-tight);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='form']) {
+    display: grid;
+    gap: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='label']) {
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-medium);
+  }
+  :where([data-postkit-part='fields']) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='input']) {
+    background: var(--postkit-color-bg);
+    border: var(--postkit-border-width) solid var(--postkit-color-border-strong);
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-fg);
+    flex: 1 1 14rem;
+    min-height: var(--postkit-control-height);
+    min-width: 0;
+    padding-inline: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='input'])::placeholder {
+    color: var(--postkit-color-fg-muted);
+    opacity: 1;
+  }
+  :where([data-postkit-part='input'][aria-invalid='true']) {
+    border-color: var(--postkit-tone-caution);
+  }
+  :where([data-postkit-part='submit']) {
+    appearance: none;
+    background: var(--postkit-color-accent);
+    border: 0;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-accent-fg);
+    cursor: pointer;
+    flex: 0 0 auto;
+    font-weight: var(--postkit-weight-semibold);
+    min-height: var(--postkit-control-height);
+    padding-inline: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='submit']:hover) {
+    opacity: 0.88;
+  }
+  :where(
+    [data-postkit-part='submit']:is(:disabled, [aria-disabled='true'], [data-disabled])
+  ) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  :where([data-postkit-part='status']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+  }
+  :where(
+    [data-postkit-part='status']:is([data-status='error'], [role='alert'])
+  ) {
+    color: var(--postkit-tone-caution);
+  }
+  :where([data-postkit-part='privacy']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+
+  :where(:scope[data-alignment='center'] [data-postkit-part='content']) {
+    justify-items: center;
+    text-align: center;
+  }
+  :where(:scope[data-alignment='center'] [data-postkit-part='form']) {
+    margin-inline: auto;
+    max-width: 36rem;
+    width: 100%;
+  }
+  :where(
+    :scope[data-alignment='center'] :is(
+        [data-postkit-part='status'],
+        [data-postkit-part='privacy']
+      )
+  ) {
+    text-align: center;
+  }
+}

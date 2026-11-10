@@ -1,0 +1,64 @@
+/* SeriesNavigation: the post's place in a series, with previous and next links. */
+@scope ([data-postkit-component='SeriesNavigation']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='header']) {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='position']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+  }
+  :where([data-postkit-part='links']) {
+    display: grid;
+    gap: var(--postkit-space-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    margin-block-start: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='link']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    display: grid;
+    gap: var(--postkit-space-1);
+    padding: var(--postkit-space-3);
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='link'][rel='next']) {
+    text-align: end;
+  }
+  :where([data-postkit-part='link']:hover) {
+    background: var(--postkit-color-surface-emphasized);
+  }
+  :where([data-postkit-part='direction']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  :where([data-postkit-part='linkTitle']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='link']) {
+    background: var(--postkit-color-bg);
+    border-color: transparent;
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

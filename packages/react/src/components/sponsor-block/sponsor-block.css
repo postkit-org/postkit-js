@@ -1,0 +1,49 @@
+/* SponsorBlock: a disclosed sponsorship with a logo, message and link. */
+@scope ([data-postkit-component='SponsorBlock']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    display: grid;
+    gap: var(--postkit-space-3);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='disclosure']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    font-weight: var(--postkit-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  :where([data-postkit-part='logo']) {
+    max-height: 2.5rem;
+    max-width: 10rem;
+    object-fit: contain;
+    object-position: left center;
+  }
+  :where([data-postkit-part='content']) {
+    display: grid;
+    gap: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='name']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='message']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='action']) {
+    font-weight: var(--postkit-weight-semibold);
+    justify-self: start;
+    margin-block-start: var(--postkit-space-1);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-block: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: 0;
+    padding-inline: 0;
+  }
+}

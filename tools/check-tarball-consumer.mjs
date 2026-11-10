@@ -130,6 +130,18 @@ if (packages.some((entry) => Object.keys(entry).length === 0)) {
 }
 console.log('Postkit tarball runtime entry points loaded with Chakra UI 3.29.0.');
 
+// The optional headless baseline resolves through the export map.
+const stylesUrl = import.meta.resolve('@postkit/react/styles.css');
+const styles = await readFile(new URL(stylesUrl), 'utf8');
+if (
+  !styles.includes('--postkit-color-fg:') ||
+  !styles.includes("[data-postkit-component='Callout']") ||
+  !styles.includes('prefers-color-scheme: dark')
+) {
+  throw new Error(\`@postkit/react/styles.css is not the baseline: \${stylesUrl}\`);
+}
+console.log('@postkit/react/styles.css resolves to the baseline stylesheet.');
+
 // Behaviours run framework-free on the host's (Chakra's) single Zag copy.
 const behaviors = await import('@postkit/core/behaviors');
 const tabs = behaviors.createTabs({ id: 'smoke', values: ['a', 'b'], initialIndex: '1' });
@@ -197,6 +209,7 @@ import {
 } from '@postkit/core/behaviors/testing';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { Callout as HeadlessCallout, postkitView, type CalloutProps } from '@postkit/react';
+import '@postkit/react/styles.css';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
@@ -239,6 +252,8 @@ type _AstroComponents = PostkitAstroComponents;
 type _AstroReactBridge = typeof Audio;
 `,
   );
+  // What a bundler's client types declare: CSS imports are side effects.
+  writeFileSync(join(consumerRoot, 'css.d.ts'), "declare module '*.css';\n");
   writeFileSync(
     join(consumerRoot, 'tsconfig.json'),
     `${JSON.stringify(
@@ -253,7 +268,7 @@ type _AstroReactBridge = typeof Audio;
           target: 'ES2022',
           types: ['node'],
         },
-        include: ['consumer.ts'],
+        include: ['consumer.ts', 'css.d.ts'],
       },
       null,
       2,
