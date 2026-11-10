@@ -875,9 +875,19 @@ One thoughtful publishing note each week.
 
 Directive props are allowlisted by `postkitDeclarationManifest`. The plugin
 emits string and boolean literals only—never authored JavaScript expressions.
-Unknown, missing, or invalid props fail the site build by default. Sites can
-use `{ strict: false }` during a staged schema migration, which drops unknown
-props instead of rendering them.
+Missing or invalid props (a value outside an enum, malformed JSON, a
+non-numeric number) always fail the build. In strict mode, the default, an
+unknown prop, an unknown `postkit-*` directive, or an unknown MDX component
+fails too. Errors are `VFileMessage`s carrying the file and
+`line:column`. Sites can use `{ strict: false }` during a staged schema
+migration: those cases become warnings on the file, unknown props are dropped,
+and unknown directives and components render as before. List site-only MDX
+components the document doesn't import in `postkit: { components: [...] }`.
+
+A directive that isn't a Postkit component and doesn't use the `postkit-`
+prefix stays the text the author wrote, so `4.5:1`, `10:30`, and
+`localhost:3000` are untouched. Register your own directive handlers in
+`before` so the directives they mark with `data.hName` are left alone.
 
 ## Multi-part styling
 
