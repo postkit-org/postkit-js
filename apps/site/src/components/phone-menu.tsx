@@ -11,6 +11,7 @@ import {
   type RefObject,
 } from 'react';
 
+import { componentCategoryGroups, componentEntries } from '../lib/components';
 import { externalLinks, type SiteSection } from '../lib/site-sections';
 
 /** Matches the `md` breakpoint (761px): the menu exists only below it. */
@@ -25,6 +26,25 @@ const FOCUSABLE = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+const numberWords = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+];
+
+/** "six kits" reads better than "6 kits"; larger counts stay as digits. */
+function countWord(count: number): string {
+  return numberWords[count] ?? String(count);
+}
+
 const rows: readonly {
   section: SiteSection;
   href: string;
@@ -35,7 +55,8 @@ const rows: readonly {
     section: 'components',
     href: '/components',
     label: 'Components',
-    description: '35 components in six kits',
+    // Counted from the component manifest (handoff 08 rule 7), never hard-coded.
+    description: `${componentEntries.length} components in ${countWord(componentCategoryGroups.length)} kits`,
   },
   {
     section: 'docs',
