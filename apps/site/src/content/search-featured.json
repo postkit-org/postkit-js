@@ -1,0 +1,48 @@
+{
+ "$note": "Search results shown before anything is typed (01 §8): what someone discovering Postkit and adding it to their site needs first. Curated, in order. Every href must be a published page; the build fails otherwise. 'latest-release' resolves to the newest released changelog entry.",
+ "jumpTo": [
+  {
+   "label": "Quick start",
+   "href": "/docs/quick-start",
+   "group": "docs"
+  },
+  {
+   "label": "Installation",
+   "href": "/docs/installation",
+   "group": "docs"
+  },
+  {
+   "label": "Introduction",
+   "href": "/docs/introduction",
+   "group": "docs"
+  },
+  {
+   "label": "Next.js",
+   "href": "/docs/nextjs",
+   "group": "docs"
+  },
+  {
+   "label": "Markdown directives",
+   "href": "/docs/markdown-directives",
+   "group": "docs"
+  },
+  {
+   "label": "Part styles",
+   "href": "/docs/part-styles",
+   "group": "docs"
+  },
+  {
+   "label": "Latest release",
+   "href": "latest-release",
+   "group": "changelog"
+  }
+ ],
+ "popularComponents": [
+  "Callout",
+  "CodeBlock",
+  "Figure",
+  "KeyTakeaway",
+  "Tabs",
+  "Terminal"
+ ]
+}

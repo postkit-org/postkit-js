@@ -58,6 +58,7 @@ const nextConfig = {
     '@postkit/next',
     '@postkit/chakra',
     '@postkit/unfurl',
+    '@postkit/site-search',
     '@postkit/site-theme',
     '@postkit/site-telemetry',
   ],

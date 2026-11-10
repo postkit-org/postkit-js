@@ -17,10 +17,7 @@ import { Button, Kbd } from './primitives';
 const MENU_ID = 'site-menu';
 
 export interface HeaderProps {
-  /**
-   * Opens site search. PK-041 passes the dialog's opener here (and binds ⌘K / Ctrl+K);
-   * until then the trigger renders but does nothing.
-   */
+  /** Opens site search (`useSearch().openSearch`; ⌘K / Ctrl K is bound in `SearchProvider`). */
   readonly onOpenSearch?: () => void;
 }
 
@@ -94,7 +91,6 @@ export function Header({ onOpenSearch }: HeaderProps) {
               GitHub
             </NavLink>
 
-            {/* PK-041: wire the search dialog through `onOpenSearch`. */}
             <SearchTrigger onClick={onOpenSearch} />
 
             <Button
