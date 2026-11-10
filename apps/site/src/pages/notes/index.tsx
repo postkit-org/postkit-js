@@ -61,7 +61,6 @@ export default function NotesPage({
         <NotesIndex notes={notes} />
 
         <Box marginTop={{ base: '64px', md: '96px' }}>
-          {/* PK-051: pass `onSubmit` to post to the subscribe API. */}
           <SubscribeCard />
         </Box>
       </PageContainer>
