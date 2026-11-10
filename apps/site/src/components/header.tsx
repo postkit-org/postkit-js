@@ -237,7 +237,6 @@ function SearchTrigger({ onClick }: { readonly onClick?: () => void }) {
   return (
     <chakra.button
       type="button"
-      aria-label="Search"
       aria-keyshortcuts="Meta+K Control+K"
       aria-haspopup="dialog"
       onClick={onClick}
@@ -264,15 +263,20 @@ function SearchTrigger({ onClick }: { readonly onClick?: () => void }) {
       css={hoverBg}
     >
       <SearchIcon />
+      {/* The button's name. Visually hidden on phones (the icon stands in), so the name is
+          always the visible label (WCAG 2.5.3, label in name). */}
       <Box
         as="span"
-        display={{ base: 'none', md: 'inline' }}
+        srOnly={{ base: true, md: false }}
         minWidth="64px"
         textAlign="start"
       >
         Search
       </Box>
-      <Kbd display={{ base: 'none', md: 'inline-flex' }}>⌘K</Kbd>
+      {/* Decorative: `aria-keyshortcuts` announces the shortcut. */}
+      <Kbd aria-hidden="true" display={{ base: 'none', md: 'inline-flex' }}>
+        ⌘K
+      </Kbd>
     </chakra.button>
   );
 }

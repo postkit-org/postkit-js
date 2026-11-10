@@ -88,7 +88,14 @@ export default function LicensingPage({
         </LegalSection>
 
         <LegalSection title="Built on">
-          <chakra.div marginTop="20px" overflowX="auto">
+          {/* Scrolls sideways on phones, so it takes focus (keyboard scrolling, WCAG 2.1.1). */}
+          <chakra.div
+            role="region"
+            aria-label="Built on"
+            tabIndex={0}
+            marginTop="20px"
+            overflowX="auto"
+          >
             <chakra.table
               width="100%"
               minWidth="480px"

@@ -123,7 +123,8 @@ export function StatsSection({
       >
         {stats.map((stat) => (
           <Box key={stat.label} display="flex" flexDirection="column-reverse">
-            <Text as="dt" fontSize="body" color="fg.quiet">
+            {/* `fg.muted`, not the board's `fg.quiet`: at 17px it needs 4.5:1 (02 §8, 07 §1). */}
+            <Text as="dt" fontSize="body" color="fg.muted">
               {stat.label}
             </Text>
             <Text

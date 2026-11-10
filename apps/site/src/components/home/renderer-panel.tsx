@@ -2,6 +2,7 @@ import { Box, chakra, Flex, Text } from '@chakra-ui/react';
 import { Callout } from '@postkit/chakra';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { segmentedOnSubtle } from '../components/usage-panel';
 import { SegmentedControl } from '../primitives';
 import {
   rendererArticle,
@@ -40,8 +41,9 @@ export function RendererPanel({ emailHtml }: RendererPanelProps) {
         <Box
           display={{ base: 'block', md: 'inline-block' }}
           css={{
-            // A step up from the default track, so it reads on the panel's `bg.subtle`.
-            '& [role=radiogroup]': { bg: 'bg.hover' },
+            // A step up from the default track, so it reads on the panel's `bg.subtle`, with
+            // unselected labels that keep 4.5:1 on it.
+            ...segmentedOnSubtle,
             '@media (min-width: 761px)': {
               '& [role=radio]': {
                 height: '40px',

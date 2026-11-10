@@ -142,6 +142,7 @@ export const siteConfig = defineConfig({
           hover: mode('#EBEBE9', '#262628'),
           pressed: mode('#E2E2DF', '#303033'),
           raised: mode('#FFFFFF', '#3A3A3C'),
+          kbd: mode('#FFFFFF', '#0F0F11'),
           inverted: mode('#1D1D1F', '#F5F5F7'),
           invertedHover: mode('#3A3A3C', '#D1D1D6'),
           invertedPressed: mode('#000000', '#FFFFFF'),

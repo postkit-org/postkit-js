@@ -168,7 +168,8 @@ export default function MadeWithOssPage({
           >
             Postkit is open source, and so is almost everything it stands
             on.{' '}
-            <chakra.span color="fg.quiet">
+            {/* The grey half is large text (3:1) from `md`; at 21px on phones it needs 4.5:1. */}
+            <chakra.span color={{ base: 'fg.muted', md: 'fg.quiet' }}>
               Thank you to the maintainers and contributors behind the library
               and this site.
             </chakra.span>

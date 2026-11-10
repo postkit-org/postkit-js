@@ -150,7 +150,7 @@ describe('site recipes', () => {
     expect(kbd).toMatchObject({
       height: '20px',
       borderRadius: '6px',
-      background: v('colors-bg-raised'),
+      background: v('colors-bg-kbd'),
       boxShadow: v('shadows-kbd'),
     });
 

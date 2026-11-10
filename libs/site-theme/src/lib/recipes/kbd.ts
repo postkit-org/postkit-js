@@ -1,7 +1,9 @@
 import { defineRecipe, type RecipeDefinition } from '@chakra-ui/react';
 
 /**
- * Site Kbd (02 §5): 20px tall, 6px radius, `bg.raised` with the `kbd` inset hairline.
+ * Site Kbd (02 §5): 20px tall, 6px radius, `bg.kbd` with the `kbd` inset hairline. Every
+ * board draws the cap white in light and page-dark (`#0F0F11`) in dark; `bg.raised` in dark
+ * left `fg.muted` under 4.5:1.
  * Registered as `siteKbd` so Chakra's own `kbd` recipe (and anything Postkit renders with it)
  * keeps its look.
  */
@@ -16,7 +18,7 @@ export const siteKbdRecipe: RecipeDefinition = defineRecipe({
     minWidth: '20px',
     paddingInline: '6px',
     borderRadius: '6px',
-    bg: 'bg.raised',
+    bg: 'bg.kbd',
     boxShadow: 'kbd',
     color: 'fg.muted',
     fontFamily: 'inherit',

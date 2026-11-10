@@ -188,7 +188,8 @@ export function Footer() {
             </FooterAnchor>
             <FooterAnchor
               href="/withoss"
-              aria-label="Made with open-source software"
+              // The name starts with the badge's own text (WCAG 2.5.3, label in name).
+              aria-label="w/ OSS: made with open-source software"
               title="Made with OSS"
               display="inline-flex"
               alignItems="center"
