@@ -1,0 +1,75 @@
+---
+title: One article, four renderers.
+subtitle: What happens when everything wants to show it.
+summary: A callout has to survive a feed reader, a newsletter and an editor’s preview pane. Postkit treats it as content rather than markup, so the article comes along unchanged.
+kind: guide
+date: 2026-11-10
+author:
+  name: Ryan Hefner
+cover: gradient
+status: draft
+---
+
+{/* TODO: real publish date (09 Q6) */}
+
+{/* TODO: the lead image. The board's Figure is a placeholder, so `cover: gradient` stands in. Replace it with the image path, and write its caption: the board's "Fig. 1 — [The lead image’s caption.]" is a placeholder (09). */}
+
+{/* TODO: Ryan's avatar for `author.avatar`. The board shows a placeholder circle. */}
+
+<KeyTakeaway
+  title="In short"
+  items='["Components are defined once, outside any framework.", "Headless React views; Chakra is its own package.", "Every customization keeps the contract."]'
+/>
+
+A callout is a small thing: a box, a word of warning, a tip. But the moment an article leaves the page it was written for, that box has to survive a feed reader, a newsletter and an editor’s preview pane[^renderers], each with different rules about what may run.
+
+Postkit treats the callout as [content rather than markup](/docs/core-concepts). Install the renderer you want and the article comes along unchanged.
+
+<Aside>
+  Postkit grew out of Prismark’s need to render the same components in the editor and on the page.
+</Aside>
+
+<Terminal command="npm install @postkit/react" output="added 1 package in 2s" />
+
+## Write the component once. A tag in MDX, a directive in Markdown, one definition behind both.
+
+Both forms validate against the same definition, so a typo in a [tone](/components/callout) fails the build instead of the reader[^validation].
+
+<CodeBlock
+  filename="post.mdx"
+  language="mdx"
+  code='<Callout tone="tip" title="Keep the content">
+&#32;&#32;Change the renderer without changing the article.
+</Callout>'
+/>
+
+<Callout tone="tip" title="Keep the content">
+  Change the renderer without changing the article.
+</Callout>
+
+<PullQuote
+  quote="The file stays plain text. The renderer is a choice you can change later."
+  attribution="Postkit design principles"
+/>
+
+## Restyle without forking. The callout above is the stock component under this site’s theme.
+
+Go further only when you need to. Each step keeps the component’s contract[^contract].
+
+<Steps
+  items='[{"title": "Theme the parts.", "description": "Style root, icon and title with CSS or a recipe."}, {"title": "Swap one part.", "description": "Give the icon slot your own mark; the rest stays stock."}, {"title": "Eject the view.", "description": "Own the source; the definition stays upstream."}]'
+/>
+
+<LinkPreview
+  href="https://github.com/postkit-org/postkit-js"
+  presentation="card"
+  siteName="github.com"
+  title="postkit-org/postkit-js"
+  description="Portable web and email components, Markdown tooling and framework adapters."
+/>
+
+[^renderers]: Feed readers drop scripts and most styles, email clients drop more, and preview panes often render without the site’s CSS at all.
+
+[^validation]: Directives are checked against the same schema as MDX props, and the error names the file and line.
+
+[^contract]: The contract is the definition: props, parts and their data-postkit-part names. Views can change; those can’t.

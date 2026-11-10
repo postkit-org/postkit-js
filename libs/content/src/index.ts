@@ -23,7 +23,12 @@ export {
 } from './lib/docs.js';
 export {
   createNotesCollection,
+  includesDraftNotes,
+  noteKinds,
+  noteKindSchema,
   notesEntrySchema,
+  selectVisibleNotes,
+  type NoteKind,
   type NotesEntryData,
 } from './lib/notes.js';
 export {
