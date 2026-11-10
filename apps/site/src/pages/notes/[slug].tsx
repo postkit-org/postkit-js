@@ -22,6 +22,7 @@ import {
   type NoteSummary,
 } from '../../lib/notes';
 import { getNote, getNotes } from '../../lib/notes.server';
+import { noteShareImage, shareImageMeta } from '../../lib/share-images';
 
 interface NotePageProps {
   readonly note: NoteEntry;
@@ -72,6 +73,7 @@ export default function NotePage({
         description={note.summary}
         path={path}
         type="article"
+        image={shareImageMeta(noteShareImage(note))}
       />
       <Schema
         id="article-jsonld"

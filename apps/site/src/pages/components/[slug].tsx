@@ -56,6 +56,7 @@ import {
   rendererSupport,
   type RendererSupportRow,
 } from '../../lib/components';
+import { componentShareImage, shareImageMeta } from '../../lib/share-images';
 import { externalLinks } from '../../lib/site-sections';
 
 /** A section written in the component's Markdown file: its grey line and the rest. */
@@ -275,6 +276,9 @@ export default function ComponentPage({
         title={component.name}
         description={`${component.name}: ${tagline}`}
         path={path}
+        image={shareImageMeta(
+          componentShareImage({ slug, name: component.name, tagline }),
+        )}
       />
       <BreadcrumbJsonLd
         items={[

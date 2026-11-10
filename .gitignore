@@ -72,3 +72,6 @@ docs/design/handoff/reference/renders/
 /apps/site/public/icon-192.png
 /apps/site/public/icon-512.png
 /apps/site/public/site.webmanifest
+
+# Generated at build time by `nx run site:og-images` (PK-061)
+/apps/site/public/og/

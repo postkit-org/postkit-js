@@ -41,6 +41,7 @@ import {
   getDocsNavigation,
   getDocsPagesOptions,
 } from '../../lib/docs.server';
+import { docsShareImage, shareImageMeta } from '../../lib/share-images';
 
 interface DocsEntryPageProps {
   /** chakra-docs' page props: the nav tree and this page (title, summary, `h2`s). */
@@ -123,7 +124,7 @@ export default function DocsEntryPage({
         title={entry.title}
         description={entry.summary}
         path={path}
-        type="article"
+        image={shareImageMeta(docsShareImage(entry))}
       />
       <Schema
         id="techarticle-jsonld"
