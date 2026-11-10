@@ -1,43 +1,18 @@
 import { Box, chakra } from '@chakra-ui/react';
-import { useId, useState, type FormEvent } from 'react';
+import { useId } from 'react';
 
 import { noteFeeds } from '../../lib/notes';
 import { TwoToneHeading } from '../layout';
-import { Button, TextField } from '../primitives';
-
-export interface SubscribeCardProps {
-  /**
-   * Called with the address when the form is submitted. The card is UI only for now:
-   * PK-051 wires this to the subscribe API (the one `/newsletter/subscribe` posts to) and
-   * adds the other five form states from 04 §2 (invalid, sending, check your inbox,
-   * already subscribed, couldn't subscribe).
-   */
-  readonly onSubmit?: (email: string) => void;
-}
-
-const feedLinkStyles = {
-  color: 'accent',
-  textDecoration: 'underline',
-  textDecorationThickness: '1px',
-  textUnderlineOffset: '3px',
-  borderRadius: 'xs',
-  _hover: { textDecorationThickness: '2px' },
-} as const;
+import { FeedLinks } from '../newsletter/feed-links';
+import { SubscribeForm } from '../newsletter/subscribe-form';
 
 /**
- * "Follow along." (SiteNotes, 04 §2 state 1, idle): the pill email field and Subscribe
- * button, plus the RSS, Atom and JSON Feed links. `id="subscribe"` so emails and other
- * pages can link to `/notes#subscribe`.
+ * "Follow along." (SiteNotes): the heading, the notes feeds, and the release-email
+ * `SubscribeForm` with its six states (04 §2, SiteSignupStates) in place. `id="subscribe"`
+ * so emails and other pages can link to `/notes#subscribe`.
  */
-export function SubscribeCard({ onSubmit }: SubscribeCardProps) {
+export function SubscribeCard() {
   const headingId = `subscribe-heading-${useId()}`;
-  const [email, setEmail] = useState('');
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // PK-051: validate on submit (04 §2), post to the subscribe API and show the result.
-    onSubmit?.(email);
-  };
 
   return (
     <chakra.section
@@ -63,49 +38,10 @@ export function SubscribeCard({ onSubmit }: SubscribeCardProps) {
           letterSpacing="heading"
         />
         <chakra.p margin="12px 0 0" fontSize="15px" color="fg.muted">
-          Or subscribe with{' '}
-          {noteFeeds.map((feed, index) => (
-            <span key={feed.href}>
-              <chakra.a href={feed.href} type={feed.type} {...feedLinkStyles}>
-                {feed.label}
-              </chakra.a>
-              {index === noteFeeds.length - 2
-                ? ' or '
-                : index < noteFeeds.length - 2
-                  ? ', '
-                  : '.'}
-            </span>
-          ))}
+          Or subscribe with <FeedLinks feeds={noteFeeds} />
         </chakra.p>
       </Box>
-      <chakra.form
-        onSubmit={handleSubmit}
-        noValidate
-        flex="1 1 280px"
-        minW="0"
-        display="flex"
-        flexWrap="wrap"
-        gap="8px"
-      >
-        <Box flex="1 1 180px" minW="0">
-          <TextField
-            label="Email address"
-            hideLabel
-            type="email"
-            name="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            size="lg"
-            shape="pill"
-            surface="subtle"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </Box>
-        <Button type="submit" variant="primary" size="lg">
-          Subscribe
-        </Button>
-      </chakra.form>
+      <SubscribeForm flex="1 1 280px" minW="0" layout="card" surface="subtle" />
     </chakra.section>
   );
 }
