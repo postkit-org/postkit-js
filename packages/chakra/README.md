@@ -939,6 +939,11 @@ remain compatibility aliases and style the same elements.
 Prismark and other editors stable component names, directives, prop types, and
 child modes without importing or executing web component code.
 
+The declarations, `postkitComponentCatalog` and `component-manifest.json` are
+built from the framework-free component definitions in
+`@postkit/core/components`. Tooling that shouldn't load React or Chakra can read
+those definitions directly.
+
 The bundled `@postkit/prismark` adapter exposes these declarations to
 Prismark's property inspector and inert desktop preview. That preview remains
 fail-closed and limited to packages bundled and integrity-pinned by the app;

@@ -109,6 +109,7 @@ if (chakraManifest.version !== '3.29.0') {
 
 const packages = await Promise.all([
   import('@postkit/core'),
+  import('@postkit/core/components'),
   import('@postkit/unfurl'),
   import('@postkit/chakra'),
   import('@postkit/chakra/theme'),
@@ -132,6 +133,11 @@ console.log('Postkit tarball runtime entry points loaded with Chakra UI 3.29.0.'
   writeFileSync(
     join(consumerRoot, 'consumer.ts'),
     `import { parsePostkitHtml, serializePostkitJson } from '@postkit/core';
+import {
+  calloutDefinition,
+  definePostkitComponent,
+  type PostkitPropsOf,
+} from '@postkit/core/components';
 import { createLinkResolverRegistry } from '@postkit/unfurl';
 import { PostkitProvider } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
@@ -148,6 +154,9 @@ import type { Audio } from '@postkit/astro/react';
 
 void parsePostkitHtml;
 void serializePostkitJson;
+void definePostkitComponent;
+const _calloutProps: PostkitPropsOf<typeof calloutDefinition> = { tone: 'tip' };
+void _calloutProps;
 void createLinkResolverRegistry;
 void PostkitProvider;
 void DocumentRenderer;

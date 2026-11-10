@@ -58,6 +58,14 @@ export interface PostkitTypography {
   readonly mono?: PostkitFontFamily;
 }
 
+/**
+ * The anatomy slots of every themed component, keyed by theme key.
+ *
+ * The component entries mirror each definition's `slots` in
+ * `@postkit/core/components`, and `theme-contract.spec.ts` fails if they drift.
+ * They stay written out because indexing the definitions' slot arrays would
+ * cost every theme consumer extra type instantiations.
+ */
 export interface PostkitThemeSlotMap {
   readonly audienceBoundary: 'root' | 'label' | 'content' | 'fallback';
   readonly appearsOn:
@@ -345,6 +353,11 @@ export interface PostkitThemeSlotMap {
   readonly video: 'root' | 'frame' | 'player' | 'caption' | 'fallback';
 }
 
+/**
+ * The recipe variants of every themed component: the props marked
+ * `themeVariant` in its definition (checked by `theme-contract.spec.ts`), plus
+ * the recipe-only `linkPreview.compact`.
+ */
 export interface PostkitThemeVariantMap {
   readonly audienceBoundary: 'size' | 'variant';
   readonly appearsOn: 'size' | 'variant' | 'presentation';

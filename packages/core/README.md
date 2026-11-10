@@ -68,6 +68,63 @@ Parsing makes content non-executable, but an application still controls the
 component registry used to render component nodes and should expose only
 components appropriate for its trust boundary.
 
+## Component definitions
+
+`@postkit/core/components` holds the framework-free contract for Postkit
+components: their props, anatomy (slots), directive and catalog metadata. It has
+no React, Chakra or parser dependency, so editors, manifest tooling and email
+builds can read it on their own.
+
+```ts
+import {
+  definePostkitComponent,
+  presentation,
+  prop,
+  type PostkitPropsOf,
+  type PostkitSlotOf,
+} from '@postkit/core/components';
+
+export const calloutDefinition = definePostkitComponent({
+  name: 'Callout',
+  directive: 'postkit-callout',
+  category: 'article-structure',
+  description: 'A highlighted note, tip, warning, or caution.',
+  children: 'mdx',
+  runtime: 'static',
+  stability: 'initial',
+  props: {
+    ...presentation,
+    title: prop.string('An optional heading.'),
+    tone: prop.enum(['note', 'tip', 'important', 'warning', 'caution'], {
+      description: 'The semantic emphasis.',
+      default: 'note',
+      themeVariant: true,
+    }),
+  },
+  slots: ['root', 'icon', 'content', 'title', 'body'],
+  example: { props: { tone: 'tip' }, children: 'Keep the content.' },
+});
+
+type CalloutProps = PostkitPropsOf<typeof calloutDefinition>;
+type CalloutSlot = PostkitSlotOf<typeof calloutDefinition>;
+```
+
+- `definePostkitComponent(definition)` validates the definition and returns it
+  deeply frozen, with `children` (`none`), `runtime` (`static`), `stability`
+  (`initial`) and `keywords` filled in, and `themeVariants` listing the props
+  marked `themeVariant`.
+- `prop.string`, `prop.number`, `prop.boolean`, `prop.enum` and `prop.json`
+  build props. Each takes a description and optional `required` and `default`;
+  `prop.enum` and `prop.boolean` also take `themeVariant`.
+- `presentation` is the shared `size` (default `md`) and `variant` (default
+  `subtle`) pair.
+- `PostkitPropsOf`, `PostkitSlotOf`, `PostkitThemeVariantOf`,
+  `PostkitThemeKeyOf` and `PostkitRecipeKeyOf` derive view props, slot and
+  variant unions, and theme and recipe keys from a definition.
+- `postkitBuiltInDefinitions` maps each built-in component name to its
+  definition, and each definition is also exported on its own, such as
+  `calloutDefinition`.
+
 ## License
 
 MIT
