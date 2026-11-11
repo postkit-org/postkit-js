@@ -36,7 +36,7 @@ describe('Postkit built-in definitions', () => {
       Object.keys(all).sort(),
     );
     for (const [name, definition] of Object.entries(all)) {
-      expect(definition.slots).toEqual(
+      expect(definition.slots).toBe(
         postkitBuiltInSlots[name as keyof typeof postkitBuiltInSlots],
       );
     }
