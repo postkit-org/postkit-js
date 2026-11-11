@@ -52,7 +52,9 @@ describe('headless ShareActions names (WCAG 2.5.3)', () => {
     const group = container.querySelector('[data-postkit-part="actions"]');
     expect(group?.hasAttribute('aria-labelledby')).toBe(false);
     expect(
-      container.querySelector('[data-postkit-part="label"]')?.hasAttribute('id'),
+      container
+        .querySelector('[data-postkit-part="label"]')
+        ?.hasAttribute('id'),
     ).toBe(false);
   });
 
