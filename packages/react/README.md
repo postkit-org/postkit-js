@@ -328,3 +328,10 @@ export const postkit = createPostkit({
   throws if rendered, with an error naming it.
 - The Markdown tooling is also available on its own from
   `@postkit/react/remark`.
+- A view can load on first render: `postkitLazyView(() => import('./showcase.js').then((m) => m.Showcase), { definition })`
+  returns a view whose code downloads when a page renders it, inside its own
+  Suspense boundary (pass the definition so it reads defaults and part
+  overrides like the view itself). `postkitLazyViews(loaders, definitions)`
+  builds a map of them and `preloadPostkitViews(views, names)` starts the
+  downloads early. `postkitHeadlessViewNames` lists the headless views without
+  importing them.
