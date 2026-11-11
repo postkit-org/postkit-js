@@ -254,12 +254,6 @@
     "tag": null,
     "description": "Local registries for testing releases before they ship.",
     "url": "https://verdaccio.org"
-   },
-   {
-    "name": "Playwright and axe",
-    "tag": null,
-    "description": "Browser tests and accessibility checks for the site.",
-    "url": "https://playwright.dev"
    }
   ]
  }
