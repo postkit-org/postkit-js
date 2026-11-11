@@ -41,6 +41,8 @@ import {
 } from '@postkit/chakra';
 import type { ComponentType, ReactNode } from 'react';
 
+import { createPostkitSample } from '../lib/code-samples';
+
 /** A prop value in a sample: what an author can write in MDX or a directive attribute. */
 export type PreviewPropValue =
   | string
@@ -214,7 +216,7 @@ export const componentPreviewSamples: Readonly<
       language: 'ts',
       lineNumbers: true,
       highlightLines: '4',
-      code: "import { createPostkit } from '@postkit/react'\nimport { article, technical } from '@postkit/react/kits'\n\nexport const postkit = createPostkit({\n  kits: [article, technical],\n})",
+      code: createPostkitSample,
     },
     markdown: {
       props: {

@@ -11,15 +11,9 @@ import {
   Steps,
 } from '@postkit/chakra';
 
+import { createPostkitSample } from '../../lib/code-samples';
 import { externalLinks } from '../../lib/site-sections';
 import { DemoCard, DemoChip, DemoTile, HomeSection } from './home-section';
-
-const createPostkitExample = `import { createPostkit } from '@postkit/react'
-import { article, technical } from '@postkit/react/kits'
-
-export const postkit = createPostkit({
-  kits: [article, technical],
-})`;
 
 /** Kits on Home (SiteHome): three sections, each drawn with the kit's own components. */
 export function KitSections() {
@@ -105,7 +99,7 @@ function TechnicalKitSection() {
               items={[
                 {
                   label: 'postkit.ts',
-                  code: createPostkitExample,
+                  code: createPostkitSample,
                   language: 'ts',
                 },
                 {
