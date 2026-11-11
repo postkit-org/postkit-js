@@ -4,7 +4,11 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
-import { PageMeta, ResultPage } from '../../components/layout';
+import {
+  BreadcrumbJsonLd,
+  PageMeta,
+  ResultPage,
+} from '../../components/layout';
 import { TextLink } from '../../components/legal/text-link';
 import {
   CautionAlert,
@@ -233,6 +237,7 @@ export default function UnsubscribePage({
         description="Stop getting Postkit release emails, in one click."
         path={PATH}
       />
+      <BreadcrumbJsonLd items={[{ name: 'Unsubscribe', path: PATH }]} />
       <Head>
         <meta key="robots" name="robots" content="noindex" />
       </Head>

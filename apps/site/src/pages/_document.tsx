@@ -1,4 +1,8 @@
+import { tokens } from '@postkit/site-theme';
 import { Head, Html, Main, NextScript } from 'next/document';
+
+/** The browser chrome matches the page ground (`bg`) in each scheme. */
+const themeColor = tokens.color.bg;
 
 export default function Document() {
   return (
@@ -7,12 +11,12 @@ export default function Document() {
       <Head>
         <meta
           name="theme-color"
-          content="#FFFFFF"
+          content={themeColor.light}
           media="(prefers-color-scheme: light)"
         />
         <meta
           name="theme-color"
-          content="#0F0F11"
+          content={themeColor.dark}
           media="(prefers-color-scheme: dark)"
         />
         {/* Icons and manifest (05 §2), written by `nx run site:icons`. */}
