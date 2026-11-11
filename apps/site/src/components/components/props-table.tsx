@@ -6,7 +6,10 @@ import type {
 import NextLink from 'next/link';
 import { Fragment } from 'react';
 
-import { componentPropDefault } from '../../lib/component-defaults';
+import type {
+  ComponentPropDefault,
+  ComponentPropDefaults,
+} from '../../lib/component-prop-defaults';
 import { formatPropType } from '../../lib/components';
 
 /** `size` and `variant` sit last, under "Appearance" (01 §6.4). */
@@ -18,7 +21,7 @@ interface PropRow {
   readonly defaultValue: string | null;
 }
 
-function formatDefault(value: string | boolean | undefined): string | null {
+function formatDefault(value: ComponentPropDefault | undefined): string | null {
   if (value === undefined) return null;
   return typeof value === 'string' ? `"${value}"` : String(value);
 }
@@ -130,18 +133,22 @@ function Row({ row }: { readonly row: PropRow }) {
 /**
  * The props table (01 §6.4): Prop (mono, "Required" in red under the name), Type (string
  * enums as `"a" | "b"`), Default, Description. `size` and `variant` sit last, under
- * "Appearance". Under 761px each row stacks. Defaults come from `component-defaults.ts`
- * until manifest v2's per-prop `default` lands (03 step 8).
+ * "Appearance". Under 761px each row stacks. `defaults` are manifest v2's per-prop
+ * `default` (`componentPropDefaults`, read in `getStaticProps`).
  */
 export function PropsTable({
   component,
+  defaults,
 }: {
   readonly component: PostkitComponentCatalogEntry;
+  readonly defaults: ComponentPropDefaults;
 }) {
   const rows = Object.entries(component.props).map(([name, prop]): PropRow => ({
     name,
     prop,
-    defaultValue: formatDefault(componentPropDefault(component.name, name)),
+    defaultValue: formatDefault(
+      Object.hasOwn(defaults, name) ? defaults[name] : undefined,
+    ),
   }));
   const isAppearance = (row: PropRow) =>
     (appearanceProps as readonly string[]).includes(row.name);

@@ -80,6 +80,9 @@
       "path": "../../packages/chakra"
     },
     {
+      "path": "../../packages/react"
+    },
+    {
       "path": "../../libs/content"
     }
   ]

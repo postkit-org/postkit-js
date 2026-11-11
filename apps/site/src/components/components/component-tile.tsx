@@ -2,7 +2,7 @@ import { chakra } from '@chakra-ui/react';
 import type { PostkitComponentCatalogEntry } from '@postkit/chakra';
 import { useSyncExternalStore } from 'react';
 
-import { componentPropDefault } from '../../lib/component-defaults';
+import type { ComponentPropDefaults } from '../../lib/component-prop-defaults';
 import {
   componentNameToSlug,
   isInteractive,
@@ -32,14 +32,17 @@ function useHydrated(): boolean {
  */
 function TilePreview({
   component,
+  defaults,
 }: {
   readonly component: PostkitComponentCatalogEntry;
+  readonly defaults: ComponentPropDefaults;
 }) {
   const hydrated = useHydrated();
-  // The documented defaults (D12: variant "subtle"), not the 0.2 recipes' own.
+  // The default state: the manifest's defaults for the controls (D12: variant "subtle"),
+  // over whatever the preview sample sets.
   const values = Object.fromEntries(
     previewControls(component).flatMap(({ prop }) => {
-      const value = componentPropDefault(component.name, prop);
+      const value = defaults[prop];
       return typeof value === 'string' ? [[prop, value]] : [];
     }),
   );
@@ -75,6 +78,8 @@ function TilePreview({
 
 export interface ComponentTileProps {
   readonly component: PostkitComponentCatalogEntry;
+  /** The component's manifest defaults (`componentPropDefaults`, from `getStaticProps`). */
+  readonly defaults: ComponentPropDefaults;
   /** The line under the name. Defaults to the manifest description. */
   readonly description?: string;
 }
@@ -84,14 +89,18 @@ export interface ComponentTileProps {
  * `bg.subtle`, the name and a two-line description. The whole tile is one link; interactive
  * components carry an "Interactive" tag.
  */
-export function ComponentTile({ component, description }: ComponentTileProps) {
+export function ComponentTile({
+  component,
+  defaults,
+  description,
+}: ComponentTileProps) {
   return (
     <Tile
       href={`/components/${componentNameToSlug(component.name)}`}
       label={component.name}
       description={description ?? component.description}
     >
-      <TilePreview component={component} />
+      <TilePreview component={component} defaults={defaults} />
       {isInteractive(component) ? (
         <chakra.span
           aria-hidden="true"

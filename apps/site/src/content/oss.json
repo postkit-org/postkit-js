@@ -41,8 +41,8 @@
    },
    {
     "name": "Zag",
-    "tag": "Via Chakra",
-    "description": "State machines for the interactive parts of the Chakra views.",
+    "tag": null,
+    "description": "State machines for the interactive views, headless and Chakra alike. A Chakra site shares one copy.",
     "url": "https://zagjs.com"
    },
    {
@@ -118,6 +118,36 @@
     "url": "https://emotion.sh"
    },
    {
+    "name": "Zag",
+    "tag": "Via Chakra and Postkit",
+    "description": "The tabs, carousels and copy buttons on these pages.",
+    "url": "https://zagjs.com"
+   },
+   {
+    "name": "Chakra Docs",
+    "tag": "Commune",
+    "description": "The docs pages: navigation, pager and the Markdown model under them (@chakra-docs/core, next and chakra).",
+    "url": "https://chakra-docs.dev"
+   },
+   {
+    "name": "Chakra Docs Search",
+    "tag": "Commune",
+    "description": "Site search: the index built at deploy time and the client in the search dialog (@chakra-docs/search).",
+    "url": "https://chakra-docs.dev/docs/search"
+   },
+   {
+    "name": "MiniSearch",
+    "tag": "Via Chakra Docs Search",
+    "description": "The full-text index behind search.",
+    "url": "https://lucaong.github.io/minisearch"
+   },
+   {
+    "name": "Chakra Docs Feed",
+    "tag": "Commune",
+    "description": "RSS, Atom and JSON Feed for the notes and changelog (@chakra-docs/feed).",
+    "url": "https://chakra-docs.dev"
+   },
+   {
     "name": "Content Collections",
     "tag": null,
     "description": "Typed content from the notes, docs and changelog folders.",
@@ -130,16 +160,16 @@
     "url": "https://github.com/hashicorp/next-mdx-remote"
    },
    {
+    "name": "github-slugger",
+    "tag": null,
+    "description": "Heading anchors, the same ones GitHub would make.",
+    "url": "https://github.com/Flet/github-slugger"
+   },
+   {
     "name": "next-meta",
     "tag": "Commune",
     "description": "Page titles, descriptions and Open Graph tags.",
     "url": "https://next-meta.dev"
-   },
-   {
-    "name": "react-fathom",
-    "tag": "Commune",
-    "description": "Cookie-free page counts.",
-    "url": "https://react-fathom.dev"
    },
    {
     "name": "react-structured",
@@ -148,9 +178,15 @@
     "url": "https://react-structured.dev"
    },
    {
+    "name": "react-fathom",
+    "tag": "Commune",
+    "description": "Cookie-free page counts.",
+    "url": "https://react-fathom.dev"
+   },
+   {
     "name": "Sentry",
     "tag": null,
-    "description": "Error reports when a page breaks.",
+    "description": "Error reports when a page breaks (@sentry/nextjs).",
     "url": "https://github.com/getsentry/sentry-javascript"
    },
    {
@@ -160,16 +196,22 @@
     "url": "https://github.com/pacocoursey/next-themes"
    },
    {
-    "name": "MiniSearch",
-    "tag": null,
-    "description": "The search box, from a static index.",
-    "url": "https://lucaong.github.io/minisearch"
-   },
-   {
     "name": "Resend Node SDK",
     "tag": null,
-    "description": "Sends release emails.",
+    "description": "Sends subscribe confirmations and release emails.",
     "url": "https://github.com/resend/resend-node"
+   },
+   {
+    "name": "@vercel/og",
+    "tag": "Via next/og",
+    "description": "Share images, rendered at build time.",
+    "url": "https://vercel.com/docs/og-image-generation"
+   },
+   {
+    "name": "sharp",
+    "tag": null,
+    "description": "The favicons, app icons and share images, as PNGs.",
+    "url": "https://sharp.pixelplumbing.com"
    }
   ]
  },
@@ -190,15 +232,9 @@
     "url": "https://www.typescriptlang.org"
    },
    {
-    "name": "Vite",
-    "tag": null,
-    "description": "Library builds.",
-    "url": "https://vite.dev"
-   },
-   {
     "name": "Vitest",
     "tag": null,
-    "description": "Unit and render tests.",
+    "description": "Unit and render tests, on Vite.",
     "url": "https://vitest.dev"
    },
    {

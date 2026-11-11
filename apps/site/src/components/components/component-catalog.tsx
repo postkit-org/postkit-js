@@ -2,6 +2,7 @@ import { Box, chakra, Flex, Grid } from '@chakra-ui/react';
 import type { PostkitComponentCatalogEntry } from '@postkit/chakra';
 import { useDeferredValue, useState } from 'react';
 
+import type { ComponentPropDefaults } from '../../lib/component-prop-defaults';
 import type { ComponentKit } from '../../lib/components';
 import { TwoToneHeading } from '../layout';
 import { TextField } from '../primitives';
@@ -36,8 +37,11 @@ function countLabel(count: number): string {
  */
 export function ComponentCatalog({
   kits,
+  defaults,
 }: {
   readonly kits: readonly ComponentKit[];
+  /** Each component's manifest defaults, keyed by name. */
+  readonly defaults: Readonly<Record<string, ComponentPropDefaults>>;
 }) {
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query.trim());
@@ -137,7 +141,10 @@ export function ComponentCatalog({
           >
             {components.map((component) => (
               <chakra.li key={component.name} minWidth="0">
-                <ComponentTile component={component} />
+                <ComponentTile
+                  component={component}
+                  defaults={defaults[component.name] ?? {}}
+                />
               </chakra.li>
             ))}
           </Grid>
