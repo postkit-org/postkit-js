@@ -1,4 +1,5 @@
 import { definePostkitComponent } from '../definition.js';
+import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
 
 export const chartDefinition = definePostkitComponent({
@@ -18,6 +19,9 @@ export const chartDefinition = definePostkitComponent({
     title: prop.string('The visible and accessible chart title.', {
       required: true,
     }),
+    headingLevel: headingLevelProp(
+      "Renders the title as a heading at this level. Leave it unset and the title is a paragraph, so the chart never breaks the page's heading outline.",
+    ),
     description: prop.string('A concise explanation of the chart.'),
     type: prop.enum(['bar', 'line'], {
       description: 'The chart presentation.',

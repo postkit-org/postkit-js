@@ -20,7 +20,11 @@
   :where([data-postkit-part='content']) {
     padding: var(--postkit-inset);
   }
+  /* The title is a `p` unless `headingLevel` makes it a heading, so it sets
+     its own type rather than relying on a heading's browser defaults. */
   :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.125em;
     font-weight: var(--postkit-weight-semibold);
   }
   :where([data-postkit-part='description']) {

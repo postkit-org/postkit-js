@@ -45,6 +45,12 @@
     flex: 0 0 auto;
     justify-content: center;
   }
+  /* A service without an icon shows its initial. It's drawn here, not
+     written into the button, so the button's text is its label alone and its
+     accessible name starts with what the reader sees (WCAG 2.5.3). */
+  :where([data-postkit-part='icon'][data-postkit-initial])::before {
+    content: attr(data-postkit-initial);
+  }
   :where([data-postkit-part='icon'] svg) {
     height: 1em;
     width: 1em;

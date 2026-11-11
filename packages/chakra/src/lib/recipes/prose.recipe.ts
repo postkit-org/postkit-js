@@ -117,6 +117,9 @@ export const postkitProseRecipe = defineSlotRecipe({
       color: 'fg',
       colorPalette: 'blue',
       lineHeight: '1.75',
+      // A word longer than the column (a URL, a package name) breaks rather
+      // than pushing the page sideways on a narrow screen.
+      overflowWrap: 'break-word',
     },
     h1: {},
     h2: {},
@@ -126,6 +129,10 @@ export const postkitProseRecipe = defineSlotRecipe({
     h6: {},
     p: {},
     a: {
+      // Link text is often a bare URL. Chakra's Link is inline-flex, which
+      // sizes to its longest word under break-word, so only anywhere lets a
+      // long one wrap. Table cells reset this (see table).
+      overflowWrap: 'anywhere',
       color: 'colorPalette.fg',
       fontWeight: 'medium',
       textDecoration: 'underline',
@@ -162,6 +169,7 @@ export const postkitProseRecipe = defineSlotRecipe({
         borderRadius: '0',
         color: 'inherit',
         fontSize: 'inherit',
+        overflowWrap: 'normal',
         padding: '0',
       },
     },
@@ -170,6 +178,10 @@ export const postkitProseRecipe = defineSlotRecipe({
       borderRadius: 'sm',
       fontFamily: 'mono',
       fontSize: '0.875em',
+      // Long identifiers (`createPostkitNextComponents`) wrap instead of
+      // overflowing a 320px column (P18). Chakra's Code is inline-flex, so
+      // break-word isn't enough. Code in `pre` and in table cells resets it.
+      overflowWrap: 'anywhere',
       paddingInline: '1.5',
       paddingBlock: '0.5',
     },
@@ -191,6 +203,11 @@ export const postkitProseRecipe = defineSlotRecipe({
       maxWidth: '100%',
       overflowX: 'auto',
       width: 'max-content',
+      // The table scrolls instead, so cells keep their identifiers whole
+      // rather than shrinking until code and links break mid-word.
+      '& :is(th, td) :is(code, a)': {
+        overflowWrap: 'normal',
+      },
     },
     thead: {
       borderBlockEndColor: 'border.emphasized',

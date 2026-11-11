@@ -1,4 +1,9 @@
-import { chartDefinition, type PostkitSlotOf } from '@postkit/core/components';
+import {
+  chartDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
+  type PostkitSlotOf,
+} from '@postkit/core/components';
 import { useId } from 'react';
 
 import { parseJsonProp } from '../../lib/json-props.js';
@@ -241,8 +246,13 @@ export type ChartSlot = PostkitSlotOf<typeof chartDefinition>;
 
 export type ChartProps = Omit<
   PostkitViewProps<typeof chartDefinition>,
-  'data' | 'series'
+  'data' | 'series' | 'headingLevel'
 > & {
+  /**
+   * Renders the title as `h2` to `h6`. Unset, the title is a `p`, so the
+   * chart never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   /** The records, as an array or a JSON array string. */
   readonly data: string | readonly ChartDatum[];
   /** The values to graph, as an array or a JSON array string. */
@@ -260,14 +270,15 @@ export const Chart = postkitView<typeof chartDefinition, ChartProps>(
     const titleId = `${useId()}-title`;
     const descriptionId = `${titleId}-description`;
     const layout = postkitChartLayout(props);
+    const Title = postkitTitleElement(props.headingLevel);
     const showTable =
       props.showTable === true || String(props.showTable) === 'true';
 
     return (
       <figure {...part('root')}>
-        <h3 {...part('title')} id={titleId}>
+        <Title {...part('title')} id={titleId}>
           {props.title}
-        </h3>
+        </Title>
         {props.description ? (
           <p {...part('description')} id={descriptionId}>
             {props.description}

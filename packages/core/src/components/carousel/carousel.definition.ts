@@ -1,4 +1,5 @@
 import { definePostkitComponent } from '../definition.js';
+import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
 
 export const carouselDefinition = definePostkitComponent({
@@ -13,6 +14,9 @@ export const carouselDefinition = definePostkitComponent({
   props: {
     ...presentation,
     items: prop.json('A JSON array of carousel items.'),
+    headingLevel: headingLevelProp(
+      "Renders each item title as a heading at this level. Leave it unset and item titles are paragraphs, so the carousel never breaks the page's heading outline.",
+    ),
     label: prop.string('The accessible name for the carousel.', {
       default: 'Article carousel',
     }),

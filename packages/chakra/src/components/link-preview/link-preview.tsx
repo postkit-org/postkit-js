@@ -20,7 +20,11 @@ import {
   type RecipeVariantProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { linkPreviewDefinition } from '@postkit/core/components';
+import {
+  linkPreviewDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
+} from '@postkit/core/components';
 import { useEmbedConsent } from '@postkit/react';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 
@@ -62,6 +66,11 @@ export type LinkPreviewProps = {
    */
   readonly provider?: string;
   readonly title?: string;
+  /**
+   * Renders the card title as `h2` to `h6`. Unset, the title is a `p`, so
+   * the preview never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   readonly description?: string;
   readonly siteName?: string;
   readonly image?: string;
@@ -148,6 +157,7 @@ export function LinkPreview({
   activation = 'click',
   provider,
   title: titleOverride,
+  headingLevel,
   description: descriptionOverride,
   siteName: siteNameOverride,
   image: imageOverride,
@@ -315,7 +325,7 @@ export function LinkPreview({
       css={[styles.content, slotStyles?.content]}
     >
       <Heading
-        as="h3"
+        as={postkitTitleElement(headingLevel)}
         size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
         {...anatomy('title')}
 

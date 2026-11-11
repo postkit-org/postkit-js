@@ -29,8 +29,10 @@ const snapshot = JSON.parse(
  */
 const added03 = {
   props: {
-    Carousel: ['presentation'],
+    Carousel: ['presentation', 'headingLevel'],
+    Chart: ['headingLevel'],
     Gallery: ['presentation'],
+    LinkPreview: ['headingLevel'],
     Video: ['captions', 'captionsLang', 'duration', 'decorative'],
   } as Readonly<Record<string, readonly string[]>>,
   components: ['Device', 'Footnote', 'Footnotes'],
