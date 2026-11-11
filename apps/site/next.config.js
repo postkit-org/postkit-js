@@ -56,12 +56,34 @@ function readNotesLive() {
   return selectVisibleNotes(notes).length > 0 ? 'true' : '';
 }
 
+/**
+ * The phone menu's "38 components in six kits", counted from the component manifest
+ * (handoff 08 rule 7). Inlined so the menu, which is on every page, doesn't import the
+ * component catalog and every definition behind it.
+ */
+function readComponentCounts() {
+  const manifest = JSON.parse(
+    readFileSync(
+      path.join(__dirname, '../../packages/chakra/component-manifest.json'),
+      'utf8',
+    ),
+  );
+  const components = Object.values(manifest.components);
+  return {
+    POSTKIT_COMPONENT_COUNT: String(components.length),
+    POSTKIT_KIT_COUNT: String(
+      new Set(components.map((component) => component.category)).size,
+    ),
+  };
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ['postkit.test'],
   env: {
     POSTKIT_LATEST_RELEASE: readLatestReleasedVersion(),
     POSTKIT_NOTES_LIVE: readNotesLive(),
+    ...readComponentCounts(),
   },
   poweredByHeader: false,
   /**

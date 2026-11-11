@@ -10,7 +10,6 @@ import {
   type RefObject,
 } from 'react';
 
-import { componentCategoryGroups, componentEntries } from '../lib/components';
 import {
   externalLinks,
   notesLive,
@@ -51,6 +50,13 @@ function countWord(count: number): string {
 /** Inlined at build by next.config.js from the newest released changelog entry (01 §5.2). */
 const latestReleasedVersion = process.env.POSTKIT_LATEST_RELEASE;
 
+/**
+ * Inlined at build by next.config.js from the component manifest, so this menu (on every
+ * page) doesn't import the component catalog.
+ */
+const componentCount = Number(process.env.POSTKIT_COMPONENT_COUNT);
+const kitCount = Number(process.env.POSTKIT_KIT_COUNT);
+
 const allRows: readonly {
   section: SiteSection;
   href: string;
@@ -62,7 +68,7 @@ const allRows: readonly {
     href: '/components',
     label: 'Components',
     // Counted from the component manifest (handoff 08 rule 7), never hard-coded.
-    description: `${componentEntries.length} components in ${countWord(componentCategoryGroups.length)} kits`,
+    description: `${componentCount} components in ${countWord(kitCount)} kits`,
   },
   {
     section: 'docs',
