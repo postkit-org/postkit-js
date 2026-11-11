@@ -21,6 +21,9 @@
     margin-block: var(--postkit-space-flow);
     margin-inline: 0;
     min-width: 0;
+    /* A word longer than the column (a URL, a package name) breaks rather
+       than pushing the page sideways on a narrow screen. */
+    overflow-wrap: break-word;
   }
 
   /* Sizes: the inset (padding) and type step every component shares. */
@@ -88,6 +91,16 @@
   }
   :where(a:hover) {
     text-decoration-thickness: 2px;
+  }
+
+  /* Long identifiers in inline code wrap instead of overflowing, also inside a
+     flex or grid item sized to its content. Code blocks keep their lines. */
+  :where(:not(pre) > code) {
+    overflow-wrap: anywhere;
+  }
+  /* A table scrolls instead, so its cells keep identifiers whole. */
+  :where(:is(th, td) code) {
+    overflow-wrap: normal;
   }
 
   :where(img, svg, video, audio, iframe) {
