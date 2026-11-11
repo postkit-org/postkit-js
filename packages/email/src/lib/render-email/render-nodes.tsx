@@ -21,19 +21,20 @@ import {
 } from '@chakra-email/core';
 import {
   createPostkitDocument,
+  normalizePostkitFootnoteIdentifier,
   parsePostkitHtml,
+  resolvePostkitFootnotes,
   serializePostkitHtml,
   type PostkitComponentNode,
   type PostkitElementNode,
+  type PostkitFootnoteReferenceNode,
+  type PostkitFootnoteResolution,
   type PostkitNode,
 } from '@postkit/core';
 import { createElement, Fragment, type ReactNode } from 'react';
 
 import type { PostkitEmailView } from '../email-views.js';
-import {
-  EMAIL_FOOTNOTE_ATTRIBUTE,
-  EMAIL_FOOTNOTES_ATTRIBUTE,
-} from './end-notes.js';
+import { postkitEmailFootnoteComponents } from '../footnotes.js';
 import {
   planEmailComponent,
   resolveEmailUrl,
@@ -51,6 +52,8 @@ interface RenderState {
   readonly slot?: readonly PostkitNode[];
   /** Inside the end notes: smaller type. */
   readonly small?: boolean;
+  /** The document's notes, numbered by first reference (03 §7.1). */
+  readonly footnotes?: PostkitFootnoteResolution;
 }
 
 type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -127,7 +130,9 @@ function literalText(nodes: readonly PostkitNode[]): string {
         ? node.value
         : node.type === 'element' && node.name === 'br'
           ? '\n'
-          : literalText(node.children),
+          : 'children' in node
+            ? literalText(node.children)
+            : '',
     )
     .join('');
 }
@@ -149,9 +154,79 @@ function renderNode(
       return node.value;
     case 'component':
       return renderComponent(node, state, key);
+    case 'footnoteReference':
+      return renderFootnoteReference(node, state, key);
+    case 'footnoteDefinition':
+      // Listed with the other notes, at the end.
+      return null;
     default:
       return renderElement(node, state, key);
   }
+}
+
+/** A view from the component map, or the built-in email footnote view. */
+function footnoteView(
+  state: RenderState,
+  name: 'Footnote' | 'Footnotes',
+): PostkitEmailView {
+  return state.context.views[name] ?? postkitEmailFootnoteComponents[name];
+}
+
+/** The list's numbering, which every mark shares. */
+function footnoteNumbering(state: RenderState): unknown {
+  return state.footnotes?.list?.props?.['numbering'];
+}
+
+/** A footnote mark: a superscript number, without a link. */
+function renderFootnoteReference(
+  node: PostkitFootnoteReferenceNode,
+  state: RenderState,
+  key: number,
+): ReactNode {
+  const note = state.footnotes?.byIdentifier.get(
+    normalizePostkitFootnoteIdentifier(node.identifier),
+  );
+  if (!note?.definition) return `[^${node.label ?? node.identifier}]`;
+  const numbering = footnoteNumbering(state);
+  return createElement(footnoteView(state, 'Footnote'), {
+    key,
+    index: note.index,
+    ...(numbering === undefined ? {} : { numbering }),
+  });
+}
+
+/**
+ * The notes, always at the end of the message (03 §7.1), whatever the
+ * authored placement: the `Footnotes` view with one `Footnote` per note.
+ */
+function renderEndNotes(state: RenderState): ReactNode {
+  const notes = (state.footnotes?.notes ?? []).filter(
+    (note) => note.definition,
+  );
+  if (notes.length === 0) return null;
+  const { props = {} } = state.footnotes?.list ?? {};
+  const Note = footnoteView(state, 'Footnote');
+  const inner: RenderState = { ...state, small: true };
+  return (
+    <Section key="postkit-end-notes" data-postkit-email="end-notes">
+      {createElement(
+        footnoteView(state, 'Footnotes'),
+        {
+          ...(props['title'] === undefined ? {} : { title: props['title'] }),
+          ...(props['numbering'] === undefined
+            ? {}
+            : { numbering: props['numbering'] }),
+        },
+        notes.map((note) =>
+          createElement(
+            Note,
+            { key: note.identifier, index: note.index },
+            renderContained(note.definition?.children ?? [], inner),
+          ),
+        ),
+      )}
+    </Section>
+  );
 }
 
 function renderElement(
@@ -332,23 +407,9 @@ function renderElement(
     case 'span':
       return <span key={key}>{children()}</span>;
     case 'sup':
-      return attribute(node, EMAIL_FOOTNOTE_ATTRIBUTE) !== undefined ? (
-        <sup key={key} style={{ lineHeight: 0, fontSize: '0.75em' }}>
-          {children()}
-        </sup>
-      ) : (
-        <sup key={key}>{children()}</sup>
-      );
+      return <sup key={key}>{children()}</sup>;
   }
 
-  if (name === 'section' && attribute(node, EMAIL_FOOTNOTES_ATTRIBUTE)) {
-    return (
-      <Section key={key} data-postkit-email="end-notes" mt={8}>
-        <Hr mt={0} />
-        {renderChildren(node.children, { ...state, small: true })}
-      </Section>
-    );
-  }
   if (inlineElements.has(name)) {
     const title = attribute(node, 'title');
     return createElement(
@@ -475,6 +536,8 @@ function renderComponent(
   state: RenderState,
   key: number,
 ): ReactNode {
+  // The list is placed at the end (`renderEndNotes`), not where it was put.
+  if (node.name === 'Footnotes' && state.footnotes?.notes.length) return null;
   const plan = planEmailComponent(node, state.context);
   if (plan.kind === 'view') {
     const children = node.children.length
@@ -526,5 +589,12 @@ export function renderEmailNodes(
   context: EmailRenderContext,
   warnings: EmailWarnings,
 ): ReactNode[] {
-  return renderChildren(nodes, { context, warnings });
+  const state: RenderState = {
+    context,
+    warnings,
+    footnotes: resolvePostkitFootnotes(nodes),
+  };
+  const content = renderChildren(nodes, state);
+  const endNotes = renderEndNotes(state);
+  return endNotes ? [...content, endNotes] : content;
 }

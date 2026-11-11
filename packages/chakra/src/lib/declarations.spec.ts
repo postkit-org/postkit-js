@@ -33,7 +33,7 @@ const added03 = {
     Gallery: ['presentation'],
     Video: ['captions', 'captionsLang', 'duration', 'decorative'],
   } as Readonly<Record<string, readonly string[]>>,
-  components: ['Device'],
+  components: ['Device', 'Footnote', 'Footnotes'],
 };
 
 /** A declaration as 0.2 had it: 0.3's added props removed, key order kept. */
@@ -94,6 +94,8 @@ describe('Postkit declaration manifest', () => {
       ['SocialPost', 'postkit-social-post'],
       ['Video', 'postkit-video'],
       ['Device', 'postkit-device'],
+      ['Footnote', 'postkit-footnote'],
+      ['Footnotes', 'postkit-footnotes'],
     ]);
   });
 
@@ -196,12 +198,13 @@ describe('Postkit declaration manifest', () => {
         JSON.stringify(snapshot.manifest.components[name]),
       );
     }
-    const { Device: _device, ...components02 } =
-      postkitDeclarationManifest.components;
+    const components02 = Object.entries(
+      postkitDeclarationManifest.components,
+    ).filter(([name]) => !added03.components.includes(name));
     const manifest02 = {
       ...postkitDeclarationManifest,
       components: Object.fromEntries(
-        Object.entries(components02).map(([name, declaration]) => [
+        components02.map(([name, declaration]) => [
           name,
           as02(name, declaration),
         ]),
@@ -215,7 +218,7 @@ describe('Postkit declaration manifest', () => {
     expect(Object.isFrozen(postkitDeclarationManifest)).toBe(true);
   });
 
-  it('keeps the 0.2 public types, plus Device', () => {
+  it('keeps the 0.2 public types, plus Device, Footnote and Footnotes', () => {
     expectTypeOf<PostkitComponentName>().toEqualTypeOf<
       | 'AppearsOn'
       | 'Device'
@@ -253,6 +256,8 @@ describe('Postkit declaration manifest', () => {
       | 'Tabs'
       | 'Terminal'
       | 'Video'
+      | 'Footnote'
+      | 'Footnotes'
     >();
     const { components } = postkitDeclarationManifest;
     expectTypeOf(components.Callout.name).toEqualTypeOf<'Callout'>();

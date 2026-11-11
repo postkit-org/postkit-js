@@ -8,6 +8,7 @@ import {
   Figure,
   Video,
 } from './components.js';
+import { Footnote, Footnotes } from './footnotes.js';
 import { KeyTakeaway } from './views/key-takeaway.js';
 import { LinkPreview } from './views/link-preview.js';
 import { ProductCard } from './views/product-card.js';
@@ -31,6 +32,8 @@ export const postkitEmailViews = Object.freeze({
   Callout,
   CallToAction,
   Figure,
+  Footnote,
+  Footnotes,
   KeyTakeaway,
   LinkPreview,
   ProductCard,

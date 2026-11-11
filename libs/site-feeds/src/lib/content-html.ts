@@ -25,7 +25,13 @@ export interface RenderFeedContentOptions {
 
 function textOf(nodes: readonly PostkitNode[]): string {
   return nodes
-    .map((node) => (node.type === 'text' ? node.value : textOf(node.children)))
+    .map((node) =>
+      node.type === 'text'
+        ? node.value
+        : node.type === 'footnoteReference'
+          ? ''
+          : textOf(node.children),
+    )
     .join('');
 }
 
@@ -98,5 +104,7 @@ export function renderFeedContent(
     baseUrl: options.siteUrl,
     audiences: [],
     newsletterUrl: `${options.siteUrl}/newsletter/subscribe`,
+    // Note ids are prefixed per entry, so a reader showing several never mixes them up.
+    footnotes: { scope: options.title },
   });
 }

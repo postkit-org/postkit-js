@@ -51,3 +51,6 @@ export * from './manifest.js';
 export * from './email.js';
 export * from './prop-rules.js';
 export * from './video/video.duration.js';
+export * from './footnote/footnote.model.js';
+export { postkitFootnoteSharedProps } from './footnote/footnote.definition.js';
+export { sidenoteDefinition } from './sidenote/sidenote.definition.js';

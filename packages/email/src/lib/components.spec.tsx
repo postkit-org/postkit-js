@@ -269,6 +269,8 @@ describe('@postkit/email components', () => {
       'CallToAction',
       'Callout',
       'Figure',
+      'Footnote',
+      'Footnotes',
       'KeyTakeaway',
       'LinkPreview',
       'ProductCard',

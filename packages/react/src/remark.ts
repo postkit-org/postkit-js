@@ -15,7 +15,9 @@ export {
   isPostkitComponentName,
   remarkPostkit,
   type PostkitDirectiveNode,
+  type PostkitRemarkFootnoteDefaults,
   type PostkitUnavailableComponent,
   type PostkitVFileLike,
+  type RemarkPostkitFootnoteOptions,
   type RemarkPostkitOptions,
 } from './lib/remark-postkit.js';

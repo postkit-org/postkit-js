@@ -1,165 +1,80 @@
 import type { EmailSyntaxNode } from './mdx-literals.js';
-import type { EmailWarnings } from './warnings.js';
 
 /*
  * Footnotes in email are always end notes (03 §7.1): a superscript number in
  * the text, without a link (in-message anchors are unreliable across mail
  * clients), and the notes in a numbered list that closes the message.
- * Numbers follow the order of first reference; source labels are ids.
  *
- * This works on GFM footnotes (`[^id]` and `[^id]: …`) in the Markdown tree,
- * before `@postkit/core` reads it. When the tree has none, it does nothing.
+ * There is one path for them. The site's `remarkPostkit` numbers GFM
+ * `[^id]`, `:footnote[…]` and `<Footnote>…</Footnote>` and writes one
+ * `Footnotes` list; `@postkit/core` reads those as footnote nodes; the
+ * renderer draws the nodes with the email `Footnote` and `Footnotes` views
+ * (`postkitEmailFootnoteComponents`), the list always at the end.
+ *
+ * The site fails a build on a reference with no definition. An email never
+ * throws on content, so such a reference stays the text the author wrote.
  */
 
-/** The attribute on a reference's `<sup>`: its note number. */
-export const EMAIL_FOOTNOTE_ATTRIBUTE = 'data-footnote';
-/** The boolean attribute on the closing notes section. */
-export const EMAIL_FOOTNOTES_ATTRIBUTE = 'data-footnotes';
+/** The `remarkPostkit` footnote rules, reported as the `footnote` code. */
+const footnoteRules = new Set([
+  'duplicate-footnote',
+  'duplicate-footnotes',
+  'missing-footnote',
+  'unreferenced-footnote',
+]);
 
-function isReference(node: EmailSyntaxNode): boolean {
-  return node.type === 'footnoteReference';
+/** The warning code for a `remarkPostkit` rule id. */
+export function emailWarningCode(ruleId: string | undefined): string {
+  if (ruleId && footnoteRules.has(ruleId)) return 'footnote';
+  return ruleId ?? 'validation';
 }
 
-function isDefinition(node: EmailSyntaxNode): boolean {
-  return node.type === 'footnoteDefinition';
-}
+/** Content the footnote transform doesn't read. */
+const skipped = new Set([
+  'code',
+  'inlineCode',
+  'html',
+  'mdxjsEsm',
+  'mdxFlowExpression',
+  'mdxTextExpression',
+  'yaml',
+  'toml',
+]);
 
-function identifierOf(node: EmailSyntaxNode): string {
-  return String(node['identifier'] ?? node['label'] ?? '');
-}
+/** `[^id]` the author didn't escape. */
+const dangling = /(?<!\\)\[(?=\^[^\]\s]+\])/g;
 
-function labelOf(node: EmailSyntaxNode): string {
-  return String(node['label'] ?? node['identifier'] ?? '');
-}
-
-function place(node: EmailSyntaxNode) {
-  return node.position
-    ? { line: node.position.start.line, column: node.position.start.column }
-    : {};
-}
-
-/** Removes every definition from the tree, keeping the first per id. */
-function takeDefinitions(
-  parent: EmailSyntaxNode,
-  definitions: Map<string, EmailSyntaxNode>,
-): void {
+/**
+ * Splits the text of a reference GFM didn't link (it has no definition) after
+ * its `[`, so the footnote transform sees text rather than a reference it
+ * would fail on. The pieces have no position: the transform reads a text
+ * node's source when it has one. Markdown output escapes the `[`, so the
+ * author's `[^id]` reaches the email as text.
+ */
+function keepDanglingReferences(parent: EmailSyntaxNode): void {
   if (!parent.children) return;
-  parent.children = parent.children.filter((child) => {
-    if (isDefinition(child)) {
-      const id = identifierOf(child);
-      if (!definitions.has(id)) definitions.set(id, child);
-      return false;
+  parent.children = parent.children.flatMap((node): EmailSyntaxNode[] => {
+    if (skipped.has(node.type)) return [node];
+    if (node.type !== 'text' || typeof node.value !== 'string') {
+      keepDanglingReferences(node);
+      return [node];
     }
-    takeDefinitions(child, definitions);
-    return true;
+    const value = node.value;
+    const cuts = [...value.matchAll(dangling)].map(
+      (match) => (match.index ?? 0) + 1,
+    );
+    if (cuts.length === 0) return [node];
+    return [0, ...cuts].map((start, index) => ({
+      type: 'text',
+      value: value.slice(start, cuts[index] ?? value.length),
+    }));
   });
 }
 
-function hasReference(node: EmailSyntaxNode): boolean {
-  return isReference(node) || (node.children ?? []).some(hasReference);
-}
-
-function superscript(number: number): EmailSyntaxNode {
-  return {
-    type: 'mdxJsxTextElement',
-    name: 'sup',
-    attributes: [
-      {
-        type: 'mdxJsxAttribute',
-        name: EMAIL_FOOTNOTE_ATTRIBUTE,
-        value: String(number),
-      },
-    ],
-    children: [{ type: 'text', value: String(number) }],
-  };
-}
-
 /**
- * Moves GFM footnotes to the end of the tree as end notes, in place. Returns
- * whether there were any.
+ * A Remark plugin for the email parse, before `remarkPostkit`: footnote
+ * references with no definition stay as their text.
  */
-export function moveFootnotesToEnd(
-  root: EmailSyntaxNode,
-  warnings: EmailWarnings,
-): boolean {
-  const definitions = new Map<string, EmailSyntaxNode>();
-  takeDefinitions(root, definitions);
-  if (definitions.size === 0 && !hasReference(root)) return false;
-
-  const numbers = new Map<string, number>();
-  const replace = (parent: EmailSyntaxNode) => {
-    if (!parent.children) return;
-    parent.children = parent.children.map((child) => {
-      if (!isReference(child)) {
-        replace(child);
-        return child;
-      }
-      const id = identifierOf(child);
-      if (!definitions.has(id)) {
-        warnings.add({
-          code: 'footnote',
-          message: `Footnote [^${labelOf(child)}] has no note, so it stays as text.`,
-          ...place(child),
-        });
-        return { type: 'text', value: `[^${labelOf(child)}]` };
-      }
-      let number = numbers.get(id);
-      if (number === undefined) {
-        number = numbers.size + 1;
-        numbers.set(id, number);
-      }
-      return superscript(number);
-    });
-  };
-  replace(root);
-
-  for (const [id, definition] of definitions) {
-    if (!numbers.has(id)) {
-      warnings.add({
-        code: 'footnote',
-        message: `Footnote [^${labelOf(definition)}] is never referenced, so it was left out.`,
-        ...place(definition),
-      });
-    }
-  }
-  if (numbers.size === 0) return false;
-
-  const items = [...numbers.keys()].map((id): EmailSyntaxNode => ({
-    type: 'listItem',
-    spread: false,
-    children: (definitions.get(id)?.children ?? []).map((child) => {
-      replace(child);
-      return child;
-    }),
-  }));
-  root.children = [
-    ...(root.children ?? []),
-    {
-      type: 'mdxJsxFlowElement',
-      name: 'section',
-      attributes: [
-        {
-          type: 'mdxJsxAttribute',
-          name: EMAIL_FOOTNOTES_ATTRIBUTE,
-          value: null,
-        },
-      ],
-      children: [
-        {
-          type: 'paragraph',
-          children: [
-            { type: 'strong', children: [{ type: 'text', value: 'Notes' }] },
-          ],
-        },
-        {
-          type: 'list',
-          ordered: true,
-          start: 1,
-          spread: false,
-          children: items,
-        },
-      ],
-    },
-  ];
-  return true;
+export function emailDanglingFootnotes() {
+  return (tree: EmailSyntaxNode): void => keepDanglingReferences(tree);
 }

@@ -119,7 +119,8 @@ function definitionMap(
  * site's validation, maps each component to its email view or its
  * definition's declared fallback, and renders with Chakra Email. It returns
  * the HTML, a plain-text part and warnings; it never throws on content the
- * site renders. GFM footnotes become end notes.
+ * site renders. Footnotes become end notes: superscript numbers, no
+ * links, and the notes at the end (the `Footnote` and `Footnotes` views).
  *
  * ```ts
  * const { html, text, warnings } = await renderEmail(source, {

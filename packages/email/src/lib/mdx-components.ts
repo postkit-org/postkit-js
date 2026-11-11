@@ -6,6 +6,7 @@ import {
   Figure,
   Video,
 } from './components.js';
+import { Footnote, Footnotes } from './footnotes.js';
 import { KeyTakeaway } from './views/key-takeaway.js';
 import { LinkPreview } from './views/link-preview.js';
 import { ProductCard } from './views/product-card.js';
@@ -19,6 +20,8 @@ export interface PostkitEmailMdxComponents {
   readonly Callout: typeof Callout;
   readonly CallToAction: typeof CallToAction;
   readonly Figure: typeof Figure;
+  readonly Footnote: typeof Footnote;
+  readonly Footnotes: typeof Footnotes;
   readonly KeyTakeaway: typeof KeyTakeaway;
   readonly LinkPreview: typeof LinkPreview;
   readonly ProductCard: typeof ProductCard;
@@ -34,6 +37,8 @@ const defaults = Object.freeze({
   Callout: Callout,
   CallToAction: CallToAction,
   Figure: Figure,
+  Footnote: Footnote,
+  Footnotes: Footnotes,
   KeyTakeaway: KeyTakeaway,
   LinkPreview: LinkPreview,
   ProductCard: ProductCard,

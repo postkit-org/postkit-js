@@ -9,20 +9,22 @@ Emotion, no CSS-in-JS.
 > [`@postkit/chakra`](https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme) unchanged: replace the dependency and
 > update imports.
 
-This package is new in 0.3.0. It ships headless views for all 35 built-in
+This package is new in 0.3.0. It ships headless views for all 38 built-in
 components, the behaviour hooks the interactive ones are built on, and
 `postkitView` for building views from any `@postkit/core/components`
 definition:
 
 - **Article structure:** `Callout`, `Aside`, `Figure`, `CardGrid`, `Disclosure`,
-  `Gallery`, `Steps`, `Tabs`
+  `Gallery`, `Steps`, `Tabs`, `Footnote`, `Footnotes` (placement `end`,
+  `side`, `popover` or `inline`, or one per breakpoint, through
+  `useFootnotes`)
 - **Technical content:** `CodeBlock`, `CodeGroup`, `Terminal`, `Diff`,
   `FileTree`, `FileCard`
 - **Publication:** `PullQuote`, `KeyTakeaway`, `Stat`, `Comparison`,
   `ProductCard`, `RelatedContent`, `SeriesNavigation`, `SponsorBlock`,
   `AudienceBoundary`
 - **Media and discovery:** `AppearsOn`, `Audio`, `AuthorCard`, `CallToAction`,
-  `Carousel`, `Chart`, `LinkPreview`, `SocialPost`, `Video`
+  `Carousel`, `Chart`, `Device`, `LinkPreview`, `SocialPost`, `Video`
 - **Engagement:** `Poll`, `NewsletterSignup`, `ShareActions`
 
 The nine interactive views (`Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`,
@@ -101,7 +103,7 @@ optional baseline once, at your app's root:
 import '@postkit/react/styles.css';
 ```
 
-It styles every built-in component: structure, prose rhythm and restrained
+It styles all 38 built-in components: structure, prose rhythm and restrained
 monochrome, with `subtle` (the default), `outline` and `plain` variants, `sm`,
 `md` and `lg` sizes, and Callout tones. It is built only from the anatomy
 attributes and `--postkit-*` custom properties, and follows the colour mode:
@@ -122,15 +124,15 @@ Set any of these on `:root` (or any element, for a subtree) to retheme every
 component. The baseline declares them with zero specificity, so your own rule
 wins whatever the order. Give each colour you change a dark value too.
 
-| Group                | Tokens                                                                                                                                                                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Colour               | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
-| Tone                 | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
-| Chart                | `--postkit-chart-1` … `--postkit-chart-4` (series without an authored colour)                                                                                                                                                                                |
-| Code surface         | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
-| Type                 | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`              |
-| Space and shape      | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
-| Footnotes (reserved) | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
+| Group           | Tokens                                                                                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Colour          | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone            | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
+| Chart           | `--postkit-chart-1` … `--postkit-chart-4` (series without an authored colour)                                                                                                                                                                                |
+| Code surface    | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
+| Type            | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`              |
+| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
+| Footnotes       | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
 
 ```css
 :root {

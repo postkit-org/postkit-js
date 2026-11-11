@@ -28,8 +28,8 @@ function sourceFiles(directory: string): string[] {
 describe('Postkit built-in definitions', () => {
   const definitions = Object.entries(postkitBuiltInDefinitions);
 
-  it('defines all 36 built-in components, keyed by name', () => {
-    expect(definitions).toHaveLength(36);
+  it('defines all 38 built-in components, keyed by name', () => {
+    expect(definitions).toHaveLength(38);
     for (const [key, definition] of definitions) {
       expect(definition.name).toBe(key);
       expect(Object.isFrozen(definition)).toBe(true);

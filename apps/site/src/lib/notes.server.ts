@@ -8,6 +8,16 @@ import type { NoteComponentLink, NoteEntry, NoteSummary } from './notes';
 
 type GeneratedNotesEntry = (typeof allNotesEntries)[number];
 
+/**
+ * The site's footnotes (01 §5.3, §6.6): sidenotes in the margin from xl (1200px), end notes
+ * from md, and notes that open under their line on phones. The end list is the plain
+ * variant: a short rule over the notes. A note's `footnotes:` front matter overrides it.
+ */
+export const siteFootnoteDefaults = {
+  placement: { base: 'inline', md: 'end', xl: 'side' },
+  variant: 'plain',
+} as const;
+
 /** Words per minute for the "min read" line. */
 const READING_WORDS_PER_MINUTE = 230;
 
@@ -104,20 +114,22 @@ export async function getNote(slug: string): Promise<NoteEntry> {
 
   const used: string[] = [];
 
-  // GFM footnotes come from the preset's remark-gfm; keep this call in step
-  // with libs/content/src/lib/notes.spec.ts, which compiles every note with it.
+  // Footnotes become Postkit's Footnote and Footnotes (03 §7.1); keep this call in step
+  // with libs/content/src/lib/notes.spec.ts, which compiles every note with it. Ids are
+  // prefixed per note (`fn-{slug}-1`), so pages that show several notes never collide.
   const source = await serialize(entry.content, {
     mdxOptions: {
       remarkPlugins: [
-        ...createPostkitRemarkPlugins(),
+        ...createPostkitRemarkPlugins({
+          postkit: {
+            footnotes: {
+              scope: slug,
+              defaults: { ...siteFootnoteDefaults, ...entry.footnotes },
+            },
+          },
+        }),
         collectPostkitComponents(used),
       ],
-      remarkRehypeOptions: {
-        // Footnote ids are prefixed per note (`{slug}-fn-…`), so pages that show several
-        // notes never collide (03 §7.1). The hidden list heading reads "Notes", as on the board.
-        clobberPrefix: `${slug}-`,
-        footnoteLabel: 'Notes',
-      },
     },
   });
 

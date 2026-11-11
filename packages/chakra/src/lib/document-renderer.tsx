@@ -2,6 +2,9 @@
 
 import {
   POSTKIT_DOCUMENT_VERSION,
+  normalizePostkitFootnoteIdentifier,
+  resolvePostkitFootnotes,
+  type PostkitFootnoteResolution,
   type PostkitComponentNode,
   type PostkitDocument,
   type PostkitElementNode,
@@ -302,6 +305,88 @@ interface RenderContext {
   readonly unknownElements: PostkitUnknownNodeBehavior;
   readonly unknownComponents: PostkitUnknownNodeBehavior;
   readonly annotate: boolean;
+  /** The document's numbered notes (03 §7.1). */
+  readonly footnotes: FootnoteContext;
+}
+
+interface FootnoteContext {
+  readonly resolution: PostkitFootnoteResolution;
+  readonly occurrences: Map<string, number>;
+  rendered: boolean;
+}
+
+/**
+ * A note's content as phrasing, for the copy beside its first reference: a
+ * reference sits in a paragraph, which can't hold blocks.
+ */
+function inlineNote(nodes: readonly PostkitNode[]): PostkitNode[] {
+  const result: PostkitNode[] = [];
+  for (const node of nodes) {
+    if (node.type !== 'element') continue;
+    const inline =
+      node.name === 'p'
+        ? [...node.children]
+        : ['ul', 'ol', 'blockquote'].includes(node.name)
+          ? inlineNote(node.children)
+          : node.name === 'li'
+            ? inlineNote(node.children).length > 0
+              ? inlineNote(node.children)
+              : [...node.children]
+            : [];
+    const content = inline.filter(
+      (child) =>
+        child.type !== 'footnoteReference' &&
+        child.type !== 'footnoteDefinition',
+    );
+    if (content.length === 0) continue;
+    if (result.length > 0) {
+      result.push({ type: 'element', name: 'br', children: [] });
+    }
+    result.push(...content);
+  }
+  return result;
+}
+
+function renderFootnoteList(
+  node: PostkitComponentNode | undefined,
+  context: RenderContext,
+  path: string,
+): ReactNode[] {
+  const { footnotes } = context;
+  if (footnotes.rendered) return [];
+  footnotes.rendered = true;
+  const List = registeredComponent(context, 'Footnotes');
+  const Note = registeredComponent(context, 'Footnote');
+  const notes = footnotes.resolution.notes.filter((note) => note.definition);
+  if (!List || !Note || notes.length === 0) return [];
+  const props = node
+    ? safeComponentProps(node.props, isSemanticComponent(node.name))
+    : {};
+  return [
+    createElement(
+      List,
+      { ...props, key: path },
+      notes.map((note) =>
+        createElement(
+          Note,
+          {
+            key: note.identifier,
+            identifier: note.label ?? note.identifier,
+            index: note.index,
+            references: note.references,
+            ...(typeof props['scope'] === 'string'
+              ? { scope: props['scope'] }
+              : {}),
+          },
+          renderChildren(
+            note.definition?.children ?? [],
+            context,
+            `${path}.${note.index}`,
+          ),
+        ),
+      ),
+    ),
+  ];
 }
 
 function isSemanticComponent(name: string): boolean {
@@ -372,6 +457,36 @@ function renderNode(
   path: string,
 ): ReactNode[] {
   if (node.type === 'text') return [node.value];
+  if (node.type === 'footnoteDefinition') return [];
+  if (node.type === 'footnoteReference') {
+    const note = context.footnotes.resolution.byIdentifier.get(
+      normalizePostkitFootnoteIdentifier(node.identifier),
+    );
+    const Note = registeredComponent(context, 'Footnote');
+    if (!note || !Note) return [`[${node.label ?? node.identifier}]`];
+    const occurrence =
+      (context.footnotes.occurrences.get(note.identifier) ?? 0) + 1;
+    context.footnotes.occurrences.set(note.identifier, occurrence);
+    const listScope = context.footnotes.resolution.list?.props?.['scope'];
+    return [
+      createElement(
+        Note,
+        {
+          key: path,
+          identifier: note.label ?? note.identifier,
+          index: note.index,
+          ...(occurrence > 1 ? { occurrence } : {}),
+          ...(typeof listScope === 'string' ? { scope: listScope } : {}),
+        },
+        occurrence === 1 && note.definition
+          ? renderChildren(inlineNote(note.definition.children), context, path)
+          : undefined,
+      ),
+    ];
+  }
+  if (node.type === 'component' && node.name === 'Footnotes') {
+    return renderFootnoteList(node, context, path);
+  }
   const rendered =
     node.type === 'element'
       ? renderElement(node, context, path)
@@ -394,8 +509,14 @@ export function DocumentRenderer({
     unknownElements,
     unknownComponents,
     annotate,
+    footnotes: {
+      resolution: resolvePostkitFootnotes(document),
+      occurrences: new Map(),
+      rendered: false,
+    },
   };
   const children = renderChildren(document.children, context, 'document');
+  children.push(...renderFootnoteList(undefined, context, 'document.notes'));
   if (wrapper === false) return createElement(Fragment, null, children);
   return createElement(
     wrapper,

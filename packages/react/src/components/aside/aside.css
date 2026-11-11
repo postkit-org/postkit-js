@@ -40,4 +40,28 @@
     padding-block: 0;
     padding-inline-end: 0;
   }
+
+  /* Beside the text where footnotes are sidenotes (D14): the authored
+     sidenote shares the margin column, quieter and without a box. */
+  :where([data-postkit-margin='side'] > :scope) {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    clear: inline-end;
+    float: inline-end;
+    font-size: var(--postkit-footnote-text-size);
+    margin-block: 0.2em var(--postkit-space-4);
+    margin-inline-end: calc(
+      -1 * (var(--postkit-sidenote-width) + var(--postkit-sidenote-gap))
+    );
+    padding: 0 0 0 var(--postkit-space-3);
+    width: var(--postkit-sidenote-width);
+  }
+  @media print {
+    :where([data-postkit-margin='side'] > :scope) {
+      float: none;
+      margin-inline-end: 0;
+      width: auto;
+    }
+  }
 }

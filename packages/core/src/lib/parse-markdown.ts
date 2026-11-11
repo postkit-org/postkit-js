@@ -1,6 +1,8 @@
 import { fromMarkdown } from 'mdast-util-from-markdown';
+import { directiveFromMarkdown } from 'mdast-util-directive';
 import { gfmFromMarkdown } from 'mdast-util-gfm';
 import { mdxFromMarkdown } from 'mdast-util-mdx';
+import { directive } from 'micromark-extension-directive';
 import { gfm } from 'micromark-extension-gfm';
 import { mdxjs } from 'micromark-extension-mdxjs';
 import { raw } from 'hast-util-raw';
@@ -13,6 +15,7 @@ import {
   type PostkitJsonValue,
   type PostkitNode,
 } from './document.js';
+import { normalizePostkitFootnoteIdentifier } from './footnotes.js';
 import { PostkitParseError } from './parse-error.js';
 import { normalizePostkitHtmlTree, parsePostkitHtml } from './parse-html.js';
 
@@ -21,15 +24,28 @@ export interface ParsePostkitMarkdownOptions {
   readonly mdx?: boolean;
   /** Allow only the component names accepted by this predicate. */
   readonly allowComponent?: (name: string) => boolean;
+  /**
+   * A footnote reference with no definition (`[^missing]`) fails with its
+   * line and column by default (03 §7.1). `literal` keeps it as the text the
+   * author wrote instead.
+   */
+  readonly missingFootnotes?: 'error' | 'literal';
+}
+
+interface SyntaxPoint {
+  readonly line?: number;
+  readonly column?: number;
+  readonly offset?: number;
 }
 
 interface SyntaxNode {
   readonly type: string;
   readonly position?: {
-    readonly start: { readonly offset?: number };
-    readonly end: { readonly offset?: number };
+    readonly start: SyntaxPoint;
+    readonly end: SyntaxPoint;
   };
   readonly identifier?: string;
+  readonly label?: string | null;
   readonly children?: readonly SyntaxNode[];
   readonly value?: string;
   readonly depth?: number;
@@ -44,12 +60,17 @@ interface SyntaxNode {
   readonly checked?: boolean | null;
   readonly align?: readonly (string | null)[];
   readonly name?: string | null;
-  readonly attributes?: readonly MdxAttribute[];
+  readonly attributes?:
+    | readonly MdxAttribute[]
+    | Readonly<Record<string, string | null | undefined>>;
+  readonly data?: { readonly directiveLabel?: boolean };
 }
 
 interface ConversionOptions extends ParsePostkitMarkdownOptions {
   readonly definitions: ReadonlyMap<string, SyntaxNode>;
   readonly source: string;
+  /** Notes written in place (`:footnote[…]`, `<Footnote>…</Footnote>`). */
+  readonly inlineNotes: PostkitNode[];
 }
 
 interface MdxAttribute {
@@ -91,13 +112,15 @@ function element(
 }
 
 function mdxProps(
-  attributes: readonly MdxAttribute[] | undefined,
+  attributes: SyntaxNode['attributes'],
 ): Readonly<Record<string, PostkitJsonValue>> | undefined {
   const props: Record<string, PostkitJsonValue> = Object.create(null) as Record<
     string,
     PostkitJsonValue
   >;
-  for (const attribute of attributes ?? []) {
+  for (const attribute of Array.isArray(attributes)
+    ? (attributes as readonly MdxAttribute[])
+    : []) {
     if (attribute.type === 'mdxJsxExpressionAttribute') {
       throw new PostkitParseError(
         'unsafe-mdx-expression',
@@ -161,7 +184,26 @@ function convertChildren(
       }).children,
     ];
   }
-  return (children ?? []).flatMap((child) => convertNode(child, options));
+  const nodes = (children ?? []).flatMap((child) =>
+    convertNode(child, options),
+  );
+  // A directive kept as text (`10:30`) joins the text around it.
+  return nodes.reduce<PostkitNode[]>((merged, node) => {
+    const previous = merged.at(-1);
+    if (
+      node.type === 'text' &&
+      previous?.type === 'text' &&
+      children?.some((child) => child.type === 'textDirective')
+    ) {
+      merged[merged.length - 1] = {
+        type: 'text',
+        value: previous.value + node.value,
+      };
+    } else {
+      merged.push(node);
+    }
+    return merged;
+  }, []);
 }
 
 function toHast(node: PostkitNode): HastNode {
@@ -188,6 +230,206 @@ function convertTableRow(
   );
 }
 
+function sliceSource(
+  options: ConversionOptions,
+  start: SyntaxPoint | undefined,
+  end: SyntaxPoint | undefined,
+): string | undefined {
+  if (start?.offset === undefined || end?.offset === undefined)
+    return undefined;
+  return options.source.slice(start.offset, end.offset);
+}
+
+/** `line:column` for an offset into the source. */
+function pointAt(source: string, offset: number): string {
+  const before = source.slice(0, offset).split(/\r\n|\r|\n/);
+  return `${before.length}:${(before.at(-1)?.length ?? 0) + 1}`;
+}
+
+/**
+ * GFM only links `[^id]` when `id` is defined; otherwise it stays text. A
+ * reference with no definition fails the parse with its position (03 §7.1).
+ */
+function checkMissingFootnotes(
+  node: SyntaxNode,
+  options: ConversionOptions,
+): void {
+  if (options.missingFootnotes === 'literal') return;
+  if (!node.value?.includes('[^')) return;
+  const start = node.position?.start.offset;
+  const raw = sliceSource(options, node.position?.start, node.position?.end);
+  const match = /(?<!\\)\[\^([^\]\s]+)\]/.exec(raw ?? node.value);
+  if (!match) return;
+  const where =
+    start !== undefined && raw !== undefined
+      ? ` (${pointAt(options.source, start + match.index)})`
+      : '';
+  throw new PostkitParseError(
+    'invalid-document',
+    `Footnote [^${match[1]}] has no definition${where}.`,
+  );
+}
+
+/** Registers a note written in place and returns its reference. */
+function inlineNote(
+  children: readonly PostkitNode[],
+  options: ConversionOptions,
+): PostkitNode {
+  const identifier = `inline-${options.inlineNotes.length + 1}`;
+  options.inlineNotes.push({
+    type: 'footnoteDefinition',
+    identifier,
+    children: children.some(
+      (child) => child.type === 'element' && child.name === 'p',
+    )
+      ? children
+      : [element('p', children)],
+  });
+  return { type: 'footnoteReference', identifier };
+}
+
+/**
+ * `<Footnote>note</Footnote>` is a note written in place, like
+ * `:footnote[note]`; `<Footnote identifier="id" />` references a definition.
+ */
+function footnoteComponent(
+  node: SyntaxNode,
+  props: Readonly<Record<string, PostkitJsonValue>> | undefined,
+  options: ConversionOptions,
+): PostkitNode[] {
+  const identifier = props?.['identifier'];
+  // A reference the Markdown tooling numbered (`index`): its children are
+  // only the copy shown beside it, so the note itself lives in the list.
+  if (props?.['index'] !== undefined) {
+    const id = String(identifier ?? props['index']);
+    return [
+      {
+        type: 'footnoteReference',
+        identifier: normalizePostkitFootnoteIdentifier(id),
+        label: id,
+      },
+    ];
+  }
+  const content = convertChildren(node.children, options);
+  if (content.length === 0 && typeof identifier === 'string' && identifier) {
+    return [
+      {
+        type: 'footnoteReference',
+        identifier: normalizePostkitFootnoteIdentifier(identifier),
+        label: identifier,
+      },
+    ];
+  }
+  return [inlineNote(content, options)];
+}
+
+/**
+ * `<Footnotes>` as the Markdown tooling writes it, with the notes as
+ * `<Footnote>` children: the placed list (a component node with its props)
+ * and a definition per note. An authored `<Footnotes />` has no children.
+ */
+function footnotesComponent(
+  node: SyntaxNode,
+  props: Readonly<Record<string, PostkitJsonValue>> | undefined,
+  options: ConversionOptions,
+): PostkitNode[] {
+  const definitions = (node.children ?? []).flatMap((child): PostkitNode[] => {
+    if (
+      (child.type !== 'mdxJsxFlowElement' &&
+        child.type !== 'mdxJsxTextElement') ||
+      child.name !== 'Footnote'
+    ) {
+      return [];
+    }
+    const childProps = mdxProps(child.attributes);
+    const id = String(
+      childProps?.['identifier'] ?? childProps?.['index'] ?? '',
+    );
+    if (!id) return [];
+    return [
+      {
+        type: 'footnoteDefinition',
+        identifier: normalizePostkitFootnoteIdentifier(id),
+        label: id,
+        children: convertChildren(child.children, options),
+      },
+    ];
+  });
+  return [
+    {
+      type: 'component',
+      name: 'Footnotes',
+      ...(props ? { props } : {}),
+      children: [],
+    },
+    ...definitions,
+  ];
+}
+
+/**
+ * Directives: `:footnote[…]` is a note written in place (03 §7.1). Every
+ * other directive keeps the text the author wrote, as before directives
+ * were parsed, with a container's body still parsed as Markdown.
+ */
+function convertDirective(
+  node: SyntaxNode,
+  options: ConversionOptions,
+): PostkitNode[] {
+  const name = node.name ?? '';
+  if (
+    node.type === 'textDirective' &&
+    (name === 'footnote' || name === 'postkit-footnote')
+  ) {
+    return [inlineNote(convertChildren(node.children, options), options)];
+  }
+  const all = node.children ?? [];
+  if (node.type === 'containerDirective') {
+    const body = all[0]?.data?.directiveLabel === true ? all.slice(1) : all;
+    const whole =
+      sliceSource(options, node.position?.start, node.position?.end) ?? '';
+    const lines = whole.split(/\r?\n/);
+    const closing = lines.length > 1 ? lines.at(-1)?.trim() : undefined;
+    return [
+      element('p', [{ type: 'text', value: lines[0] || `:::${name}` }]),
+      ...convertChildren(body, options),
+      ...(closing && /^:{3,}$/.test(closing)
+        ? [element('p', [{ type: 'text', value: closing }])]
+        : []),
+    ];
+  }
+  const first = all[0];
+  const last = all.at(-1);
+  const inline: PostkitNode[] =
+    first && last
+      ? [
+          {
+            type: 'text',
+            value:
+              sliceSource(
+                options,
+                node.position?.start,
+                first.position?.start,
+              ) ?? `:${name}[`,
+          },
+          ...convertChildren(all, options),
+          {
+            type: 'text',
+            value:
+              sliceSource(options, last.position?.end, node.position?.end) ??
+              ']',
+          },
+        ]
+      : [
+          {
+            type: 'text',
+            value:
+              sliceSource(options, node.position?.start, node.position?.end) ??
+              `:${name}`,
+          },
+        ];
+  return node.type === 'leafDirective' ? [element('p', inline)] : inline;
+}
+
 function convertNode(
   node: SyntaxNode,
   options: ConversionOptions,
@@ -195,19 +437,26 @@ function convertNode(
   const children = () => convertChildren(node.children, options);
   switch (node.type) {
     case 'footnoteReference':
-    case 'footnoteDefinition': {
-      // Footnotes are not yet part of the portable semantic vocabulary.
-      // Preserve the exact authored syntax, including labels and multiline
-      // definitions, rather than dropping references or unwrapping bodies.
-      // Still visit children so executable MDX cannot bypass validation.
-      children();
-      const value = options.source.slice(
-        node.position?.start.offset,
-        node.position?.end.offset,
-      );
-      const text: PostkitNode = { type: 'text', value };
-      return [node.type === 'footnoteDefinition' ? element('p', [text]) : text];
-    }
+      return [
+        {
+          type: 'footnoteReference',
+          identifier: node.identifier ?? '',
+          ...(node.label ? { label: node.label } : {}),
+        },
+      ];
+    case 'footnoteDefinition':
+      return [
+        {
+          type: 'footnoteDefinition',
+          identifier: node.identifier ?? '',
+          ...(node.label ? { label: node.label } : {}),
+          children: children(),
+        },
+      ];
+    case 'textDirective':
+    case 'leafDirective':
+    case 'containerDirective':
+      return convertDirective(node, options);
     case 'definition':
       return [];
     case 'linkReference':
@@ -227,6 +476,7 @@ function convertNode(
     case 'root':
       return children();
     case 'text':
+      checkMissingFootnotes(node, options);
       return [{ type: 'text', value: node.value ?? '' }];
     case 'paragraph':
       return [element('p', children())];
@@ -336,6 +586,12 @@ function convertNode(
         return children();
       }
       const props = mdxProps(node.attributes);
+      if (node.name === 'Footnote') {
+        return footnoteComponent(node, props, options);
+      }
+      if (node.name === 'Footnotes') {
+        return footnotesComponent(node, props, options);
+      }
       return [
         {
           type: 'component',
@@ -362,9 +618,20 @@ export function parsePostkitMarkdown(
   options: ParsePostkitMarkdownOptions = {},
 ): PostkitDocument {
   const mdx = options.mdx === true;
+  // Directive syntax is only parsed for `:footnote[…]`; other directives keep
+  // their text (`convertDirective`).
+  const directives = /:(?:postkit-)?footnote\[/.test(source);
   const root = fromMarkdown(source, {
-    extensions: [gfm(), ...(mdx ? [mdxjs()] : [])],
-    mdastExtensions: [gfmFromMarkdown(), ...(mdx ? [mdxFromMarkdown()] : [])],
+    extensions: [
+      gfm(),
+      ...(directives ? [directive()] : []),
+      ...(mdx ? [mdxjs()] : []),
+    ],
+    mdastExtensions: [
+      gfmFromMarkdown(),
+      ...(directives ? [directiveFromMarkdown()] : []),
+      ...(mdx ? [mdxFromMarkdown()] : []),
+    ],
   }) as SyntaxNode;
   // mdast normalizes reference identifiers. Definitions may follow their uses
   // or live inside containers; CommonMark gives the first definition priority.
@@ -380,7 +647,12 @@ export function parsePostkitMarkdown(
     node.children?.forEach(collectDefinitions);
   };
   collectDefinitions(root);
-  return createPostkitDocument(
-    convertChildren(root.children, { ...options, definitions, source }),
-  );
+  const inlineNotes: PostkitNode[] = [];
+  const children = convertChildren(root.children, {
+    ...options,
+    definitions,
+    source,
+    inlineNotes,
+  });
+  return createPostkitDocument([...children, ...inlineNotes]);
 }

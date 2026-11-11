@@ -167,12 +167,64 @@ describe('renderEmail (03 §6.1)', () => {
     expect(html).toMatch(/One<sup[^>]*>1<\/sup>, two<sup[^>]*>2<\/sup>/);
     expect(html).not.toMatch(/<sup[^>]*><a/);
     expect(html).toContain('data-postkit-email="end-notes"');
+    // The email Footnotes view: one row per note, numbered, first reference first.
+    expect(html).toContain('data-postkit-component="Footnotes"');
     expect(html).toMatch(
-      /<li[^>]*>First\.<\/li>[\s\S]*<li[^>]*>Second\.<\/li>/,
+      />1\.<\/p>[\s\S]*>First\.<\/p>[\s\S]*>2\.<\/p>[\s\S]*>Second\.<\/p>/,
     );
+    expect(html).not.toMatch(/href="#/);
     expect(html).not.toContain('Unused');
     expect(text).toContain('One[1], two[2], one again[1], missing[^x].');
     expect(text).toContain('Notes\n\n1. First.\n2. Second.');
+  });
+
+  it('ends with the notes from core footnote nodes, wherever the list was placed', async () => {
+    const mdx = await renderEmail(
+      [
+        'Inline<Footnote>An inline note.</Footnote> and :footnote[a directive note].',
+        '',
+        '<Footnotes title="Sources" />',
+        '',
+        'After the list.',
+      ].join('\n'),
+      { format: 'mdx' },
+    );
+    expect(mdx.warnings).toEqual([]);
+    expect(mdx.html).toMatch(/Inline<sup[^>]*>1<\/sup> and <sup[^>]*>2<\/sup>/);
+    expect(mdx.html).toMatch(
+      /After the list\.[\s\S]*Sources[\s\S]*An inline note\./,
+    );
+    expect(mdx.text).toContain('Inline[1] and [2].');
+    expect(mdx.text).toMatch(
+      /After the list\.\n\nSources\n\n1\. An inline note\.\n2\. a directive note\n$/,
+    );
+
+    const document = createPostkitDocument([
+      {
+        type: 'element',
+        name: 'p',
+        children: [
+          { type: 'text', value: 'Text' },
+          { type: 'footnoteReference', identifier: 'n' },
+        ],
+      },
+      {
+        type: 'footnoteDefinition',
+        identifier: 'n',
+        children: [
+          {
+            type: 'element',
+            name: 'p',
+            children: [{ type: 'text', value: 'Note.' }],
+          },
+        ],
+      },
+    ]);
+    const { html, warnings } = await renderEmail(document);
+    expect(warnings).toEqual([]);
+    expect(html).toMatch(/Text<sup[^>]*>1<\/sup>/);
+    expect(html).toContain('data-postkit-email="end-notes"');
+    expect(html).toContain('Note.');
   });
 
   it('renders documents, view overrides and a wrapper', async () => {

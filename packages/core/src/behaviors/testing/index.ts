@@ -64,3 +64,4 @@ export {
   carouselPeekBehaviorSpec,
   type CarouselPeekBehaviorFixture,
 } from '../carousel/carousel-peek.behavior.spec-suite.js';
+export * from '../footnotes/footnotes.behavior.spec-suite.js';

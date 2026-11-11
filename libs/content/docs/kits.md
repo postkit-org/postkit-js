@@ -7,25 +7,25 @@ since: '0.3.0'
 status: draft
 ---
 
-A kit is a named set of component definitions. Postkit's 36 components come in
+A kit is a named set of component definitions. Postkit's 38 components come in
 six kits, and you turn on the ones your writers use. Only those components are
 bundled, validated and described in your manifest.
 
 ## The six kits
 
-| Kit          | Import                           | Components                                                                                  |
-| ------------ | -------------------------------- | ------------------------------------------------------------------------------------------- |
-| `article`    | `@postkit/react/kits/article`    | Aside, AudienceBoundary, Callout, CardGrid, Disclosure, KeyTakeaway, PullQuote, Steps, Tabs |
-| `technical`  | `@postkit/react/kits/technical`  | Chart, CodeBlock, CodeGroup, Comparison, Diff, FileCard, FileTree, Stat, Terminal           |
-| `media`      | `@postkit/react/kits/media`      | Audio, Carousel, Device, Figure, Gallery, Video                                             |
-| `discovery`  | `@postkit/react/kits/discovery`  | AppearsOn, AuthorCard, LinkPreview, RelatedContent, SeriesNavigation, SocialPost            |
-| `engagement` | `@postkit/react/kits/engagement` | CallToAction, NewsletterSignup, Poll, ShareActions                                          |
-| `publishing` | `@postkit/react/kits/publishing` | ProductCard, SponsorBlock                                                                   |
+| Kit          | Import                           | Components                                                                                                       |
+| ------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `article`    | `@postkit/react/kits/article`    | Aside, AudienceBoundary, Callout, CardGrid, Disclosure, Footnote, Footnotes, KeyTakeaway, PullQuote, Steps, Tabs |
+| `technical`  | `@postkit/react/kits/technical`  | Chart, CodeBlock, CodeGroup, Comparison, Diff, FileCard, FileTree, Stat, Terminal                                |
+| `media`      | `@postkit/react/kits/media`      | Audio, Carousel, Device, Figure, Gallery, Video                                                                  |
+| `discovery`  | `@postkit/react/kits/discovery`  | AppearsOn, AuthorCard, LinkPreview, RelatedContent, SeriesNavigation, SocialPost                                 |
+| `engagement` | `@postkit/react/kits/engagement` | CallToAction, NewsletterSignup, Poll, ShareActions                                                               |
+| `publishing` | `@postkit/react/kits/publishing` | ProductCard, SponsorBlock                                                                                        |
 
 All six are also exported together from `@postkit/react/kits`. Each component
 page shows which kit it belongs to.
 
-{/* TODO(0.3.0): Footnote and Footnotes join the article kit in 0.3.0 (03 §7, D13). Add them to the table once they land, and confirm "Kit 1" means `article`. */}
+{/* TODO(0.3.0): Footnote and Footnotes have no component pages yet (03 §7.1, D13). */}
 
 ## Turn kits on
 

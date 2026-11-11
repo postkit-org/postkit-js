@@ -1,6 +1,7 @@
 import {
   createPostkitDocument,
   parsePostkit,
+  resolvePostkitFootnotes,
   type PostkitDocument,
 } from '@postkit/core';
 import {
@@ -17,7 +18,7 @@ import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
 
-import { moveFootnotesToEnd } from './end-notes.js';
+import { emailDanglingFootnotes, emailWarningCode } from './end-notes.js';
 import { settleMdxExpressions, type EmailSyntaxNode } from './mdx-literals.js';
 import { EmailWarnings, type RenderEmailWarning } from './warnings.js';
 
@@ -43,7 +44,10 @@ export interface ParseEmailSourceOptions {
 export interface ParsedEmailSource {
   readonly document: PostkitDocument;
   readonly warnings: readonly RenderEmailWarning[];
-  /** Whether the source has end notes (GFM footnotes). */
+  /**
+   * Whether the document has footnotes (GFM `[^id]`, `:footnote[…]` or
+   * `<Footnote>`), which the email ends with.
+   */
   readonly footnotes: boolean;
 }
 
@@ -90,18 +94,20 @@ function plainDocument(source: string): PostkitDocument {
  * Reads a Markdown or MDX source the way the site does: the same Remark
  * preset and `remarkPostkit` validation, against the same definitions. It
  * reports instead of failing on anything the site would only warn about
- * (unknown components, MDX code, dangling footnotes), then hands the tree to
- * `@postkit/core`'s safe MDX parser, so directives become components.
+ * (unknown components, MDX code), keeps a footnote reference with no
+ * definition as its text, then hands the tree to `@postkit/core`'s safe MDX
+ * parser, so directives become components and footnotes footnote nodes.
  */
 function parseMarkdownSource(
   source: string,
   mdx: boolean,
   options: ParseEmailSourceOptions,
   warnings: EmailWarnings,
-): { document: PostkitDocument; footnotes: boolean } {
+): PostkitDocument {
   const file = new VFile({ value: source });
   const processor = unified().use(remarkParse);
   if (mdx) processor.use(remarkMdx);
+  processor.use(emailDanglingFootnotes);
   processor.use(
     createPostkitRemarkPlugins({
       postkit: {
@@ -122,7 +128,7 @@ function parseMarkdownSource(
     // The renderer reports unknown components itself, with what it did.
     if (message.ruleId === 'unknown-component') continue;
     warnings.add({
-      code: message.ruleId ?? 'validation',
+      code: emailWarningCode(message.ruleId ?? undefined),
       message: message.reason,
       ...(typeof message.line === 'number' ? { line: message.line } : {}),
       ...(typeof message.column === 'number' ? { column: message.column } : {}),
@@ -132,13 +138,15 @@ function parseMarkdownSource(
   dropFrontmatter(tree);
   if (!mdx) dropHtmlComments(tree);
   settleMdxExpressions(tree, warnings);
-  const footnotes = moveFootnotesToEnd(tree, warnings);
 
   try {
     const bridge = toMarkdown(tree as Parameters<typeof toMarkdown>[0], {
       extensions: [gfmToMarkdown(), mdxToMarkdown(), directiveToMarkdown()],
     });
-    return { document: parsePostkit(bridge, { format: 'mdx' }), footnotes };
+    return parsePostkit(bridge, {
+      format: 'mdx',
+      markdown: { missingFootnotes: 'literal' },
+    });
   } catch (error) {
     warnings.add({
       code: 'parse',
@@ -148,12 +156,12 @@ function parseMarkdownSource(
     });
   }
   try {
-    return {
-      document: parsePostkit(source, { format: 'markdown' }),
-      footnotes: false,
-    };
+    return parsePostkit(source, {
+      format: 'markdown',
+      markdown: { missingFootnotes: 'literal' },
+    });
   } catch {
-    return { document: plainDocument(source), footnotes: false };
+    return plainDocument(source);
   }
 }
 
@@ -170,21 +178,21 @@ export function parseEmailSource(
   const warnings = new EmailWarnings();
   const format: RenderEmailFormat =
     options.format ?? (typeof source === 'string' ? 'markdown' : 'document');
-  if (format === 'document') {
-    return {
-      document: parsePostkit(source, { format: 'json' }),
-      warnings: warnings.list,
-      footnotes: false,
-    };
-  }
-  if (typeof source !== 'string') {
+  if (format !== 'document' && typeof source !== 'string') {
     throw new TypeError(`renderEmail: ${format} source must be a string.`);
   }
-  const { document, footnotes } = parseMarkdownSource(
-    source,
-    format === 'mdx',
-    options,
-    warnings,
-  );
-  return { document, warnings: warnings.list, footnotes };
+  const document =
+    format === 'document'
+      ? parsePostkit(source, { format: 'json' })
+      : parseMarkdownSource(
+          source as string,
+          format === 'mdx',
+          options,
+          warnings,
+        );
+  return {
+    document,
+    warnings: warnings.list,
+    footnotes: resolvePostkitFootnotes(document).notes.length > 0,
+  };
 }

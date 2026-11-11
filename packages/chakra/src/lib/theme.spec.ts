@@ -20,7 +20,8 @@ describe('Postkit theme', () => {
   it('registers every component under a stable Chakra slot-recipe key', () => {
     const system = createPostkitSystem({ preset: postkitDefaultTheme });
 
-    expect(Object.values(postkitRecipeKeys)).toHaveLength(36);
+    // 38 built-ins less Aside (Callout's recipe), plus Prose and Sidenote.
+    expect(Object.values(postkitRecipeKeys)).toHaveLength(39);
     for (const key of Object.values(postkitRecipeKeys)) {
       expect(system.isSlotRecipe(key)).toBe(true);
     }

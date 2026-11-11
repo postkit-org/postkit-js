@@ -190,3 +190,7 @@ export {
 export * from './hooks/index.js';
 export * from './components/interactive.js';
 export * from './lib/create-postkit.js';
+export * from './components/footnote/footnote.js';
+export * from './components/footnote/footnote-model.js';
+export * from './components/footnotes/footnotes.js';
+export * from './components/sidenote/sidenote.js';

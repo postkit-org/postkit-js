@@ -442,3 +442,9 @@ export {
   postkitDeviceSlots,
   type PostkitDeviceSlot,
 } from './components/device/device.recipe.js';
+export * from './components/footnote/footnote.js';
+export * from './components/footnote/footnote.recipe.js';
+export * from './components/footnotes/footnotes.js';
+export * from './components/footnotes/footnotes.recipe.js';
+export * from './components/sidenote/sidenote.js';
+export * from './components/sidenote/sidenote.recipe.js';

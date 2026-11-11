@@ -136,9 +136,39 @@ function parseNode(value: unknown, path: string): PostkitNode {
       children: parseChildren(value['children'], `${path}.children`),
     };
   }
+  if (
+    value['type'] === 'footnoteReference' ||
+    value['type'] === 'footnoteDefinition'
+  ) {
+    if (
+      typeof value['identifier'] !== 'string' ||
+      value['identifier'].trim().length === 0
+    ) {
+      throw new PostkitParseError(
+        'invalid-document',
+        `${path}.identifier must be a non-empty string.`,
+      );
+    }
+    const label =
+      typeof value['label'] === 'string' && value['label'].length > 0
+        ? { label: value['label'] }
+        : {};
+    return value['type'] === 'footnoteReference'
+      ? {
+          type: 'footnoteReference',
+          identifier: value['identifier'],
+          ...label,
+        }
+      : {
+          type: 'footnoteDefinition',
+          identifier: value['identifier'],
+          ...label,
+          children: parseChildren(value['children'], `${path}.children`),
+        };
+  }
   throw new PostkitParseError(
     'invalid-document',
-    `${path}.type must be text, element, or component.`,
+    `${path}.type must be text, element, component, footnoteReference, or footnoteDefinition.`,
   );
 }
 

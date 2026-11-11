@@ -9,6 +9,12 @@ import {
 import { PostkitParseError } from './parse-error.js';
 import { parsePostkitMarkdown } from './parse-markdown.js';
 import {
+  createPostkitFootnoteContext,
+  postkitFootnoteListHtml,
+  postkitFootnoteReferenceHtml,
+  type PostkitFootnoteRenderContext,
+} from './serialize-footnotes.js';
+import {
   serializePostkitText,
   type SerializePostkitTextOptions,
 } from './serialize-text.js';
@@ -357,6 +363,63 @@ function serializeStaticView(
   return `<div data-postkit-component="${escapeAttribute(node.name)}" data-postkit-part="root"${reconstructionAnnotations(node, 'omitted')} hidden>${children}</div>`;
 }
 
+/** Each HTML serialization's numbered notes, keyed by its options object. */
+const footnoteContexts = new WeakMap<
+  SerializePostkitHtmlOptions,
+  PostkitFootnoteRenderContext
+>();
+
+/**
+ * Footnote nodes and the `Footnotes` list (03 §7.1). Definitions render in
+ * the list, where the `Footnotes` component sits or at the end. Returns
+ * `undefined` for other nodes.
+ */
+function serializeFootnoteHtml(
+  node: PostkitNode,
+  options: SerializePostkitHtmlOptions,
+  mdx: boolean,
+  markdown: boolean,
+): string | undefined {
+  const context = footnoteContexts.get(options);
+  const annotated = options.annotations !== false;
+  if (node.type === 'footnoteReference') {
+    return postkitFootnoteReferenceHtml(context, node, annotated);
+  }
+  if (node.type === 'footnoteDefinition') {
+    if (context) return '';
+    // No document to number it in (a Markdown fallback): keep it readable
+    // and recoverable.
+    const children = node.children
+      .map((child) => serializeHtmlNode(child, options, mdx, markdown))
+      .join('');
+    return annotated
+      ? `<div data-postkit-node="footnoteDefinition" data-postkit-identifier="${escapeAttribute(node.identifier)}"${
+          node.label
+            ? ` data-postkit-label="${escapeAttribute(node.label)}"`
+            : ''
+        } data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"><div data-postkit-slot="children">${children}</div></div>`
+      : `<div>${children}</div>`;
+  }
+  if (
+    context &&
+    node.type === 'component' &&
+    node.name === 'Footnotes' &&
+    !mdx
+  ) {
+    if (context.rendered) return '';
+    return postkitFootnoteListHtml(
+      context,
+      (children) =>
+        children
+          .map((child) => serializeHtmlNode(child, options, mdx, markdown))
+          .join(''),
+      annotated,
+      node,
+    );
+  }
+  return undefined;
+}
+
 function componentElement(
   node: PostkitComponentNode,
   option: SerializePostkitHtmlOptions['componentElement'],
@@ -374,6 +437,11 @@ function serializeHtmlNode(
 ): string {
   if (node.type === 'text')
     return mdx ? escapeMdxText(escapeHtml(node.value)) : escapeHtml(node.value);
+  const footnote = serializeFootnoteHtml(node, options, mdx, markdown);
+  if (footnote !== undefined) return footnote;
+  if (node.type === 'footnoteReference' || node.type === 'footnoteDefinition') {
+    return '';
+  }
   if (node.type === 'component') {
     if (!/^[A-Z][A-Za-z0-9.]*$/.test(node.name)) {
       throw new PostkitParseError(
@@ -437,9 +505,22 @@ export function serializePostkitHtml(
   options: SerializePostkitHtmlOptions = {},
 ): string {
   assertDocument(document);
-  const body = document.children
-    .map((node) => serializeHtmlNode(node, options))
+  // A fresh options object keys this document's footnote numbering.
+  const htmlOptions: SerializePostkitHtmlOptions = { ...options };
+  const footnotes = createPostkitFootnoteContext(document, options.footnotes);
+  if (footnotes) footnoteContexts.set(htmlOptions, footnotes);
+  let body = document.children
+    .map((node) => serializeHtmlNode(node, htmlOptions))
     .join('');
+  if (footnotes && !footnotes.rendered) {
+    body += postkitFootnoteListHtml(
+      footnotes,
+      (children) =>
+        children.map((child) => serializeHtmlNode(child, htmlOptions)).join(''),
+      htmlOptions.annotations !== false,
+      undefined,
+    );
+  }
   if (
     options.documentElement === false ||
     options.documentElement === undefined
@@ -465,9 +546,37 @@ export function serializePostkitJson(
 function textContent(nodes: readonly PostkitNode[]): string {
   return nodes
     .map((node) =>
-      node.type === 'text' ? node.value : textContent(node.children),
+      node.type === 'text'
+        ? node.value
+        : node.type === 'footnoteReference'
+          ? ''
+          : textContent(node.children),
     )
     .join('');
+}
+
+/** A footnote label as GFM accepts it: no whitespace, brackets or carets. */
+function footnoteLabel(node: {
+  readonly identifier: string;
+  readonly label?: string;
+}): string {
+  return (
+    (node.label ?? node.identifier)
+      .replace(/[\s\][^\\]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'note'
+  );
+}
+
+/** `[^id]: text`, continuation lines indented four spaces. */
+function serializeFootnoteDefinition(
+  node: Extract<PostkitNode, { readonly type: 'footnoteDefinition' }>,
+  options: SerializePostkitMarkdownOptions,
+): string {
+  const content = serializeMarkdownNodes(node.children, options).trim();
+  const [first = '', ...rest] = content.split('\n');
+  return `[^${footnoteLabel(node)}]: ${first}${rest
+    .map((line) => (line ? `\n    ${line}` : '\n'))
+    .join('')}`;
 }
 
 function escapeMdxText(value: string): string {
@@ -548,6 +657,8 @@ function serializeInlineNode(
   options: SerializePostkitMarkdownOptions,
 ): string {
   if (node.type === 'text') return escapeMarkdown(node.value, options);
+  if (node.type === 'footnoteReference') return `[^${footnoteLabel(node)}]`;
+  if (node.type === 'footnoteDefinition') return htmlFallback(node, options);
   if (node.type === 'component') {
     return options.mdx
       ? mdxComponent(node, options, true)
@@ -706,6 +817,10 @@ function serializeBlockNode(
   options: SerializePostkitMarkdownOptions,
 ): string {
   if (node.type === 'text') return escapeMarkdown(node.value, options);
+  if (node.type === 'footnoteReference') return `[^${footnoteLabel(node)}]`;
+  if (node.type === 'footnoteDefinition') {
+    return serializeFootnoteDefinition(node, options);
+  }
   if (node.type === 'component') {
     return options.mdx
       ? mdxComponent(node, options)

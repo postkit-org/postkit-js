@@ -1,0 +1,91 @@
+/* Sidenote (internal): a footnote beside its reference (03 §7.1). In the
+   margin for `side`, sharing the column with Aside (D14): each note floats
+   to its line and a later note pushes down. Opened in place for `inline`, a
+   native popover for `popover`; hidden otherwise. */
+@scope ([data-postkit-component='Sidenote']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    box-sizing: border-box;
+    color: var(--postkit-footnote-text-color);
+    display: none;
+    font-size: var(--postkit-footnote-text-size);
+    font-style: normal;
+    font-weight: normal;
+    line-height: var(--postkit-leading);
+    text-align: start;
+    text-indent: 0;
+  }
+  :where(:scope[data-active-placement='side']) {
+    border-inline-start: var(--postkit-rule-width) solid transparent;
+    clear: inline-end;
+    display: block;
+    float: inline-end;
+    margin-block: 0.2em var(--postkit-space-4);
+    margin-inline-end: calc(
+      -1 * (var(--postkit-sidenote-width) + var(--postkit-sidenote-gap))
+    );
+    padding-inline-start: var(--postkit-space-3);
+    transition: border-color var(--postkit-duration) ease-out;
+    width: var(--postkit-sidenote-width);
+  }
+  :where(:scope[data-active-placement='side'][data-highlighted]) {
+    border-inline-start-color: var(--postkit-footnote-accent);
+  }
+  :where(:scope[data-active-placement='inline'][data-open]) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-lg);
+    display: block;
+    margin-block: var(--postkit-space-2);
+    padding: var(--postkit-space-3) var(--postkit-space-8)
+      var(--postkit-space-3) var(--postkit-space-3);
+    position: relative;
+  }
+  :where(:scope[popover]) {
+    background: var(--postkit-color-bg);
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    margin: 0;
+    max-width: calc(100vw - 16px);
+    padding: var(--postkit-space-3);
+    width: var(--postkit-sidenote-width);
+  }
+  :where(:scope[popover]:popover-open) {
+    display: block;
+  }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-footnote-number-color);
+    font-variant-numeric: tabular-nums;
+    margin-inline-end: var(--postkit-space-2);
+  }
+  :where([data-postkit-sidenote-close]:not([hidden])) {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: var(--postkit-radius-sm);
+    color: var(--postkit-color-fg-muted);
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    height: 24px;
+    inset-block-start: var(--postkit-space-2);
+    inset-inline-end: var(--postkit-space-2);
+    justify-content: center;
+    padding: 0;
+    position: absolute;
+    width: 24px;
+  }
+  :where([data-postkit-sidenote-close]:focus-visible) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+
+  @media print {
+    :where(:scope) {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where(:scope) {
+      transition: none;
+    }
+  }
+}

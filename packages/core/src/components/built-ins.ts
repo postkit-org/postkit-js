@@ -34,6 +34,8 @@ import { tabsDefinition } from './tabs/tabs.definition.js';
 import { terminalDefinition } from './terminal/terminal.definition.js';
 import { videoDefinition } from './video/video.definition.js';
 import { deviceDefinition } from './device/device.definition.js';
+import { footnoteDefinition } from './footnote/footnote.definition.js';
+import { footnotesDefinition } from './footnotes/footnotes.definition.js';
 
 export {
   appearsOnDefinition,
@@ -72,6 +74,8 @@ export {
   terminalDefinition,
   videoDefinition,
   deviceDefinition,
+  footnoteDefinition,
+  footnotesDefinition,
 };
 
 /**
@@ -116,6 +120,8 @@ export const postkitBuiltInDefinitions = Object.freeze({
   SocialPost: socialPostDefinition,
   Video: videoDefinition,
   Device: deviceDefinition,
+  Footnote: footnoteDefinition,
+  Footnotes: footnotesDefinition,
 });
 
 /** The name of a built-in Postkit component. */

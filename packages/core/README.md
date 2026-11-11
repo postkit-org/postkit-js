@@ -18,8 +18,11 @@ event handlers, unsafe URLs, and MDX expressions.
 
 - `parsePostkitHtml(source)` normalizes untrusted HTML into semantic nodes.
 - `parsePostkitMarkdown(source)` supports CommonMark and GFM lists, tables,
-  autolinks, and strikethrough. Footnote references and definitions are preserved
-  as literal text, not converted into linked footnotes.
+  autolinks, strikethrough and footnotes. `[^id]`, `:footnote[…]` and
+  `<Footnote>…</Footnote>` become `footnoteReference` and `footnoteDefinition`
+  nodes; a reference with no definition fails with its line and column.
+  `resolvePostkitFootnotes` numbers notes by first reference and
+  `validatePostkitFootnotes` reports missing and unreferenced notes.
 - `parsePostkit(source, { format: 'mdx' })` supports literal MDX components and
   rejects expressions, spread props, imports, and exports.
 - `parsePostkitJson(source)` validates the versioned document format.
@@ -109,6 +112,8 @@ const text = serializePostkitText(document, options);
 | Figure           | `<figure>`: `<img>` (linked when `href` is set) and caption with credit            | —                                                              |
 | FileCard         | `<div>`: name, description, type and size, download link                           | —                                                              |
 | FileTree         | `<div>`: title and a list of full paths (folders end in `/`)                       | Full paths instead of an indented tree                         |
+| Footnote         | `<sup>`: the mark, linked to its note (`footnoteReference` nodes)                  | `footnotes: { links: false }` (email) drops the links          |
+| Footnotes        | `<section>`: title, rule and the notes as an `<ol>` with ↩ backlinks               | Always the end list; side, popover and inline need a renderer  |
 | Gallery          | `<div>`: heading, then one `<figure>` per image with its caption                   | —                                                              |
 | KeyTakeaway      | `<aside>`: eyebrow, title, body and the items as a list                            | —                                                              |
 | LinkPreview      | A link card: image, linked title, description, site name and domain                | Never an embed, iframe or player; `inline` is a plain link     |
@@ -134,7 +139,9 @@ authored is lost.
 
 `serializePostkitText` renders the same views as text: paragraphs separated by
 blank lines, `-` and `1.` list markers, `>` for quotes, `A | B` table rows,
-code kept verbatim, images as `[alt]` and links as `label (url)`.
+code kept verbatim, images as `[alt]` and links as `label (url)`. Footnotes
+become `[1]` marks and a `[1] Note` list where `Footnotes` is placed, or at
+the end.
 
 MDX serialization escapes literal braces and ESM-like text, keeps code fences
 isolated, and validates the generated syntax with the non-executable parser.

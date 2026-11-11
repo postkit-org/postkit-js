@@ -39,6 +39,8 @@ import { Disclosure } from '../components/disclosure/disclosure.js';
 import { Gallery } from '../components/gallery/gallery.js';
 import { Steps } from '../components/steps/steps.js';
 import { Tabs } from '../components/tabs/tabs.js';
+import { Footnote } from '../components/footnote/footnote.js';
+import { Footnotes } from '../components/footnotes/footnotes.js';
 import {
   createPostkitLink,
   type CreatePostkitLinkOptions,
@@ -83,6 +85,8 @@ export type PostkitMdxComponents = ProseComponents & {
   readonly Terminal: typeof Terminal;
   readonly Video: typeof Video;
   readonly Device: typeof Device;
+  readonly Footnote: typeof Footnote;
+  readonly Footnotes: typeof Footnotes;
 };
 
 export const postkitMdxComponents: PostkitMdxComponents = Object.freeze({
@@ -123,6 +127,8 @@ export const postkitMdxComponents: PostkitMdxComponents = Object.freeze({
   Terminal: Terminal,
   Video: Video,
   Device: Device,
+  Footnote: Footnote,
+  Footnotes: Footnotes,
 });
 
 export interface CreatePostkitMdxComponentsOptions<

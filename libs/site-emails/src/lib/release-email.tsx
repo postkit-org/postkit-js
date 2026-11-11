@@ -106,7 +106,13 @@ export function releaseSubject(entry: ReleaseEmailEntry): string {
 
 function textOf(nodes: readonly PostkitNode[]): string {
   return nodes
-    .map((node) => (node.type === 'text' ? node.value : textOf(node.children)))
+    .map((node) =>
+      node.type === 'text'
+        ? node.value
+        : 'children' in node
+          ? textOf(node.children)
+          : '',
+    )
     .join('');
 }
 
@@ -146,7 +152,7 @@ function findFirst(
 ): PostkitNode | undefined {
   for (const node of nodes) {
     if (test(node)) return node;
-    if (node.type !== 'text') {
+    if ('children' in node) {
       const found = findFirst(node.children, test);
       if (found) return found;
     }
@@ -207,7 +213,7 @@ export function releasePackages(document: PostkitDocument): string[] {
   const names = new Set<string>();
   const visit = (nodes: readonly PostkitNode[]) => {
     for (const node of nodes) {
-      if (node.type === 'text') continue;
+      if (!('children' in node)) continue;
       if (isElement(node, 'code')) {
         const match = /^@postkit\/([a-z0-9][a-z0-9-]*)/.exec(
           textOf(node.children).trim(),
