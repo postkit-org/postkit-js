@@ -1,5 +1,6 @@
 // @vitest-environment node
 
+import type { ResolvedLinkPreview } from '@postkit/unfurl';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -18,10 +19,14 @@ import { createPostkitSystem, postkitDefaultTheme } from '../theme.js';
 const system = createPostkitSystem({ preset: postkitDefaultTheme });
 const data = [{ label: 'Jan', value: 1 }];
 const items = [{ title: 'Slide', description: 'One.' }];
-const metadata = {
+const metadata: ResolvedLinkPreview = {
+  requestedUrl: 'https://example.com/a',
   url: 'https://example.com/a',
   title: 'An article',
   images: [],
+  audio: [],
+  video: [],
+  provider: { id: 'fixture' },
 };
 
 function render(node: ReactNode): string {

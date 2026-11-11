@@ -1,5 +1,6 @@
 // @vitest-environment node
 
+import type { ResolvedLinkPreview } from '@postkit/unfurl';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { Carousel } from './carousel/carousel.js';
@@ -13,10 +14,14 @@ import { LinkPreview } from './link-preview/link-preview.js';
  */
 const data = [{ label: 'Jan', value: 1 }];
 const items = [{ title: 'Slide', description: 'One.' }];
-const metadata = {
+const metadata: ResolvedLinkPreview = {
+  requestedUrl: 'https://example.com/a',
   url: 'https://example.com/a',
   title: 'An article',
   images: [],
+  audio: [],
+  video: [],
+  provider: { id: 'fixture' },
 };
 
 function titleOf(markup: string): string | undefined {
