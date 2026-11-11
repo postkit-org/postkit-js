@@ -3,7 +3,14 @@ import {
   type CodeBlockAdapter,
   type ShikiAdapterOptions,
 } from '@chakra-ui/react';
-import type { BundledLanguage, BundledTheme, Highlighter } from 'shiki';
+import type {
+  BundledLanguage,
+  BundledTheme,
+  Highlighter,
+  HighlighterCore,
+} from 'shiki';
+
+import { plainLanguages, warnOnce } from './warn.js';
 
 export const postkitShikiLanguages = [
   'astro',
@@ -24,6 +31,16 @@ export const postkitShikiThemes = {
   dark: 'github-dark',
   light: 'github-light',
 } as const satisfies PostkitShikiThemes;
+
+/**
+ * The regular-expression engine Shiki tokenizes with.
+ *
+ * - `javascript` (the default) runs the grammars on the browser's own `RegExp`
+ *   through `@shikijs/engine-javascript`: about 20 KB gzipped and no WASM.
+ * - `oniguruma` loads the Oniguruma WASM build (about 225 KB gzipped), the
+ *   engine VS Code uses. Choose it for a grammar the JavaScript engine can't run.
+ */
+export type PostkitShikiEngine = 'javascript' | 'oniguruma';
 
 /**
  * Colour fixes applied to the curated themes. Postkit's code surface is dark in
@@ -55,45 +72,113 @@ function withPostkitColorReplacements(
   return { ...options, colorReplacements: merged };
 }
 
+type CodeBlockHighlighter = ReturnType<CodeBlockAdapter['getHighlighter']>;
+
 export type PostkitShikiHighlightOptions = Omit<
   NonNullable<ShikiAdapterOptions<Highlighter>['highlightOptions']>,
   'lang' | 'theme'
 >;
 
 export interface CreatePostkitShikiAdapterOptions {
-  /** Bundled Shiki grammars to load. Common Postkit content languages are used by default. */
+  /**
+   * Bundled Shiki grammars to load. Common Postkit content languages are used by default.
+   * Only these grammars (and the ones they embed) are downloaded. A code block in any
+   * other language renders as plain text instead of failing.
+   */
   readonly languages?: readonly BundledLanguage[];
   /** Bundled Shiki themes selected from Chakra's current color scheme. */
   readonly themes?: PostkitShikiThemes;
   /** Additional Shiki options, such as custom transformers, applied during highlighting. */
   readonly highlightOptions?: PostkitShikiHighlightOptions;
+  /**
+   * The regular-expression engine: `javascript` (the default, no WASM) or `oniguruma`.
+   * Every grammar in `postkitShikiLanguages`, plus `css`, `html` and `yaml`, highlights
+   * the same on both.
+   */
+  readonly engine?: PostkitShikiEngine;
+}
+
+/**
+ * Wraps Chakra's Shiki highlighter so a block never takes the page down: a language
+ * that isn't loaded, or a grammar the engine can't run, renders as escaped plain
+ * text in the same code block (with a development-only warning) instead of throwing
+ * during render.
+ */
+function withPlainTextFallback(
+  highlight: CodeBlockHighlighter,
+  highlighter: HighlighterCore,
+): CodeBlockHighlighter {
+  let loaded: ReadonlySet<string> | undefined;
+  const resolveLanguage = (language: string | undefined): string => {
+    if (!language) return 'text';
+    loaded ??= new Set(highlighter.getLoadedLanguages());
+    if (plainLanguages.has(language) || loaded.has(language)) return language;
+    const lower = language.toLowerCase();
+    if (plainLanguages.has(lower) || loaded.has(lower)) return lower;
+    warnOnce(
+      `language:${language}`,
+      `No grammar is loaded for "${language}", so its code blocks render as plain text. Add it to createPostkitShikiAdapter({ languages }).`,
+    );
+    return 'text';
+  };
+
+  return (props) => {
+    const language = resolveLanguage(props.language);
+    try {
+      return highlight({ ...props, language });
+    } catch (error) {
+      warnOnce(
+        `error:${language}`,
+        `Highlighting "${language}" failed, so the block renders as plain text. If the JavaScript regex engine can't run this grammar, pass engine: 'oniguruma'.`,
+        error,
+      );
+      try {
+        return highlight({ ...props, language: 'text' });
+      } catch {
+        return { code: props.code, highlighted: false };
+      }
+    }
+  };
 }
 
 /**
  * Creates a lazy Chakra CodeBlock adapter backed by Shiki. Create the adapter
  * once at module scope and pass it to `PostkitProvider.codeBlockAdapter`.
+ *
+ * Nothing is downloaded until the first code block mounts. Then Shiki's core, the
+ * JavaScript regex engine (or Oniguruma, with `engine: 'oniguruma'`), the configured
+ * grammars and the two themes load once, and every block below the provider reuses them.
  */
 export function createPostkitShikiAdapter(
   options: CreatePostkitShikiAdapterOptions = {},
 ): CodeBlockAdapter {
   const languages = options.languages ?? postkitShikiLanguages;
   const themes = options.themes ?? postkitShikiThemes;
+  const engine = options.engine ?? 'javascript';
 
-  return createShikiAdapter<Highlighter>({
-    async load() {
-      const { createHighlighter } = await import('shiki');
-
-      return createHighlighter({
-        langs: [...languages],
-        themes: [...new Set([themes.dark, themes.light])],
-      });
+  const adapter = createShikiAdapter<HighlighterCore>({
+    load: async () => {
+      const { loadHighlighter } = await import('./load-highlighter.js');
+      return loadHighlighter(
+        [...new Set(languages)],
+        [...new Set([themes.dark, themes.light])],
+        engine,
+      );
     },
     highlightOptions: withPostkitColorReplacements(
       options.highlightOptions,
-    ) as ShikiAdapterOptions<Highlighter>['highlightOptions'],
+    ) as ShikiAdapterOptions<HighlighterCore>['highlightOptions'],
     theme: {
       dark: themes.dark,
       light: themes.light,
     },
   });
+
+  return {
+    ...adapter,
+    getHighlighter(context: HighlighterCore | null | undefined) {
+      const highlight = adapter.getHighlighter(context);
+      return context ? withPlainTextFallback(highlight, context) : highlight;
+    },
+  };
 }
