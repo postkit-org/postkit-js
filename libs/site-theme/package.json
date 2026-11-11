@@ -19,7 +19,49 @@
       "npm:private",
       "scope:postkit",
       "type:theme"
-    ]
+    ],
+    "targets": {
+      "test": {
+        "inputs": [
+          "default",
+          "^production",
+          {
+            "fileset": "{projectRoot}/tsconfig.spec.json",
+            "dependencies": true
+          },
+          {
+            "json": "{workspaceRoot}/tsconfig.json",
+            "fields": [
+              "compilerOptions"
+            ]
+          },
+          "{workspaceRoot}/apps/site/src/**/*",
+          "{workspaceRoot}/libs/*/src/**/*",
+          "{workspaceRoot}/packages/chakra/src/**/*",
+          "{workspaceRoot}/packages/next/src/**/*",
+          "{workspaceRoot}/packages/react/src/**/*",
+          "{workspaceRoot}/packages/shiki/src/**/*",
+          {
+            "externalDependencies": [
+              "vitest",
+              "@chakra-ui/react",
+              "@chakra-docs/chakra",
+              "@chakra-docs/core",
+              "@chakra-docs/feed",
+              "@chakra-docs/next",
+              "@chakra-docs/search"
+            ]
+          },
+          {
+            "env": "CI"
+          },
+          {
+            "dependentTasksOutputFiles": "**/*.js",
+            "transitive": true
+          }
+        ]
+      }
+    }
   },
   "dependencies": {
     "@chakra-ui/react": "^3.36.0"

@@ -4,8 +4,13 @@
 // Fonts: the app loads Inter Tight and JetBrains Mono with next/font and exposes them as
 // --font-inter-tight and --font-jetbrains-mono. Each var() has the family name as its
 // fallback, so the stacks still work where those variables aren't set (emails, tests).
-import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
+import {
+  createSystem,
+  defaultBaseConfig,
+  defineConfig,
+} from '@chakra-ui/react';
 
+import { chakraThemeConfig } from './chakra-theme';
 import { siteRecipes, siteSlotRecipes } from './recipes';
 
 // Chakra's own semantic tokens use `_light` / `_dark`. Overriding them with `base`
@@ -244,4 +249,13 @@ export const siteConfig = defineConfig({
   },
 });
 
-export const siteSystem = createSystem(defaultConfig, siteConfig);
+/**
+ * Chakra's default config minus the built-in recipes nothing on the site renders
+ * (`chakra-theme.ts`), then the site's. Built on `defaultConfig`, every page would ship all
+ * of Chakra's recipes.
+ */
+export const siteSystem = createSystem(
+  defaultBaseConfig,
+  chakraThemeConfig,
+  siteConfig,
+);
