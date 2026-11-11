@@ -186,3 +186,17 @@ Found by the site build and its axe passes. They live in the packages, so they'r
 | P19 | `@postkit/chakra` | ShareActions copy and email buttons fail `label-content-name-mismatch` (WCAG 2.5.3, serious) | Notes with ShareActions | 7 |
 | P20 | `@postkit/chakra` | Carousel, Chart and LinkPreview hard-code `h3` titles (axe `heading-order`, best practice); the heading level should follow the context | Their component pages | 7 |
 | P21 | `@postkit/next` | `createPostkitNextComponents` imports every component (Carousel, rating and progress machines, `@postkit/core`) on every MDX page; views should load per component | First-load JS on docs and notes (07 §4) | 7 |
+
+P16–P21 were fixed on Nov 11, 2026:
+- **P16:** an unloaded language renders as plain text.
+- **P17:** `shiki/core` with the JavaScript engine (the `engine` option keeps Oniguruma available). Highlighting after hydration went from about 427 KB to 213 KB gzipped.
+- **P18:** Prose wraps inline code and links.
+- **P19:** ShareActions buttons are named by their visible label.
+- **P20:** titles are `p` by default, with a `headingLevel` prop.
+- **P21:** lazy per-component views (`postkitLazyView`, `chakraLazy`, `createPostkitLazyMdxComponents`). First-load JS is about 45–52 KB smaller on docs, note and component pages.
+
+Still open, for speed rather than launch:
+- Home's `DocumentRenderer` default map and `createPostkit`'s default headless views still import every view.
+- Every configured grammar loads on each page; this needs an async-aware CodeBlock, or build-time highlighting.
+- The phone menu imports the full component catalog.
+- The router adapters (`@postkit/react-router`, `@postkit/tanstack-router`) are still eager.
