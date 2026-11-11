@@ -549,6 +549,22 @@ export function resolvePreviewProps(
   return resolved;
 }
 
+/**
+ * Downloads the views a component's preview renders, for a preview that should appear only
+ * once it can render in full (catalog tiles).
+ */
+export function preloadComponentPreview(
+  name: PostkitComponentName,
+): Promise<void> {
+  const names: readonly PostkitComponentName[] =
+    name === 'Footnote' || name === 'Footnotes'
+      ? ['Footnote', 'Footnotes']
+      : [name];
+  return Promise.all(
+    names.map((view) => postkitChakraLazyViews[view].preload()),
+  ).then(() => undefined);
+}
+
 /** A live preview of one catalog component, rendered by `@postkit/chakra`. */
 export function ComponentPreview({
   name,
