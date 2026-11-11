@@ -20,8 +20,8 @@ import {
   type ReactNode,
 } from 'react';
 
+import { postkitChakraLazyViews } from './chakra-lazy-views.js';
 import { Prose, postkitProseComponents } from './components/prose.js';
-import { postkitMdxComponents } from './mdx-components.js';
 
 export type PostkitRenderComponent = ElementType;
 export type PostkitDocumentComponentMap = Readonly<
@@ -55,11 +55,18 @@ const structuralComponents = Object.fromEntries(
   structuralElementNames.map((name) => [name, chakra(name)]),
 ) as PostkitDocumentComponentMap;
 
+/**
+ * The default map: structural elements, prose, and Postkit's component views
+ * as lazy views (`postkitChakraLazyViews`), so a page downloads only the views
+ * its document uses. A server render that waits for Suspense (a streaming or
+ * `allReady` render, as Next.js does) has them in its HTML; for a synchronous
+ * render (`renderToStaticMarkup`), pass `components={postkitChakraViews}`.
+ */
 export const postkitDocumentComponents: PostkitDocumentComponentMap =
   Object.freeze({
     ...structuralComponents,
     ...postkitProseComponents,
-    ...postkitMdxComponents,
+    ...postkitChakraLazyViews,
     Prose,
   });
 

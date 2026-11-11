@@ -2,9 +2,16 @@
 
 import { defaultSystem } from '@chakra-ui/react';
 import { parsePostkit, parsePostkitHtml } from '@postkit/core';
+import { preloadPostkitViews } from '@postkit/react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { prerenderToNodeStream } from 'react-dom/static';
 
-import { DocumentRenderer } from './document-renderer.js';
+import { postkitChakraLazyViews } from './chakra-lazy-views.js';
+import { postkitChakraViews } from './chakra-renderer.js';
+import {
+  DocumentRenderer,
+  postkitDocumentComponents,
+} from './document-renderer.js';
 import { PostkitProvider } from './postkit-provider.js';
 
 function render(renderer: React.ReactNode): string {
@@ -14,6 +21,46 @@ function render(renderer: React.ReactNode): string {
 }
 
 describe('DocumentRenderer', () => {
+  // The default map's views are lazy: the synchronous renders below need
+  // them loaded first.
+  beforeAll(() =>
+    preloadPostkitViews(
+      postkitChakraLazyViews,
+      Object.keys(postkitChakraLazyViews),
+    ),
+  );
+
+  it('renders lazy views by default, and takes the eager views', async () => {
+    expect(postkitDocumentComponents['Callout']).toBe(
+      postkitChakraLazyViews.Callout,
+    );
+    const document = parsePostkit(
+      '<Callout tone="tip" title="Keep">Body</Callout>',
+      { format: 'mdx' },
+    );
+
+    // A server render that waits for Suspense, as Next.js does.
+    const { prelude } = await prerenderToNodeStream(
+      <PostkitProvider system={defaultSystem}>
+        <DocumentRenderer document={document} />
+      </PostkitProvider>,
+    );
+    let html = '';
+    for await (const chunk of prelude) html += String(chunk);
+    expect(html).toContain('data-postkit-component="Callout"');
+    expect(html).toContain('Keep');
+
+    // A synchronous render with the eager views.
+    expect(
+      render(
+        <DocumentRenderer
+          document={document}
+          components={postkitChakraViews}
+        />,
+      ),
+    ).toContain('data-postkit-component="Callout"');
+  });
+
   it.each([
     '<p as="script" src="https://example.test/payload.js" />',
     '<div as="iframe" srcDoc="&lt;script>alert(1)&lt;/script>" />',
