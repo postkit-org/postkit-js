@@ -192,11 +192,16 @@ export * from './hooks/index.js';
 export * from './components/interactive.js';
 export * from './lib/create-postkit.js';
 export {
+  postkitHeadlessEagerRenderer,
+  postkitHeadlessViews,
+} from './lib/headless-views.js';
+export {
   postkitLazyView,
   postkitLazyViews,
   preloadPostkitViews,
   type PostkitLazyView,
   type PostkitLazyViewOptions,
+  type PostkitLazyViewsOptions,
   type PostkitViewLoader,
 } from './lib/lazy-view.js';
 export * from './components/footnote/footnote.js';

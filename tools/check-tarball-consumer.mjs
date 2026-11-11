@@ -220,8 +220,12 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
   const { renderToStaticMarkup } = await import('react-dom/server');
   const { definePostkitComponent, prop, readPostkitComponentManifest } =
     await import('@postkit/core/components');
-  const { createPostkit, postkitView } = await import('@postkit/react');
-  const { remarkPostkit } = await import('@postkit/react/remark');
+  const { createPostkit, postkitView, preloadPostkitViews } = await import(
+    '@postkit/react'
+  );
+  const { postkitRemarkPlugins, remarkPostkit } = await import(
+    '@postkit/react/remark'
+  );
   const { article, technical, media } = await import('@postkit/react/kits');
   const { chakra, postkitDefaultTheme } = await import('@postkit/chakra');
 
@@ -257,6 +261,9 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
       defaults: { Callout: { variant: 'plain' }, Showcase: { frame: 'laptop' } },
     });
     const { Callout, Figure, Tabs } = postkit.mdxComponents;
+    // The headless views load on first render; a synchronous render needs
+    // them loaded first.
+    await preloadPostkitViews(postkit.mdxComponents, ['Callout', 'Figure', 'Tabs']);
     const markup = renderToStaticMarkup(
       createElement(
         postkit.Provider,
@@ -294,7 +301,7 @@ console.log('@postkit/core behaviours share the host Zag copy; the root entry lo
       throw new Error(\`createPostkit (\${label}) manifest is missing headless Tabs.\`);
     }
 
-    const [, postkitOptions] = postkit.remarkPlugins.find(
+    const [, postkitOptions] = postkitRemarkPlugins(postkit).find(
       (plugin) => Array.isArray(plugin) && plugin[0] === remarkPostkit,
     );
     const tree = {
@@ -360,7 +367,10 @@ import {
 import '@postkit/react/styles.css';
 import { article, media, technical } from '@postkit/react/kits';
 import { article as articleKit } from '@postkit/react/kits/article';
-import { remarkPostkit as remarkPostkitHeadless } from '@postkit/react/remark';
+import {
+  postkitRemarkPlugins,
+  remarkPostkit as remarkPostkitHeadless,
+} from '@postkit/react/remark';
 import { PostkitProvider, chakra } from '@postkit/chakra';
 import { DocumentRenderer } from '@postkit/chakra/document';
 import { createPostkitTheme } from '@postkit/chakra/theme';
@@ -416,6 +426,9 @@ void headlessSite.Provider;
 void chakraSite.Provider;
 void readPostkitComponentManifest;
 void remarkPostkitHeadless;
+const _remarkPlugins: ReturnType<typeof postkitRemarkPlugins> =
+  postkitRemarkPlugins(headlessSite, { gfm: false });
+void _remarkPlugins;
 const _carouselApi: CarouselBehaviorApi = createCarousel({ id: 'c', slideCount: 2 }).api;
 void _carouselApi;
 const _tabsDriver = null as unknown as BehaviorDriver<TabsBehaviorFixture>;
@@ -573,7 +586,7 @@ export const postkit = createPostkit({
       `import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createJiti } from 'jiti';
-import { remarkPostkit } from '@postkit/react/remark';
+import { postkitRemarkPlugins, remarkPostkit } from '@postkit/react/remark';
 import { postkitDefaultTheme } from '@postkit/chakra';
 
 const jiti = createJiti(import.meta.url, { jsx: { runtime: 'automatic' } });
@@ -585,7 +598,7 @@ if (postkit.mdxComponents.Figure !== EjectedFigure) {
   throw new Error('createPostkit did not use the ejected Figure view.');
 }
 
-const [, options] = postkit.remarkPlugins.find(
+const [, options] = postkitRemarkPlugins(postkit).find(
   (plugin) => Array.isArray(plugin) && plugin[0] === remarkPostkit,
 );
 const directive = (attributes) => ({

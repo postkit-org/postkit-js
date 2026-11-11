@@ -1,4 +1,7 @@
 import type { PostkitAnyComponent } from './config.js';
+import type { PostkitRenderer } from './create-postkit.js';
+import type { PostkitHeadlessViewName } from './headless-view-names.js';
+import type { PostkitLinkComponent } from './link.js';
 import { AppearsOn } from '../components/appears-on/appears-on.js';
 import { Aside } from '../components/aside/aside.js';
 import { AudienceBoundary } from '../components/audience-boundary/audience-boundary.js';
@@ -39,13 +42,15 @@ import { Footnote } from '../components/footnote/footnote.js';
 import { Footnotes } from '../components/footnotes/footnotes.js';
 
 /**
- * The headless views `@postkit/react` exports, keyed by component name. The
- * headless renderer reads it, so add a view here when it ships, and its name
- * to `postkitHeadlessViewNames` (the manifest's `support.headless` reads
- * that). Every built-in has one (`chakraOnly` is empty).
+ * The headless views `@postkit/react` exports, keyed by component name, all
+ * imported up front. Add a view here when it ships, with its name in
+ * `postkitHeadlessViewNames` (the manifest's `support.headless` reads that)
+ * and its loader in `postkitHeadlessViewLoaders` (the lazy renderer,
+ * `createPostkit`'s default, reads that). Every built-in has one
+ * (`chakraOnly` is empty).
  */
 export const postkitHeadlessViews: Readonly<
-  Record<string, PostkitAnyComponent>
+  Record<PostkitHeadlessViewName, PostkitAnyComponent>
 > = Object.freeze({
   Aside,
   Callout,
@@ -85,4 +90,18 @@ export const postkitHeadlessViews: Readonly<
   Device,
   Footnote,
   Footnotes,
+});
+
+/**
+ * The headless renderer with every view imported up front: the same views as
+ * `postkitHeadlessRenderer` (`createPostkit`'s default, whose views load on
+ * first render), for a synchronous render such as `renderToStaticMarkup`,
+ * where a lazy view that hasn't loaded renders nothing. A page using it ships
+ * every headless view.
+ */
+export const postkitHeadlessEagerRenderer: PostkitRenderer = Object.freeze({
+  id: 'headless',
+  package: '@postkit/react',
+  views: postkitHeadlessViews,
+  prose: (link: PostkitLinkComponent) => ({ a: link }),
 });

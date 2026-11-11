@@ -18,10 +18,11 @@ import {
 
 /**
  * The MDX map's lazy views (`postkitLazyView`), keyed by component name. They
- * don't carry definitions, so the map doesn't ship every definition; the
- * renderer's `chakraLazy` views do.
+ * don't carry definitions, so the map doesn't ship every definition.
  */
-const postkitMdxLazyViews = postkitLazyViews(postkitChakraViewLoaders);
+const postkitMdxLazyViews = postkitLazyViews(postkitChakraViewLoaders, {
+  postkitViews: true,
+});
 
 /** `postkitMdxComponents` with lazy views: prose stays as it is. */
 export type PostkitLazyMdxComponents = ProseComponents & {

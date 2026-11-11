@@ -22,7 +22,11 @@ import {
   postkitKits,
   technical,
 } from '../kits/index.js';
+import { postkitBuiltInKit } from '../kits/built-in-kit.js';
 import { createPostkit, postkitHeadlessRenderer } from './create-postkit.js';
+import { postkitHeadlessEagerRenderer } from './headless-views.js';
+import { preloadPostkitViews } from './lazy-view.js';
+import { postkitRemarkPlugins } from './postkit-remark-plugins.js';
 import { postkitView } from './view.js';
 
 const showcaseDefinition = definePostkitComponent({
@@ -54,21 +58,23 @@ const Showcase = postkitView(showcaseDefinition, ({ props, part }) => (
 ));
 
 function compile(
-  remarkPlugins: ReturnType<typeof createPostkit>['remarkPlugins'],
+  postkit: ReturnType<typeof createPostkit>,
   source: string,
 ): MdastRoot {
   const processor = unified()
     .use(remarkParse)
     .use(remarkMdx)
-    .use(remarkPlugins);
+    .use(postkitRemarkPlugins(postkit));
   return processor.runSync(processor.parse(source)) as MdastRoot;
 }
 
-function render(
+/** Loads the view (the headless views are lazy), then renders it. */
+async function render(
   postkit: ReturnType<typeof createPostkit>,
   name: string,
   props: Record<string, unknown> = {},
-): string {
+): Promise<string> {
+  await preloadPostkitViews(postkit.mdxComponents, [name]);
   const View = postkit.mdxComponents[name] as ComponentType<
     Record<string, unknown>
   >;
@@ -101,6 +107,14 @@ describe('kits', () => {
       expect(Object.isFrozen(kit.definitions)).toBe(true);
     }
   });
+
+  it('list exactly their category, as postkitBuiltInKit does', () => {
+    // Each kit module imports its own definitions, so a site bundles only
+    // the kits it enables.
+    for (const kit of postkitKits) {
+      expect(kit).toEqual(postkitBuiltInKit(kit.id));
+    }
+  });
 });
 
 describe('createPostkit', () => {
@@ -121,19 +135,44 @@ describe('createPostkit', () => {
     expect(postkit.mdxComponents['RelatedContent']).toBeUndefined();
     expect(postkit.mdxComponents['a']).toBeDefined();
     expect(postkit.renderer).toBe(postkitHeadlessRenderer);
+    expect(postkit.unavailable).toEqual([]);
   });
 
-  it('applies site defaults to headless views, and an author prop wins', () => {
+  it('loads each headless view on first render by default', () => {
+    const postkit = createPostkit({ kits: [article] });
+    const Callout = postkit.mdxComponents['Callout'] as ComponentType & {
+      readonly preload?: () => Promise<unknown>;
+    };
+    expect(typeof Callout.preload).toBe('function');
+    expect(postkitHeadlessRenderer.views['Callout']).toBe(Callout);
+
+    // The eager renderer's views render at once, even synchronously.
+    const eager = createPostkit({
+      renderer: postkitHeadlessEagerRenderer,
+      kits: [article],
+    });
+    const EagerCallout = eager.mdxComponents['Callout'] as ComponentType;
+    expect(EagerCallout).toBe(postkitHeadlessEagerRenderer.views['Callout']);
+    expect(
+      renderToStaticMarkup(
+        <eager.Provider>
+          <EagerCallout />
+        </eager.Provider>,
+      ),
+    ).toContain('data-postkit-component="Callout"');
+  });
+
+  it('applies site defaults to headless views, and an author prop wins', async () => {
     const postkit = createPostkit({
       kits: [article],
       defaults: { Callout: { variant: 'plain', title: 'Note' } },
     });
 
-    const defaulted = render(postkit, 'Callout', { children: 'Body' });
+    const defaulted = await render(postkit, 'Callout', { children: 'Body' });
     expect(defaulted).toContain('data-variant="plain"');
     expect(defaulted).toContain('>Note</p>');
 
-    const authored = render(postkit, 'Callout', {
+    const authored = await render(postkit, 'Callout', {
       variant: 'outline',
       title: 'Mine',
     });
@@ -146,7 +185,7 @@ describe('createPostkit', () => {
     );
   });
 
-  it('replaces anatomy parts with slot overrides', () => {
+  it('replaces anatomy parts with slot overrides', async () => {
     function InkMark(props: ComponentProps<'span'>) {
       return <b data-ink {...props} />;
     }
@@ -159,7 +198,7 @@ describe('createPostkit', () => {
         },
       },
     });
-    const markup = render(postkit, 'Callout', {
+    const markup = await render(postkit, 'Callout', {
       tone: 'tip',
       title: 'Tip',
       classNames: { icon: 'mark' },
@@ -172,7 +211,7 @@ describe('createPostkit', () => {
     expect(markup).toContain('data-postkit-component="Callout"');
   });
 
-  it('replaces a whole view with a view override', () => {
+  it('replaces a whole view with a view override', async () => {
     const CommuneCallout = postkitView(calloutDefinition, ({ part }) => (
       <div {...part('root')}>commune</div>
     ));
@@ -182,7 +221,7 @@ describe('createPostkit', () => {
     });
 
     expect(postkit.mdxComponents['Callout']).toBe(CommuneCallout);
-    expect(render(postkit, 'Callout')).toContain('commune');
+    expect(await render(postkit, 'Callout')).toContain('commune');
   });
 
   it('validates directives against the enabled set', () => {
@@ -192,7 +231,7 @@ describe('createPostkit', () => {
     });
 
     const tree = compile(
-      postkit.remarkPlugins,
+      postkit,
       '::postkit-showcase{src="/phone.png" frame="laptop"}',
     );
     expect(tree.children[0]).toMatchObject({
@@ -201,14 +240,14 @@ describe('createPostkit', () => {
     });
 
     expect(() =>
-      compile(postkit.remarkPlugins, '::postkit-figure{src="/a.png" alt=""}'),
+      compile(postkit, '::postkit-figure{src="/a.png" alt=""}'),
     ).toThrow(/Figure isn't enabled/);
-    expect(() => compile(postkit.remarkPlugins, '<Figure />')).toThrow(
+    expect(() => compile(postkit, '<Figure />')).toThrow(
       /Figure isn't enabled/,
     );
   });
 
-  it('renders every built-in on the headless renderer (chakraOnly is empty)', () => {
+  it('renders every built-in on the headless renderer (chakraOnly is empty)', async () => {
     // 03 step 6 gave the interactive components headless views, so nothing is
     // chakra-only any more: Tabs and Poll are part of their kits headlessly too.
     const postkit = createPostkit({ kits: [article, engagement] });
@@ -218,9 +257,11 @@ describe('createPostkit', () => {
       support: { headless: 'supported' },
     });
     expect(() =>
-      compile(postkit.remarkPlugins, ':::postkit-tabs{items="[]"}\nBody\n:::'),
+      compile(postkit, ':::postkit-tabs{items="[]"}\nBody\n:::'),
     ).not.toThrow();
-    expect(() => render(postkit, 'Tabs')).not.toThrow();
+    await expect(render(postkit, 'Tabs')).resolves.toContain(
+      'data-postkit-component="Tabs"',
+    );
   });
 
   it('builds a v2 manifest of exactly the set', () => {

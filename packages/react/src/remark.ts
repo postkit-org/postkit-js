@@ -1,9 +1,14 @@
 /**
  * `@postkit/react/remark`: the build-time Markdown tooling, with no React
- * components. `createPostkit().remarkPlugins` is built from it.
+ * components. `postkitRemarkPlugins(postkit)` gives a `createPostkit` set its
+ * plugins.
  *
  * @module
  */
+export {
+  postkitRemarkPlugins,
+  type PostkitRemarkPluginsOptions,
+} from './lib/postkit-remark-plugins.js';
 export {
   createPostkitRemarkPlugins,
   createPostkitRemarkPreset,

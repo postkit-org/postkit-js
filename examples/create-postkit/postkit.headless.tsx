@@ -1,5 +1,6 @@
 import { createPostkit, type PostkitSlotProps } from '@postkit/react';
 import { article, media, technical } from '@postkit/react/kits';
+import { postkitRemarkPlugins } from '@postkit/react/remark';
 
 import { showcaseDefinition } from '../component-definition/showcase.definition';
 import { HeadlessShowcase } from './showcase';
@@ -11,13 +12,10 @@ function InkMark(props: PostkitSlotProps) {
 
 /**
  * The headless set: three kits plus the site's own Showcase. Omitting
- * `renderer` uses `@postkit/react`'s views; style them with `styles.css` or
- * the site's CSS on the anatomy.
+ * `renderer` uses `@postkit/react`'s views, each loaded the first time a page
+ * renders it; style them with `styles.css` or the site's CSS on the anatomy.
  */
 export const postkit = createPostkit({
-  // Chakra-only components in these kits (CodeBlock, CodeGroup, Tabs,
-  // Carousel) stay out of the manifest, and using one fails the build with
-  // an error naming it.
   kits: [article, technical, media],
   components: [{ definition: showcaseDefinition, view: HeadlessShowcase }],
   defaults: {
@@ -28,8 +26,11 @@ export const postkit = createPostkit({
   link: { openExternalInNewTab: true },
 });
 
-/** For an MDX compiler: `remarkPlugins` and the `components` map. */
-export const mdxOptions = { remarkPlugins: postkit.remarkPlugins };
+/**
+ * For an MDX compiler (build-time code): the Remark plugins for this set, so
+ * directives validate against exactly the enabled components.
+ */
+export const mdxOptions = { remarkPlugins: postkitRemarkPlugins(postkit) };
 export const mdxComponents = postkit.mdxComponents;
 
 export function HeadlessArticle({ children }: { readonly children: string }) {
