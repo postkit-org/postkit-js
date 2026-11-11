@@ -15,6 +15,7 @@
     "@postkit/chakra": "0.2.0",
     "@postkit/content": "0.0.1",
     "@postkit/next": "0.2.0",
+    "@postkit/react": "0.2.0",
     "@postkit/shiki": "0.2.0",
     "@postkit/site-emails": "0.0.1",
     "@postkit/site-feeds": "0.0.1",

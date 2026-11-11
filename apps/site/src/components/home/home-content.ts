@@ -37,11 +37,6 @@ export interface RendererTab {
   /** The package (or app) that draws it. */
   readonly pkg: string;
   readonly description: string;
-  /**
-   * The release the live view arrives in, while the tab shows a static render captured from
-   * the boards (06 PK-030: Headless needs 03 step 7, Editor needs step 8).
-   */
-  readonly staticUntil?: string;
 }
 
 export const rendererTabs: readonly RendererTab[] = [
@@ -51,7 +46,6 @@ export const rendererTabs: readonly RendererTab[] = [
     pkg: '@postkit/react',
     description:
       'Semantic markup and the named parts, with a quiet stylesheet you can keep or replace with your own CSS.',
-    staticUntil: '0.3.0',
   },
   {
     value: 'chakra',
@@ -73,6 +67,5 @@ export const rendererTabs: readonly RendererTab[] = [
     pkg: 'Prismark',
     description:
       'Rendered inline while you write, selectable, with its properties in a panel. The file stays plain MDX.',
-    staticUntil: '0.3.0',
   },
 ];

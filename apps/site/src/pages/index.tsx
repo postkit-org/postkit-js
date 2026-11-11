@@ -19,6 +19,11 @@ import {
   renderEmailArticle,
   type HomeStats,
 } from '../components/home/home-data.server';
+import {
+  renderEditorArticle,
+  renderHeadlessArticle,
+} from '../components/home/renderer-frames.server';
+import type { RendererDocuments } from '../components/home/renderer-panel';
 import { PageMeta, WebSiteJsonLd } from '../components/layout';
 import { trackGoal } from '../lib/analytics';
 import { assertSearchReady } from '../lib/search-records';
@@ -26,7 +31,8 @@ import { homeShareImage, shareImageMeta } from '../lib/share-images';
 
 interface HomePageProps {
   readonly stats: HomeStats;
-  readonly emailHtml: string;
+  /** The renderer panel's framed documents (Headless, Email, Editor), built here. */
+  readonly rendererDocuments: RendererDocuments;
   readonly authoringDocument: PostkitDocument;
 }
 
@@ -38,7 +44,11 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   return {
     props: {
       stats: getHomeStats(),
-      emailHtml: await renderEmailArticle(),
+      rendererDocuments: {
+        headless: renderHeadlessArticle(),
+        email: await renderEmailArticle(),
+        editor: renderEditorArticle(),
+      },
       authoringDocument: parseAuthoringExample(),
     },
   };
@@ -46,7 +56,7 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
 
 export default function IndexPage({
   stats,
-  emailHtml,
+  rendererDocuments,
   authoringDocument,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -63,7 +73,7 @@ export default function IndexPage({
       <HeroArticle />
       <WritersSection document={authoringDocument} />
       <KitSections />
-      <RendererPanel emailHtml={emailHtml} />
+      <RendererPanel documents={rendererDocuments} />
       <CustomizeSection />
       <StatsSection
         components={stats.components}

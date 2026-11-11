@@ -41,12 +41,17 @@ interface PackageJson {
 }
 
 /**
- * The Nx layer tags a renderer package carries. `@postkit/chakra` is `layer:chakra` and
- * `@postkit/email` is `layer:renderer` (AGENTS.md: core and unfurl → renderers → adapters).
- * Adapters (`layer:adapter`: next, astro, the routers, shiki) and foundations (`core`,
- * `unfurl`) don't draw components, so they don't count.
+ * The Nx layer tags a renderer package carries. The headless `@postkit/react` is
+ * `layer:react`, `@postkit/chakra` is `layer:chakra` and `@postkit/email` is `layer:renderer`
+ * (AGENTS.md: core and unfurl → react (headless) → renderers → adapters). Adapters
+ * (`layer:adapter`: next, astro, the routers, shiki), foundations (`core`, `unfurl`) and
+ * tooling (`cli`, `nx`) don't draw components, so they don't count.
  */
-const RENDERER_LAYER_TAGS = new Set(['layer:renderer', 'layer:chakra']);
+const RENDERER_LAYER_TAGS = new Set([
+  'layer:react',
+  'layer:chakra',
+  'layer:renderer',
+]);
 
 function readJson(file: string): PackageJson {
   return JSON.parse(readFileSync(file, 'utf8')) as PackageJson;
@@ -67,9 +72,8 @@ function findWorkspaceRoot(start = process.cwd()): string {
 
 /**
  * "Renderers" on Home: the packages in `packages/*` that are published (`npm:public`, not
- * `private`) and tagged with a renderer layer. Today that's `@postkit/chakra` and
- * `@postkit/email`; the headless `@postkit/react` (03 step 7) counts as soon as it lands
- * with the same tag.
+ * `private`) and tagged with a renderer layer: `@postkit/react` (headless),
+ * `@postkit/chakra` and `@postkit/email`.
  */
 export function countRendererPackages(root = findWorkspaceRoot()): number {
   const packagesDirectory = path.join(root, 'packages');
