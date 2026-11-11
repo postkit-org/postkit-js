@@ -91,7 +91,13 @@ describe('createPostkitShikiAdapter', () => {
     async function highlightAll(
       engine: 'javascript' | 'oniguruma' | undefined,
     ) {
-      const adapter = createPostkitShikiAdapter({ languages, engine });
+      // No per-line time limit: under a busy runner Shiki's 500ms default stops tokenizing
+      // mid-line, and the engines would differ for reasons that have nothing to do with them.
+      const adapter = createPostkitShikiAdapter({
+        languages,
+        engine,
+        highlightOptions: { tokenizeTimeLimit: 0 },
+      });
       const context = await adapter.loadContext?.();
       try {
         const highlight = adapter.getHighlighter(context);

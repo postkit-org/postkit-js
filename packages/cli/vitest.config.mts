@@ -8,6 +8,9 @@ export default defineConfig(() => ({
     watch: false,
     globals: true,
     environment: 'node',
+    // The command specs run the CLI against a real fixture project; 5s is too tight when
+    // `npm run check` runs every package's tests at once.
+    testTimeout: 30_000,
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
