@@ -51,9 +51,9 @@ describe('Postkit theme contract', () => {
     >();
   });
 
-  it('shares the Callout anatomy with Aside', () => {
+  it('shares the Callout anatomy, less the tone mark, with Aside (D14)', () => {
     expect(postkitBuiltInDefinitions.Aside.slots).toEqual(
-      postkitBuiltInDefinitions.Callout.slots,
+      postkitBuiltInDefinitions.Callout.slots.filter((slot) => slot !== 'icon'),
     );
     expect(postkitBuiltInDefinitions.Aside.themeVariants).toEqual(
       postkitBuiltInDefinitions.Callout.themeVariants,

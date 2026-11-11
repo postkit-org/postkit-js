@@ -94,6 +94,9 @@ describe('@postkit/email components', () => {
     expect(html).toContain('data-postkit-component="Aside"');
     expect(html).toContain('aria-label="tip"');
     expect(html).not.toContain('font-weight:bold');
+    // No tone mark (D14): the tone shows only as the border and tint.
+    expect(html).not.toContain('data-postkit-part="icon"');
+    expect(html).not.toContain('>✓<');
   });
 
   it('renders calls to action as bulletproof links without client behavior', async () => {

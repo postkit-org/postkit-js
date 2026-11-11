@@ -18,7 +18,8 @@ export const asideDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: ['root', 'icon', 'content', 'title', 'body'],
+  // The Callout anatomy without `icon`: Aside has no tone mark (D14).
+  slots: ['root', 'content', 'title', 'body'],
   example: {
     children: 'Example content.',
   },

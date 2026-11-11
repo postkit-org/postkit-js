@@ -1,16 +1,16 @@
 import { asideDefinition } from '@postkit/core/components';
-import type { ReactNode } from 'react';
 
 import { postkitView, type PostkitViewProps } from '../../lib/view.js';
 import { renderPostkitCallout } from '../callout/callout.js';
 
-export type AsideProps = PostkitViewProps<typeof asideDefinition> & {
-  /** Replaces the tone's mark. */
-  readonly icon?: ReactNode;
-};
+export type AsideProps = PostkitViewProps<typeof asideDefinition>;
 
-/** A semantic article aside: the Callout anatomy under its own name. */
+/**
+ * A semantic article aside, the authored sidenote (D14): the Callout
+ * anatomy under its own name, without the tone mark in any placement or
+ * size. `tone` still sets `data-tone` for styling.
+ */
 export const Aside = postkitView<typeof asideDefinition, AsideProps>(
   asideDefinition,
-  renderPostkitCallout,
+  ({ props, part }) => renderPostkitCallout({ props, part, mark: false }),
 );

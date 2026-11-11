@@ -193,6 +193,12 @@ describe('Postkit anatomy parity between @postkit/react and @postkit/chakra', ()
             'data-variant': variant ?? 'subtle',
             'data-size': size ?? 'md',
           });
+          // Aside is the authored sidenote: no tone mark (D14).
+          expect(
+            anatomy[0]?.children.map(
+              (child) => child.attributes['data-postkit-part'],
+            ),
+          ).toEqual(name === 'Aside' ? ['content'] : ['icon', 'content']);
         }
       }
     },
