@@ -55,18 +55,88 @@ function withPostkitColorReplacements(
   return { ...options, colorReplacements: merged };
 }
 
+type CodeBlockHighlighter = ReturnType<CodeBlockAdapter['getHighlighter']>;
+
 export type PostkitShikiHighlightOptions = Omit<
   NonNullable<ShikiAdapterOptions<Highlighter>['highlightOptions']>,
   'lang' | 'theme'
 >;
 
 export interface CreatePostkitShikiAdapterOptions {
-  /** Bundled Shiki grammars to load. Common Postkit content languages are used by default. */
+  /**
+   * Bundled Shiki grammars to load. Common Postkit content languages are used by default.
+   * A code block in any other language renders as plain text instead of failing.
+   */
   readonly languages?: readonly BundledLanguage[];
   /** Bundled Shiki themes selected from Chakra's current color scheme. */
   readonly themes?: PostkitShikiThemes;
   /** Additional Shiki options, such as custom transformers, applied during highlighting. */
   readonly highlightOptions?: PostkitShikiHighlightOptions;
+}
+
+/** Shiki's built-in plain-text languages, which need no grammar. */
+const plainLanguages = new Set(['text', 'plaintext', 'txt', 'plain', 'ansi']);
+
+declare const process: { readonly env: Record<string, string | undefined> };
+
+function isDevelopment(): boolean {
+  try {
+    return process.env['NODE_ENV'] !== 'production';
+  } catch {
+    return false;
+  }
+}
+
+const warned = new Set<string>();
+
+function warnOnce(key: string, message: string, error?: unknown) {
+  if (warned.has(key) || !isDevelopment()) return;
+  warned.add(key);
+  // Development-only guidance; production builds stay silent.
+  console.warn(`[@postkit/shiki] ${message}`, ...(error ? [error] : []));
+}
+
+/**
+ * Wraps Chakra's Shiki highlighter so a block never takes the page down: a language
+ * that isn't loaded, or a grammar that fails to tokenize, renders as escaped plain
+ * text in the same code block (with a development-only warning) instead of throwing
+ * during render.
+ */
+function withPlainTextFallback(
+  highlight: CodeBlockHighlighter,
+  highlighter: Pick<Highlighter, 'getLoadedLanguages'>,
+): CodeBlockHighlighter {
+  let loaded: ReadonlySet<string> | undefined;
+  const resolveLanguage = (language: string | undefined): string => {
+    if (!language) return 'text';
+    loaded ??= new Set(highlighter.getLoadedLanguages());
+    if (plainLanguages.has(language) || loaded.has(language)) return language;
+    const lower = language.toLowerCase();
+    if (plainLanguages.has(lower) || loaded.has(lower)) return lower;
+    warnOnce(
+      `language:${language}`,
+      `No grammar is loaded for "${language}", so its code blocks render as plain text. Add it to createPostkitShikiAdapter({ languages }).`,
+    );
+    return 'text';
+  };
+
+  return (props) => {
+    const language = resolveLanguage(props.language);
+    try {
+      return highlight({ ...props, language });
+    } catch (error) {
+      warnOnce(
+        `error:${language}`,
+        `Highlighting "${language}" failed, so the block renders as plain text.`,
+        error,
+      );
+      try {
+        return highlight({ ...props, language: 'text' });
+      } catch {
+        return { code: props.code, highlighted: false };
+      }
+    }
+  };
 }
 
 /**
@@ -79,7 +149,7 @@ export function createPostkitShikiAdapter(
   const languages = options.languages ?? postkitShikiLanguages;
   const themes = options.themes ?? postkitShikiThemes;
 
-  return createShikiAdapter<Highlighter>({
+  const adapter = createShikiAdapter<Highlighter>({
     async load() {
       const { createHighlighter } = await import('shiki');
 
@@ -96,4 +166,12 @@ export function createPostkitShikiAdapter(
       light: themes.light,
     },
   });
+
+  return {
+    ...adapter,
+    getHighlighter(context: Highlighter | null | undefined) {
+      const highlight = adapter.getHighlighter(context);
+      return context ? withPlainTextFallback(highlight, context) : highlight;
+    },
+  };
 }

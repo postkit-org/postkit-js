@@ -68,6 +68,153 @@ describe('createPostkitShikiAdapter', () => {
     }
   });
 
+  describe('a language that is not loaded', () => {
+    async function withAdapter<T>(
+      run: (
+        highlight: ReturnType<
+          ReturnType<typeof createPostkitShikiAdapter>['getHighlighter']
+        >,
+      ) => T,
+      options?: Parameters<typeof createPostkitShikiAdapter>[0],
+    ): Promise<T> {
+      const adapter = createPostkitShikiAdapter({
+        languages: ['typescript'],
+        ...options,
+      });
+      const context = await adapter.loadContext?.();
+      try {
+        return run(adapter.getHighlighter(context));
+      } finally {
+        adapter.unloadContext?.(context);
+      }
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('falls back to escaped plain text instead of throwing', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {
+        /* silenced */
+      });
+      const result = await withAdapter((highlight) =>
+        highlight({
+          code: '<style>a { color: red; }</style>\n<p>Hi</p>',
+          language: 'html',
+          meta: { colorScheme: 'dark', highlightLines: [2] },
+        }),
+      );
+
+      expect(result.highlighted).toBe(true);
+      // Escaped, never injected as markup.
+      expect(result.code).not.toContain('<style>');
+      expect(result.code).not.toContain('<p>');
+      expect(result.code).toContain('&#x3C;style>');
+      // Still a code block: one span per line, with Chakra's line metadata.
+      expect(result.code).toContain('data-line="1"');
+      expect(result.code).toMatch(/data-line="2"[^>]*data-highlight/);
+      // No token colours: plain text takes the code block's own colour.
+      expect(result.code).not.toContain('style=');
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0]?.[0])).toContain('"html"');
+    });
+
+    it('warns once per language in development', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {
+        /* silenced */
+      });
+      await withAdapter((highlight) => {
+        highlight({ code: 'a: 1', language: 'yaml-unloaded' });
+        highlight({ code: 'b: 2', language: 'yaml-unloaded' });
+      });
+
+      expect(warn).toHaveBeenCalledTimes(1);
+    });
+
+    it('stays silent in production', async () => {
+      vi.stubEnv('NODE_ENV', 'production');
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {
+        /* silenced */
+      });
+      try {
+        const result = await withAdapter((highlight) =>
+          highlight({ code: 'x = 1', language: 'python-in-production' }),
+        );
+        expect(result.highlighted).toBe(true);
+        expect(warn).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllEnvs();
+      }
+    });
+
+    it('treats a missing language as plain text', async () => {
+      const result = await withAdapter((highlight) =>
+        highlight({ code: 'plain <b>', meta: { colorScheme: 'light' } }),
+      );
+
+      expect(result.highlighted).toBe(true);
+      expect(result.code).toContain('&#x3C;b>');
+    });
+
+    it('matches loaded languages and aliases case-insensitively', async () => {
+      const result = await withAdapter((highlight) =>
+        highlight({ code: 'const a = 1;', language: 'TS' }),
+      );
+
+      expect(result.highlighted).toBe(true);
+      expect(result.code).toContain('color:');
+    });
+
+    it('falls back to plain text when highlighting throws', async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {
+        /* silenced */
+      });
+      const result = await withAdapter(
+        (highlight) =>
+          highlight({ code: 'const a = 1;', language: 'typescript' }),
+        {
+          highlightOptions: {
+            transformers: [
+              {
+                preprocess(_code, options) {
+                  if (options.lang === 'typescript') {
+                    throw new Error('grammar failure');
+                  }
+                },
+              },
+            ],
+          },
+        },
+      );
+
+      expect(result.highlighted).toBe(true);
+      expect(result.code).toContain('data-line="1"');
+      expect(result.code).not.toContain('style=');
+    });
+
+    it('returns the raw code when even plain text fails', async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {
+        /* silenced */
+      });
+      const result = await withAdapter(
+        (highlight) => highlight({ code: '<b>', language: 'typescript' }),
+        {
+          highlightOptions: {
+            transformers: [
+              {
+                preprocess() {
+                  throw new Error('always fails');
+                },
+              },
+            ],
+          },
+        },
+      );
+
+      expect(result).toEqual({ code: '<b>', highlighted: false });
+    });
+  });
+
   describe('comment colour on the dark code surface', () => {
     function rgb(hex: string): [number, number, number] {
       const value = hex.replace('#', '');

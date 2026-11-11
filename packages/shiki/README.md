@@ -35,6 +35,11 @@ The default preset loads `astro`, `bash`, `json`, `markdown`, `mdx`, `tsx`, and
 `typescript`, plus GitHub light and dark themes. Shiki aliases such as `sh`,
 `md`, and `ts` work through their canonical grammars.
 
+A code block in a language that isn't loaded renders as escaped plain text in
+the same code block, with its line metadata, rather than throwing. In
+development the adapter logs one warning per missing language; add its grammar
+to `languages` to highlight it.
+
 Postkit's code surface is dark in both colour modes. GitHub Dark's comment grey
 (`#6a737d`) is below 4.5:1 there, so the adapter maps it to `#959da5` with
 Shiki's `colorReplacements`, scoped to `github-dark`; every other token colour
