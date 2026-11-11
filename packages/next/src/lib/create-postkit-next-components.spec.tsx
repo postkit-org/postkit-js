@@ -1,5 +1,11 @@
-import { PostkitProvider, type PostkitLinkProps } from '@postkit/chakra';
+import {
+  PostkitProvider,
+  postkitChakraViews,
+  type PostkitLinkProps,
+} from '@postkit/chakra';
+import type { ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { prerenderToNodeStream } from 'react-dom/static';
 import { createPostkitNextComponents } from './create-postkit-next-components.js';
 
 vi.mock('next/link.js', () => ({
@@ -68,5 +74,48 @@ describe('Postkit Next.js components', () => {
     });
 
     expect(components.a).toBe(SiteLink);
+  });
+
+  it('loads each component view on first render, with complete server HTML', async () => {
+    const components = createPostkitNextComponents();
+    const Callout = components['Callout'] as ComponentType<
+      Record<string, unknown>
+    > & { readonly preload?: () => Promise<unknown> };
+
+    // Lazy: the map doesn't import the views.
+    expect(typeof Callout.preload).toBe('function');
+    expect(Callout).not.toBe(postkitChakraViews['Callout']);
+
+    // The Pages Router waits for Suspense (`allReady`), as this render does.
+    const { prelude } = await prerenderToNodeStream(
+      <PostkitProvider>
+        <Callout tone="tip" title="Keep the content">
+          Change the renderer.
+        </Callout>
+      </PostkitProvider>,
+    );
+    let html = '';
+    for await (const chunk of prelude) html += String(chunk);
+
+    expect(html).toContain('data-postkit-component="Callout"');
+    expect(html).toContain('Keep the content');
+  });
+
+  it('takes the eager views for a synchronous render', () => {
+    const components = createPostkitNextComponents({
+      components: postkitChakraViews,
+    });
+    const Callout = components['Callout'] as ComponentType<
+      Record<string, unknown>
+    >;
+
+    expect(Callout).toBe(postkitChakraViews['Callout']);
+    expect(
+      renderToStaticMarkup(
+        <PostkitProvider>
+          <Callout title="Now">Body</Callout>
+        </PostkitProvider>,
+      ),
+    ).toContain('data-postkit-component="Callout"');
   });
 });

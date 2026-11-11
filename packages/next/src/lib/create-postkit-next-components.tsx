@@ -1,6 +1,6 @@
 import {
+  createPostkitLazyMdxComponents,
   createPostkitLink,
-  createPostkitMdxComponents,
   type CreatePostkitLinkOptions,
   type PostkitLinkComponent,
   type PostkitLinkProps,
@@ -52,13 +52,24 @@ export function createPostkitNextLink(
   });
 }
 
+/**
+ * The MDX components for Next.js: Postkit's prose and component views, with
+ * internal links through next/link. `components` take final precedence.
+ *
+ * Each component view loads the first time a page renders it
+ * (`createPostkitLazyMdxComponents`), so a page only downloads the views its
+ * content uses. The server render waits for them, so the HTML is complete,
+ * and the browser keeps that HTML in place until a view arrives, so nothing
+ * shifts. For a synchronous render (`renderToStaticMarkup`), pass the eager
+ * views: `createPostkitNextComponents({ components: postkitChakraViews })`.
+ */
 export function createPostkitNextComponents(
   options: PostkitNextComponentsOptions = {},
 ): MDXComponents {
   const link = createPostkitNextLink(options.link);
 
   return {
-    ...createPostkitMdxComponents({ link }),
+    ...createPostkitLazyMdxComponents({ link }),
     ...options.components,
-  };
+  } as MDXComponents;
 }

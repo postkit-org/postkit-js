@@ -41,6 +41,13 @@ export function useMDXComponents(): MDXComponents {
 }
 ```
 
+Each Postkit component in the map loads the first time a page renders it, so
+a page only downloads the components its content uses. Next.js waits for them
+on the server, so the HTML is complete, and the browser keeps that HTML in
+place until the component has loaded, so nothing shifts. For a synchronous
+render such as `renderToStaticMarkup`, pass the eager views:
+`createPostkitNextComponents({ components: postkitChakraViews })`.
+
 ## Mount the provider
 
 Mount `PostkitProvider` in the application's provider tree:
