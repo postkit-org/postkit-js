@@ -58,6 +58,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
+    "@types/hast": "^3.0.4",
     "hast-util-from-html": "^2.0.3",
     "hast-util-raw": "^9.1.0",
     "mdast-util-directive": "^3.1.0",

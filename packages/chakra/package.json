@@ -68,8 +68,7 @@
     "@postkit/core": "0.2.0",
     "@postkit/react": "0.2.0",
     "@postkit/unfurl": "0.2.0",
-    "tslib": "^2.3.0",
-    "unified": "^11.0.5"
+    "tslib": "^2.3.0"
   },
   "peerDependencies": {
     "@chakra-ui/react": ">=3.29.0 <4",
@@ -78,7 +77,8 @@
   "devDependencies": {
     "@testing-library/react": "^16.3.2",
     "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.2"
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5"
   },
   "publishConfig": {
     "access": "public",
