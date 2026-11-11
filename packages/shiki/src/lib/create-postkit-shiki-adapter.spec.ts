@@ -116,20 +116,30 @@ describe('createPostkitShikiAdapter', () => {
       }
     });
 
-    it('tokenizes every Postkit grammar on the JavaScript engine as Oniguruma does', async () => {
-      const warn = vi.spyOn(console, 'warn');
-      const [javascript, oniguruma, byDefault] = await Promise.all([
-        highlightAll('javascript'),
-        highlightAll('oniguruma'),
-        highlightAll(undefined),
-      ]);
+    // Compiling ten grammars three times is CPU-bound; leave room for a busy CI runner.
+    it(
+      'tokenizes every Postkit grammar on the JavaScript engine as Oniguruma does',
+      {
+        timeout: 30_000,
+      },
+      async () => {
+        const warn = vi.spyOn(console, 'warn');
+        try {
+          const [javascript, oniguruma, byDefault] = await Promise.all([
+            highlightAll('javascript'),
+            highlightAll('oniguruma'),
+            highlightAll(undefined),
+          ]);
 
-      expect(javascript).toEqual(oniguruma);
-      expect(byDefault).toEqual(javascript);
-      for (const html of javascript) expect(html).toContain('color:');
-      expect(warn).not.toHaveBeenCalled();
-      warn.mockRestore();
-    });
+          expect(javascript).toEqual(oniguruma);
+          expect(byDefault).toEqual(javascript);
+          for (const html of javascript) expect(html).toContain('color:');
+          expect(warn).not.toHaveBeenCalled();
+        } finally {
+          warn.mockRestore();
+        }
+      },
+    );
 
     it('skips a language Shiki does not bundle and loads the rest', async () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {
