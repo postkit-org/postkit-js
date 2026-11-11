@@ -3,8 +3,9 @@
 import { stepsDefinition } from '@postkit/core/components';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitProvider } from '../../lib/provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../../lib/theme.js';
+import { PostkitProvider } from '../../lib/postkit-provider.js';
+import { createPostkitSystem } from '../../lib/create-postkit-system.js';
+import { postkitDefaultTheme } from '../../lib/theme.js';
 import { Steps } from './steps.js';
 import { postkitStepsRecipe, postkitStepsSlots } from './steps.recipe.js';
 

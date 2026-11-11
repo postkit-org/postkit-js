@@ -4,12 +4,9 @@ import { defaultSystem } from '@chakra-ui/react';
 import { terminalDefinition } from '@postkit/core/components';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitProvider } from '../../lib/provider.js';
-import {
-  createPostkitSystem,
-  createPostkitTheme,
-  postkitDefaultTheme,
-} from '../../lib/theme.js';
+import { PostkitProvider } from '../../lib/postkit-provider.js';
+import { createPostkitSystem } from '../../lib/create-postkit-system.js';
+import { createPostkitTheme, postkitDefaultTheme } from '../../lib/theme.js';
 import { Terminal } from './terminal.js';
 
 function render(

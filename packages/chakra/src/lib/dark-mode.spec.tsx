@@ -10,15 +10,12 @@ import { render } from '@testing-library/react';
 
 import { Callout } from '../components/callout/callout.js';
 import { Terminal } from '../components/terminal/terminal.js';
-import { PostkitProvider } from './provider.js';
+import { PostkitProvider } from './postkit-provider.js';
 import { postkitCodeBlockRecipe } from '../components/code-block/code-block.recipe.js';
 import { postkitCodeGroupRecipe } from '../components/code-group/code-group.recipe.js';
 import { postkitTerminalRecipe } from '../components/terminal/terminal.recipe.js';
-import {
-  createPostkitSystem,
-  postkitDefaultTheme,
-  postkitRecipeKeys,
-} from './theme.js';
+import { createPostkitSystem } from './create-postkit-system.js';
+import { postkitDefaultTheme, postkitRecipeKeys } from './theme.js';
 
 globalThis.structuredClone ??= <T,>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);

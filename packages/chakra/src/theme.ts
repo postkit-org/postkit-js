@@ -1,5 +1,5 @@
+export { createPostkitSystem } from './lib/create-postkit-system.js';
 export {
-  createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
   postkitRecipeKeys,

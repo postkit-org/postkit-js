@@ -28,7 +28,7 @@ import { Disclosure } from '../../components/disclosure/disclosure.js';
 import { Gallery } from '../../components/gallery/gallery.js';
 import { Steps } from '../../components/steps/steps.js';
 import { Tabs } from '../../components/tabs/tabs.js';
-import { PostkitProvider } from '../provider.js';
+import { PostkitProvider } from '../postkit-provider.js';
 import { CodeBlock } from '../../components/code-block/code-block.js';
 import { CodeGroup } from '../../components/code-group/code-group.js';
 import { Diff } from '../../components/diff/diff.js';

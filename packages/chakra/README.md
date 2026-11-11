@@ -39,7 +39,8 @@ The package is ESM-only and includes TypeScript declarations.
 - Chakra-backed article and publishing components
 - `chakra`, the renderer for `createPostkit` from `@postkit/react`, and
   `chakraLazy`, the same renderer with views that load on first render
-- `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
+- `PostkitProvider`, `PostkitHostProvider`, `createPostkitSystem`, and
+  `createPostkitTheme`
 - `createPostkitMdxComponents` and `createPostkitLazyMdxComponents`
 - `postkitChakraViewLoaders` (one loader per view), `postkitChakraLazyViews`
   and `postkitChakraViewNames`

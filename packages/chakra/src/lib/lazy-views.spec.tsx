@@ -16,7 +16,7 @@ import {
   createPostkitMdxComponents,
   postkitMdxComponents,
 } from './mdx-components.js';
-import { PostkitProvider } from './provider.js';
+import { PostkitProvider } from './postkit-provider.js';
 import {
   postkitChakraViewLoaders,
   postkitChakraViewNames,
