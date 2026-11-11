@@ -91,7 +91,7 @@ export default function LicensingPage({
           {/* Scrolls sideways on phones, so it takes focus (keyboard scrolling, WCAG 2.1.1). */}
           <chakra.div
             role="region"
-            aria-label="Built on"
+            aria-label="Dependencies table"
             tabIndex={0}
             marginTop="20px"
             overflowX="auto"

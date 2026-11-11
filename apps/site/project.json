@@ -119,7 +119,14 @@
       }
     },
     "build": {
-      "dependsOn": ["^build", "feeds", "icons", "og-images", "renderer-styles"],
+      "dependsOn": [
+        "^build",
+        "^typecheck",
+        "feeds",
+        "icons",
+        "og-images",
+        "renderer-styles"
+      ],
       "inputs": [
         "default",
         "^default",

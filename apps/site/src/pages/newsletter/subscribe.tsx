@@ -5,7 +5,11 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
-import { PageMeta, ResultPage } from '../../components/layout';
+import {
+  BreadcrumbJsonLd,
+  PageMeta,
+  ResultPage,
+} from '../../components/layout';
 import {
   FeedLinks,
   releaseFeeds,
@@ -186,6 +190,7 @@ export default function SubscribePage({
         description="Follow along. One email per Postkit release, nothing else."
         path={PATH}
       />
+      <BreadcrumbJsonLd items={[{ name: 'Release emails', path: PATH }]} />
       {view === 'confirmed' || view === 'expired' ? (
         <Head>
           <meta key="robots" name="robots" content="noindex" />
