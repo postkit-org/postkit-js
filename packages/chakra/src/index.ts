@@ -285,6 +285,16 @@ export {
   type PostkitMdxComponents,
 } from './lib/mdx-components.js';
 export {
+  createPostkitLazyMdxComponents,
+  type PostkitLazyMdxComponentMap,
+  type PostkitLazyMdxComponents,
+} from './lib/lazy-mdx-components.js';
+export {
+  postkitChakraViewLoaders,
+  postkitChakraViewNames,
+  type PostkitChakraViewName,
+} from './lib/view-loaders.js';
+export {
   DocumentRenderer,
   createPostkitDocumentComponents,
   postkitDocumentComponents,
@@ -436,6 +446,10 @@ export {
   type PostkitTypography,
 } from './lib/theme.js';
 export * from './lib/chakra-renderer.js';
+export {
+  chakraLazy,
+  postkitChakraLazyViews,
+} from './lib/chakra-lazy-renderer.js';
 export { Device, type DeviceProps } from './components/device/device.js';
 export {
   postkitDeviceRecipe,

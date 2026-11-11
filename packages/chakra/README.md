@@ -37,9 +37,12 @@ The package is ESM-only and includes TypeScript declarations.
 ## What it exports
 
 - Chakra-backed article and publishing components
-- `chakra`, the renderer for `createPostkit` from `@postkit/react`
+- `chakra`, the renderer for `createPostkit` from `@postkit/react`, and
+  `chakraLazy`, the same renderer with views that load on first render
 - `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
-- `createPostkitMdxComponents`
+- `createPostkitMdxComponents` and `createPostkitLazyMdxComponents`
+- `postkitChakraViewLoaders` (one loader per view), `postkitChakraLazyViews`
+  and `postkitChakraViewNames`
 - `DocumentRenderer` and the `@postkit/chakra/document` interchange entry point
 - `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
 - `postkitDeclarationManifest` for editor integrations
@@ -63,6 +66,30 @@ const postkit = createPostkit({
 });
 
 <postkit.Provider system={siteSystem}>{article}</postkit.Provider>;
+```
+
+### Load views per component
+
+`chakra` and `createPostkitMdxComponents` import every view, so a page ships
+all of them. To download only the views a page's content uses, use the lazy
+forms: `renderer: chakraLazy` for `createPostkit`, or
+`createPostkitLazyMdxComponents` (same options as `createPostkitMdxComponents`)
+for an MDX map. `@postkit/next`'s `createPostkitNextComponents` uses it.
+
+Each view loads the first time it renders, inside its own Suspense boundary. A
+server render that waits for Suspense (`renderToReadableStream` or
+`renderToPipeableStream`, as Next.js uses) still writes the whole view, and the browser keeps that HTML in place until the
+view has loaded, so nothing shifts. A synchronous `renderToStaticMarkup`
+renders a view that hasn't loaded as nothing: call its `preload()` first, or
+use the eager views. `postkitChakraViewLoaders` has one loader per view for
+building your own lazy views.
+
+```tsx
+import { chakraLazy } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+const postkit = createPostkit({ renderer: chakraLazy, kits: [article, media] });
 ```
 
 Shared theme libraries should import from `@postkit/chakra/theme`, and Markdown
