@@ -36,6 +36,13 @@ directive syntax, and the Postkit transform. Pass options to adjust it:
 - `postkit: { output: 'hast' }` annotates directives for pipelines such as
   react-markdown that map `data.hName` to a registered component. The default
   output is MDX JSX nodes.
+- `postkit: { footnotes: { defaults } }` sets your site's footnote settings,
+  and `postkit: { footnotes: false }` leaves GFM's own footnotes alone (see
+  [Footnotes](#footnotes)).
+
+With [`createPostkit`](/docs/create-postkit), use `postkit.remarkPlugins`
+instead: it's the same preset, validating against the components your kits
+enable, and takes the same options through `createPostkit({ remark })`.
 
 The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root
@@ -63,6 +70,36 @@ JSON array written as a literal string:
 ```md
 ::postkit-tabs{items='[{"label":"npm","content":"npm install @postkit/chakra"},{"label":"pnpm","content":"pnpm add @postkit/chakra"}]'}
 ```
+
+## Footnotes
+
+Footnotes use GitHub's syntax: a `[^id]` reference in the text, and a `[^id]:`
+note anywhere in the file.
+
+```md
+Postkit numbers notes by first reference.[^order] A note can be referenced
+again.[^order]
+
+[^order]: The id is a name, never a number: the reader sees 1, 2, 3.
+```
+
+A short note can go inline with the `:footnote` text directive:
+
+```md
+Directives never run code.:footnote[They take literal strings and JSON.]
+```
+
+The notes close the document. To place the list somewhere else, or change its
+settings for one document, put a `::footnotes` leaf directive where it goes:
+
+```md
+::footnotes{title="Sources" numbering="lower-roman"}
+```
+
+They become Postkit's `Footnote` and `Footnotes` components whenever those
+are enabled; with `createPostkit`, they're in the `article` kit. A reference with no note fails the build, and a note nobody
+references is a warning. See [Footnotes](/docs/footnotes) for placement,
+settings and styling.
 
 ## Validation
 

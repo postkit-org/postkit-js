@@ -59,17 +59,19 @@ Install the package closest to the application boundary. Framework adapters
 use the Chakra-based React component system and add their native routing
 behavior.
 
-| Package                    | Choose it for                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
-| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
-| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
-| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
-| `@postkit/next`            | Next.js MDX and `next/link`                                                           |
-| `@postkit/react-router`    | React Router and router-native internal links                                         |
-| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
-| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
-| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
+| Package                    | Choose it for                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency         |
+| `@postkit/react`           | `createPostkit`, kits, and headless React views you style yourself                     |
+| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map  |
+| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                    |
+| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                      |
+| `@postkit/next`            | Next.js MDX and `next/link`                                                            |
+| `@postkit/react-router`    | React Router and router-native internal links                                          |
+| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                         |
+| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                       |
+| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                   |
+| `@postkit/cli`             | The `postkit` command: turn on kits, eject and scaffold components, write the manifest |
 
 Continue with [Installation](/docs/installation) for the install command that
 matches your stack, or go straight to the [Quick start](/docs/quick-start).

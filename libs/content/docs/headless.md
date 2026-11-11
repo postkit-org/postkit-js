@@ -4,7 +4,7 @@ summary: Render Postkit components as semantic, named parts and style them with 
 category: Renderers
 order: 1
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 `@postkit/react` is the headless renderer. Its views emit semantic markup,
@@ -22,11 +22,21 @@ compatibility shim.
 ## Install
 
 ```sh
-npm install @postkit/react
+npm install @postkit/react react react-dom
 ```
 
 It brings the definitions, the behaviour hooks, `createPostkit`, the kits, the
 MDX map and the directive plugin with it.
+
+The interactive components and hooks run on [Zag](https://zagjs.com). Zag is
+an optional peer dependency, so a Chakra site uses the copy Chakra already
+installs and never bundles two. A headless-only site installs it too:
+
+```sh
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
+
+The package is ESM-only and supports React 19.
 
 ## Set up
 
@@ -98,9 +108,43 @@ Load your own CSS after it, or leave it out and start from bare, named parts.
 The stylesheet follows the reader's colour mode. Its custom properties get dark
 values under `prefers-color-scheme: dark`, and under `.dark` and
 `[data-theme="dark"]` for hosts that switch themes with a class, such as
-next-themes.
+next-themes. A light-only site that ignores the reader's setting should mark
+its root `class="light"` or `data-theme="light"`, so the components stay light
+too. CodeBlock, CodeGroup and Terminal keep their dark surface in both modes.
 
-{/* TODO(0.3.0): link or list the full set of --postkit-* custom properties once styles.css lands. */}
+Set any of these on `:root`, or on any element for a subtree. The stylesheet
+declares them with zero specificity, so your own rule wins whatever the order.
+Give each colour you change a dark value too.
+
+| Group           | Custom properties                                                                                                                                                                                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Colour          | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone            | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
+| Chart           | `--postkit-chart-1` to `--postkit-chart-4`, for series without an authored colour                                                                                                                                                                            |
+| Code surface    | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
+| Type            | `--postkit-font-body` and `--postkit-font-heading` (unset: the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`                      |
+| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
+| Footnotes       | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
+
+```css
+:root {
+  --postkit-font-heading: 'Fraunces', serif;
+  --postkit-color-accent: #3b2f8f;
+}
+.dark {
+  --postkit-color-accent: #c9c1ff;
+}
+```
+
+Inside a component, `--postkit-inset` (the padding for its size) and
+`--postkit-tone` and `--postkit-tone-surface` (its resolved tone) are set on
+the root, so your part rules can reuse them.
+
+Every rule in the stylesheet is wrapped in `:where()`, so a single class or
+attribute selector beats it. To keep it below your own cascade layers, import
+it into one: `@import '@postkit/react/styles.css' layer(postkit);`. It scopes
+each component with CSS `@scope`, so a Callout's rules never reach a component
+inside it; browsers without `@scope` show the semantic markup unstyled.
 
 ## Behaviour
 
@@ -114,9 +158,33 @@ included: `Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`, `Poll`, `LinkPreview`,
 `NewsletterSignup`, `ShareActions` and `SocialPost` read their behaviour from
 `useTabs`, `useCarousel`, `useCodeCopy`, `useEmbedConsent`, `usePoll`,
 `useNewsletterSignup` and `useShareActions`. None is `chakra-only`.
+Footnotes use `useFootnotes` for their placement (see
+[Footnotes](/docs/footnotes)).
 
-## Who uses it
+The hooks are exported, so you can build your own interactive views on the
+same behaviour. Each returns the state plus prop getters to spread onto your
+elements:
 
-Prismark's editor previews render with `@postkit/react` and `styles.css`, so
-writers see the same parts your site styles. See
-[Writing in Prismark](/docs/writing-in-prismark).
+```tsx
+import { useTabs } from '@postkit/react';
+
+function Install() {
+  const api = useTabs({ values: ['npm', 'pnpm'] });
+  return (
+    <div {...api.getRootProps()}>
+      <div {...api.getListProps()} aria-label="Install">
+        <button {...api.getTriggerProps({ value: 'npm' })}>npm</button>
+        <button {...api.getTriggerProps({ value: 'pnpm' })}>pnpm</button>
+      </div>
+      <div {...api.getContentProps({ value: 'npm' })}>npm install</div>
+      <div {...api.getContentProps({ value: 'pnpm' })}>pnpm add</div>
+    </div>
+  );
+}
+```
+
+The headless package has no provider of its own, so views that need host
+configuration take it as props: `LinkPreview` and `SocialPost` take
+`resolveLink` and `socialServices`, `NewsletterSignup` takes `newsletter`,
+`ShareActions` takes `socialServices` and `onShare`, and `Poll` takes
+`onVote`.

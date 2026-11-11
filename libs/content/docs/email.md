@@ -4,7 +4,7 @@ summary: Send the post as a newsletter without rewriting it.
 category: Renderers
 order: 3
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 Your posts already have callouts, figures and footnotes. `@postkit/email`
@@ -33,25 +33,33 @@ Hand `html` and `text` to any provider. Postkit never sends anything itself.
 
 ## Options
 
-| Option        | Description                                                                        |
-| ------------- | ---------------------------------------------------------------------------------- |
-| `format`      | `'mdx'`, `'markdown'` or `'document'` (a `@postkit/core` document).                |
-| `theme`       | Optional Chakra Email theme. Defaults to the light Postkit email theme.            |
-| `baseUrl`     | Resolves relative links and images, such as `'https://example.com'`.               |
-| `components`  | Optional overrides, keyed like your MDX map: components by name, prose by element. |
-| `wrapper`     | Optional layout component for the header, footer and unsubscribe link.             |
-| `definitions` | The components the post may use. Defaults to every built-in.                       |
-| `url`         | The post on your site, where `link` fallbacks point.                               |
+| Option          | Description                                                                        |
+| --------------- | ---------------------------------------------------------------------------------- |
+| `format`        | `'mdx'`, `'markdown'` or `'document'` (a `@postkit/core` document).                |
+| `theme`         | Optional Chakra Email theme. Defaults to the light Postkit email theme.            |
+| `baseUrl`       | Resolves relative links and images, such as `'https://example.com'`.               |
+| `components`    | Optional overrides, keyed like your MDX map: components by name, prose by element. |
+| `wrapper`       | Optional layout component for the header, footer and unsubscribe link.             |
+| `definitions`   | The components the post may use. Defaults to every built-in.                       |
+| `url`           | The post on your site, where `link` fallbacks point.                               |
+| `audiences`     | The audiences this email is for, for `AudienceBoundary`.                           |
+| `newsletterUrl` | Where a `NewsletterSignup` would link.                                             |
+| `pretty`        | Indents the HTML, for review.                                                      |
 
+`format` defaults to `'markdown'` for a string and `'document'` for an object.
 It resolves to `{ html, text, warnings }`. To use only part of a post, as a
 digest does, call `parseEmailSource` first, pick the nodes you want, and pass
 the result with `format: 'document'`.
 
 ## How it works
 
-`renderEmail` parses the post with `@postkit/core`, using the same validation
-as your site. It maps each component to its email view, or to the component's
-declared fallback, and renders the result with Chakra Email's `render()`.
+`renderEmail` parses the post with Postkit's Remark preset and directive
+validation, as your site does, then `@postkit/core`'s safe MDX parser. Invalid props fail as they
+do on the site; unknown components, MDX code (`import`, `{expressions}`) and
+dangling footnotes become warnings instead. It maps each component to its
+email view, or to the component's declared fallback, and renders the result
+with Chakra Email's `render()`. The plain-text part comes from the same
+document, so it makes the same decisions as the HTML.
 
 It doesn't depend on a framework. Email is rendered in scripts, scheduled jobs
 and queue workers as often as in a page, so `renderEmail` lives in
@@ -68,7 +76,7 @@ mode.
 | Figure · Audio · Video           | Supported | Image with caption; media as a linked poster |
 | KeyTakeaway · PullQuote · Steps  | Supported | Boxed summary, ruled quote, numbered rows    |
 | Stat · ProductCard · LinkPreview | Supported | LinkPreview as a static card, never an embed |
-| Footnotes                        | Supported | Numbered notes at the end, no links          |
+| Footnote · Footnotes             | Supported | Numbered notes at the end, no links          |
 | Everything else                  | Fallback  | Declared per component: text, link or omit   |
 
 The status on each component page is computed from what `@postkit/email`
@@ -81,25 +89,30 @@ unreliable across clients. The plain-text part marks them `[1]`.
 Interactive components can't run in an inbox. Each one declares what to do
 instead, so a newsletter never shows a broken widget:
 
-| Fallback | What readers see                                    | Used by                                                                                                                                                                                                             |
-| -------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `text`   | The content as plain, readable text, code and links | AppearsOn, AudienceBoundary, AuthorCard, CardGrid, Carousel, Chart, CodeBlock, CodeGroup, Comparison, Diff, Disclosure, FileCard, FileTree, Gallery, RelatedContent, SeriesNavigation, SponsorBlock, Tabs, Terminal |
-| `link`   | A short line linking to it on the web               | Poll (to your post), SocialPost (to the post itself)                                                                                                                                                                |
-| `omit`   | Nothing; the block is skipped                       | ShareActions, NewsletterSignup                                                                                                                                                                                      |
+| Fallback | What readers see                                    | Used by                                                                                                                                                                                                                     |
+| -------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text`   | The content as plain, readable text, code and links | AppearsOn, AudienceBoundary, AuthorCard, CardGrid, Carousel, Chart, CodeBlock, CodeGroup, Comparison, Device, Diff, Disclosure, FileCard, FileTree, Gallery, RelatedContent, SeriesNavigation, SponsorBlock, Tabs, Terminal |
+| `link`   | A short line linking to it on the web               | Poll (to your post), SocialPost (to the post itself)                                                                                                                                                                        |
+| `omit`   | Nothing; the block is skipped                       | ShareActions, NewsletterSignup                                                                                                                                                                                              |
 
 Your own components declare one the same way, with `email: { fallback: 'text' }`
-in `definePostkitComponent`. When a fallback applies, or a component is
-unknown, `renderEmail` adds an entry to `warnings`. It never throws on content
-your site renders.
+in `definePostkitComponent`. A component of your own with no email view and
+no fallback renders as text. When a fallback applies, or a component is
+unknown, `renderEmail` adds an entry to `warnings`, with a `code` such as
+`email-fallback` or `unknown-component`, a `message`, and the component and
+position when there is one. It never throws on content your site renders.
+
+To give your own component an email view, or replace a built-in one, pass it
+in `components`. A component with a view is never a fallback.
 
 ## Views and the provider
 
 `renderEmail` is built from parts you can use directly. The package exports:
 
-- Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure`, `KeyTakeaway`,
-  `LinkPreview`, `ProductCard`, `PullQuote`, `Stat`, `Steps` and `Video`, and
-  `postkitEmailViews`, the map of all of them that the manifest's
-  `support.email` is computed from.
+- Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure`, `Footnote`,
+  `Footnotes`, `KeyTakeaway`, `LinkPreview`, `ProductCard`, `PullQuote`,
+  `Stat`, `Steps` and `Video`, and `postkitEmailViews`, the map of all of
+  them that the manifest's `support.email` is computed from.
 - `PostkitEmailProvider`, which applies `postkitEmailTheme` (light, with
   literal `tone.*` and `tint.*` colours) and accepts Chakra Email theme
   overrides on top, such as your own tones.

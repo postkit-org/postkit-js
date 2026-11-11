@@ -4,7 +4,7 @@ summary: Replace a component's whole render with your own view, bound to the sam
 category: Customizing
 order: 4
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 A view is the render function for a component. Replacing it is rung 6 of the
@@ -41,13 +41,19 @@ export const CommuneFigure = postkitView(
 );
 ```
 
-{/* TODO(0.3.0): confirm postkitView is exported from the @postkit/react root, and check the Figure part names against the 0.3.0 figureDefinition anatomy (today's slots are root, mediaLink, media, image, figcaption, caption, credit, creditLink). */}
+`part(name)` returns everything a part needs: its anatomy attributes
+(`data-postkit-component` and the theme-variant state on the root,
+`data-postkit-part` on every part), its `classNames` entry, its `slotStyles`
+and, on the root, `rootProps`. With Chakra it also returns the recipe's class
+and styles. The part names are typed from the definition, so a misspelled part
+doesn't compile.
 
-`part(name)` returns everything a part needs: its anatomy attributes, its
-`classNames` entry, any [slot override](/docs/defaults-and-slots), and, with
-Chakra, the recipe's class and styles. `postkitView` also applies `unstyled`,
-merges `slotStyles` and `rootProps`, validates props in development and applies
-your site's defaults and overrides, so your view doesn't repeat that work.
+`postkitView` also does the work every view needs. It applies `unstyled`,
+fills in your site's defaults and then the definition's, so a prop with a
+default is never `undefined`, maps aliases such as Callout's `type` to their
+prop, and swaps in any [slot overrides](/docs/defaults-and-slots). In
+development it warns once in the console about a missing required prop or a
+value of the wrong kind.
 
 ## Use it
 
@@ -75,13 +81,27 @@ takes the component's recipe. Parts then get the recipe's slot styles and your
 system's tokens:
 
 ```tsx
-export const Callout = postkitChakraView(
+// lib/postkit/callout.tsx
+import { Alert, Box } from '@chakra-ui/react';
+import { postkitCalloutRecipe, postkitChakraView } from '@postkit/chakra';
+import { calloutDefinition } from '@postkit/core/components';
+import { postkitCalloutMarks } from '@postkit/react';
+
+const toneStatus = {
+  note: 'info',
+  tip: 'success',
+  important: 'neutral',
+  warning: 'warning',
+  caution: 'error',
+} as const;
+
+export const InkCallout = postkitChakraView(
   calloutDefinition,
-  calloutRecipe,
+  postkitCalloutRecipe,
   ({ props, part }) => (
     <Alert.Root as="aside" status={toneStatus[props.tone]} {...part('root')}>
-      <Alert.Indicator {...part('icon')}>
-        {props.icon ?? marks[props.tone]}
+      <Alert.Indicator aria-hidden="true" {...part('icon')}>
+        {postkitCalloutMarks[props.tone]}
       </Alert.Indicator>
       <Alert.Content {...part('content')}>
         {props.title && (
@@ -94,15 +114,24 @@ export const Callout = postkitChakraView(
 );
 ```
 
-This is how Postkit's own Chakra Callout is written.
+Postkit's own Chakra Callout is written the same way. `@postkit/chakra`
+exports each built-in recipe as `postkit<Name>Recipe`, such as
+`postkitCalloutRecipe`, with its part names as `postkit<Name>Slots`.
 
-{/* TODO(0.3.0): confirm where postkitChakraView and the built-in recipes (calloutRecipe) are exported from, and add the imports to this sample. */}
+The view uses the recipe your Chakra system registers under the recipe key
+(`postkitCallout`) when there is one, so `createPostkitTheme` overrides still
+apply. Without one, the parts keep the recipe's class names and render
+unstyled; pass `{ fallback: 'recipe' }` as a fourth argument to apply the
+recipe you passed instead, or `{ recipeKey }` to read another key.
 
 ## Keep the anatomy
 
-Emit every part in the definition's anatomy, with `part(name)`. The part names
-are what [part styles](/docs/part-styles), slot overrides and other renderers
-rely on, so a view that drops one loses the styles and overrides aimed at it.
+Emit each part you render with `part(name)`, under the definition's name for
+it. The part names are what [part styles](/docs/part-styles), slot overrides
+and other renderers rely on, so a part your view drops or renders without
+`part()` loses the styles and overrides aimed at it. The Figure view above,
+for example, leaves out the credit, link and figure-number parts, so styles
+for those have nothing to apply to.
 
 ## Views or eject
 

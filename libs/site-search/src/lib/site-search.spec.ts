@@ -248,7 +248,11 @@ describe('featured (empty query)', () => {
     const broken = {
       jumpTo: [
         ...config.featured.jumpTo,
-        { label: 'Eject', href: '/docs/eject', group: 'docs' },
+        {
+          label: 'Writing in Prismark',
+          href: '/docs/writing-in-prismark',
+          group: 'docs',
+        },
         { label: 'Nowhere', href: '/docs/nowhere', group: 'docs' },
       ],
       popularComponents: [...config.featured.popularComponents, 'Timeline'],
@@ -260,7 +264,7 @@ describe('featured (empty query)', () => {
       resolveFeatured(broken, production);
     } catch (error) {
       expect((error as SearchFeaturedError).problems).toEqual([
-        '"Eject" → /docs/eject',
+        '"Writing in Prismark" → /docs/writing-in-prismark',
         '"Nowhere" → /docs/nowhere',
         'popular component "Timeline"',
       ]);

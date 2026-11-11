@@ -2,7 +2,7 @@
 title: Writing in Prismark
 summary: Insert and edit Postkit components in Prismark without touching syntax.
 category: Writing
-order: 6
+order: 7
 status: draft
 ---
 

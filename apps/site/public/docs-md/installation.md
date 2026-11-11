@@ -6,22 +6,41 @@ Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
 those package conventions.
 
-## Install the React renderer
+## Install a renderer
 
-Most sites start with the Chakra UI renderer and its peer dependencies:
+Postkit has two React renderers. `@postkit/react` holds `createPostkit`, the
+[kits](/docs/kits) and the headless views; `@postkit/chakra` adds the Chakra UI
+views.
+
+Most sites start with the [Chakra UI renderer](/docs/chakra) and its peer
+dependencies:
 
 ```sh
-npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/react @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
-`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
-The `@postkit/react` name is reserved for a future generic React renderer without
-a Chakra dependency. The current framework adapters use `@postkit/chakra`.
+For the [headless renderer](/docs/headless), which ships no styles and no
+Chakra or Emotion, install `@postkit/react` and [Zag](https://zagjs.com), which
+runs its interactive components:
+
+```sh
+npm install @postkit/react react react-dom
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
+
+The Zag packages are optional peer dependencies of `@postkit/react`, so a
+Chakra site uses the copy Chakra already installs and never bundles Zag twice.
+
+`@postkit/chakra` was named `@postkit/react` before 0.3.0. Coming from 0.2,
+replace the dependency with `@postkit/chakra` and update your imports; the
+component API is unchanged. From 0.3.0, `@postkit/react` is the headless
+renderer.
 
 ## Add a framework adapter
 
-Framework adapters add native routing around the same component map. Install
-the one that matches the application:
+Framework adapters add native routing around the same component map. Each
+takes `@postkit/react` and `@postkit/chakra` as peer dependencies, and npm
+installs them with it. Install the one that matches the application:
 
 ```sh
 # Next.js
@@ -63,8 +82,16 @@ Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
 npm install @postkit/shiki
 ```
 
-An HTML email build should use `@postkit/email` rather than aliasing Chakra UI
-to an email primitive package. It shares portable Postkit props where the
+Add `@postkit/cli` as a dev dependency for the `postkit` command, which turns
+on kits, ejects and scaffolds components, and writes the manifest (see
+[CLI](/docs/cli)):
+
+```sh
+npm install --save-dev @postkit/cli
+```
+
+An HTML email build should use `@postkit/email` (see [Email](/docs/email))
+rather than aliasing Chakra UI to an email primitive package. It shares portable Postkit props where the
 meaning carries over and deliberately changes the output for interactions that
 email clients do not support.
 

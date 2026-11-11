@@ -4,7 +4,7 @@ summary: The machine-readable catalog of a site's components, for editors, agent
 category: Reference
 order: 3
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 The manifest is the machine-readable catalog of components: each one's
@@ -24,16 +24,21 @@ import { postkit } from './lib/postkit';
 const manifest = postkit.manifest();
 ```
 
-Or write it to a file from the terminal, for editors that read it from your
-repo:
+Or write it from the terminal, for editors that read it from your repo. The
+[CLI](/docs/cli#postkit-manifest) loads your config and prints the same JSON,
+or writes it to `--out`:
 
 ```sh
-npx postkit manifest
+npx postkit manifest --out public/postkit-manifest.json
 ```
 
-Each package that ships components publishes a `component-manifest.json`. A
-host merges the manifests for exactly the components it enabled, so the result
-describes your site, not everything installed.
+Either way, the manifest describes exactly the components you enabled, your
+own included, not everything installed.
+
+`@postkit/chakra/component-manifest.json` is the manifest of every built-in
+component. A package that ships components of its own can publish one too,
+written with `createPostkitComponentManifest` from `@postkit/core/components`,
+and `mergePostkitComponentManifests` combines several into one.
 
 ## What v2 adds
 
@@ -49,6 +54,8 @@ Version 2 keeps every v1 field and adds:
 | `variants`     | Component | The props that are theme variants.                                                               |
 | `default`      | Prop      | The value when the author doesn't set one.                                                       |
 | `themeVariant` | Prop      | Whether the prop is a recipe variant.                                                            |
+| `aliases`      | Prop      | Other names authors may use for the prop, such as Callout's `type`. Only when it has some.       |
+| `recommended`  | Prop      | `{ reason, unless? }` for a prop that warns when it's missing, such as Video's `captions`.       |
 
 A v2 component entry, shortened to one prop:
 
@@ -65,7 +72,8 @@ A v2 component entry, shortened to one prop:
       "values": ["note", "tip", "important", "warning", "caution"],
       "description": "The semantic emphasis of the aside.",
       "default": "note",
-      "themeVariant": true
+      "themeVariant": true,
+      "aliases": ["type"]
     }
   },
   "slots": ["root", "icon", "content", "title", "body"],
@@ -97,25 +105,31 @@ A v2 component entry, shortened to one prop:
 ```
 
 `kit` is `null` and `package` is what you pass (or `null`) for your own
-components.
+components. `components` is an object keyed by component name, alongside the
+manifest's `id` (`postkit.component-catalog`), `version` (`2`) and
+`declarationVersion`.
 
 ## Support
 
 The `support` field is computed from what each renderer package exports:
 
-| Field      | Values                                            | Meaning                                                                                          |
-| ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `react`    | `supported`, `not-supported`                      | v1's field: some React renderer has a view.                                                      |
-| `headless` | `supported`, `chakra-only`, `not-supported`       | `@postkit/react`. `chakra-only` is an interactive component still waiting for its headless view. |
-| `chakra`   | `supported`, `not-supported`                      | `@postkit/chakra`.                                                                               |
-| `astro`    | `static`, `hydrated`                              | Whether Astro hydrates it.                                                                       |
-| `email`    | `supported`, `{ "fallback": … }`, `not-supported` | `@postkit/email`, or the definition's declared fallback: `text`, `link` or `omit`.               |
+| Field      | Values                                            | Meaning                                                                                            |
+| ---------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `react`    | `supported`, `not-supported`                      | v1's field: some React renderer has a view.                                                        |
+| `headless` | `supported`, `chakra-only`, `not-supported`       | `@postkit/react`. `chakra-only` means only `@postkit/chakra` has a view; no built-in is, in 0.3.0. |
+| `chakra`   | `supported`, `not-supported`                      | `@postkit/chakra`.                                                                                 |
+| `astro`    | `static`, `hydrated`                              | Whether Astro hydrates it.                                                                         |
+| `email`    | `supported`, `{ "fallback": … }`, `not-supported` | `@postkit/email`, or the definition's declared fallback: `text`, `link` or `omit`.                 |
+
+`astro` is `hydrated` for `client` and `resolver` components, and `static`
+otherwise.
 
 A renderer the manifest's producer doesn't know is left out: a headless
 site's `manifest()` has no `chakra` field, and `email` is there only when the
 producer read `@postkit/email`'s views. `component-manifest.json` has it;
 `@postkit/chakra`'s `postkitComponentCatalog` doesn't, since it doesn't depend
-on `@postkit/email`. To add it to your own manifest, pass
+on `@postkit/email`, and neither does `postkit.manifest()`. To add it to a
+manifest you write, pass
 `renderers: { email: Object.keys(postkitEmailViews) }` to
 `createPostkitComponentManifest`. A component is supported in email when
 `@postkit/email` exports a view for its definition; otherwise `renderEmail`

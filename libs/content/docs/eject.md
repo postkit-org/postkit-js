@@ -4,7 +4,7 @@ summary: Copy a component's view into your repo to own it, while its contract st
 category: Customizing
 order: 5
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 Ejecting is rung 7 of the customization ladder. It copies a component's view
@@ -29,6 +29,8 @@ npx postkit eject figure --renderer chakra --to libs/postkit
 ✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
 
 Still bound to Figure's definition from @postkit/core/components.
+It imports @postkit/chakra, @postkit/core, @postkit/react; keep them in your dependencies.
+Chakra applies the recipe registered as postkitFigure first: register the ejected recipe in your theme to use your edits (see /docs/eject).
 Run `postkit diff figure` after upgrading @postkit/chakra.
 ```
 
@@ -48,8 +50,9 @@ export const postkit = createPostkit({
 });
 ```
 
-If it can't find your config, or can't edit it safely, it prints those lines
-for you to add. See [CLI](/docs/cli#your-config) for how it finds the config
+It writes the import path the way your config already writes relative
+imports, with `.js` if it uses `.js`. If it can't find your config, or can't
+edit it safely, it prints those lines for you to add. See [CLI](/docs/cli#your-config) for how it finds the config
 and for every flag.
 
 | Flag            | Default       | Meaning                               |
@@ -123,18 +126,24 @@ npx postkit diff figure
 Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
 --- a/figure.tsx	@postkit/chakra@0.3.0
 +++ b/figure.tsx	@postkit/chakra@0.3.2
-@@ -54,7 +54,7 @@
+@@ -59,7 +59,7 @@
+           alt={alt}
+           htmlWidth={postkitImageDimension(props.width)}
+           htmlHeight={postkitImageDimension(props.height)}
 -          loading={props.loading}
 +          loading={props.priority ? 'eager' : props.loading}
+           decoding="async"
+           sizes={props.sizes}
+           srcSet={props.srcSet}
 
 1 file changed upstream. Your copy wasn't changed.
 Your edits: figure.recipe.ts.
 ```
 
 When you've brought across what you want, `postkit diff figure --accept`
-records the installed version as your new base. In CI,
-`postkit diff --exit-code` fails when an ejected component has upstream
-changes you haven't reviewed.
+records the installed version as your new base, and your copy as it is now,
+so later edits show against it. In CI, `postkit diff --exit-code` exits with
+1 when an ejected component has upstream changes you haven't accepted.
 
 ## Before you eject
 

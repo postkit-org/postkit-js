@@ -4,7 +4,7 @@ summary: Change what authors get without asking, and swap a single part of a com
 category: Customizing
 order: 3
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 Defaults and slots are rungs 4 and 5 of the customization ladder. Both keep the
@@ -44,6 +44,10 @@ another one. A prop written in the post always wins over a default.
 
 Without `defaults`, every component uses its definition's defaults. The
 `variant` default is `subtle` for every component.
+
+`createPostkit` checks `defaults` when it runs: a component that isn't
+enabled, a prop the component doesn't have, or a value the prop doesn't allow
+throws an error naming it.
 
 The [manifest](/docs/manifest)'s per-prop `default` is the definition's
 default, not your site's: the manifest describes the components, and your
@@ -113,7 +117,11 @@ the anatomy attributes (`data-postkit-part` and any state), the part's
 for that part arrive in `className` too. Spread them onto your root element
 so the part still carries its name and still picks up your CSS.
 
-Slots replace the parts a view renders itself. A view not built with
+Class names per part, without replacing the element, go in
+`overrides.Callout.classNames` (see [Part styles](/docs/part-styles)).
+
+Slots replace the parts a view renders itself: an element the view returns
+with a matching `data-postkit-part`. A view not built with
 `postkitView` or `postkitChakraView` (in 0.3.0, Chakra's `CodeBlock`,
 `CodeGroup`, `LinkPreview` and `SocialPost`) can't take slot overrides yet,
 and `createPostkit` says so; override its view instead.

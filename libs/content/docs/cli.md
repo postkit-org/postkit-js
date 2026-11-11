@@ -4,7 +4,7 @@ summary: Add, own and create components from your terminal.
 category: Reference
 order: 4
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 One small tool for the moments config isn't enough: turning on kits, taking a
@@ -33,11 +33,15 @@ npx postkit eject --help
 | `postkit add`      | Turn on a kit or component and update your config | `npx postkit add media`    |
 | `postkit eject`    | Copy a component's view into your repo to own it  | `npx postkit eject figure` |
 | `postkit diff`     | See what changed upstream since you ejected       | `npx postkit diff figure`  |
-| `postkit new`      | Scaffold a component of your own                  | `npx postkit new showcase`   |
+| `postkit new`      | Scaffold a component of your own                  | `npx postkit new showcase` |
 | `postkit manifest` | Write the catalog for editors like Prismark       | `npx postkit manifest`     |
 
 Names work in any case: `figure`, `Figure`, `code-block` and `CodeBlock` all
-work.
+work. `npx postkit --version` prints the installed version.
+
+Every command takes `--config <file>`. An error you can fix, such as a
+component that doesn't exist or a file that's already there, prints as one
+line and exits with 1.
 
 ## Your config
 
@@ -78,7 +82,10 @@ npx postkit add poll
 A kit name (`article`, `technical`, `media`, `discovery`, `engagement`,
 `publishing`) is imported from `@postkit/react/kits` and added to `kits`. A
 built-in component whose kit is already on is taken out of `exclude`;
-otherwise its definition and your renderer's view are added to `components`.
+otherwise its definition (from `@postkit/core/components`) and your renderer's
+view (from `@postkit/react` or `@postkit/chakra`) are imported and added to
+`components`. A name that's neither a kit nor a built-in component stops with
+a hint to run `postkit new` instead.
 
 | Flag        | Default    | Meaning                               |
 | ----------- | ---------- | ------------------------------------- |
@@ -102,8 +109,14 @@ npx postkit eject figure --renderer chakra --to libs/postkit
 ✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
 
 Still bound to Figure's definition from @postkit/core/components.
+It imports @postkit/chakra, @postkit/core, @postkit/react; keep them in your dependencies.
+Chakra applies the recipe registered as postkitFigure first: register the ejected recipe in your theme to use your edits (see /docs/eject).
 Run `postkit diff figure` after upgrading @postkit/chakra.
 ```
+
+The folder is `<--to>/<component>/`. With `--renderer headless`, you get the
+view and its CSS instead of a recipe. Without `--force`, eject stops if a file
+it would write already exists.
 
 | Flag            | Default       | Meaning                               |
 | --------------- | ------------- | ------------------------------------- |
@@ -130,15 +143,22 @@ npx postkit diff figure
 Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
 --- a/figure.tsx	@postkit/chakra@0.3.0
 +++ b/figure.tsx	@postkit/chakra@0.3.2
-@@ -54,7 +54,7 @@
+@@ -59,7 +59,7 @@
+           alt={alt}
+           htmlWidth={postkitImageDimension(props.width)}
+           htmlHeight={postkitImageDimension(props.height)}
 -          loading={props.loading}
 +          loading={props.priority ? 'eager' : props.loading}
+           decoding="async"
+           sizes={props.sizes}
+           srcSet={props.srcSet}
 
 1 file changed upstream. Your copy wasn't changed.
 Your edits: figure.recipe.ts.
 ```
 
-Without a name, it checks every component in `.postkit-eject.json`.
+Without a name, it checks every component in `.postkit-eject.json`. When
+nothing changed upstream, it prints `No upstream changes.`
 
 | Flag          | Meaning                                                         |
 | ------------- | --------------------------------------------------------------- |
@@ -160,9 +180,22 @@ npx postkit new showcase
 ✓ src/postkit/showcase/showcase.css
 
 Register it with createPostkit({ components }) in lib/postkit.ts:
-…
+
+import { Showcase } from '../src/postkit/showcase/showcase';
+import { showcaseDefinition } from '../src/postkit/showcase/showcase.definition';
+
+export const postkit = createPostkit({
+  // …your renderer and kits
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+});
+
 Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
+Import showcase.css from your global stylesheet for the headless view.
 ```
+
+With `--chakra` it also writes `showcase.recipe.ts` and `showcase.chakra.tsx`,
+and the registration uses the Chakra view. With `--spec` it writes a spec per
+view (`showcase.spec.tsx`, and `showcase.chakra.spec.tsx` with `--chakra`).
 
 | Flag                 | Default             | Meaning                                      |
 | -------------------- | ------------------- | -------------------------------------------- |
@@ -173,6 +206,8 @@ Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
 | `--directive`        | `postkit-<name>`    | The Markdown directive                       |
 | `--description`      |                     | The one line editors and the catalog show    |
 | `--import-extension` | `none`              | `js` for Node's `nodenext` module resolution |
+| `--dry-run`          | `false`             | List the files without writing them          |
+| `--force`            | `false`             | Overwrite files that already exist           |
 
 In an Nx workspace, `nx g @postkit/nx:component showcase` writes the same files
 from the same templates. See [New components](/docs/new-components).
@@ -185,4 +220,14 @@ npx postkit manifest --out public/postkit-manifest.json
 
 Loads your config (TypeScript and TSX work) and writes the v2 manifest of
 exactly the components it enables, yours included, to stdout or `--out`. It's
-the same JSON as `postkit.manifest()`, for editors like Prismark.
+the same JSON as `postkit.manifest()`, for editors like Prismark. With
+`--out`, it confirms on stderr:
+
+```text
+✓ public/postkit-manifest.json   from lib/postkit.ts
+```
+
+`manifest` finds the config like the other commands (see
+[Your config](#your-config)). The module must export the `createPostkit`
+result as `default` or `postkit`, or as its only export with a `manifest()`
+method.

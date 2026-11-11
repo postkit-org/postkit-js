@@ -4,7 +4,7 @@ summary: Scaffold a component of your own that gets a directive, validation and 
 category: Customizing
 order: 6
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 When Postkit doesn't have what you need, define it yourself. This is rung 8 of
@@ -24,12 +24,22 @@ npx postkit new showcase --category media
 ✓ src/postkit/showcase/showcase.css
 
 Register it with createPostkit({ components }) in lib/postkit.ts:
-…
+
+import { Showcase } from '../src/postkit/showcase/showcase';
+import { showcaseDefinition } from '../src/postkit/showcase/showcase.definition';
+
+export const postkit = createPostkit({
+  // …your renderer and kits
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+});
+
 Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
+Import showcase.css from your global stylesheet for the headless view.
 ```
 
 You get a definition, a headless view and its styles, as a starting point
-with a `title` prop and `root`, `title` and `body` parts. `--chakra` adds a
+that wraps authored content (`children: 'mdx'`), with a `title` prop and
+`root`, `title` and `body` parts. `--chakra` adds a
 Chakra view (`showcase.chakra.tsx`) and slot recipe (`showcase.recipe.ts`), and
 `--spec` adds a spec per view. The CSS targets the anatomy attributes; import
 it from your global stylesheet. See [CLI](/docs/cli#postkit-new) for every
@@ -49,6 +59,9 @@ named parts. It's framework-free, so the manifest and editors can read it
 without React. See [definePostkitComponent](/docs/define-postkit-component) for
 every field.
 
+The example frames a screenshot in a browser or app window. (Postkit's own
+[Device](/components/device) already does iPhone, iPad and Mac frames.)
+
 ```ts
 // showcase/showcase.definition.ts
 import {
@@ -61,14 +74,14 @@ export const showcaseDefinition = definePostkitComponent({
   name: 'Showcase',
   directive: 'postkit-showcase',
   category: 'media',
-  description: 'A screenshot framed in a phone, tablet or laptop.',
+  description: 'A screenshot framed in a browser or app window.',
   runtime: 'static',
   stability: 'experimental',
   props: {
     ...presentation,
-    kind: prop.enum(['iphone', 'ipad', 'mac'], {
+    kind: prop.enum(['browser', 'window'], {
       description: 'The showcase frame.',
-      default: 'iphone',
+      default: 'browser',
       themeVariant: true,
     }),
     src: prop.string('The screenshot URL.', { required: true }),
@@ -80,13 +93,14 @@ export const showcaseDefinition = definePostkitComponent({
   slots: ['root', 'frame', 'screen', 'caption'],
   keywords: ['showcase', 'screenshot', 'mockup'],
   example: {
-    props: { kind: 'iphone', src: '/shots/home.png', alt: 'The home screen' },
+    props: { kind: 'browser', src: '/shots/home.png', alt: 'The home page' },
   },
 });
 ```
 
-- **Required props** take `{ required: true }`. A directive or MDX element
-  without them fails validation, and the view receives them as non-optional.
+- **Required props** take `{ required: true }`. A directive without them
+  fails validation, an MDX element without them gets a console warning in
+  development, and the view receives them as non-optional.
 - **`children`** can be left out, as here: it defaults to `'none'`. Set
   `children: 'mdx'` when the component wraps authored content.
 - **`category`** is one of Postkit's six: `article-structure`,
@@ -137,11 +151,15 @@ export const postkit = createPostkit({
 Writers can now use it in either syntax:
 
 ```mdx
-<Showcase kind="mac" src="/shots/editor.png" alt="The editor with a post open" />
+<Showcase
+  kind="window"
+  src="/shots/editor.png"
+  alt="The editor with a post open"
+/>
 ```
 
 ```md
-::postkit-showcase{kind="mac" src="/shots/editor.png" alt="The editor with a post open"}
+::postkit-showcase{kind="window" src="/shots/editor.png" alt="The editor with a post open"}
 ```
 
 ## What you get
@@ -159,7 +177,8 @@ From the one definition:
 
 ## Share it
 
-A component package exports `{ definition, view }` pairs and a manifest. A
-site turns it on by adding those pairs to `components`, and Prismark reads the
-manifest through its per-workspace component packages setting. A component
-that proves itself can be proposed upstream to Postkit.
+A component package exports `{ definition, view }` pairs and a manifest,
+written with `createPostkitComponentManifest` from `@postkit/core/components`
+(see [Manifest](/docs/manifest)). A site turns the components on by adding
+those pairs to `components`, and editors read the manifest. A component that
+proves itself can be proposed upstream to Postkit.

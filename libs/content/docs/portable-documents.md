@@ -2,7 +2,7 @@
 title: Portable documents and feeds
 summary: Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
 category: Writing
-order: 4
+order: 5
 ---
 
 Use `@postkit/core` when an API or feed needs to offer the same article as

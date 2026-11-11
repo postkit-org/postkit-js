@@ -63,17 +63,19 @@ Install the package closest to the application boundary. Framework adapters
 use the Chakra-based React component system and add their native routing
 behavior.
 
-| Package                    | Choose it for                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency        |
-| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map |
-| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                   |
-| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                     |
-| `@postkit/next`            | Next.js MDX and `next/link`                                                           |
-| `@postkit/react-router`    | React Router and router-native internal links                                         |
-| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                        |
-| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                      |
-| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                  |
+| Package                    | Choose it for                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| `@postkit/core`            | Versioned HTML, Markdown, MDX, and JSON interchange without a React dependency         |
+| `@postkit/react`           | `createPostkit`, kits, and headless React views you style yourself                     |
+| `@postkit/chakra`          | React components, Chakra theming, Markdown directives, or a framework-neutral MDX map  |
+| `@postkit/email`           | Chakra Email rendering with explicit email-safe component fallbacks                    |
+| `@postkit/shiki`           | Lazy Shiki syntax highlighting for Postkit and Chakra code blocks                      |
+| `@postkit/next`            | Next.js MDX and `next/link`                                                            |
+| `@postkit/react-router`    | React Router and router-native internal links                                          |
+| `@postkit/tanstack-router` | TanStack Router and application-defined typed route resolution                         |
+| `@postkit/astro`           | Astro Markdown/MDX and selective React hydration                                       |
+| `@postkit/unfurl`          | Server-side or build-time URL metadata normalization                                   |
+| `@postkit/cli`             | The `postkit` command: turn on kits, eject and scaffold components, write the manifest |
 
 Continue with [Installation](/docs/installation) for the install command that
 matches your stack, or go straight to the [Quick start](/docs/quick-start).
@@ -86,22 +88,41 @@ Postkit packages are ESM-only, publish TypeScript declarations, and emit
 ES2022 JavaScript. The host application's framework and build tool must support
 those package conventions.
 
-## Install the React renderer
+## Install a renderer
 
-Most sites start with the Chakra UI renderer and its peer dependencies:
+Postkit has two React renderers. `@postkit/react` holds `createPostkit`, the
+[kits](/docs/kits) and the headless views; `@postkit/chakra` adds the Chakra UI
+views.
+
+Most sites start with the [Chakra UI renderer](/docs/chakra) and its peer
+dependencies:
 
 ```sh
-npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/react @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
-`@postkit/chakra` is the Chakra UI renderer, previously named `@postkit/react`.
-The `@postkit/react` name is reserved for a future generic React renderer without
-a Chakra dependency. The current framework adapters use `@postkit/chakra`.
+For the [headless renderer](/docs/headless), which ships no styles and no
+Chakra or Emotion, install `@postkit/react` and [Zag](https://zagjs.com), which
+runs its interactive components:
+
+```sh
+npm install @postkit/react react react-dom
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
+
+The Zag packages are optional peer dependencies of `@postkit/react`, so a
+Chakra site uses the copy Chakra already installs and never bundles Zag twice.
+
+`@postkit/chakra` was named `@postkit/react` before 0.3.0. Coming from 0.2,
+replace the dependency with `@postkit/chakra` and update your imports; the
+component API is unchanged. From 0.3.0, `@postkit/react` is the headless
+renderer.
 
 ## Add a framework adapter
 
-Framework adapters add native routing around the same component map. Install
-the one that matches the application:
+Framework adapters add native routing around the same component map. Each
+takes `@postkit/react` and `@postkit/chakra` as peer dependencies, and npm
+installs them with it. Install the one that matches the application:
 
 ```sh
 # Next.js
@@ -143,8 +164,16 @@ Add `@postkit/shiki` when rendered code blocks need syntax highlighting:
 npm install @postkit/shiki
 ```
 
-An HTML email build should use `@postkit/email` rather than aliasing Chakra UI
-to an email primitive package. It shares portable Postkit props where the
+Add `@postkit/cli` as a dev dependency for the `postkit` command, which turns
+on kits, ejects and scaffolds components, and writes the manifest (see
+[CLI](/docs/cli)):
+
+```sh
+npm install --save-dev @postkit/cli
+```
+
+An HTML email build should use `@postkit/email` (see [Email](/docs/email))
+rather than aliasing Chakra UI to an email primitive package. It shares portable Postkit props where the
 meaning carries over and deliberately changes the output for interactions that
 email clients do not support.
 
@@ -169,30 +198,54 @@ Source: /docs/quick-start
 
 Postkit gives articles a portable component vocabulary while leaving the host
 application in control of routing, layout, assets, and remote services. This
-page assumes the React renderer is installed (see
-[Installation](/docs/installation)).
+page uses the Chakra UI renderer (see [Installation](/docs/installation)); the
+[headless renderer](#headless-instead) works the same way.
+
+## Configure Postkit
+
+Choose the [kits](/docs/kits) your writers need, and the renderer:
+
+```ts
+// lib/postkit.ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+```
+
+[`createPostkit`](/docs/create-postkit) returns the provider, the MDX map, the
+Remark plugins and the [manifest](/docs/manifest) for exactly that set.
 
 ## Render a first component
 
 Mount the provider near the article:
 
 ```tsx
-import { Callout, PostkitProvider } from '@postkit/chakra';
+import { Callout } from '@postkit/chakra';
 import { postkitDefaultTheme } from '@postkit/chakra/theme';
+
+import { postkit } from './lib/postkit';
 
 export function Article() {
   return (
-    <PostkitProvider preset={postkitDefaultTheme}>
+    <postkit.Provider preset={postkitDefaultTheme}>
       <article>
         <h1>My first Postkit article</h1>
         <Callout title="Portable by default" tone="tip">
           Keep the content. Change the renderer.
         </Callout>
       </article>
-    </PostkitProvider>
+    </postkit.Provider>
   );
 }
 ```
+
+With `renderer: chakra`, `postkit.Provider` is Chakra's `PostkitProvider`
+with your site's defaults and overrides, and takes the same props.
 
 The preset gives a standalone article Postkit's visual defaults. In an existing
 Chakra application, omit `preset` and pass the site's system through `system`.
@@ -203,21 +256,53 @@ the layering.
 
 ## Add Markdown or MDX
 
-Use the supplied component map with the application's Markdown or MDX runtime:
+Pass the component map and the Remark plugins to the application's Markdown or
+MDX runtime:
 
-```tsx
-import { createPostkitMdxComponents } from '@postkit/chakra';
+```ts
+import { postkit } from './lib/postkit';
 
-export const mdxComponents = createPostkitMdxComponents();
+export const mdxOptions = { remarkPlugins: postkit.remarkPlugins };
+export const mdxComponents = postkit.mdxComponents;
 ```
 
+The map holds only the components your kits enable, and the plugins
+[validate](/docs/validation) directives and component names against the same
+set, so a post that uses a component you didn't turn on fails the build.
+
 Framework packages add native routing and framework-specific behavior around
-this same map. Pick yours under Frameworks: [Next.js](/docs/nextjs),
+this same map. `@postkit/next`, `@postkit/react-router` and
+`@postkit/tanstack-router` each export a `createPostkit` that sets the
+framework's link for you. Pick yours under Frameworks: [Next.js](/docs/nextjs),
 [React Router](/docs/react-router), [TanStack Router](/docs/tanstack-router),
 or [Astro](/docs/astro).
 
 Write components as JSX in [MDX](/docs/mdx), or as literal-only
 [Markdown directives](/docs/markdown-directives) in plain Markdown.
+
+## Headless instead
+
+To style the components yourself, with no Chakra or Emotion, leave out
+`renderer`, and the views come from `@postkit/react`:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  kits: [article, technical, media],
+});
+```
+
+For a quiet starting look, import the optional baseline stylesheet once, at
+your app's root:
+
+```ts
+import '@postkit/react/styles.css';
+```
+
+See [Headless](/docs/headless) for the install and styling.
 
 ## Keep sensitive work on the server
 
@@ -225,6 +310,105 @@ Link previews and social metadata can require network access or provider
 credentials. Resolve them with `@postkit/unfurl` in a server or build-time
 boundary, then pass normalized data to the renderer. See
 [Link previews and unfurling](/docs/link-previews).
+
+## Kits
+
+Source: /docs/kits
+
+A kit is a named set of component definitions. Postkit's 38 components come in
+six kits, and you turn on the ones your writers use. Only those components are
+bundled, validated and described in your manifest.
+
+## The six kits
+
+| Kit          | Import                           | Components                                                                                                       |
+| ------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `article`    | `@postkit/react/kits/article`    | Aside, AudienceBoundary, Callout, CardGrid, Disclosure, Footnote, Footnotes, KeyTakeaway, PullQuote, Steps, Tabs |
+| `technical`  | `@postkit/react/kits/technical`  | Chart, CodeBlock, CodeGroup, Comparison, Diff, FileCard, FileTree, Stat, Terminal                                |
+| `media`      | `@postkit/react/kits/media`      | Audio, Carousel, Device, Figure, Gallery, Video                                                                  |
+| `discovery`  | `@postkit/react/kits/discovery`  | AppearsOn, AuthorCard, LinkPreview, RelatedContent, SeriesNavigation, SocialPost                                 |
+| `engagement` | `@postkit/react/kits/engagement` | CallToAction, NewsletterSignup, Poll, ShareActions                                                               |
+| `publishing` | `@postkit/react/kits/publishing` | ProductCard, SponsorBlock                                                                                        |
+
+All six are also exported together from `@postkit/react/kits`, and as one
+array, `postkitKits`. Each component page shows which kit it belongs to.
+[Footnote](/components/footnote) and [Footnotes](/components/footnotes) are
+in `article`, and [Footnotes](/docs/footnotes) covers how to write them.
+
+## Turn kits on
+
+Pass the kits to `createPostkit`:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  kits: [article, technical],
+});
+```
+
+Kits are renderer-neutral. They list definitions, and each renderer package
+supplies the views for them, so the same kits work with the Chakra renderer:
+
+```ts
+import { createPostkit } from '@postkit/react';
+import { article, technical, media } from '@postkit/react/kits';
+import { chakra } from '@postkit/chakra';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+```
+
+## Leave one out
+
+Use `exclude` to drop a component from a kit you otherwise want:
+
+```ts
+import { createPostkit } from '@postkit/react';
+import { article, engagement } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  kits: [article, engagement],
+  exclude: ['Poll'],
+});
+```
+
+## What a kit changes
+
+The set you enable is the set everything else uses:
+
+- `postkit.mdxComponents` contains only the enabled components, plus prose.
+- `postkit.remarkPlugins` validates directives against the enabled set, so a
+  post that uses a component you didn't turn on fails the build the same way a
+  misspelled one does (see [Validation](/docs/validation)).
+- `postkit.manifest()` describes exactly the enabled set, so editors like
+  Prismark offer writers only what your site renders.
+
+An excluded or not-enabled component fails strict validation like an
+unknown one, and the error says it isn't enabled. With `strict: false` it's a
+warning, as for any unknown component.
+
+Every built-in component has a view in both renderers, so every kit works
+with either one. If a renderer has no view for an enabled component, as can
+happen with a third-party renderer, the component stays out of the manifest,
+and using it fails the build in every mode with an error naming it. Give it a
+view with `overrides`, or add it to `exclude`.
+
+## Add your own
+
+Your own components and third-party packages join the set through
+`components`, next to the kits. See [New components](/docs/new-components).
+
+## Compatibility
+
+You can still import components one at a time: the `@postkit/react` root
+exports every headless view, and the `@postkit/chakra` root every Chakra view.
+Kits are the recommended way to choose a set, because they also set what is
+validated and what the manifest describes.
 
 ## MDX
 
@@ -391,6 +575,13 @@ directive syntax, and the Postkit transform. Pass options to adjust it:
 - `postkit: { output: 'hast' }` annotates directives for pipelines such as
   react-markdown that map `data.hName` to a registered component. The default
   output is MDX JSX nodes.
+- `postkit: { footnotes: { defaults } }` sets your site's footnote settings,
+  and `postkit: { footnotes: false }` leaves GFM's own footnotes alone (see
+  [Footnotes](#footnotes)).
+
+With [`createPostkit`](/docs/create-postkit), use `postkit.remarkPlugins`
+instead: it's the same preset, validating against the components your kits
+enable, and takes the same options through `createPostkit({ remark })`.
 
 The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root
@@ -418,6 +609,36 @@ JSON array written as a literal string:
 ```md
 ::postkit-tabs{items='[{"label":"npm","content":"npm install @postkit/chakra"},{"label":"pnpm","content":"pnpm add @postkit/chakra"}]'}
 ```
+
+## Footnotes
+
+Footnotes use GitHub's syntax: a `[^id]` reference in the text, and a `[^id]:`
+note anywhere in the file.
+
+```md
+Postkit numbers notes by first reference.[^order] A note can be referenced
+again.[^order]
+
+[^order]: The id is a name, never a number: the reader sees 1, 2, 3.
+```
+
+A short note can go inline with the `:footnote` text directive:
+
+```md
+Directives never run code.:footnote[They take literal strings and JSON.]
+```
+
+The notes close the document. To place the list somewhere else, or change its
+settings for one document, put a `::footnotes` leaf directive where it goes:
+
+```md
+::footnotes{title="Sources" numbering="lower-roman"}
+```
+
+They become Postkit's `Footnote` and `Footnotes` components whenever those
+are enabled; with `createPostkit`, they're in the `article` kit. A reference with no note fails the build, and a note nobody
+references is a warning. See [Footnotes](/docs/footnotes) for placement,
+settings and styling.
 
 ## Validation
 
@@ -466,17 +687,22 @@ import { createPostkitRemarkPlugins } from '@postkit/chakra/remark';
 export const remarkPlugins = createPostkitRemarkPlugins();
 ```
 
+The same preset is exported from `@postkit/react/remark`. With
+[`createPostkit`](/docs/create-postkit), use `postkit.remarkPlugins`, which
+validates against exactly the components your [kits](/docs/kits) enable.
+
 Each directive is matched to a component by its directive name, such as
 `postkit-callout`, or by the component name in lowercase, such as `callout`.
 Its attributes are then checked against that component's declared props:
 
-| Check                      | Example                                | Error                                               |
-| -------------------------- | -------------------------------------- | --------------------------------------------------- |
-| The prop exists            | `:::postkit-callout{mood="tip"}`       | `Unknown Callout prop "mood" in Postkit directive.` |
-| An enum value is allowed   | `:::postkit-callout{tone="tpi"}`       | `Invalid Callout tone value "tpi".`                 |
-| JSON data is literal JSON  | `::postkit-tabs{items="[{label: 1}]"}` | `Invalid Tabs items value: expected literal JSON…`  |
-| A number is a number       | `initialIndex="second"`                | `Invalid Tabs initialIndex value "second": …`       |
-| Required props are present | `::postkit-card-grid` with no `items`  | `Postkit CardGrid directive requires "items".`      |
+| Check                      | Example                                | Error                                                            |
+| -------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+| The prop exists            | `:::postkit-callout{mood="tip"}`       | `Unknown Callout prop "mood" in Postkit directive.`              |
+| An enum value is allowed   | `:::postkit-callout{tone="tpi"}`       | `Invalid Callout tone value "tpi".`                              |
+| JSON data is literal JSON  | `::postkit-tabs{items="[{label: 1}]"}` | `Invalid Tabs items value: expected literal JSON…`               |
+| A number is a number       | `initialIndex="second"`                | `Invalid Tabs initialIndex value "second": …`                    |
+| Required props are present | `::postkit-card-grid` with no `items`  | `Postkit CardGrid directive requires "items".`                   |
+| The component is enabled   | `::postkit-poll` without its kit       | `Unknown Postkit directive "postkit-poll": Poll isn't enabled.…` |
 
 Attribute values are literal strings. Directives never evaluate JavaScript, so
 they're safe for untrusted authoring environments. A prop that takes data, such
@@ -488,8 +714,9 @@ ones are required.
 ## Strict mode
 
 Strict mode is on by default. It fails the build on anything Postkit doesn't
-recognise: an unknown prop, an unknown `postkit-*` directive or an unknown MDX
-component. Turning it off reports those as warnings instead:
+recognise: an unknown prop, an unknown `postkit-*` directive, an unknown MDX
+component, or a built-in component your `createPostkit` set doesn't enable.
+Turning it off reports those as warnings instead:
 
 ```ts
 export const remarkPlugins = createPostkitRemarkPlugins({
@@ -499,7 +726,8 @@ export const remarkPlugins = createPostkitRemarkPlugins({
 
 With strict mode off, unknown props are dropped, and unknown directives and
 components render as they did before. Invalid values, malformed JSON and
-missing required props fail in both modes. Warnings are `VFileMessage`s on the
+missing required props fail in both modes, and so does a
+[footnote](#footnotes) reference with no note. Warnings are `VFileMessage`s on the
 compiled file's `messages`; they don't stop the build, so check them if you
 rely on them.
 
@@ -523,7 +751,9 @@ silent loop, say) or pass `tracks`:
 Postkit Video: the "captions" prop is missing. Add a captions track (a WebVTT file), or mark the video decorative. (content/post.md:7:1-7:48)
 ```
 
-These warnings carry the `ruleId` `recommended-prop`.
+These warnings carry the `ruleId` `recommended-prop`. In MDX, the check reads
+the element's literal attributes, so `<Video src="/a.mp4" decorative />`
+doesn't warn, and an element with a spread (`{...props}`) is left alone.
 
 ## Where an error points
 
@@ -537,7 +767,8 @@ Invalid Callout tone value "tpi". (content/post.md:3:1-5:4)
 ```
 
 The error also carries `file`, `line`, `column`, `ruleId` (such as
-`unknown-directive`, `invalid-prop` or `unknown-component`) and
+`unknown-directive`, `invalid-prop`, `missing-prop`, `unknown-component` or
+`missing-footnote`) and
 `source: 'postkit'`. The file appears when your build passes a path to the
 compiler, for example `compile({ path, value })`. When it passes the source as
 a plain string, as next-mdx-remote's `serialize` does, the message carries the
@@ -565,6 +796,13 @@ strict build:
 Unknown MDX component <Calout>: it isn't a Postkit component, imported by the document or listed in `components`. (content/post.mdx:3:1-3:33)
 ```
 
+A built-in component your `createPostkit` set leaves out fails the same way,
+and the error says so:
+
+```text
+Unknown MDX component <Poll>: Postkit's Poll isn't enabled. Add its kit to createPostkit, or remove it from `exclude`. (content/post.mdx:1:1-1:22)
+```
+
 Lowercase HTML elements, member expressions such as `<motion.div>`, and names
 the document imports or exports are always accepted. If your site passes its
 own components to MDX through the component map, list them:
@@ -577,12 +815,40 @@ export const remarkPlugins = createPostkitRemarkPlugins({
 
 ## Props in MDX
 
-The Remark plugin checks MDX component names, not their props. Props on JSX
-elements are passed to the component as written, so an unknown prop or an
-out-of-range value on `<Callout>` isn't caught at compile time. A few
+The Remark plugin checks MDX component names, not their props (apart from the
+recommended-prop warnings above). Props on JSX elements are passed to the
+component as written, so an unknown prop or an out-of-range value on
+`<Callout>` isn't caught at compile time.
+
+The components check them when they render instead. In development, every
+built-in view warns once in the browser console about a missing required prop
+or a value of the wrong kind, and so does any view you build with
+`postkitView` or `postkitChakraView`:
+
+```text
+Postkit Callout: the "tone" prop must be one of "note", "tip", "important", "warning", "caution"; received "tpi".
+```
+
+An enum value the component doesn't allow falls back to its default, so the
+page still renders. Nothing is checked or logged in production. A few
 components that take JSON data, such as `LinkPreview` and `SocialPost`, reject
 malformed data when they render.
 
+## Footnotes
+
+Footnotes are checked when the post compiles (see [Footnotes](/docs/footnotes)):
+
+| Check                              | Result  | Message                                                                  |
+| ---------------------------------- | ------- | ------------------------------------------------------------------------ |
+| A reference has a note             | Error   | `Footnote [^b] has no definition.`                                       |
+| Every note is referenced           | Warning | `Footnote [^z] is defined but never referenced; it is left out.`         |
+| A note is defined once             | Warning | `Footnote [^a] is defined more than once; the first definition is used.` |
+| The list is placed once            | Warning | `Footnotes is placed more than once; the first placement is used.`       |
+| `::footnotes` settings are allowed | Error   | `Invalid Footnotes placement value "middle".`                            |
+
+The error fails the build in every mode, strict or not, and points at the
+reference. The warnings carry the `ruleId` `unreferenced-footnote`,
+`duplicate-footnote` or `duplicate-footnotes`.
 
 ## One syntax per file
 
@@ -590,6 +856,239 @@ MDX reads braces as JavaScript expressions. Use JSX in `.mdx` files and keep
 `:::postkit-*` directives with their brace attributes for plain Markdown
 pipelines. See [Troubleshooting](/docs/troubleshooting) for other integration
 problems.
+
+## Footnotes
+
+Source: /docs/footnotes
+
+Footnotes are part of the portable document, so they survive every renderer:
+your site, email, feeds and plain text. Authors write them once, and your site
+decides where readers see them: at the end, in the margin, in a popover or
+opened under the line.
+
+They render as two components in the `article` [kit](/docs/kits):
+[Footnote](/components/footnote), the mark in the text, and
+[Footnotes](/components/footnotes), the list of notes.
+
+## Write a footnote
+
+Use GitHub's footnote syntax, in Markdown or MDX. A `[^id]` reference goes in
+the text, and a `[^id]:` note can go anywhere in the file:
+
+```md
+Postkit numbers notes by first reference.[^order] A note can be referenced
+more than once.[^order]
+
+[^order]: The id is a name, not a number. Readers see 1, 2, 3.
+```
+
+A short note can go inline. In Markdown, use the `:footnote` text directive;
+in MDX, the `Footnote` component with the note as its children:
+
+```md
+Directives never run code.:footnote[They take literal strings and JSON.]
+```
+
+```mdx
+Directives never run code.<Footnote>They take literal strings and JSON.</Footnote>
+```
+
+Notes are numbered in the order they're first referenced. A note referenced
+more than once is listed once, with a link back to each reference (↩, then
+a, b, …). Ids are prefixed per document (`fn-{slug}-1`), so a feed or index
+page that shows several posts never repeats one.
+
+## Place the list
+
+The list closes the document. To put it somewhere else, such as before an
+author card, place it with a leaf directive in Markdown or the component in
+MDX:
+
+```md
+::footnotes
+```
+
+```mdx
+<Footnotes />
+```
+
+The placed list also takes settings for this one document:
+
+```md
+::footnotes{title="Sources" numbering="lower-roman"}
+```
+
+## Placement
+
+`placement` decides where readers see the notes:
+
+| Placement | What readers see                                                                              |
+| --------- | --------------------------------------------------------------------------------------------- |
+| `end`     | The numbered list where the document places it, or at the end. The default.                   |
+| `side`    | Sidenotes in the margin, each beside the line that references it.                             |
+| `popover` | The note in a native `popover`, anchored to the mark, when the reader activates it.           |
+| `inline`  | The note opened under its line when the reader activates the mark, with a button to close it. |
+
+`popover` and `inline` enhance the end list and never replace it, so the notes
+still print and are still there without JavaScript. `side` replaces the list on
+screen and keeps it in print. It falls back to `end` below `sideBreakpoint`
+(1024px by default), when the margin is too narrow for the notes, or when the
+stacked notes would run past the end of the article.
+
+Side notes sit in the inline-end margin, `--postkit-sidenote-width` (232px)
+wide and `--postkit-sidenote-gap` (48px) from the text, so leave that much room
+beside your article column. Each note starts at its reference's line, and a
+note that would overlap the one before moves down below it. They share the
+margin with [Aside](/components/aside).
+
+### Responsive placement
+
+Pass one placement per breakpoint, smallest first. postkit.org uses this for
+its notes: opened in place on phones, end notes from `md`, and sidenotes from
+`xl`:
+
+```ts
+{ base: 'inline', md: 'end', xl: 'side' }
+```
+
+The breakpoint names are `base`, `sm`, `md`, `lg`, `xl` and `2xl`. With
+`@postkit/chakra` they're your Chakra system's breakpoints. The headless
+`Footnotes` uses Chakra UI's defaults (480, 768, 1024, 1280 and 1536px), or
+the widths you pass in its `breakpoints` prop. In a directive, write the
+object as JSON:
+
+```md
+::footnotes{placement='{"base":"inline","md":"end","xl":"side"}'}
+```
+
+## Set your site's footnotes
+
+Set the defaults for every document in the Remark options, so the settings
+are written into each document's references and list:
+
+```ts
+// lib/postkit.ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react';
+import { article } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article],
+  remark: {
+    postkit: {
+      footnotes: {
+        defaults: {
+          placement: { base: 'inline', md: 'end', xl: 'side' },
+          variant: 'plain',
+        },
+      },
+    },
+  },
+});
+```
+
+Without `createPostkit`, pass the same `postkit` options to
+`createPostkitRemarkPlugins`. `footnotes` also takes `scope`, the id prefix,
+which defaults to the file's `data.slug` or front-matter `slug`, then its file
+name. `footnotes: false` turns Postkit's handling off and leaves GFM's own
+footnotes alone.
+
+A document overrides the defaults with an authored `::footnotes{…}` or
+`<Footnotes … />`, or with a `footnotes:` key in its front matter when your
+pipeline puts the parsed front matter on `file.data.matter` or
+`file.data.frontmatter`:
+
+```yaml
+footnotes:
+  placement: side
+```
+
+You can also set `Footnotes` props in `createPostkit`'s
+[`defaults`](/docs/defaults-and-slots). They apply when the page renders, and
+each `Footnote` takes the shared settings (`marker`, `numbering`, `placement`,
+`sideBreakpoint`) from them, so one setting styles both.
+
+## Props
+
+`Footnote` and `Footnotes` share these settings:
+
+| Prop             | Values                                                    | Default       |
+| ---------------- | --------------------------------------------------------- | ------------- |
+| `placement`      | `end`, `side`, `popover`, `inline`, or one per breakpoint | `end`         |
+| `marker`         | `superscript`, `bracket` (`[1]` on the baseline), `pill`  | `superscript` |
+| `numbering`      | `decimal`, `lower-roman`, `lower-alpha`, `symbol`         | `decimal`     |
+| `sideBreakpoint` | A width in px, below which `side` falls back to `end`     | `1024`        |
+| `size`           | `sm`, `md`, `lg`                                          | `md`          |
+| `variant`        | `outline`, `subtle`, `plain`                              | `subtle`      |
+
+`symbol` numbering uses \*, †, ‡, §, ‖ and ¶, then doubles them. In React,
+`numbering` also takes a function from the note's number to its mark.
+
+`Footnotes` also takes:
+
+| Prop        | Values                                                                                 | Default   |
+| ----------- | -------------------------------------------------------------------------------------- | --------- |
+| `title`     | The list heading. `false` hides it, and the list keeps "Notes" as its accessible name. | `"Notes"` |
+| `backlinks` | Whether each note links back to its references.                                        | `true`    |
+
+The Markdown tooling sets the rest (`identifier`, `index`, `occurrence`,
+`references` and `scope`), so authors never write them.
+
+## Validation
+
+A reference with no note fails the build, in every mode, and points at the
+reference:
+
+```text
+Footnote [^b] has no definition. (content/post.md:3:6-3:10)
+```
+
+A note nobody references is left out with a warning, and so is a second note
+with the same id, or a second `::footnotes`. An invalid `placement`, `marker`
+or `numbering` on `::footnotes` fails like any invalid prop. See
+[Validation](/docs/validation#footnotes).
+
+## Style them
+
+The parts are `root` and `marker` for `Footnote`, and `root`, `title`, `rule`,
+`list`, `item`, `number`, `content` and `backlink` for `Footnotes`. Style them
+like any other component (see [Part styles](/docs/part-styles)).
+
+With the headless renderer and `@postkit/react/styles.css`, these custom
+properties retheme them:
+
+| Custom property                                                     | Sets                               |
+| ------------------------------------------------------------------- | ---------------------------------- |
+| `--postkit-footnote-accent`                                         | The highlighted sidenote's rule    |
+| `--postkit-footnote-marker-color`, `--postkit-footnote-marker-size` | The mark in the text               |
+| `--postkit-footnote-number-color`, `--postkit-footnote-number-size` | The number beside each note        |
+| `--postkit-footnote-text-color`, `--postkit-footnote-text-size`     | The notes' text                    |
+| `--postkit-footnote-rule`, `--postkit-footnote-rule-width`          | The rule above the list            |
+| `--postkit-footnote-target-bg`                                      | The note a reader just jumped to   |
+| `--postkit-sidenote-width`, `--postkit-sidenote-gap`                | The margin column (232px and 48px) |
+
+With `@postkit/chakra`, the sizes and the sidenote column read the same
+custom properties, and the colours come from your system's semantic tokens.
+Restyle them with `createPostkitTheme({ footnote, footnotes, sidenote })`,
+like any recipe (see [Tokens](/docs/tokens)).
+
+Every mark is a link to its note with `role="doc-noteref"` and a label such as
+"Note 1", with a tap target of at least 24px. Activating a mark moves focus
+to its note, a backlink returns it to the mark, and Escape closes a note opened
+in place.
+
+## In other renderers
+
+| Renderer                      | Footnotes                                                                                    |
+| ----------------------------- | -------------------------------------------------------------------------------------------- |
+| Headless and Chakra           | Every placement, with the shared behaviour (`useFootnotes` in `@postkit/react`).             |
+| [Email](/docs/email)          | Always end notes: superscript numbers without links, and a numbered "Notes" list at the end. |
+| Static HTML (`@postkit/core`) | The end list, with links and backlinks.                                                      |
+| Plain text (`@postkit/core`)  | `[1]` marks, and a `[1] Note` list where the list is placed, or at the end.                  |
+
+Email leaves out the links because in-message anchors are unreliable across
+mail clients.
 
 ## Portable documents and feeds
 
@@ -960,18 +1459,803 @@ pass `unstyled` to a mapped list root when its complete list subtree should be
 bare. Ordered-list mappings retain native `start`, `reversed`, and `type`
 attributes supplied by Markdown renderers.
 
+## Defaults and slots
+
+Source: /docs/defaults-and-slots
+
+Defaults and slots are rungs 4 and 5 of the customization ladder. Both keep the
+component's definition, so its directive, validation and manifest entry don't
+change and every existing post keeps working.
+
+| Rung            | What you change                    | How                                                    |
+| --------------- | ---------------------------------- | ------------------------------------------------------ |
+| 1. Props        | One instance                       | `variant`, `size`, `tone`, `layout`…                   |
+| 2. Tokens       | Fonts, colours, spacing everywhere | Your Chakra system, or `--postkit-*` custom properties |
+| 3. Part styles  | A component's look                 | Recipes, CSS on the anatomy, or `classNames` per part  |
+| **4. Defaults** | What authors get without asking    | `defaults` in `createPostkit`                          |
+| **5. Slots**    | One part of the markup             | `overrides.Callout.slots`                              |
+| 6. Views        | The whole render                   | `overrides.Figure.view`                                |
+| 7. Eject        | The source itself                  | `npx postkit eject`                                    |
+| 8. New          | Something Postkit doesn't have     | `npx postkit new`                                      |
+
+## Defaults
+
+Set site-wide prop defaults with `defaults`, keyed by component name:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  kits: [article],
+  defaults: {
+    Callout: { variant: 'plain' },
+  },
+});
+```
+
+Every callout now renders with the plain variant unless its author asks for
+another one. A prop written in the post always wins over a default.
+
+Without `defaults`, every component uses its definition's defaults. The
+`variant` default is `subtle` for every component.
+
+`createPostkit` checks `defaults` when it runs: a component that isn't
+enabled, a prop the component doesn't have, or a value the prop doesn't allow
+throws an error naming it.
+
+The [manifest](/docs/manifest)'s per-prop `default` is the definition's
+default, not your site's: the manifest describes the components, and your
+defaults are a rendering choice.
+
+### How each renderer applies them
+
+The same `defaults` object works with both renderers:
+
+- **Headless:** the defaults become the view's prop defaults.
+- **Chakra:** props that are theme variants (`variant`, `size`, `tone`) are
+  written into the recipe's `defaultVariants`. Other props become the view's
+  defaults.
+
+If you set the same variant default in both places, `createPostkit`'s
+`defaults` wins.
+
+Because Chakra variant defaults live in the recipe, you can also set them with
+[part styles](/docs/part-styles), next to the rest of a component's look:
+
+```ts
+import { createPostkitTheme } from '@postkit/chakra';
+
+export const postkitTheme = createPostkitTheme({
+  callout: {
+    defaultVariants: { variant: 'plain' },
+  },
+});
+```
+
+Use `defaults` when the choice is about content, and the recipe when it's part
+of a theme you share between sites.
+
+## Slots
+
+A slot override replaces one named part of a component and keeps the rest.
+The part names are the component's anatomy, listed on each component page.
+
+```tsx
+// lib/postkit.tsx
+import { createPostkit, type PostkitSlotProps } from '@postkit/react';
+import { article } from '@postkit/react/kits';
+
+function InkMark(props: PostkitSlotProps) {
+  return (
+    <span {...props}>
+      <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
+        <circle cx="8" cy="8" r="6" fill="currentColor" />
+      </svg>
+    </span>
+  );
+}
+
+export const postkit = createPostkit({
+  kits: [article],
+  overrides: {
+    Callout: {
+      slots: { icon: InkMark },
+    },
+  },
+});
+```
+
+Your part receives the slot's props and styles, typed as `PostkitSlotProps`:
+the anatomy attributes (`data-postkit-part` and any state), the part's
+`className` and `style`, and its children. With Chakra, the recipe's styles
+for that part arrive in `className` too. Spread them onto your root element
+so the part still carries its name and still picks up your CSS.
+
+Class names per part, without replacing the element, go in
+`overrides.Callout.classNames` (see [Part styles](/docs/part-styles)).
+
+Slots replace the parts a view renders itself: an element the view returns
+with a matching `data-postkit-part`. A view not built with
+`postkitView` or `postkitChakraView` (in 0.3.0, Chakra's `CodeBlock`,
+`CodeGroup`, `LinkPreview` and `SocialPost`) can't take slot overrides yet,
+and `createPostkit` says so; override its view instead.
+
+## When to go further
+
+If you need to change how the parts fit together, not just one of them,
+replace the whole render with a [view](/docs/views). If you need to change the
+source itself, [eject](/docs/eject) it.
+
+## Views
+
+Source: /docs/views
+
+A view is the render function for a component. Replacing it is rung 6 of the
+customization ladder: you change the whole markup, and the component keeps its
+definition. Its props, directive, validation and manifest entry stay the same,
+so posts and Prismark don't notice the swap.
+
+Reach for a view when [defaults and slots](/docs/defaults-and-slots) aren't
+enough, for example when the parts need a different structure, not just a
+different look.
+
+## Build a view
+
+Build the view with `postkitView` and the component's definition. The
+definition gives your render function typed props and a `part` helper:
+
+```tsx
+// lib/postkit/figure.tsx
+import { figureDefinition } from '@postkit/core/components';
+import { postkitView } from '@postkit/react';
+
+export const CommuneFigure = postkitView(
+  figureDefinition,
+  ({ props, part }) => (
+    <figure {...part('root')}>
+      <img {...part('image')} src={props.src} alt={props.alt} />
+      {props.caption && (
+        <figcaption {...part('figcaption')}>
+          <span {...part('caption')}>{props.caption}</span>
+        </figcaption>
+      )}
+    </figure>
+  ),
+);
+```
+
+`part(name)` returns everything a part needs: its anatomy attributes
+(`data-postkit-component` and the theme-variant state on the root,
+`data-postkit-part` on every part), its `classNames` entry, its `slotStyles`
+and, on the root, `rootProps`. With Chakra it also returns the recipe's class
+and styles. The part names are typed from the definition, so a misspelled part
+doesn't compile.
+
+`postkitView` also does the work every view needs. It applies `unstyled`,
+fills in your site's defaults and then the definition's, so a prop with a
+default is never `undefined`, maps aliases such as Callout's `type` to their
+prop, and swaps in any [slot overrides](/docs/defaults-and-slots). In
+development it warns once in the console about a missing required prop or a
+value of the wrong kind.
+
+## Use it
+
+Register the view as an override:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+import { CommuneFigure } from './postkit/figure';
+
+export const postkit = createPostkit({
+  kits: [article, media],
+  overrides: {
+    Figure: { view: CommuneFigure },
+  },
+});
+```
+
+## Chakra views
+
+With the Chakra renderer, build the view with `postkitChakraView`, which also
+takes the component's recipe. Parts then get the recipe's slot styles and your
+system's tokens:
+
+```tsx
+// lib/postkit/callout.tsx
+import { Alert, Box } from '@chakra-ui/react';
+import { postkitCalloutRecipe, postkitChakraView } from '@postkit/chakra';
+import { calloutDefinition } from '@postkit/core/components';
+import { postkitCalloutMarks } from '@postkit/react';
+
+const toneStatus = {
+  note: 'info',
+  tip: 'success',
+  important: 'neutral',
+  warning: 'warning',
+  caution: 'error',
+} as const;
+
+export const InkCallout = postkitChakraView(
+  calloutDefinition,
+  postkitCalloutRecipe,
+  ({ props, part }) => (
+    <Alert.Root as="aside" status={toneStatus[props.tone]} {...part('root')}>
+      <Alert.Indicator aria-hidden="true" {...part('icon')}>
+        {postkitCalloutMarks[props.tone]}
+      </Alert.Indicator>
+      <Alert.Content {...part('content')}>
+        {props.title && (
+          <Alert.Title {...part('title')}>{props.title}</Alert.Title>
+        )}
+        <Box {...part('body')}>{props.children}</Box>
+      </Alert.Content>
+    </Alert.Root>
+  ),
+);
+```
+
+Postkit's own Chakra Callout is written the same way. `@postkit/chakra`
+exports each built-in recipe as `postkit<Name>Recipe`, such as
+`postkitCalloutRecipe`, with its part names as `postkit<Name>Slots`.
+
+The view uses the recipe your Chakra system registers under the recipe key
+(`postkitCallout`) when there is one, so `createPostkitTheme` overrides still
+apply. Without one, the parts keep the recipe's class names and render
+unstyled; pass `{ fallback: 'recipe' }` as a fourth argument to apply the
+recipe you passed instead, or `{ recipeKey }` to read another key.
+
+## Keep the anatomy
+
+Emit each part you render with `part(name)`, under the definition's name for
+it. The part names are what [part styles](/docs/part-styles), slot overrides
+and other renderers rely on, so a part your view drops or renders without
+`part()` loses the styles and overrides aimed at it. The Figure view above,
+for example, leaves out the credit, link and figure-number parts, so styles
+for those have nothing to apply to.
+
+## Views or eject
+
+A view starts from nothing. If you want to start from Postkit's own view and
+change it, [eject](/docs/eject) it instead: you get the source in your repo,
+already wired up as an override.
+
+## Eject
+
+Source: /docs/eject
+
+Ejecting is rung 7 of the customization ladder. It copies a component's view
+(and its recipe, for Chakra) into your repo, so you own the source and can
+change anything in it.
+
+Unlike copying a component by hand, the contract stays upstream. An ejected
+`Figure` still imports `figureDefinition` from `@postkit/core`, so its
+directive, validation and manifest entry don't fork, and your posts, Prismark
+and the email renderer keep treating it as a Figure.
+
+## Eject a component
+
+```sh
+npx postkit eject figure --renderer chakra --to libs/postkit
+```
+
+```text
+✓ libs/postkit/figure/figure.recipe.ts
+✓ libs/postkit/figure/figure.tsx
+✓ .postkit-eject.json   Figure @ @postkit/chakra 0.3.0
+✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
+
+Still bound to Figure's definition from @postkit/core/components.
+It imports @postkit/chakra, @postkit/core, @postkit/react; keep them in your dependencies.
+Chakra applies the recipe registered as postkitFigure first: register the ejected recipe in your theme to use your edits (see /docs/eject).
+Run `postkit diff figure` after upgrading @postkit/chakra.
+```
+
+The CLI copies that renderer's view from your installed `@postkit/chakra` or
+`@postkit/react`, plus the recipe for Chakra and the CSS for headless, and
+registers the copy as the component's [view](/docs/views) override in your
+Postkit config:
+
+```ts
+// lib/postkit.ts
+import { Figure } from '../libs/postkit/figure/figure';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, media],
+  overrides: { Figure: { view: Figure } },
+});
+```
+
+It writes the import path the way your config already writes relative
+imports, with `.js` if it uses `.js`. If it can't find your config, or can't
+edit it safely, it prints those lines for you to add. See [CLI](/docs/cli#your-config) for how it finds the config
+and for every flag.
+
+| Flag            | Default       | Meaning                               |
+| --------------- | ------------- | ------------------------------------- |
+| `--renderer`    | from config   | `headless` or `chakra`                |
+| `--to`          | `src/postkit` | Where the component's folder goes     |
+| `--dry-run`     | `false`       | Show the files and config change only |
+| `--force`       | `false`       | Overwrite files that already exist    |
+| `--no-register` | registers     | Leave your config alone               |
+
+### What the copy imports
+
+The copied view imports its definition from `@postkit/core/components` and
+helpers from the renderer package's public API (`@postkit/chakra`,
+`@postkit/react`), so keep those in your dependencies. If a view needs a small
+internal helper the package doesn't export, the helper is copied into an
+`internal/` folder beside it.
+
+### Using an ejected Chakra recipe
+
+The ejected view passes its recipe to `postkitChakraView`, but Chakra uses the
+recipe your system registers as `postkitFigure` first, and
+`postkitDefaultTheme` registers Postkit's. To style the component with your
+copy, register it last:
+
+```tsx
+import { defineConfig } from '@chakra-ui/react';
+import { postkitDefaultTheme } from '@postkit/chakra';
+
+import { postkitFigureRecipe } from '../libs/postkit/figure/figure.recipe';
+
+const theme = defineConfig({
+  theme: { slotRecipes: { postkitFigure: postkitFigureRecipe } },
+});
+
+<postkit.Provider preset={postkitDefaultTheme} theme={theme}>
+  {children}
+</postkit.Provider>;
+```
+
+## What stays upstream
+
+| Ejected into your repo | Stays in Postkit                                      |
+| ---------------------- | ----------------------------------------------------- |
+| The view               | The definition: props, directive, anatomy, validation |
+| The recipe (Chakra)    | Behaviour, such as carousel paging or code copy       |
+| The CSS (headless)     | The manifest entry                                    |
+
+Behaviour lives in `@postkit/core/behaviors` and the renderer's hooks, so an
+ejected interactive component keeps getting behaviour fixes when you upgrade.
+And because the directive is validated against the upstream definition, a
+post that passes a bad prop to `::postkit-figure` still fails the build with
+your view in place.
+
+## Keep up with upstream
+
+`postkit eject` records what it copied in `.postkit-eject.json` at your
+project root: the package, the version, a content hash and the upstream source
+of each file. Commit it.
+
+After an upgrade, `postkit diff` compares that recorded source with the
+installed version's and prints a unified diff of what changed upstream, so
+you can decide what to bring across. It never changes your copy, and it lists
+the files you've edited since ejecting.
+
+```sh
+npx postkit diff figure
+```
+
+```text
+Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
+--- a/figure.tsx	@postkit/chakra@0.3.0
++++ b/figure.tsx	@postkit/chakra@0.3.2
+@@ -59,7 +59,7 @@
+           alt={alt}
+           htmlWidth={postkitImageDimension(props.width)}
+           htmlHeight={postkitImageDimension(props.height)}
+-          loading={props.loading}
++          loading={props.priority ? 'eager' : props.loading}
+           decoding="async"
+           sizes={props.sizes}
+           srcSet={props.srcSet}
+
+1 file changed upstream. Your copy wasn't changed.
+Your edits: figure.recipe.ts.
+```
+
+When you've brought across what you want, `postkit diff figure --accept`
+records the installed version as your new base, and your copy as it is now,
+so later edits show against it. In CI, `postkit diff --exit-code` exits with
+1 when an ejected component has upstream changes you haven't accepted.
+
+## Before you eject
+
+Ejecting is the last step before writing your own component. Most changes fit
+lower on the ladder, where upgrades land without a diff:
+
+- A different look: [Part styles](/docs/part-styles).
+- Different defaults, or one part swapped: [Defaults and slots](/docs/defaults-and-slots).
+- A new structure written from scratch: [Views](/docs/views).
+
+See [CLI](/docs/cli) for every command.
+
+## New components
+
+Source: /docs/new-components
+
+When Postkit doesn't have what you need, define it yourself. This is rung 8 of
+the customization ladder. Your component is defined the same way Postkit's
+built-in ones are, so it gets a Markdown directive, validation, theming and a
+manifest entry for free, and Prismark can offer it to writers.
+
+## Scaffold it
+
+```sh
+npx postkit new showcase --category media
+```
+
+```text
+✓ src/postkit/showcase/showcase.definition.ts
+✓ src/postkit/showcase/showcase.tsx
+✓ src/postkit/showcase/showcase.css
+
+Register it with createPostkit({ components }) in lib/postkit.ts:
+
+import { Showcase } from '../src/postkit/showcase/showcase';
+import { showcaseDefinition } from '../src/postkit/showcase/showcase.definition';
+
+export const postkit = createPostkit({
+  // …your renderer and kits
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+});
+
+Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
+Import showcase.css from your global stylesheet for the headless view.
+```
+
+You get a definition, a headless view and its styles, as a starting point
+that wraps authored content (`children: 'mdx'`), with a `title` prop and
+`root`, `title` and `body` parts. `--chakra` adds a
+Chakra view (`showcase.chakra.tsx`) and slot recipe (`showcase.recipe.ts`), and
+`--spec` adds a spec per view. The CSS targets the anatomy attributes; import
+it from your global stylesheet. See [CLI](/docs/cli#postkit-new) for every
+flag.
+
+In an Nx workspace, the generator writes the same files from the same
+templates:
+
+```sh
+nx g @postkit/nx:component showcase --category=media --directory=libs/site/src/postkit
+```
+
+## Define it
+
+The definition is the contract: the component's name, directive, props and
+named parts. It's framework-free, so the manifest and editors can read it
+without React. See [definePostkitComponent](/docs/define-postkit-component) for
+every field.
+
+The example frames a screenshot in a browser or app window. (Postkit's own
+[Device](/components/device) already does iPhone, iPad and Mac frames.)
+
+```ts
+// showcase/showcase.definition.ts
+import {
+  definePostkitComponent,
+  prop,
+  presentation,
+} from '@postkit/core/components';
+
+export const showcaseDefinition = definePostkitComponent({
+  name: 'Showcase',
+  directive: 'postkit-showcase',
+  category: 'media',
+  description: 'A screenshot framed in a browser or app window.',
+  runtime: 'static',
+  stability: 'experimental',
+  props: {
+    ...presentation,
+    kind: prop.enum(['browser', 'window'], {
+      description: 'The showcase frame.',
+      default: 'browser',
+      themeVariant: true,
+    }),
+    src: prop.string('The screenshot URL.', { required: true }),
+    alt: prop.string('Text alternative for the screenshot.', {
+      required: true,
+    }),
+    caption: prop.string('An optional caption.'),
+  },
+  slots: ['root', 'frame', 'screen', 'caption'],
+  keywords: ['showcase', 'screenshot', 'mockup'],
+  example: {
+    props: { kind: 'browser', src: '/shots/home.png', alt: 'The home page' },
+  },
+});
+```
+
+- **Required props** take `{ required: true }`. A directive without them
+  fails validation, an MDX element without them gets a console warning in
+  development, and the view receives them as non-optional.
+- **`children`** can be left out, as here: it defaults to `'none'`. Set
+  `children: 'mdx'` when the component wraps authored content.
+- **`category`** is one of Postkit's six: `article-structure`,
+  `technical-content`, `media`, `discovery`, `engagement` or `publishing`.
+  Pick the closest; it groups the component in the manifest and in editors.
+
+## Write the view
+
+Build the view with `postkitView`, so it emits the anatomy and picks up
+defaults, slot overrides and part styles like any other component:
+
+```tsx
+// showcase/showcase.tsx
+import { postkitView } from '@postkit/react';
+
+import { showcaseDefinition } from './showcase.definition';
+
+export const Showcase = postkitView(showcaseDefinition, ({ props, part }) => (
+  <figure {...part('root')}>
+    <div {...part('frame')}>
+      <img {...part('screen')} src={props.src} alt={props.alt} />
+    </div>
+    {props.caption && (
+      <figcaption {...part('caption')}>{props.caption}</figcaption>
+    )}
+  </figure>
+));
+```
+
+## Register it
+
+Add the definition and view to `components`, next to your kits:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+import { Showcase } from './showcase/showcase';
+import { showcaseDefinition } from './showcase/showcase.definition';
+
+export const postkit = createPostkit({
+  kits: [article, media],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+});
+```
+
+Writers can now use it in either syntax:
+
+```mdx
+<Showcase
+  kind="window"
+  src="/shots/editor.png"
+  alt="The editor with a post open"
+/>
+```
+
+```md
+::postkit-showcase{kind="window" src="/shots/editor.png" alt="The editor with a post open"}
+```
+
+## What you get
+
+From the one definition:
+
+- Typed props for your view, with `PostkitPropsOf<typeof showcaseDefinition>`.
+- A directive, validated like Postkit's own (see [Validation](/docs/validation)).
+- An entry in `postkit.manifest()`, so editors like Prismark can offer it.
+- Slot and variant types derived from its parts and theme-variant props, and
+  the recipe key `postkitShowcase` if you write a Chakra view and recipe for it
+  with `postkitChakraView`.
+- Anatomy attributes on every part, so [part styles](/docs/part-styles) work
+  the same as for built-in components.
+
+## Share it
+
+A component package exports `{ definition, view }` pairs and a manifest,
+written with `createPostkitComponentManifest` from `@postkit/core/components`
+(see [Manifest](/docs/manifest)). A site turns the components on by adding
+those pairs to `components`, and editors read the manifest. A component that
+proves itself can be proposed upstream to Postkit.
+
+## Headless
+
+Source: /docs/headless
+
+`@postkit/react` is the headless renderer. Its views emit semantic markup,
+landmarks and ARIA with a name on every part, and nothing else. You bring the
+look with plain CSS, utility classes or any CSS-in-JS. There's no Chakra and no
+Emotion in the bundle.
+
+:::postkit-callout{tone="important" title="Upgrading from 0.2"}
+From 0.3.0, `@postkit/react` is headless. The Chakra components that
+`@postkit/react` exported in 0.2 are now in `@postkit/chakra`. To keep today's
+look, install `@postkit/chakra` and change your imports. There's no
+compatibility shim.
+:::
+
+## Install
+
+```sh
+npm install @postkit/react react react-dom
+```
+
+It brings the definitions, the behaviour hooks, `createPostkit`, the kits, the
+MDX map and the directive plugin with it.
+
+The interactive components and hooks run on [Zag](https://zagjs.com). Zag is
+an optional peer dependency, so a Chakra site uses the copy Chakra already
+installs and never bundles two. A headless-only site installs it too:
+
+```sh
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
+
+The package is ESM-only and supports React 19.
+
+## Set up
+
+Leave out `renderer` and `createPostkit` uses the headless views:
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  kits: [article, technical],
+});
+```
+
+Wrap your app in `postkit.Provider` and pass `postkit.mdxComponents` to MDX,
+as in the [Quick start](/docs/quick-start).
+
+## Every part has a name
+
+Every headless view stamps the component name on its root and a part name on
+each part, along with its state:
+
+```html
+<aside
+  data-postkit-component="Callout"
+  data-postkit-part="root"
+  data-tone="tip"
+  data-size="md"
+  data-variant="subtle"
+>
+  <span data-postkit-part="icon" aria-hidden="true">…</span>
+  <div data-postkit-part="content">…</div>
+</aside>
+```
+
+State follows the Ark UI conventions Chakra v3 uses, such as
+`data-state="open"`, `data-current` and `data-tone`. The Chakra renderer emits
+the same attributes, so selectors you write for one work for the other.
+
+## Style it
+
+Target parts with attribute selectors:
+
+```css
+[data-postkit-component='Callout'] [data-postkit-part='icon'] {
+  color: var(--brand);
+}
+```
+
+Or pass class names per part, which suits Tailwind and other utility CSS. They
+are applied alongside the part names, so the two approaches mix. See
+[Part styles](/docs/part-styles) for both.
+
+## The optional stylesheet
+
+Headless doesn't mean unstyled by force. `@postkit/react/styles.css` is a
+small, optional baseline with a quiet, neutral look: structure, prose rhythm
+and restrained monochrome. Every value in it is a `--postkit-*` custom
+property, so you can retune it with [tokens](/docs/tokens) instead of
+overriding rules.
+
+```ts
+import '@postkit/react/styles.css';
+```
+
+Load your own CSS after it, or leave it out and start from bare, named parts.
+
+The stylesheet follows the reader's colour mode. Its custom properties get dark
+values under `prefers-color-scheme: dark`, and under `.dark` and
+`[data-theme="dark"]` for hosts that switch themes with a class, such as
+next-themes. A light-only site that ignores the reader's setting should mark
+its root `class="light"` or `data-theme="light"`, so the components stay light
+too. CodeBlock, CodeGroup and Terminal keep their dark surface in both modes.
+
+Set any of these on `:root`, or on any element for a subtree. The stylesheet
+declares them with zero specificity, so your own rule wins whatever the order.
+Give each colour you change a dark value too.
+
+| Group           | Custom properties                                                                                                                                                                                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Colour          | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone            | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
+| Chart           | `--postkit-chart-1` to `--postkit-chart-4`, for series without an authored colour                                                                                                                                                                            |
+| Code surface    | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
+| Type            | `--postkit-font-body` and `--postkit-font-heading` (unset: the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`                      |
+| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
+| Footnotes       | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
+
+```css
+:root {
+  --postkit-font-heading: 'Fraunces', serif;
+  --postkit-color-accent: #3b2f8f;
+}
+.dark {
+  --postkit-color-accent: #c9c1ff;
+}
+```
+
+Inside a component, `--postkit-inset` (the padding for its size) and
+`--postkit-tone` and `--postkit-tone-surface` (its resolved tone) are set on
+the root, so your part rules can reuse them.
+
+Every rule in the stylesheet is wrapped in `:where()`, so a single class or
+attribute selector beats it. To keep it below your own cascade layers, import
+it into one: `@import '@postkit/react/styles.css' layer(postkit);`. It scopes
+each component with CSS `@scope`, so a Callout's rules never reach a component
+inside it; browsers without `@scope` show the semantic markup unstyled.
+
+## Behaviour
+
+Interactive behaviour, such as carousel paging, code copy, tabs and
+consent-to-embed, is written once as a headless hook and shared by every
+renderer. Postkit's Chakra views use the same hooks, and both pass the same
+behaviour tests.
+
+In 0.3.0 every built-in component has a headless view, the interactive ones
+included: `Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`, `Poll`, `LinkPreview`,
+`NewsletterSignup`, `ShareActions` and `SocialPost` read their behaviour from
+`useTabs`, `useCarousel`, `useCodeCopy`, `useEmbedConsent`, `usePoll`,
+`useNewsletterSignup` and `useShareActions`. None is `chakra-only`.
+Footnotes use `useFootnotes` for their placement (see
+[Footnotes](/docs/footnotes)).
+
+The hooks are exported, so you can build your own interactive views on the
+same behaviour. Each returns the state plus prop getters to spread onto your
+elements:
+
+```tsx
+import { useTabs } from '@postkit/react';
+
+function Install() {
+  const api = useTabs({ values: ['npm', 'pnpm'] });
+  return (
+    <div {...api.getRootProps()}>
+      <div {...api.getListProps()} aria-label="Install">
+        <button {...api.getTriggerProps({ value: 'npm' })}>npm</button>
+        <button {...api.getTriggerProps({ value: 'pnpm' })}>pnpm</button>
+      </div>
+      <div {...api.getContentProps({ value: 'npm' })}>npm install</div>
+      <div {...api.getContentProps({ value: 'pnpm' })}>pnpm add</div>
+    </div>
+  );
+}
+```
+
+The headless package has no provider of its own, so views that need host
+configuration take it as props: `LinkPreview` and `SocialPost` take
+`resolveLink` and `socialServices`, `NewsletterSignup` takes `newsletter`,
+`ShareActions` takes `socialServices` and `onShare`, and `Poll` takes
+`onVote`.
+
 ## Chakra
 
 Source: /docs/chakra
 
-`@postkit/chakra` is the Chakra UI renderer for React. It maps every portable
-declaration to a Chakra-backed component, supplies the Markdown and MDX
-tooling, and ships Postkit's optional visual preset. The framework adapters
-(Next.js, React Router, TanStack Router, and Astro) all render through it.
+`@postkit/chakra` is the Chakra UI renderer for React. It has a Chakra-backed
+view for every built-in component, supplies the Markdown and MDX tooling, and
+ships Postkit's optional visual preset. The framework adapters (Next.js, React
+Router, TanStack Router, and Astro) render through it.
 
-`@postkit/chakra` was previously named `@postkit/react`. The `@postkit/react`
-name is reserved for a future generic React renderer without a Chakra
-dependency.
+`@postkit/chakra` was named `@postkit/react` before 0.3.0. From 0.3.0,
+[`@postkit/react`](/docs/headless) is the headless renderer, and the Chakra
+components moved here unchanged: replace the dependency and update your
+imports.
 
 ```sh
 npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
@@ -979,15 +2263,37 @@ npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 
 It needs React 19 and Chakra UI `>=3.29.0 <4`.
 
+## Use it with createPostkit
+
+Pass `chakra` as the renderer to [`createPostkit`](/docs/create-postkit):
+
+```ts
+// lib/postkit.ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react';
+import { article, media } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, media],
+  defaults: { Callout: { variant: 'plain' } },
+});
+```
+
+`postkit.Provider` then takes `PostkitProvider`'s props, described below.
+Theme-variant `defaults` (`variant`, `size`, `tone`…) are written into the
+recipes' `defaultVariants`, and other defaults become view defaults (see
+[Defaults and slots](/docs/defaults-and-slots)).
+
 ## Entry points
 
-| Import                                    | Contains                                                           |
-| ----------------------------------------- | ------------------------------------------------------------------ |
-| `@postkit/chakra`                         | Components, `PostkitProvider`, the MDX map, declarations, theme    |
-| `@postkit/chakra/theme`                   | `createPostkitSystem`, `createPostkitTheme`, `postkitDefaultTheme` |
-| `@postkit/chakra/remark`                  | `createPostkitRemarkPlugins` and the Remark transform              |
-| `@postkit/chakra/document`                | `DocumentRenderer` and the `@postkit/core` parsers and serializers |
-| `@postkit/chakra/component-manifest.json` | The generated component manifest                                   |
+| Import                                    | Contains                                                             |
+| ----------------------------------------- | -------------------------------------------------------------------- |
+| `@postkit/chakra`                         | Components, `chakra`, `PostkitProvider`, the MDX map, recipes, theme |
+| `@postkit/chakra/theme`                   | `createPostkitSystem`, `createPostkitTheme`, `postkitDefaultTheme`   |
+| `@postkit/chakra/remark`                  | `createPostkitRemarkPlugins` and the Remark transform                |
+| `@postkit/chakra/document`                | `DocumentRenderer` and the `@postkit/core` parsers and serializers   |
+| `@postkit/chakra/component-manifest.json` | The generated component manifest                                     |
 
 The focused entry points keep React components out of theme libraries and
 build-only Markdown tooling.
@@ -1006,6 +2312,8 @@ site-wide Postkit configuration:
   syntax highlighter (see [MDX](/docs/mdx)).
 - `resolver` or `resolvers`, with `defaultResolver`: runtime link resolution
   for `LinkPreview` (see [Link previews](/docs/link-previews)).
+- `figures` and `figureLabel`: `figures="numbered"` numbers Figure, Video and
+  Device ("Fig. 1", "Fig. 2") in reading order.
 
 ```tsx
 import { PostkitProvider } from '@postkit/chakra';
@@ -1025,6 +2333,20 @@ import { PostkitProvider } from '@postkit/chakra';
 [Tokens](/docs/tokens) covers the layering, and [Part styles](/docs/part-styles)
 covers per-part overrides.
 
+## Recipes and views
+
+Each component's look is a Chakra slot recipe, exported as
+`postkit<Name>Recipe` (such as `postkitCalloutRecipe`) with its part names as
+`postkit<Name>Slots` (Aside shares Callout's), and registered under the recipe key
+`postkit<Name>`. The parts carry the same `data-postkit-*` anatomy attributes
+as the [headless](/docs/headless) views, so selectors written for one work
+for the other.
+
+To replace a component's render, build a view with `postkitChakraView`, which
+takes the definition, the recipe and a render function (see
+[Views](/docs/views)). To start from Postkit's own view instead, eject it with
+`npx postkit eject <name> --renderer chakra` (see [Eject](/docs/eject)).
+
 ## Presentation props
 
 Portable components share compact presentation controls:
@@ -1041,6 +2363,144 @@ component with live previews, its props, and its directive syntax.
 To render a portable document (from HTML, Markdown, MDX, or JSON) rather than
 compiled MDX, use `DocumentRenderer` from `@postkit/chakra/document`. See
 [Portable documents and feeds](/docs/portable-documents).
+
+## Email
+
+Source: /docs/email
+
+Your posts already have callouts, figures and footnotes. `@postkit/email`
+turns the same file into an email that looks right in Gmail, Outlook and Apple
+Mail, so the newsletter is never a second draft.
+
+## Render a post
+
+`renderEmail` takes an authored post and returns email-safe HTML, a plain-text
+version and any warnings:
+
+```ts
+// scripts/send-issue.ts
+import { renderEmail } from '@postkit/email';
+
+const { html, text, warnings } = await renderEmail(post.body, {
+  format: 'mdx',
+  baseUrl: 'https://example.com',
+  definitions: postkit.definitions, // your createPostkit() set
+});
+
+await newsletter.send({ subject: post.title, html, text });
+```
+
+Hand `html` and `text` to any provider. Postkit never sends anything itself.
+
+## Options
+
+| Option          | Description                                                                        |
+| --------------- | ---------------------------------------------------------------------------------- |
+| `format`        | `'mdx'`, `'markdown'` or `'document'` (a `@postkit/core` document).                |
+| `theme`         | Optional Chakra Email theme. Defaults to the light Postkit email theme.            |
+| `baseUrl`       | Resolves relative links and images, such as `'https://example.com'`.               |
+| `components`    | Optional overrides, keyed like your MDX map: components by name, prose by element. |
+| `wrapper`       | Optional layout component for the header, footer and unsubscribe link.             |
+| `definitions`   | The components the post may use. Defaults to every built-in.                       |
+| `url`           | The post on your site, where `link` fallbacks point.                               |
+| `audiences`     | The audiences this email is for, for `AudienceBoundary`.                           |
+| `newsletterUrl` | Where a `NewsletterSignup` would link.                                             |
+| `pretty`        | Indents the HTML, for review.                                                      |
+
+`format` defaults to `'markdown'` for a string and `'document'` for an object.
+It resolves to `{ html, text, warnings }`. To use only part of a post, as a
+digest does, call `parseEmailSource` first, pick the nodes you want, and pass
+the result with `format: 'document'`.
+
+## How it works
+
+`renderEmail` parses the post with Postkit's Remark preset and directive
+validation, as your site does, then `@postkit/core`'s safe MDX parser. Invalid props fail as they
+do on the site; unknown components, MDX code (`import`, `{expressions}`) and
+dangling footnotes become warnings instead. It maps each component to its
+email view, or to the component's declared fallback, and renders the result
+with Chakra Email's `render()`. The plain-text part comes from the same
+document, so it makes the same decisions as the HTML.
+
+It doesn't depend on a framework. Email is rendered in scripts, scheduled jobs
+and queue workers as often as in a page, so `renderEmail` lives in
+`@postkit/email`, not in the framework adapters.
+
+Email always renders in the light theme. Email clients apply their own dark
+mode.
+
+## What's supported
+
+| Components                       | Status    | In the inbox                                 |
+| -------------------------------- | --------- | -------------------------------------------- |
+| Callout · Aside · CallToAction   | Supported | Table layout, inline styles, your tones      |
+| Figure · Audio · Video           | Supported | Image with caption; media as a linked poster |
+| KeyTakeaway · PullQuote · Steps  | Supported | Boxed summary, ruled quote, numbered rows    |
+| Stat · ProductCard · LinkPreview | Supported | LinkPreview as a static card, never an embed |
+| Footnote · Footnotes             | Supported | Numbered notes at the end, no links          |
+| Everything else                  | Fallback  | Declared per component: text, link or omit   |
+
+The status on each component page is computed from what `@postkit/email`
+exports, so it can't drift out of date. Footnotes always render as end notes
+with superscript numbers and no links, because in-message anchors are
+unreliable across clients. The plain-text part marks them `[1]`.
+
+## Fallbacks
+
+Interactive components can't run in an inbox. Each one declares what to do
+instead, so a newsletter never shows a broken widget:
+
+| Fallback | What readers see                                    | Used by                                                                                                                                                                                                                     |
+| -------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text`   | The content as plain, readable text, code and links | AppearsOn, AudienceBoundary, AuthorCard, CardGrid, Carousel, Chart, CodeBlock, CodeGroup, Comparison, Device, Diff, Disclosure, FileCard, FileTree, Gallery, RelatedContent, SeriesNavigation, SponsorBlock, Tabs, Terminal |
+| `link`   | A short line linking to it on the web               | Poll (to your post), SocialPost (to the post itself)                                                                                                                                                                        |
+| `omit`   | Nothing; the block is skipped                       | ShareActions, NewsletterSignup                                                                                                                                                                                              |
+
+Your own components declare one the same way, with `email: { fallback: 'text' }`
+in `definePostkitComponent`. A component of your own with no email view and
+no fallback renders as text. When a fallback applies, or a component is
+unknown, `renderEmail` adds an entry to `warnings`, with a `code` such as
+`email-fallback` or `unknown-component`, a `message`, and the component and
+position when there is one. It never throws on content your site renders.
+
+To give your own component an email view, or replace a built-in one, pass it
+in `components`. A component with a view is never a fallback.
+
+## Views and the provider
+
+`renderEmail` is built from parts you can use directly. The package exports:
+
+- Views: `Aside`, `Audio`, `Callout`, `CallToAction`, `Figure`, `Footnote`,
+  `Footnotes`, `KeyTakeaway`, `LinkPreview`, `ProductCard`, `PullQuote`,
+  `Stat`, `Steps` and `Video`, and `postkitEmailViews`, the map of all of
+  them that the manifest's `support.email` is computed from.
+- `PostkitEmailProvider`, which applies `postkitEmailTheme` (light, with
+  literal `tone.*` and `tint.*` colours) and accepts Chakra Email theme
+  overrides on top, such as your own tones.
+- `createPostkitEmailMdxComponents()` and `postkitEmailMdxComponents`, the MDX
+  map of the views, for email builds that compile trusted MDX.
+- `parseEmailSource`, the parsing step of `renderEmail`.
+
+```tsx
+import { render } from '@chakra-email/core';
+import { Callout, CallToAction, PostkitEmailProvider } from '@postkit/email';
+
+const html = await render(
+  <PostkitEmailProvider>
+    <Callout title="Before you publish" tone="warning">
+      Review the destination and audience.
+    </Callout>
+    <CallToAction
+      title="Read the field guide"
+      primaryLabel="Read now"
+      primaryHref="https://example.com/guide"
+    />
+  </PostkitEmailProvider>,
+);
+```
+
+Audio and Video never emit native media elements, because major email clients
+don't support them consistently.
 
 ## Next.js
 
@@ -1390,6 +2850,726 @@ serialized as props across an Astro island boundary.
 
 The package README and the repository's `examples/astro` directory, which is
 built and inspected in CI, contain the complete API.
+
+## createPostkit
+
+Source: /docs/create-postkit
+
+`createPostkit` configures everything a host needs from the set of components
+it actually uses: the provider, the MDX map, the directive plugins and the
+manifest.
+
+```ts
+// lib/postkit.ts
+import { createPostkit } from '@postkit/react';
+import { article, technical, media } from '@postkit/react/kits';
+import { chakra } from '@postkit/chakra'; // omit for headless views
+import NextLink from 'next/link';
+
+import { showcaseDefinition, Showcase } from './components/showcase';
+import { CommuneFigure } from './components/figure';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+  exclude: ['Poll'],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+  defaults: { Callout: { variant: 'plain' } },
+  overrides: {
+    Figure: { view: CommuneFigure },
+  },
+  link: NextLink,
+});
+```
+
+## Options
+
+| Option       | Description                                                                                                                                                                                               |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `renderer`   | The renderer that supplies the views. Pass `chakra` from `@postkit/chakra` for the Chakra views. Omit it for the headless views.                                                                          |
+| `kits`       | The [kits](/docs/kits) to enable, such as `[article, technical]` from `@postkit/react/kits`.                                                                                                              |
+| `exclude`    | Component names to leave out of the enabled kits, such as `['Poll']`.                                                                                                                                     |
+| `components` | Your own components and third-party ones, as `{ definition, view }` pairs. See [New components](/docs/new-components).                                                                                    |
+| `defaults`   | Site-wide prop defaults, keyed by component name. See [Defaults and slots](/docs/defaults-and-slots).                                                                                                     |
+| `overrides`  | Per-component slot and view overrides, keyed by component name.                                                                                                                                           |
+| `link`       | The link component for internal links, such as Next.js `Link`. The framework adapters set it for you.                                                                                                     |
+| `remark`     | Options for the Remark preset, such as `{ postkit: { strict: false } }` or `{ postkit: { footnotes: { defaults } } }` ([Footnotes](/docs/footnotes)). Directives always validate against the enabled set. |
+
+### `defaults`
+
+```ts
+defaults: {
+  Callout: { variant: 'plain' },
+}
+```
+
+A prop an author writes always wins. With `@postkit/chakra`, theme-variant
+props (`variant`, `size`, `tone`) are written into the recipe's
+`defaultVariants`; other props become the view's defaults. The same object
+works with the headless renderer.
+
+`createPostkit` checks the object when it runs, and throws for a component
+that isn't enabled, a prop it doesn't have, or a value the prop doesn't
+allow.
+
+### `overrides`
+
+Each key is a component name. Each value can set:
+
+| Key          | Rung | Description                                                                                                   |
+| ------------ | ---- | ------------------------------------------------------------------------------------------------------------- |
+| `classNames` | 3    | Class names per part, applied alongside the part names. See [Part styles](/docs/part-styles).                 |
+| `slots`      | 5    | Components that replace single parts, keyed by part name. See [Defaults and slots](/docs/defaults-and-slots). |
+| `view`       | 6    | A view that replaces the whole render. See [Views](/docs/views).                                              |
+
+```ts
+overrides: {
+  Callout: {
+    classNames: { root: 'rounded-sm border-l-4', title: 'font-display' },
+    slots: { icon: InkMark },
+  },
+  Figure: { view: CommuneFigure },
+}
+```
+
+Site `classNames` come first on each part, then an instance's own
+`classNames`. A part name the component doesn't have throws, and the error
+lists its parts. A view not built with `postkitView` or `postkitChakraView`
+can't take `classNames` or `slots` overrides (see
+[Defaults and slots](/docs/defaults-and-slots)).
+
+`createPostkit` also throws when two kits or components define the same name
+or directive, when `exclude` names something that isn't enabled, and when a
+`components` entry repeats an enabled component. To replace a built-in
+component's view, use `overrides.Name.view`.
+
+## Returns
+
+| Property                | Description                                                                                                                              |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `postkit.Provider`      | The renderer's provider (Chakra's `PostkitProvider` with `renderer: chakra`) with your defaults and overrides. Wrap your app in it once. |
+| `postkit.mdxComponents` | Only the enabled components, plus prose. Pass it to your MDX runtime.                                                                    |
+| `postkit.remarkPlugins` | The Remark plugins for MDX and Markdown. Directives validate against this set.                                                           |
+| `postkit.manifest()`    | The `postkit.component-catalog` v2 [manifest](/docs/manifest) for this set.                                                              |
+| `postkit.definitions`   | The enabled definitions that render with this renderer. Pass them to `renderEmail` ([Email](/docs/email)).                               |
+| `postkit.renderer`      | The renderer in use.                                                                                                                     |
+
+With `renderer: chakra`, `postkit.Provider` takes `PostkitProvider`'s props,
+such as `system`, `preset` and `theme` (see [Chakra](/docs/chakra)). With
+either renderer it also takes `figures="numbered"`, which numbers Figure,
+Video and Device in reading order ("Fig. 1", "Fig. 2"). A Carousel or Gallery
+counts as one figure whose items read "Fig. 3", "Fig. 3b", "Fig. 3c".
+`figureLabel` changes "Fig.":
+
+```tsx
+<postkit.Provider figures="numbered" figureLabel="Figure">
+  {children}
+</postkit.Provider>
+```
+
+```tsx
+// pages/_app.tsx
+import type { AppProps } from 'next/app';
+import { postkit } from '../lib/postkit';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <postkit.Provider>
+      <Component {...pageProps} />
+    </postkit.Provider>
+  );
+}
+```
+
+## Framework adapters
+
+`@postkit/next`, `@postkit/react-router` and `@postkit/tanstack-router` each
+export a `createPostkit` preset. It takes the same options and returns the
+same result, with `link` set to the framework's link; pass link options (or
+your own component) as `link`. Image optimisation stays the host's job.
+
+```ts
+import { createPostkit } from '@postkit/next';
+import { article, technical, media } from '@postkit/react/kits';
+import { chakra } from '@postkit/chakra';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+  link: { linkProps: { prefetch: false } },
+});
+```
+
+The low-level exports stay available: `createPostkitNextComponents()`,
+`createPostkitReactRouterComponents()` and
+`createPostkitTanStackRouterComponents()`, plus each adapter's link
+(`createPostkitNextLink()` and so on).
+
+## definePostkitComponent
+
+Source: /docs/define-postkit-component
+
+`definePostkitComponent` creates a component definition: the framework-free
+contract for its props, its named parts and how it validates. Postkit's own
+components and yours are defined the same way. It lives in
+`@postkit/core/components`, so manifest tooling and editors can read
+definitions without React.
+
+```ts
+// callout.definition.ts
+import {
+  definePostkitComponent,
+  prop,
+  presentation,
+} from '@postkit/core/components';
+
+export const calloutDefinition = definePostkitComponent({
+  name: 'Callout',
+  directive: 'postkit-callout',
+  category: 'article-structure',
+  description: 'A highlighted note, tip, warning, or caution.',
+  children: 'mdx',
+  runtime: 'static',
+  stability: 'initial',
+  props: {
+    ...presentation,
+    title: prop.string('An optional heading.'),
+    tone: prop.enum(['note', 'tip', 'important', 'warning', 'caution'], {
+      description: 'The semantic emphasis.',
+      default: 'note',
+      themeVariant: true,
+      aliases: ['type'],
+    }),
+  },
+  slots: ['root', 'icon', 'content', 'title', 'body'],
+  keywords: ['note', 'admonition', 'alert'],
+  example: {
+    props: { tone: 'tip', title: 'Keep the content' },
+    children: 'Change the renderer without changing the article.',
+  },
+});
+```
+
+## Fields
+
+| Field         | Description                                                                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | The PascalCase component name, used in MDX (`<Callout>`) and as the key in `defaults` and `overrides`.                                                            |
+| `directive`   | The kebab-case Markdown directive name, such as `postkit-callout`.                                                                                                |
+| `category`    | `article-structure`, `technical-content`, `media`, `discovery`, `engagement` or `publishing`. It groups the component in the manifest and in editors.             |
+| `description` | A one-line description for the catalog and editors.                                                                                                               |
+| `children`    | `'mdx'` when the component wraps authored content, or `'none'` (the default).                                                                                     |
+| `runtime`     | `static` (the default), `native-controls`, `client` or `resolver`. `client` and `resolver` components hydrate in Astro.                                           |
+| `stability`   | `initial` (the default), `experimental`, `stable` or `deprecated`. Editors can hide experimental components.                                                      |
+| `props`       | The props, built with `presentation` and the `prop` builders.                                                                                                     |
+| `slots`       | The anatomy: the named parts every renderer must emit. It must include `root`.                                                                                    |
+| `keywords`    | Optional search terms for the catalog and editors.                                                                                                                |
+| `example`     | Optional example props, and children for an `mdx` component, for the catalog and generated docs.                                                                  |
+| `email`       | `{ fallback }`, where `fallback` is `'link'`, `'text'` or `'omit'`: what the email renderer does when it has no view for the component. See [Email](/docs/email). |
+
+`definePostkitComponent` checks the definition when it runs and throws a
+`TypeError` naming the component for anything it can't use: a name that isn't
+PascalCase, a directive that isn't kebab-case, an unknown category, a missing
+`root` slot, a prop not built with the builders, or example props the
+definition doesn't declare. It returns the definition frozen, with the
+defaults filled in and `themeVariants` listing the props marked as theme
+variants.
+
+## Props
+
+`presentation` spreads in the shared `size` (`sm`, `md` or `lg`, default
+`md`) and `variant` (`outline`, `subtle` or `plain`, default `subtle`) props.
+The `prop` builders declare the rest:
+
+| Builder                                  | Example                                                                            |
+| ---------------------------------------- | ---------------------------------------------------------------------------------- |
+| `prop.string(description, options?)`     | `prop.string('An optional heading.')`                                              |
+| `prop.number(description, options?)`     | `prop.number('The start time, in seconds.', { default: 0 })`                       |
+| `prop.boolean(description, options?)`    | `prop.boolean('Whether it starts open.', { default: false })`                      |
+| `prop.enum(values, options)`             | `prop.enum(['note', 'tip'], { description, default: 'note', themeVariant: true })` |
+| `prop.json<Type>(description, options?)` | `prop.json<Item[]>('The items, as a JSON array.', { required: true })`             |
+
+A directive writes every value as a string: numbers and booleans are checked
+and converted, a bare boolean attribute (`{open}`) means `true`, and a `json`
+prop takes literal JSON, checked for syntax only. `prop.enum` takes its
+description in the options, or a string in place of the options.
+
+Options, for every builder:
+
+- `required`: `true` makes the prop required. A directive without it fails
+  validation, and views receive it as non-optional.
+- `default`: the value when the author doesn't set one. It appears in the
+  manifest and the props table, and views receive the prop as non-optional.
+  An enum default must be one of its values.
+- `aliases`: other names authors may use, such as Callout's `type` for
+  `tone`. Directives, MDX props and the static serializer map an alias to
+  the prop, and the prop wins when both are set (see
+  [Validation](/docs/validation#aliases-and-warnings)).
+- `recommended`: `{ reason, unless? }` for a prop authors should set. Leaving
+  it out is a warning, never an error, in every mode. `unless` lists props
+  that make it unnecessary, such as Video's `decorative`. A required prop
+  can't also be recommended.
+
+`prop.enum` and `prop.boolean` also take `themeVariant`: `true` makes the
+prop a recipe variant automatically, and a site-wide default for it goes into
+the recipe's `defaultVariants`.
+
+## What it derives
+
+From one definition, TypeScript derives the rest with no code generation:
+
+| Derived                     | For Callout                                                                 |
+| --------------------------- | --------------------------------------------------------------------------- |
+| Prop types for views        | `PostkitPropsOf<typeof calloutDefinition>`                                  |
+| Prop types for authors      | `PostkitAuthoredPropsOf<typeof calloutDefinition>`                          |
+| Slot union                  | `PostkitSlotOf<typeof calloutDefinition>`                                   |
+| Variant union               | `PostkitThemeVariantOf<typeof calloutDefinition>`                           |
+| Recipe key                  | `PostkitRecipeKeyOf<typeof calloutDefinition>`, which is `'postkitCallout'` |
+| MDX map entry and directive | Registered when the component is enabled                                    |
+
+`PostkitPropsOf` is what a view receives, so a prop with a `default` is never
+optional. `PostkitAuthoredPropsOf` is what an author writes, where only
+`required` props are required. All of these types come from
+`@postkit/core/components`.
+
+What TypeScript can't express is generated or computed from the definitions:
+the [manifest](/docs/manifest) JSON, the Astro wrappers and the renderer
+support matrix.
+
+## Views
+
+A view reads the definition. `postkitView` (headless) and `postkitChakraView`
+(Chakra, with a recipe) give the render function typed `props` and a
+`part(name)` helper that applies each part's attributes, class names and
+styles, and both swap in slot overrides:
+
+```tsx
+import { postkitCalloutMarks, postkitView } from '@postkit/react';
+
+export const Callout = postkitView(calloutDefinition, ({ props, part }) => (
+  <aside {...part('root')}>
+    <span {...part('icon')} aria-hidden="true">
+      {postkitCalloutMarks[props.tone]}
+    </span>
+    <div {...part('content')}>
+      {props.title && <p {...part('title')}>{props.title}</p>}
+      <div {...part('body')}>{props.children}</div>
+    </div>
+  </aside>
+));
+```
+
+See [Views](/docs/views) for writing one, and
+[New components](/docs/new-components) for scaffolding a definition and view
+together.
+
+## Manifest
+
+Source: /docs/manifest
+
+The manifest is the machine-readable catalog of components: each one's
+name, directive, props, parts and renderer support. Editors such as Prismark
+read it to offer writers the components a site renders, and agents and other
+tooling read it instead of importing a renderer.
+
+Its id is `postkit.component-catalog`. Version 2 ships with 0.3.0.
+
+## Get the manifest
+
+For the set your site enabled, call `manifest()` on your Postkit:
+
+```ts
+import { postkit } from './lib/postkit';
+
+const manifest = postkit.manifest();
+```
+
+Or write it from the terminal, for editors that read it from your repo. The
+[CLI](/docs/cli#postkit-manifest) loads your config and prints the same JSON,
+or writes it to `--out`:
+
+```sh
+npx postkit manifest --out public/postkit-manifest.json
+```
+
+Either way, the manifest describes exactly the components you enabled, your
+own included, not everything installed.
+
+`@postkit/chakra/component-manifest.json` is the manifest of every built-in
+component. A package that ships components of its own can publish one too,
+written with `createPostkitComponentManifest` from `@postkit/core/components`,
+and `mergePostkitComponentManifests` combines several into one.
+
+## What v2 adds
+
+Version 2 keeps every v1 field and adds:
+
+| Field          | Level     | Description                                                                                      |
+| -------------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `package`      | Component | The package that defines it.                                                                     |
+| `kit`          | Component | The [kit](/docs/kits) it belongs to.                                                             |
+| `stability`    | Component | `initial`, `experimental`, `stable` or `deprecated`. Editors can hide experimental components.   |
+| `support`      | Component | Which renderers support it, computed from what each package exports rather than written by hand. |
+| `slots`        | Component | The anatomy: the named parts every renderer emits.                                               |
+| `variants`     | Component | The props that are theme variants.                                                               |
+| `default`      | Prop      | The value when the author doesn't set one.                                                       |
+| `themeVariant` | Prop      | Whether the prop is a recipe variant.                                                            |
+| `aliases`      | Prop      | Other names authors may use for the prop, such as Callout's `type`. Only when it has some.       |
+| `recommended`  | Prop      | `{ reason, unless? }` for a prop that warns when it's missing, such as Video's `captions`.       |
+
+A v2 component entry, shortened to one prop:
+
+```json
+{
+  "name": "Callout",
+  "directive": "postkit-callout",
+  "description": "A highlighted note, tip, warning, or caution.",
+  "childMode": "mdx",
+  "directiveRemarkPlugins": ["directives", "postkit"],
+  "props": {
+    "tone": {
+      "kind": "enum",
+      "values": ["note", "tip", "important", "warning", "caution"],
+      "description": "The semantic emphasis of the aside.",
+      "default": "note",
+      "themeVariant": true,
+      "aliases": ["type"]
+    }
+  },
+  "slots": ["root", "icon", "content", "title", "body"],
+  "variants": ["size", "variant", "tone"],
+  "category": "Article structure",
+  "kit": "article",
+  "package": "@postkit/core",
+  "keywords": [
+    "callout",
+    "article",
+    "structure",
+    "size",
+    "variant",
+    "title",
+    "tone"
+  ],
+  "example": { "props": {}, "jsx": "…", "directive": "…" },
+  "preview": { "kind": "live", "label": "Callout component preview" },
+  "runtime": "static",
+  "stability": "initial",
+  "support": {
+    "react": "supported",
+    "headless": "supported",
+    "chakra": "supported",
+    "astro": "static",
+    "email": "supported"
+  }
+}
+```
+
+`kit` is `null` and `package` is what you pass (or `null`) for your own
+components. `components` is an object keyed by component name, alongside the
+manifest's `id` (`postkit.component-catalog`), `version` (`2`) and
+`declarationVersion`.
+
+## Support
+
+The `support` field is computed from what each renderer package exports:
+
+| Field      | Values                                            | Meaning                                                                                            |
+| ---------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `react`    | `supported`, `not-supported`                      | v1's field: some React renderer has a view.                                                        |
+| `headless` | `supported`, `chakra-only`, `not-supported`       | `@postkit/react`. `chakra-only` means only `@postkit/chakra` has a view; no built-in is, in 0.3.0. |
+| `chakra`   | `supported`, `not-supported`                      | `@postkit/chakra`.                                                                                 |
+| `astro`    | `static`, `hydrated`                              | Whether Astro hydrates it.                                                                         |
+| `email`    | `supported`, `{ "fallback": … }`, `not-supported` | `@postkit/email`, or the definition's declared fallback: `text`, `link` or `omit`.                 |
+
+`astro` is `hydrated` for `client` and `resolver` components, and `static`
+otherwise.
+
+A renderer the manifest's producer doesn't know is left out: a headless
+site's `manifest()` has no `chakra` field, and `email` is there only when the
+producer read `@postkit/email`'s views. `component-manifest.json` has it;
+`@postkit/chakra`'s `postkitComponentCatalog` doesn't, since it doesn't depend
+on `@postkit/email`, and neither does `postkit.manifest()`. To add it to a
+manifest you write, pass
+`renderers: { email: Object.keys(postkitEmailViews) }` to
+`createPostkitComponentManifest`. A component is supported in email when
+`@postkit/email` exports a view for its definition; otherwise `renderEmail`
+applies the fallback the definition declares (`{ "fallback": "text" }`,
+`"link"` or `"omit"`, see [Email](/docs/email)). Component pages show the
+same data, so they can't drift from the packages.
+
+## Version 1
+
+v1 stays readable. `readPostkitComponentManifest` from
+`@postkit/core/components` takes either version and returns v2, filling what
+v1 never recorded with neutral values (no slots or variants, `package: null`,
+the kit from the category, and no `email`, since v1's `not-defined` was a
+placeholder). `isPostkitComponentManifestV2` and
+`isPostkitComponentManifestV1` tell them apart, and
+`mergePostkitComponentManifests` combines several:
+
+```ts
+import { readPostkitComponentManifest } from '@postkit/core/components';
+import manifest from '@postkit/chakra/component-manifest.json';
+
+const catalog = readPostkitComponentManifest(manifest);
+```
+
+A v1 component entry looks like this:
+
+```json
+{
+  "name": "Callout",
+  "directive": "postkit-callout",
+  "description": "A highlighted note, tip, warning, or caution.",
+  "childMode": "mdx",
+  "directiveRemarkPlugins": ["directives", "postkit"],
+  "props": {
+    "tone": {
+      "kind": "enum",
+      "values": ["note", "tip", "important", "warning", "caution"],
+      "description": "The semantic emphasis of the aside."
+    }
+  },
+  "category": "Article structure",
+  "runtime": "static",
+  "stability": "initial",
+  "support": { "react": "supported", "astro": "static", "email": "not-defined" }
+}
+```
+
+The entry is shortened here: `props` also lists `size`, `variant` and `title`,
+and each entry carries `keywords`, `example` and `preview`. The
+`email: "not-defined"` value in v1 is a hand-written placeholder that v2
+replaces with computed support.
+
+## CLI
+
+Source: /docs/cli
+
+One small tool for the moments config isn't enough: turning on kits, taking a
+component into your repo, keeping it current, and making your own.
+
+The CLI is `@postkit/cli`, and its command is `postkit`. It depends only on
+`@postkit/core` and file tooling, so it works with either renderer.
+
+```sh
+npm install --save-dev @postkit/cli
+```
+
+Once it's installed, `npx postkit` runs your project's copy. To try it without
+installing, use the package name: `npx @postkit/cli eject figure`. A bare
+`npx postkit` outside a project would look for a different, unscoped package.
+
+## Commands
+
+```sh
+npx postkit --help
+npx postkit eject --help
+```
+
+| Command            | What it does                                      | Example                    |
+| ------------------ | ------------------------------------------------- | -------------------------- |
+| `postkit add`      | Turn on a kit or component and update your config | `npx postkit add media`    |
+| `postkit eject`    | Copy a component's view into your repo to own it  | `npx postkit eject figure` |
+| `postkit diff`     | See what changed upstream since you ejected       | `npx postkit diff figure`  |
+| `postkit new`      | Scaffold a component of your own                  | `npx postkit new showcase` |
+| `postkit manifest` | Write the catalog for editors like Prismark       | `npx postkit manifest`     |
+
+Names work in any case: `figure`, `Figure`, `code-block` and `CodeBlock` all
+work. `npx postkit --version` prints the installed version.
+
+Every command takes `--config <file>`. An error you can fix, such as a
+component that doesn't exist or a file that's already there, prints as one
+line and exits with 1.
+
+## Your config
+
+Every command that needs your `createPostkit` config finds it the same way:
+
+1. `--config <file>`, if you pass it.
+2. `postkit.config.ts` (or `.mts`, `.js`, `.mjs`) in the current directory,
+   then in the project root (the nearest `package.json`). It exports your
+   `createPostkit` result as `default` or `postkit`:
+
+   ```ts
+   // postkit.config.ts
+   export { postkit as default } from './lib/postkit';
+   ```
+
+3. Otherwise, the one file in your project that calls `createPostkit(`. If
+   there's more than one, the CLI stops and asks for `--config`.
+
+`add` and `eject` edit the file that calls `createPostkit({ … })`, following
+`postkit.config.ts` to it. They only change what they can read with
+certainty: a single call with an object literal, array literals for `kits`,
+`components` and `exclude`, and an object literal for `overrides`. Anything
+else, such as kits built in a function or options spread from another
+object, is left alone, and the CLI prints the exact lines to add instead.
+
+## postkit add
+
+```sh
+npx postkit add media
+npx postkit add poll
+```
+
+```text
+✓ lib/postkit.ts   kits += media
+✓ lib/postkit.ts   components += Poll
+```
+
+A kit name (`article`, `technical`, `media`, `discovery`, `engagement`,
+`publishing`) is imported from `@postkit/react/kits` and added to `kits`. A
+built-in component whose kit is already on is taken out of `exclude`;
+otherwise its definition (from `@postkit/core/components`) and your renderer's
+view (from `@postkit/react` or `@postkit/chakra`) are imported and added to
+`components`. A name that's neither a kit nor a built-in component stops with
+a hint to run `postkit new` instead.
+
+| Flag        | Default    | Meaning                               |
+| ----------- | ---------- | ------------------------------------- |
+| `--config`  | discovered | The config file                       |
+| `--dry-run` | `false`    | Print the change as a diff, unwritten |
+
+## postkit eject
+
+Ejecting copies the view (and its recipe, for Chakra) into your repo. The
+definition stays upstream, so your posts, validation and editor support don't
+fork.
+
+```sh
+npx postkit eject figure --renderer chakra --to libs/postkit
+```
+
+```text
+✓ libs/postkit/figure/figure.recipe.ts
+✓ libs/postkit/figure/figure.tsx
+✓ .postkit-eject.json   Figure @ @postkit/chakra 0.3.0
+✓ lib/postkit.ts   overrides.Figure.view → ../libs/postkit/figure/figure
+
+Still bound to Figure's definition from @postkit/core/components.
+It imports @postkit/chakra, @postkit/core, @postkit/react; keep them in your dependencies.
+Chakra applies the recipe registered as postkitFigure first: register the ejected recipe in your theme to use your edits (see /docs/eject).
+Run `postkit diff figure` after upgrading @postkit/chakra.
+```
+
+The folder is `<--to>/<component>/`. With `--renderer headless`, you get the
+view and its CSS instead of a recipe. Without `--force`, eject stops if a file
+it would write already exists.
+
+| Flag            | Default       | Meaning                               |
+| --------------- | ------------- | ------------------------------------- |
+| `--renderer`    | from config   | `headless` or `chakra`                |
+| `--to`          | `src/postkit` | Where the component's folder goes     |
+| `--dry-run`     | `false`       | Show the files and config change only |
+| `--force`       | `false`       | Overwrite files that already exist    |
+| `--no-register` | registers     | Leave your config alone               |
+
+"From config" means `chakra` when your config passes `renderer: chakra` from
+`@postkit/chakra`, and `headless` when it has no renderer. See
+[Eject](/docs/eject) for when to use it.
+
+## postkit diff
+
+After an upgrade, see exactly what upstream changed in the views you own, and
+decide what to bring across.
+
+```sh
+npx postkit diff figure
+```
+
+```text
+Figure (chakra) in libs/postkit/figure: @postkit/chakra 0.3.0 → 0.3.2
+--- a/figure.tsx	@postkit/chakra@0.3.0
++++ b/figure.tsx	@postkit/chakra@0.3.2
+@@ -59,7 +59,7 @@
+           alt={alt}
+           htmlWidth={postkitImageDimension(props.width)}
+           htmlHeight={postkitImageDimension(props.height)}
+-          loading={props.loading}
++          loading={props.priority ? 'eager' : props.loading}
+           decoding="async"
+           sizes={props.sizes}
+           srcSet={props.srcSet}
+
+1 file changed upstream. Your copy wasn't changed.
+Your edits: figure.recipe.ts.
+```
+
+Without a name, it checks every component in `.postkit-eject.json`. When
+nothing changed upstream, it prints `No upstream changes.`
+
+| Flag          | Meaning                                                         |
+| ------------- | --------------------------------------------------------------- |
+| `--accept`    | Record the installed version as your new base, once you're done |
+| `--exit-code` | Exit with 1 when upstream changed, for CI                       |
+
+## postkit new
+
+Scaffold a component with its definition, headless view and styles. It gets a
+Markdown directive, validation and a manifest entry for free.
+
+```sh
+npx postkit new showcase
+```
+
+```text
+✓ src/postkit/showcase/showcase.definition.ts
+✓ src/postkit/showcase/showcase.tsx
+✓ src/postkit/showcase/showcase.css
+
+Register it with createPostkit({ components }) in lib/postkit.ts:
+
+import { Showcase } from '../src/postkit/showcase/showcase';
+import { showcaseDefinition } from '../src/postkit/showcase/showcase.definition';
+
+export const postkit = createPostkit({
+  // …your renderer and kits
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+});
+
+Use it as <Showcase /> in MDX or :::postkit-showcase in Markdown.
+Import showcase.css from your global stylesheet for the headless view.
+```
+
+With `--chakra` it also writes `showcase.recipe.ts` and `showcase.chakra.tsx`,
+and the registration uses the Chakra view. With `--spec` it writes a spec per
+view (`showcase.spec.tsx`, and `showcase.chakra.spec.tsx` with `--chakra`).
+
+| Flag                 | Default             | Meaning                                      |
+| -------------------- | ------------------- | -------------------------------------------- |
+| `--to`               | `src/postkit`       | Where the component's folder goes            |
+| `--chakra`           | `false`             | Also a Chakra view and slot recipe           |
+| `--spec`             | `false`             | A spec per view (Vitest)                     |
+| `--category`         | `article-structure` | The catalog category                         |
+| `--directive`        | `postkit-<name>`    | The Markdown directive                       |
+| `--description`      |                     | The one line editors and the catalog show    |
+| `--import-extension` | `none`              | `js` for Node's `nodenext` module resolution |
+| `--dry-run`          | `false`             | List the files without writing them          |
+| `--force`            | `false`             | Overwrite files that already exist           |
+
+In an Nx workspace, `nx g @postkit/nx:component showcase` writes the same files
+from the same templates. See [New components](/docs/new-components).
+
+## postkit manifest
+
+```sh
+npx postkit manifest --out public/postkit-manifest.json
+```
+
+Loads your config (TypeScript and TSX work) and writes the v2 manifest of
+exactly the components it enables, yours included, to stdout or `--out`. It's
+the same JSON as `postkit.manifest()`, for editors like Prismark. With
+`--out`, it confirms on stderr:
+
+```text
+✓ public/postkit-manifest.json   from lib/postkit.ts
+```
+
+`manifest` finds the config like the other commands (see
+[Your config](#your-config)). The module must export the `createPostkit`
+result as `default` or `postkit`, or as its only export with a `manifest()`
+method.
 
 ## API reference
 

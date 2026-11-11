@@ -34,6 +34,7 @@ export const docsNavigation: readonly DocsNavGroupDefinition[] = [
       { label: 'MDX', slug: 'mdx' },
       { label: 'Markdown directives', slug: 'markdown-directives' },
       { label: 'Validation', slug: 'validation' },
+      { label: 'Footnotes', slug: 'footnotes' },
       { label: 'Portable documents and feeds', slug: 'portable-documents' },
       { label: 'Link previews and unfurling', slug: 'link-previews' },
       { label: 'Writing in Prismark', slug: 'writing-in-prismark' },

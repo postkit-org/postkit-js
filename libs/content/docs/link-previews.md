@@ -2,7 +2,7 @@
 title: Link previews and unfurling
 summary: Resolve URLs behind a server boundary with @postkit/unfurl and render normalized link or social metadata.
 category: Writing
-order: 5
+order: 6
 ---
 
 Remote content is normalized before rendering. `@postkit/unfurl` returns a

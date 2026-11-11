@@ -4,7 +4,7 @@ summary: Choose the components your writers need, and ship only those.
 category: Get started
 order: 4
 since: '0.3.0'
-status: draft
+status: published
 ---
 
 A kit is a named set of component definitions. Postkit's 38 components come in
@@ -22,10 +22,10 @@ bundled, validated and described in your manifest.
 | `engagement` | `@postkit/react/kits/engagement` | CallToAction, NewsletterSignup, Poll, ShareActions                                                               |
 | `publishing` | `@postkit/react/kits/publishing` | ProductCard, SponsorBlock                                                                                        |
 
-All six are also exported together from `@postkit/react/kits`. Each component
-page shows which kit it belongs to.
-
-{/* TODO(0.3.0): Footnote and Footnotes have no component pages yet (03 §7.1, D13). */}
+All six are also exported together from `@postkit/react/kits`, and as one
+array, `postkitKits`. Each component page shows which kit it belongs to.
+[Footnote](/components/footnote) and [Footnotes](/components/footnotes) are
+in `article`, and [Footnotes](/docs/footnotes) covers how to write them.
 
 ## Turn kits on
 
@@ -84,9 +84,11 @@ An excluded or not-enabled component fails strict validation like an
 unknown one, and the error says it isn't enabled. With `strict: false` it's a
 warning, as for any unknown component.
 
-On the headless renderer, a `chakra-only` component in a kit (an interactive
-component still waiting for its headless view) stays out of the manifest.
-Using it fails the build in every mode, with an error naming the component.
+Every built-in component has a view in both renderers, so every kit works
+with either one. If a renderer has no view for an enabled component, as can
+happen with a third-party renderer, the component stays out of the manifest,
+and using it fails the build in every mode with an error naming it. Give it a
+view with `overrides`, or add it to `exclude`.
 
 ## Add your own
 
@@ -95,6 +97,7 @@ Your own components and third-party packages join the set through
 
 ## Compatibility
 
-The `@postkit/react` root still exports every component for 0.x
-compatibility, and individual components stay importable for full
-tree-shaking. Kits are the recommended way to choose a set.
+You can still import components one at a time: the `@postkit/react` root
+exports every headless view, and the `@postkit/chakra` root every Chakra view.
+Kits are the recommended way to choose a set, because they also set what is
+validated and what the manifest describes.
