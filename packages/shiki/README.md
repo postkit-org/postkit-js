@@ -63,9 +63,31 @@ export const codeBlockAdapter = createPostkitShikiAdapter({
 ```
 
 The adapter loads Shiki on demand, and Chakra reuses the loaded highlighter for
-all code blocks below the provider. Use Chakra's lower-level
-`createShikiAdapter` directly when an application needs custom Shiki grammars or
-non-bundled themes.
+all code blocks below the provider. Nothing is downloaded until the first code
+block mounts; then Shiki's core, a regular-expression engine, the configured
+grammars (and the grammars they embed) and the two themes load once, each as its
+own chunk. Use Chakra's lower-level `createShikiAdapter` directly when an
+application needs custom Shiki grammars or non-bundled themes.
+
+## Regex engine
+
+Shiki tokenizes with a regular-expression engine. The adapter uses Shiki's
+JavaScript engine by default, which runs the grammars on the browser's own
+`RegExp`: about 20 KB gzipped, with no WebAssembly. Every default grammar, plus
+`css`, `html` and `yaml`, highlights exactly as it does on Oniguruma, the engine
+VS Code uses; the package's tests check this.
+
+A few rarely used grammars rely on Oniguruma features the JavaScript engine
+can't emulate. A block in one of those renders as plain text, with a warning in
+development. Switch that application to Oniguruma, which loads a WebAssembly
+build (about 225 KB gzipped) on demand:
+
+```ts
+export const codeBlockAdapter = createPostkitShikiAdapter({
+  languages: ['bash', 'json', 'tsx'],
+  engine: 'oniguruma',
+});
+```
 
 ## Exports
 
@@ -73,6 +95,7 @@ non-bundled themes.
 - `postkitShikiLanguages`
 - `postkitShikiThemes`
 - `CreatePostkitShikiAdapterOptions`
+- `PostkitShikiEngine`
 - `PostkitShikiHighlightOptions`
 - `PostkitShikiThemes`
 
