@@ -1,5 +1,6 @@
 import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { Callout, KeyTakeaway, Terminal } from '@postkit/chakra';
+import { gradients } from '@postkit/site-theme';
 import NextLink from 'next/link';
 
 import { PageContainer, TwoToneHeading } from '../layout';
@@ -96,9 +97,10 @@ export function HeroArticle() {
       aria-label="An article written with Postkit"
       paddingTop={{ base: '12', md: '20' }}
     >
+      {/* The brand gradient's softer cover stops, as on note covers (02 §3, added Nov 11, 2026). */}
       <Flex
         justify="center"
-        bg="bg.subtle"
+        backgroundImage={gradients.cover}
         borderRadius="3xl"
         paddingBlock="clamp(24px, 6vw, 72px)"
         paddingInline={{ base: '3', sm: '6' }}

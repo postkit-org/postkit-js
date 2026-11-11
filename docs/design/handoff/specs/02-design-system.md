@@ -45,7 +45,8 @@ The full table is in `tokens.json` → `color`, and on the **Colour tokens** boa
   - the active sidenote edge (vertical);
   - the 4px rule above the Commune band;
   - the 12px band on share images;
-  - note covers (the softer `cover` stops).
+  - note covers (the softer `cover` stops);
+  - the ground behind the home page's article preview, under the hero (the `cover` stops; added Nov 11, 2026).
 
   Never on text, buttons or large fills.
 
