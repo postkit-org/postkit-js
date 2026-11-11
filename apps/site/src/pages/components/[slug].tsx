@@ -42,8 +42,11 @@ import {
   TwoToneHeading,
   type TocHeading,
 } from '../../components/layout';
-import { componentPropDefault } from '../../lib/component-defaults';
 import { componentEmailSupport } from '../../lib/component-email-support';
+import {
+  componentPropDefaultsByName,
+  type ComponentPropDefaults,
+} from '../../lib/component-prop-defaults';
 import { getComponentPage } from '../../lib/component-pages';
 import {
   componentNameToSlug,
@@ -74,6 +77,11 @@ interface ComponentPageProps {
   readonly theming: BodySection | null;
   readonly accessibility: BodySection | null;
   readonly renderers: readonly RendererSupportRow[];
+  /**
+   * Manifest v2's per-prop defaults for this component and the related ones, keyed by
+   * name: the props table, the controls' starting values and the related tiles.
+   */
+  readonly defaults: Readonly<Record<string, ComponentPropDefaults>>;
   /** The content file's path under `libs/content/components`, for "Edit this page". */
   readonly contentFile: string | null;
 }
@@ -161,15 +169,16 @@ export const getStaticProps: GetStaticProps<
   const contentFile =
     allComponentPages.find((entry) => entry.slug === slug)?._meta.filePath ??
     null;
+  const relatedNames = related.filter(
+    (name): name is PostkitComponentName => !!getComponentByName(name),
+  );
 
   return {
     props: {
       name: component.name,
       tagline: page.tagline,
       layers: page.anatomy?.layers ?? null,
-      related: related.filter(
-        (name): name is PostkitComponentName => !!getComponentByName(name),
-      ),
+      related: relatedNames,
       usage: await bodySection(sections, 'usage'),
       theming: await bodySection(sections, 'theming'),
       accessibility: await bodySection(sections, 'accessibility'),
@@ -177,6 +186,7 @@ export const getStaticProps: GetStaticProps<
         component,
         componentEmailSupport(component.name),
       ),
+      defaults: componentPropDefaultsByName([component.name, ...relatedNames]),
       contentFile,
     },
   };
@@ -216,19 +226,19 @@ export default function ComponentPage({
   theming,
   accessibility,
   renderers,
+  defaults,
   contentFile,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const component = getComponentByName(name);
   const controls = component ? previewControls(component) : [];
+  const ownDefaults = defaults[name] ?? {};
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       controls.map(({ prop, values: options }) => {
         const sampled = component
           ? componentPreviewSamples[component.name].props[prop]
           : undefined;
-        const fallback = component
-          ? componentPropDefault(component.name, prop)
-          : undefined;
+        const fallback = ownDefaults[prop];
         const value =
           typeof sampled === 'string'
             ? sampled
@@ -251,7 +261,7 @@ export default function ComponentPage({
   // The source shows the controls' values that differ from the documented defaults.
   const sourceValues = Object.fromEntries(
     Object.entries(values).filter(
-      ([prop, value]) => componentPropDefault(component.name, prop) !== value,
+      ([prop, value]) => ownDefaults[prop] !== value,
     ),
   );
   const source = usageSource(component, syntax, sourceValues);
@@ -390,7 +400,7 @@ export default function ComponentPage({
               title="Props"
               quiet="Always in step with the code."
             >
-              <PropsTable component={component} />
+              <PropsTable component={component} defaults={ownDefaults} />
             </PageSection>
 
             <PageSection
@@ -460,7 +470,10 @@ export default function ComponentPage({
                 >
                   {relatedComponents.map((entry) => (
                     <chakra.li key={entry.name} minWidth="0">
-                      <ComponentTile component={entry} />
+                      <ComponentTile
+                        component={entry}
+                        defaults={defaults[entry.name] ?? {}}
+                      />
                     </chakra.li>
                   ))}
                 </Grid>
