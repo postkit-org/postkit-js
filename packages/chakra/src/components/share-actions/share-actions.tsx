@@ -12,6 +12,7 @@ import {
 import { postkitDefaultShareServiceIds } from '@postkit/core/behaviors';
 import { shareActionsDefinition } from '@postkit/core/components';
 import { useShareActions } from '@postkit/react';
+import { useId } from 'react';
 
 import { parseJsonProp } from '../../lib/json-props.js';
 import { usePostkit } from '../../lib/provider.js';
@@ -44,6 +45,11 @@ export type ShareActionsProps = {
  * Chakra recipe. Sharing comes from `useShareActions` in `@postkit/react`,
  * which the headless `ShareActions` uses too; the provider's
  * `socialServices` supply labels, icons and accents.
+ *
+ * The `label` part names the group of actions, and each action is named by
+ * its visible service label. A service without an icon shows its initial,
+ * drawn by the recipe from `data-postkit-initial` so it stays out of the
+ * button's text (WCAG 2.5.3).
  */
 export const ShareActions = postkitChakraView<
   typeof shareActionsDefinition,
@@ -64,10 +70,18 @@ export const ShareActions = postkitChakraView<
     onShare,
   });
 
+  const labelId = `${useId()}-label`;
+
   return (
     <Box as="aside" {...part('root')}>
-      <Text {...part('label')}>{label}</Text>
-      <Box {...part('actions')}>
+      <Text id={label ? labelId : undefined} {...part('label')}>
+        {label}
+      </Text>
+      <Box
+        role="group"
+        aria-labelledby={label ? labelId : undefined}
+        {...part('actions')}
+      >
         {services.map((serviceId) => {
           const service = socialServices[serviceId];
           const serviceLabel = service?.label ?? serviceId;
@@ -83,9 +97,14 @@ export const ShareActions = postkitChakraView<
               <Box
                 as="span"
                 aria-hidden={service?.icon ? undefined : true}
+                data-postkit-initial={
+                  service?.icon
+                    ? undefined
+                    : serviceLabel.slice(0, 1).toUpperCase()
+                }
                 {...part('icon')}
               >
-                {service?.icon ?? serviceLabel.slice(0, 1).toUpperCase()}
+                {service?.icon}
               </Box>
               {serviceLabel}
             </Button>

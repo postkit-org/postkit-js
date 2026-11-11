@@ -19,7 +19,7 @@ export interface ShareActionsBehaviorFixture {
   readonly url: string;
   readonly title: string;
   readonly text: string;
-  /** The heading, and the start of each action's accessible name. */
+  /** The heading shown above the actions. */
   readonly label: string;
   /** Service ids, in order; the renderer's default registry labels them. */
   readonly services: readonly string[];
@@ -54,9 +54,9 @@ type NativeShare = 'none' | 'shares' | 'cancels';
 
 function action(root: Element, label: string): HTMLButtonElement {
   const button = Array.from(root.querySelectorAll('button')).find(
-    (candidate) => accessibleName(candidate) === `${fixture.label}: ${label}`,
+    (candidate) => accessibleName(candidate) === label,
   );
-  check(button, `An action is named "${fixture.label}: ${label}"`);
+  check(button, `An action is named "${label}"`);
   return button;
 }
 
@@ -142,15 +142,29 @@ export function shareActionsBehaviorSpec(
     behavior: 'ShareActions',
     cases: [
       {
-        name: 'names one button per service after the label',
+        name: 'names one button per service by its visible label',
         run: run(async (root, { clipboard, shares }) => {
           const buttons = Array.from(root.querySelectorAll('button'));
           checkEqual(buttons.length, LABELS.length, 'One action per service');
           for (const label of LABELS) {
+            const button = action(root, label);
             checkEqual(
-              action(root, label).getAttribute('type'),
+              button.getAttribute('type'),
               'button',
               `The ${label} action type`,
+            );
+            // WCAG 2.5.3 (axe `label-content-name-mismatch`): every text node
+            // in the button, aria-hidden ones included, counts as its visible
+            // text, and the accessible name has to start with it. A fallback
+            // initial or a label prefix in the DOM breaks that.
+            checkEqual(
+              visibleText(button),
+              label,
+              `The ${label} action's text is its label`,
+            );
+            check(
+              accessibleName(button).startsWith(visibleText(button)),
+              `The ${label} action's name starts with its visible text`,
             );
           }
           checkEqual(statusText(root), '', 'No status before sharing');

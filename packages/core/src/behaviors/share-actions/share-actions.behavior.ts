@@ -207,7 +207,10 @@ export interface ShareActionsNormalizer<Button, Element> {
 
 /** What is shared and how, for {@link connectShareActions}. */
 export interface ShareActionsContext extends ShareRequest {
-  /** The heading; each action's accessible name starts with it. */
+  /**
+   * The heading shown above the actions. Renderers name the group of actions
+   * with it; each action is named by its own visible label (WCAG 2.5.3).
+   */
   readonly label: string;
   /** Defaults to {@link postkitShareServices}. */
   readonly services?: ShareServiceRegistry;
@@ -226,7 +229,11 @@ export interface ShareActionsApi<
   serviceLabel(serviceId: string): string;
   /** Shares with a service, as its action does. */
   share(serviceId: string): Promise<void>;
-  /** A service's action button, named "label: service". */
+  /**
+   * A service's action button. It has no `aria-label`: the button's visible
+   * service label is its accessible name, so speech-input users can say what
+   * they see (WCAG 2.5.3).
+   */
   getActionProps(serviceId: string): Button;
   /** The status line, announced politely. */
   getStatusProps(): Element;
@@ -262,7 +269,6 @@ export function connectShareActions<Button, Element>(
     getActionProps: (serviceId) =>
       normalize.button({
         type: 'button',
-        'aria-label': `${context.label}: ${serviceLabel(serviceId)}`,
         onClick(event: { defaultPrevented?: boolean }) {
           if (event?.defaultPrevented) return;
           void share(serviceId);

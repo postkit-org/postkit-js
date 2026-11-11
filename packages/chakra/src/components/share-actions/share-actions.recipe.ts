@@ -20,6 +20,12 @@ export const postkitShareActionsRecipe = defineSlotRecipe({
       alignItems: 'center',
       display: 'inline-flex',
       justifyContent: 'center',
+      // A service without an icon shows its initial, drawn here rather than
+      // written into the button, so the button's text is its label alone and
+      // its accessible name starts with what the reader sees (WCAG 2.5.3).
+      '&[data-postkit-initial]::before': {
+        content: 'attr(data-postkit-initial)',
+      },
     },
     status: { color: 'fg.muted' },
   },
