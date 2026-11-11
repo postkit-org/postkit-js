@@ -70,7 +70,10 @@ const codeBlockAdapter = createPostkitShikiAdapter();
 
 `@postkit/shiki` provides practical language and light/dark theme defaults.
 Pass `languages` and `themes` when an application wants a smaller or customized
-bundle. Chakra loads the adapter once and reuses it for nested code blocks.
+bundle. Chakra loads the adapter once and reuses it for nested code blocks. The
+adapter uses Shiki's JavaScript regex engine, so no WebAssembly is downloaded;
+pass `engine: 'oniguruma'` for a grammar that needs it. A fence in a language
+that isn't loaded renders as plain text instead of failing.
 
 ## Customize code-copy feedback
 
