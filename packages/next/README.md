@@ -116,6 +116,14 @@ It needs `@postkit/react` installed alongside `@postkit/chakra`.
 The returned value is an MDX component map. Components supplied through
 `options.components` override Postkit defaults.
 
+Each component view in the map loads the first time a page renders it
+(`createPostkitLazyMdxComponents` from `@postkit/chakra`), so a page only
+downloads the views its content uses. Next.js waits for them on the server, so
+the HTML is complete, and the browser keeps that HTML until a view has loaded,
+so nothing shifts. For a synchronous render such as `renderToStaticMarkup`,
+pass the eager views: `createPostkitNextComponents({ components: postkitChakraViews })`.
+For `createPostkit`, pass `renderer: chakraLazy` for the same behaviour.
+
 ## Troubleshooting
 
 - If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or

@@ -23,6 +23,7 @@ import {
   PostkitFiguresProvider,
   type PostkitFiguresProviderProps,
 } from './figures.js';
+import { postkitHeadlessViewNames } from './headless-view-names.js';
 import { postkitHeadlessViews } from './headless-views.js';
 import {
   createPostkitLink,
@@ -43,6 +44,7 @@ import type { PostkitKit } from '../kits/kit.js';
 // through this module.
 export * from './config.js';
 export * from './figures.js';
+export * from './headless-view-names.js';
 export * from './headless-views.js';
 export * from './link.js';
 export * from './slot-overrides.js';
@@ -605,7 +607,7 @@ export function createPostkit<ProviderProps extends object = object>(
           renderers:
             renderer.id === 'chakra'
               ? {
-                  headless: Object.keys(postkitHeadlessViews),
+                  headless: postkitHeadlessViewNames,
                   chakra: rendererViews,
                 }
               : renderer.id === 'headless'

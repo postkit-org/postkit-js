@@ -40,8 +40,9 @@ import { Footnotes } from '../components/footnotes/footnotes.js';
 
 /**
  * The headless views `@postkit/react` exports, keyed by component name. The
- * manifest's computed `support.headless` and the headless renderer read it,
- * so add a view here when it ships. Every built-in has one (`chakraOnly` is empty).
+ * headless renderer reads it, so add a view here when it ships, and its name
+ * to `postkitHeadlessViewNames` (the manifest's `support.headless` reads
+ * that). Every built-in has one (`chakraOnly` is empty).
  */
 export const postkitHeadlessViews: Readonly<
   Record<string, PostkitAnyComponent>

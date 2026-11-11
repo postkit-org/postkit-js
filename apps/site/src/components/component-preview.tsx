@@ -1,42 +1,5 @@
 import {
-  AppearsOn,
-  Aside,
-  Audio,
-  AudienceBoundary,
-  AuthorCard,
-  Callout,
-  CallToAction,
-  CardGrid,
-  Carousel,
-  Chart,
-  CodeBlock,
-  CodeGroup,
-  Comparison,
-  Diff,
-  Disclosure,
-  Figure,
-  FileCard,
-  FileTree,
-  Footnote,
-  Footnotes,
-  Gallery,
-  KeyTakeaway,
-  LinkPreview,
-  NewsletterSignup,
-  Poll,
-  ProductCard,
-  PullQuote,
-  RelatedContent,
-  SeriesNavigation,
-  ShareActions,
-  SocialPost,
-  SponsorBlock,
-  Stat,
-  Steps,
-  Tabs,
-  Terminal,
-  Video,
-  Device,
+  postkitChakraLazyViews,
   type PostkitComponentName,
 } from '@postkit/chakra';
 import type { ComponentType, ReactNode } from 'react';
@@ -515,6 +478,9 @@ export const componentPreviewSamples: Readonly<
   },
 };
 
+// Lazy views: a page downloads only the components it previews (P21).
+const { Footnote, Footnotes } = postkitChakraLazyViews;
+
 const previewNotes = [
   'Markdown with directives, or MDX. Both parse to the same portable document.',
   'Headless, Chakra, email or web components, chosen per site rather than per article.',
@@ -549,44 +515,11 @@ type PreviewView = ComponentType<
   Record<string, unknown> & { readonly children?: ReactNode }
 >;
 
-// The real `@postkit/chakra` components (01 §1 dogfood): the site never draws its own.
+// The real `@postkit/chakra` components (01 §1 dogfood): the site never draws its own. Each
+// is a lazy view, so a page downloads only the views it previews; the server render waits for
+// them, so the HTML is the same.
 const views = {
-  AppearsOn,
-  AudienceBoundary,
-  Aside,
-  Audio,
-  AuthorCard,
-  Callout,
-  CallToAction,
-  CardGrid,
-  Carousel,
-  Chart,
-  CodeBlock,
-  CodeGroup,
-  Comparison,
-  Diff,
-  Disclosure,
-  Figure,
-  FileCard,
-  FileTree,
-  Gallery,
-  KeyTakeaway,
-  LinkPreview,
-  NewsletterSignup,
-  Poll,
-  ProductCard,
-  PullQuote,
-  RelatedContent,
-  SeriesNavigation,
-  ShareActions,
-  SocialPost,
-  SponsorBlock,
-  Stat,
-  Steps,
-  Tabs,
-  Terminal,
-  Video,
-  Device,
+  ...postkitChakraLazyViews,
   Footnote: FootnotesPreview,
   Footnotes: FootnotesPreview,
 } as unknown as Readonly<Record<PostkitComponentName, PreviewView>>;
@@ -614,6 +547,22 @@ export function resolvePreviewProps(
     if (value !== undefined) resolved[prop] = value;
   }
   return resolved;
+}
+
+/**
+ * Downloads the views a component's preview renders, for a preview that should appear only
+ * once it can render in full (catalog tiles).
+ */
+export function preloadComponentPreview(
+  name: PostkitComponentName,
+): Promise<void> {
+  const names: readonly PostkitComponentName[] =
+    name === 'Footnote' || name === 'Footnotes'
+      ? ['Footnote', 'Footnotes']
+      : [name];
+  return Promise.all(
+    names.map((view) => postkitChakraLazyViews[view].preload()),
+  ).then(() => undefined);
 }
 
 /** A live preview of one catalog component, rendered by `@postkit/chakra`. */

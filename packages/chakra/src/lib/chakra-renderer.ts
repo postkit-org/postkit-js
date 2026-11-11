@@ -22,7 +22,8 @@ export {
 
 /**
  * The views `@postkit/chakra` exports, keyed by component name: one for every
- * built-in definition. The manifest's computed `support.chakra` reads it.
+ * built-in definition. `postkitChakraViewNames` lists the same names without
+ * importing the views (the manifest's computed `support.chakra` reads it).
  */
 export const postkitChakraViews: Readonly<Record<string, PostkitAnyComponent>> =
   Object.freeze(
