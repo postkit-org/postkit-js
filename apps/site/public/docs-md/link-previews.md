@@ -62,6 +62,15 @@ prop, either as an object or as a JSON string from a saved snapshot:
 <LinkPreview href="https://example.com/article" metadata={metadata} />
 ```
 
+The card's title is a paragraph, because a preview can't know where it sits
+in your page's outline. When it should be a heading, say which one with
+`headingLevel` (`2` to `6`), so it follows the heading above it. `Chart` and
+`Carousel` take the same prop for their titles.
+
+```tsx
+<LinkPreview href="https://example.com/article" headingLevel={3} />
+```
+
 `SocialPost` can render a captured social snapshot or use an application
 callback to resolve one at runtime.
 
