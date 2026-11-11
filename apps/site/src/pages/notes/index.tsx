@@ -17,9 +17,12 @@ interface NotesPageProps {
   readonly notes: readonly NoteSummary[];
 }
 
-export const getStaticProps: GetStaticProps<NotesPageProps> = async () => ({
-  props: { notes: getNotes() },
-});
+/** Until the first note is published, production has no Notes page: `/notes` is a 404. */
+export const getStaticProps: GetStaticProps<NotesPageProps> = async () => {
+  const notes = getNotes();
+  if (!notes.length) return { notFound: true };
+  return { props: { notes } };
+};
 
 export default function NotesPage({
   notes,

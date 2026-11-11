@@ -1,7 +1,10 @@
 import type { GetServerSideProps } from 'next';
 
 import { getChangelogEntries } from '../lib/changelog.server';
-import { componentNameToSlug, orderedComponentEntries } from '../lib/components';
+import {
+  componentNameToSlug,
+  orderedComponentEntries,
+} from '../lib/components';
 import { getDocsEntries } from '../lib/docs.server';
 import { getNotes } from '../lib/notes.server';
 import { absoluteUrl } from '../lib/site-url';
@@ -12,6 +15,8 @@ import { absoluteUrl } from '../lib/site-url';
  * so they aren't listed.
  */
 function sitemapPaths(): string[] {
+  // No published notes means no Notes page, so `/notes` isn't listed either.
+  const notes = getNotes();
   return [
     '/',
     '/components',
@@ -19,8 +24,8 @@ function sitemapPaths(): string[] {
       (component) => `/components/${componentNameToSlug(component.name)}`,
     ),
     ...getDocsEntries().map((entry) => `/docs/${entry.slug}`),
-    '/notes',
-    ...getNotes().map((note) => `/notes/${note.slug}`),
+    ...(notes.length ? ['/notes'] : []),
+    ...notes.map((note) => `/notes/${note.slug}`),
     '/changelog',
     ...getChangelogEntries().map((entry) => `/changelog/${entry.slug}`),
     '/licensing',

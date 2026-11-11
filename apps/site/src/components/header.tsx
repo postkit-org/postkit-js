@@ -6,6 +6,7 @@ import { useRef, type ReactNode } from 'react';
 
 import {
   externalLinks,
+  notesLive,
   sectionFromPathname,
   type SiteSection,
 } from '../lib/site-sections';
@@ -84,9 +85,11 @@ export function Header({ onOpenSearch }: HeaderProps) {
             <NavLink href="/docs" section="docs" current={current}>
               Docs
             </NavLink>
-            <NavLink href="/notes" section="notes" current={current}>
-              Notes
-            </NavLink>
+            {notesLive ? (
+              <NavLink href="/notes" section="notes" current={current}>
+                Notes
+              </NavLink>
+            ) : null}
             <NavLink href={externalLinks.github} external>
               GitHub
             </NavLink>

@@ -7,11 +7,13 @@ import { PageMeta, ResultPage } from '../components/layout';
 import { TextLink } from '../components/legal/text-link';
 import { Button, TextField } from '../components/primitives';
 import { useSearch } from '../lib/search';
+import { notesLive } from '../lib/site-sections';
 
 const destinations = [
   { href: '/components', label: 'Components' },
   { href: '/docs', label: 'Docs' },
-  { href: '/notes', label: 'Notes' },
+  // Notes stays out until the first note is published.
+  ...(notesLive ? [{ href: '/notes', label: 'Notes' }] : []),
 ] as const;
 
 /** The search field: submitting opens the site search dialog with the query (01 §6.8). */

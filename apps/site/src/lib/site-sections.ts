@@ -17,6 +17,12 @@ export function sectionFromPathname(pathname: string): SiteSection | null {
   return sectionRoots.find((section) => section === root) ?? null;
 }
 
+/**
+ * Whether the Notes section is shown: true once a note is published (or, outside production,
+ * when any note exists). Inlined at build by next.config.js.
+ */
+export const notesLive = process.env.POSTKIT_NOTES_LIVE === 'true';
+
 /** Postkit elsewhere (09 Q8: Bluesky @postkit.org, X @Postkit_). */
 export const externalLinks = {
   github: 'https://github.com/postkit-org/postkit-js',

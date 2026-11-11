@@ -5,7 +5,7 @@ import { useId, type ComponentProps } from 'react';
 import { LogoPill } from './logo';
 import { OssMark } from './oss-mark';
 import { ThemeSwitch } from './theme-switch';
-import { externalLinks } from '../lib/site-sections';
+import { externalLinks, notesLive } from '../lib/site-sections';
 
 interface FooterLink {
   readonly label: string;
@@ -26,7 +26,8 @@ const columns: readonly { title: string; links: readonly FooterLink[] }[] = [
     links: [
       { label: 'Components', href: '/components' },
       { label: 'Docs', href: '/docs' },
-      { label: 'Notes', href: '/notes' },
+      // Notes stays out until the first note is published.
+      ...(notesLive ? [{ label: 'Notes', href: '/notes' }] : []),
       { label: 'Changelog', href: '/changelog' },
     ],
   },

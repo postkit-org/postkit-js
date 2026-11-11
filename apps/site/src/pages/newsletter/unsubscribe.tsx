@@ -76,7 +76,7 @@ function DoneView() {
         <>
           You won’t get release emails from Postkit any more. Changed your mind?{' '}
           <TextLink href="/newsletter/subscribe">Sign up again</TextLink> any
-          time, from the Notes page.
+          time.
         </>
       }
       actions={

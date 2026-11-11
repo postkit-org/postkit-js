@@ -8,6 +8,7 @@ const { withSentryConfig } = require('@sentry/nextjs/config');
 const {
   changelogEntrySchema,
   getLatestChangelogRelease,
+  selectVisibleNotes,
 } = require('@postkit/content');
 const { parse: parseYaml } = require('yaml');
 
@@ -37,11 +38,30 @@ function readLatestReleasedVersion() {
   return getLatestChangelogRelease(entries)?.version ?? '';
 }
 
+/**
+ * Whether this build shows any note (drafts count only outside production). Until the first
+ * note is published, production hides the Notes section: its nav links, `/notes` and the
+ * sitemap entry. Inlined like the release above, so the chrome needs no content at runtime.
+ */
+function readNotesLive() {
+  const directory = path.join(__dirname, '../../libs/content/notes');
+  const notes = readdirSync(directory)
+    .filter((file) => /\.mdx?$/.test(file))
+    .map((file) => {
+      const source = readFileSync(path.join(directory, file), 'utf8');
+      const frontmatter = /^---\n([\s\S]*?)\n---\n/.exec(source)?.[1] ?? '';
+      const { status = 'published' } = parseYaml(frontmatter) ?? {};
+      return { status };
+    });
+  return selectVisibleNotes(notes).length > 0 ? 'true' : '';
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ['postkit.test'],
   env: {
     POSTKIT_LATEST_RELEASE: readLatestReleasedVersion(),
+    POSTKIT_NOTES_LIVE: readNotesLive(),
   },
   poweredByHeader: false,
   /**

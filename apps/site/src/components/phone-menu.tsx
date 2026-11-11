@@ -11,7 +11,11 @@ import {
 } from 'react';
 
 import { componentCategoryGroups, componentEntries } from '../lib/components';
-import { externalLinks, type SiteSection } from '../lib/site-sections';
+import {
+  externalLinks,
+  notesLive,
+  type SiteSection,
+} from '../lib/site-sections';
 
 /** Matches the `md` breakpoint (761px): the menu exists only below it. */
 const DESKTOP_QUERY = '(min-width: 761px)';
@@ -47,7 +51,7 @@ function countWord(count: number): string {
 /** Inlined at build by next.config.js from the newest released changelog entry (01 §5.2). */
 const latestReleasedVersion = process.env.POSTKIT_LATEST_RELEASE;
 
-const rows: readonly {
+const allRows: readonly {
   section: SiteSection;
   href: string;
   label: string;
@@ -82,6 +86,9 @@ const rows: readonly {
       : 'Release notes',
   },
 ];
+
+/** Notes stays out of the menu until the first note is published. */
+const rows = allRows.filter((row) => row.section !== 'notes' || notesLive);
 
 const elsewhere = [
   { href: externalLinks.github, label: 'GitHub' },
