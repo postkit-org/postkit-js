@@ -10,8 +10,9 @@ import {
 import type { PostkitRendererConfig } from '@postkit/react';
 import { useMemo, type ReactNode } from 'react';
 
-import { PostkitProvider, type PostkitProviderProps } from './provider.js';
-import { createPostkitSystem } from './theme.js';
+import { PostkitProvider } from './postkit-provider.js';
+import type { PostkitProviderProps } from './provider.js';
+import { createPostkitSystem } from './create-postkit-system.js';
 
 /** The provider props `createPostkit({ renderer: chakra }).Provider` takes. */
 export type PostkitChakraProviderProps = Omit<PostkitProviderProps, 'children'>;

@@ -1,9 +1,9 @@
 import { createSystem } from '@chakra-ui/react';
 import { chakraDocsThemeConfig } from '@chakra-docs/chakra/theme';
 import {
-  createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
+  type PostkitHostProviderProps,
 } from '@postkit/chakra';
 import { fontStacks, siteSystem as baseSystem } from '@postkit/site-theme';
 
@@ -70,8 +70,14 @@ const docsAwareBaseSystem = createSystem(
   baseSystem._config,
 );
 
-export const siteSystem = createPostkitSystem({
+/**
+ * `PostkitHostProvider` composes these in `_app.tsx`: Postkit's preset beneath the site's
+ * system, `postkitSiteTheme` above it. Unlike `createPostkitSystem` and `PostkitProvider`, it
+ * never imports Chakra's `defaultSystem`, so the Chakra recipes the site's system leaves out
+ * (`@postkit/site-theme`'s `chakra-theme.ts`) stay out of the bundle.
+ */
+export const sitePostkitSystem = {
   system: docsAwareBaseSystem,
   preset: postkitDefaultTheme,
   theme: postkitSiteTheme,
-});
+} satisfies Pick<PostkitHostProviderProps, 'system' | 'preset' | 'theme'>;

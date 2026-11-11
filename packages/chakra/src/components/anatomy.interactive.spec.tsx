@@ -19,8 +19,9 @@ import {
 import { createElement, type ComponentType, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitProvider } from '../lib/provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../lib/theme.js';
+import { PostkitProvider } from '../lib/postkit-provider.js';
+import { createPostkitSystem } from '../lib/create-postkit-system.js';
+import { postkitDefaultTheme } from '../lib/theme.js';
 import { Carousel } from './carousel/carousel.js';
 import { postkitCarouselRecipe } from './carousel/carousel.recipe.js';
 import { CodeBlock } from './code-block/code-block.js';

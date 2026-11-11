@@ -1,7 +1,7 @@
 import { createSystem, defaultConfig, defaultSystem } from '@chakra-ui/react';
 
+import { createPostkitSystem } from './create-postkit-system.js';
 import {
-  createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
   postkitRecipeKeys,

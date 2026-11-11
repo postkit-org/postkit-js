@@ -8,7 +8,7 @@ import {
 } from '@postkit/core/behaviors/testing';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 
-import { PostkitProvider } from '../../lib/provider.js';
+import { PostkitProvider } from '../../lib/postkit-provider.js';
 import { Carousel } from './carousel.js';
 
 /*

@@ -13,9 +13,9 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
 import { createPostkitMdxComponents } from '../mdx-components.js';
-import { PostkitProvider } from '../provider.js';
+import { PostkitProvider } from '../postkit-provider.js';
+import { createPostkitSystem } from '../create-postkit-system.js';
 import {
-  createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
   postkitRecipeKeys,

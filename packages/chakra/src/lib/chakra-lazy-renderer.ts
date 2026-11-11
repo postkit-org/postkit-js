@@ -1,30 +1,14 @@
-import { postkitBuiltInDefinitions } from '@postkit/core/components';
-import {
-  postkitLazyViews,
-  type PostkitLazyView,
-  type PostkitLinkComponent,
-} from '@postkit/react';
+import type { PostkitLinkComponent } from '@postkit/react';
 
 import type { PostkitChakraRenderer } from './chakra-renderer.js';
 import { PostkitChakraRendererProvider } from './chakra-renderer-provider.js';
+import { postkitChakraLazyViews } from './chakra-lazy-views.js';
 import {
   createPostkitProseLink,
   postkitProseComponents,
 } from './components/prose.js';
-import {
-  postkitChakraViewLoaders,
-  type PostkitChakraViewName,
-} from './view-loaders.js';
 
-/**
- * The Chakra views as lazy views (`postkitLazyView`), keyed by component
- * name like `postkitChakraViews`: each downloads its view the first time it
- * renders. They carry their definitions, so `createPostkit` gives them site
- * defaults and part overrides like the views themselves.
- */
-export const postkitChakraLazyViews: Readonly<
-  Record<PostkitChakraViewName, PostkitLazyView>
-> = postkitLazyViews(postkitChakraViewLoaders, postkitBuiltInDefinitions);
+export { postkitChakraLazyViews } from './chakra-lazy-views.js';
 
 /**
  * The Chakra renderer with lazy views, for `createPostkit`: the same id,

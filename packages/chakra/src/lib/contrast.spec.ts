@@ -1,7 +1,8 @@
 import type { SystemContext } from '@chakra-ui/react';
 
 import { postkitDefaultSocialServices } from './social-services.js';
-import { createPostkitSystem, postkitDefaultTheme } from './theme.js';
+import { createPostkitSystem } from './create-postkit-system.js';
+import { postkitDefaultTheme } from './theme.js';
 
 globalThis.structuredClone ??= <T>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);

@@ -10,8 +10,9 @@ import { VFile } from 'vfile';
 import { Figure } from '../components/figure/figure.js';
 import { Video } from '../components/video/video.js';
 import { createPostkitRemarkPlugins } from './markdown-preset.js';
-import { PostkitProvider } from './provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from './theme.js';
+import { PostkitProvider } from './postkit-provider.js';
+import { createPostkitSystem } from './create-postkit-system.js';
+import { postkitDefaultTheme } from './theme.js';
 
 /*
  * 03 §7 catalog changes in the Markdown pipeline and the Chakra renderer:

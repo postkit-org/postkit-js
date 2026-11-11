@@ -5,7 +5,7 @@ import { parsePostkit, parsePostkitHtml } from '@postkit/core';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { DocumentRenderer } from './document-renderer.js';
-import { PostkitProvider } from './provider.js';
+import { PostkitProvider } from './postkit-provider.js';
 
 function render(renderer: React.ReactNode): string {
   return renderToStaticMarkup(

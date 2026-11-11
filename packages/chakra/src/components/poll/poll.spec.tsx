@@ -2,8 +2,9 @@ import { pollDefinition } from '@postkit/core/components';
 import { chakraOnly, Poll as HeadlessPoll } from '@postkit/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { PostkitProvider } from '../../lib/provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../../lib/theme.js';
+import { PostkitProvider } from '../../lib/postkit-provider.js';
+import { createPostkitSystem } from '../../lib/create-postkit-system.js';
+import { postkitDefaultTheme } from '../../lib/theme.js';
 import { Poll } from './poll.js';
 
 const system = createPostkitSystem({ preset: postkitDefaultTheme });

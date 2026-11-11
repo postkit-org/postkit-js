@@ -333,15 +333,17 @@ export {
   type PostkitNewsletterSubscription,
 } from './lib/newsletter.js';
 export {
-  PostkitProvider,
+  PostkitHostProvider,
   usePostkit,
   type PostkitContextValue,
   type PostkitCodeBlockConfig,
   type PostkitCodeBlockSize,
   type PostkitCodeBlockVariant,
+  type PostkitHostProviderProps,
   type PostkitProviderProps,
   type PostkitResolverErrorContext,
 } from './lib/provider.js';
+export { PostkitProvider } from './lib/postkit-provider.js';
 export {
   mergePostkitSocialServices,
   postkitDefaultSocialServices,
@@ -426,9 +428,9 @@ export {
   postkitVideoSlots,
   type PostkitVideoSlot,
 } from './components/video/video.recipe.js';
+export { createPostkitSystem } from './lib/create-postkit-system.js';
 export {
   createPostkitTheme,
-  createPostkitSystem,
   postkitDefaultTheme,
   postkitRecipeKeys,
   type PostkitFontFamily,
@@ -446,10 +448,8 @@ export {
   type PostkitTypography,
 } from './lib/theme.js';
 export * from './lib/chakra-renderer.js';
-export {
-  chakraLazy,
-  postkitChakraLazyViews,
-} from './lib/chakra-lazy-renderer.js';
+export { chakraLazy } from './lib/chakra-lazy-renderer.js';
+export { postkitChakraLazyViews } from './lib/chakra-lazy-views.js';
 export { Device, type DeviceProps } from './components/device/device.js';
 export {
   postkitDeviceRecipe,

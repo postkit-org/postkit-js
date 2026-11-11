@@ -7,8 +7,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { Carousel } from '../../components/carousel/carousel.js';
 import { Chart } from '../../components/chart/chart.js';
 import { LinkPreview } from '../../components/link-preview/link-preview.js';
-import { PostkitProvider } from '../provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../theme.js';
+import { PostkitProvider } from '../postkit-provider.js';
+import { createPostkitSystem } from '../create-postkit-system.js';
+import { postkitDefaultTheme } from '../theme.js';
 
 /*
  * P20: Carousel, Chart and LinkPreview hard-coded `h3` titles, which skip a

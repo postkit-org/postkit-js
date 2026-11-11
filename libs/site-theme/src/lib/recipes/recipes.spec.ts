@@ -54,13 +54,12 @@ describe('site recipes', () => {
     },
   );
 
-  it("leaves Chakra's own button, kbd, input and segmentGroup recipes alone", () => {
+  // Nothing on the site renders Chakra's segmentGroup, so the system leaves it out
+  // (chakra-theme.spec.ts).
+  it("leaves Chakra's own button, kbd and input recipes alone", () => {
     for (const key of ['button', 'kbd', 'input']) {
       expect(siteSystem.getRecipe(key)).toEqual(defaultSystem.getRecipe(key));
     }
-    expect(siteSystem.getSlotRecipe('segmentGroup')).toEqual(
-      defaultSystem.getSlotRecipe('segmentGroup'),
-    );
   });
 
   it('gives Button primary and secondary variants in two sizes', () => {

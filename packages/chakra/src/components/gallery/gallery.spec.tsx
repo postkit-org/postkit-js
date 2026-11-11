@@ -5,8 +5,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { PostkitFiguresProvider } from '@postkit/react';
 
-import { PostkitProvider } from '../../lib/provider.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../../lib/theme.js';
+import { PostkitProvider } from '../../lib/postkit-provider.js';
+import { createPostkitSystem } from '../../lib/create-postkit-system.js';
+import { postkitDefaultTheme } from '../../lib/theme.js';
 import { Gallery } from './gallery.js';
 import { postkitGalleryRecipe, postkitGallerySlots } from './gallery.recipe.js';
 

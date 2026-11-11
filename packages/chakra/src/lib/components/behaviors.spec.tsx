@@ -16,7 +16,8 @@ import type { ResolvedLinkPreview } from '@postkit/unfurl';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import type { ReactElement } from 'react';
 
-import { PostkitProvider, type PostkitProviderProps } from '../provider.js';
+import { PostkitProvider } from '../postkit-provider.js';
+import type { PostkitProviderProps } from '../provider.js';
 import { Poll } from '../../components/poll/poll.js';
 import { NewsletterSignup } from '../../components/newsletter-signup/newsletter-signup.js';
 import { ShareActions } from '../../components/share-actions/share-actions.js';

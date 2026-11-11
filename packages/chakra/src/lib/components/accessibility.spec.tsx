@@ -5,7 +5,7 @@
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
-import { PostkitProvider } from '../provider.js';
+import { PostkitProvider } from '../postkit-provider.js';
 import { postkitDefaultTheme } from '../theme.js';
 import { Chart } from '../../components/chart/chart.js';
 import { postkitProseComponents } from './prose.js';

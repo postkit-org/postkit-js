@@ -1,4 +1,4 @@
-import { PostkitProvider } from '@postkit/chakra';
+import { PostkitHostProvider } from '@postkit/chakra';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -12,7 +12,7 @@ import { SearchProvider } from '../lib/search';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
 import { siteCodeBlockConfig } from '../lib/code-block-config';
 import { fontVariablesCss } from '../lib/fonts';
-import { siteSystem } from '../lib/site-theme';
+import { sitePostkitSystem } from '../lib/site-theme';
 import './styles.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
@@ -25,8 +25,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <PostkitProvider
-        system={siteSystem}
+      <PostkitHostProvider
+        {...sitePostkitSystem}
         codeBlockAdapter={siteCodeBlockAdapter}
         codeBlock={siteCodeBlockConfig}
       >
@@ -46,7 +46,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
             </SearchProvider>
           </SiteAnalytics>
         </MetaProvider>
-      </PostkitProvider>
+      </PostkitHostProvider>
     </ThemeProvider>
   );
 }

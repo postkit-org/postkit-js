@@ -2,9 +2,10 @@
 
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { PostkitProvider } from '../provider.js';
+import { PostkitProvider } from '../postkit-provider.js';
 import { postkitProseRecipe } from '../recipes/prose.recipe.js';
-import { createPostkitSystem, postkitDefaultTheme } from '../theme.js';
+import { createPostkitSystem } from '../create-postkit-system.js';
+import { postkitDefaultTheme } from '../theme.js';
 import { postkitProseComponents } from './prose.js';
 
 /*

@@ -12,7 +12,6 @@ import {
 import {
   ChakraProvider,
   CodeBlock,
-  defaultSystem,
   type CodeBlockAdapter,
   type SystemConfig,
   type SystemContext,
@@ -23,7 +22,7 @@ import {
 } from '@postkit/react';
 import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
-import { createPostkitSystem } from './theme.js';
+import { composePostkitSystem } from './theme.js';
 import { postkitPlainTextCodeBlockAdapter } from './code-block-adapter.js';
 import type { PostkitNewsletterConfig } from './newsletter.js';
 import {
@@ -201,7 +200,18 @@ function configuredResolver({
   });
 }
 
-export function PostkitProvider({
+/** `PostkitProvider`'s props with the host's Chakra `system` required. */
+export interface PostkitHostProviderProps extends PostkitProviderProps {
+  readonly system: SystemContext;
+}
+
+/**
+ * `PostkitProvider` for a host that passes its own Chakra `system`. It never
+ * imports Chakra's `defaultSystem`, so a host whose system leaves out Chakra
+ * recipes it doesn't render (one built on `defaultBaseConfig`) keeps them out
+ * of its bundle. `PostkitProvider` renders this one.
+ */
+export function PostkitHostProvider({
   children,
   system,
   preset,
@@ -217,14 +227,9 @@ export function PostkitProvider({
   newsletter,
   figures,
   figureLabel,
-}: PostkitProviderProps) {
+}: PostkitHostProviderProps) {
   const chakraSystem = useMemo(
-    () =>
-      createPostkitSystem({
-        system: system ?? defaultSystem,
-        preset,
-        theme,
-      }),
+    () => composePostkitSystem({ system, preset, theme }),
     [preset, system, theme],
   );
   const configured = useMemo(

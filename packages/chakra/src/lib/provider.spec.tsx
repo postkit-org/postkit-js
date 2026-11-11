@@ -20,7 +20,8 @@ import { NewsletterSignup } from '../components/newsletter-signup/newsletter-sig
 import { ShareActions } from '../components/share-actions/share-actions.js';
 import { SocialPost } from '../components/social-post/social-post.js';
 import { CodeBlock } from '../components/code-block/code-block.js';
-import { PostkitProvider, usePostkit } from './provider.js';
+import { PostkitProvider } from './postkit-provider.js';
+import { PostkitHostProvider, usePostkit } from './provider.js';
 import { postkitDefaultSocialServices } from './social-services.js';
 import {
   createPostkitTheme,
@@ -468,6 +469,48 @@ describe('PostkitProvider', () => {
     expect(screen.getByTestId('context-token').textContent).toBe('#663399');
     expect(screen.getByTestId('default-recipe').textContent).toBe('hidden');
     expect(screen.getByTestId('recipe-override').textContent).toBe('sm');
+  });
+
+  it('composes a host system the same way through PostkitHostProvider', () => {
+    const contextualSystem = createSystem(defaultConfig, {
+      theme: { tokens: { colors: { contextAccent: { value: '#663399' } } } },
+    });
+    const theme = createPostkitTheme({
+      linkPreview: { base: { root: { boxShadow: 'sm' } } },
+    });
+
+    render(
+      <PostkitHostProvider
+        system={contextualSystem}
+        preset={postkitDefaultTheme}
+        theme={theme}
+      >
+        <ThemeProbe />
+      </PostkitHostProvider>,
+    );
+
+    expect(screen.getByTestId('context-token').textContent).toBe('#663399');
+    expect(screen.getByTestId('default-recipe').textContent).toBe('hidden');
+    expect(screen.getByTestId('recipe-override').textContent).toBe('sm');
+  });
+
+  it("builds on Chakra's defaultSystem when no system is passed", () => {
+    function RecipeProbe() {
+      const system = useChakraContext();
+      return (
+        <span data-testid="button-recipe">
+          {String(system.isRecipe('button'))}
+        </span>
+      );
+    }
+
+    render(
+      <PostkitProvider>
+        <RecipeProbe />
+      </PostkitProvider>,
+    );
+
+    expect(screen.getByTestId('button-recipe').textContent).toBe('true');
   });
 
   it('reports resolver errors while preserving the link fallback', async () => {

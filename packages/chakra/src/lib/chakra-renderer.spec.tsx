@@ -17,7 +17,8 @@ import {
   createPostkitDefaultVariantsConfig,
   postkitChakraViews,
 } from './chakra-renderer.js';
-import { createPostkitSystem, postkitDefaultTheme } from './theme.js';
+import { createPostkitSystem } from './create-postkit-system.js';
+import { postkitDefaultTheme } from './theme.js';
 
 globalThis.ResizeObserver ??= class ResizeObserver {
   disconnect() {

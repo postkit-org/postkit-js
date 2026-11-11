@@ -1,6 +1,5 @@
 import {
   createSystem,
-  defaultSystem,
   defineConfig,
   type SlotRecipeConfig,
   type SystemConfig,
@@ -656,31 +655,22 @@ export function createPostkitTheme(
 }
 
 /**
- * Composes an optional Postkit visual preset, a host Chakra system, and
- * contextual Postkit overrides. Postkit is host-native by default; pass
- * `postkitDefaultTheme` as `preset` to opt into its standalone appearance.
+ * Composes an optional Postkit visual preset, the host's Chakra system, and
+ * contextual Postkit overrides. `createPostkitSystem` and `PostkitProvider`
+ * call it with Chakra's `defaultSystem` when the host passes none.
+ *
+ * It lives apart from them so the modules the views import never import
+ * `defaultSystem`: Chakra's full theme, with every built-in recipe, stays out
+ * of the bundle of a host that brings its own system (`PostkitHostProvider`).
+ *
+ * @internal
  */
-export function createPostkitSystem(
-  options?: PostkitSystemOptions,
-): SystemContext;
-/** @deprecated Prefer the options-object overload. */
-export function createPostkitSystem(
-  system?: SystemContext,
-  theme?: SystemConfig,
-): SystemContext;
-export function createPostkitSystem(
-  optionsOrSystem: PostkitSystemOptions | SystemContext = {},
-  legacyTheme?: SystemConfig,
+export function composePostkitSystem(
+  options: PostkitSystemOptions & { readonly system: SystemContext },
 ): SystemContext {
-  const options: PostkitSystemOptions =
-    '_config' in optionsOrSystem
-      ? { system: optionsOrSystem, theme: legacyTheme }
-      : optionsOrSystem;
-  const system = options.system ?? defaultSystem;
-
   return createSystem(
     ...(options.preset ? [options.preset] : []),
-    system._config,
+    options.system._config,
     ...(options.theme ? [options.theme] : []),
   );
 }
