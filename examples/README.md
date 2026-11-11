@@ -4,17 +4,18 @@ These examples use the same portable article contract at different application
 boundaries. They are checked in CI so package and framework changes cannot
 silently invalidate the documented integrations.
 
-| Example                                        | What it demonstrates                                                                      | Validation                                    |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------- |
-| [`astro`](astro)                               | A complete Astro MDX site, custom Chakra system module, and selective hydration           | Production build and rendered HTML assertions |
-| [`behaviors`](behaviors)                       | Tabs and embed consent from `@postkit/core/behaviors`, driven with plain DOM              | TypeScript                                    |
-| [`component-definition`](component-definition) | A custom component defined with `@postkit/core/components`, and the types derived from it | TypeScript                                    |
-| [`create-postkit`](create-postkit)             | `createPostkit` with three kits and a custom component, headless and Chakra (03 step 8)   | TypeScript and `consumer:check`               |
-| [`email`](email)                               | Chakra Email rendering with Postkit's email-safe component fallbacks                      | TypeScript                                    |
-| [`next`](next)                                 | Next.js's native `mdx-components.tsx` entry point                                         | TypeScript                                    |
-| [`react-router`](react-router)                 | An MDX component map beneath React Router                                                 | TypeScript                                    |
-| [`tanstack-router`](tanstack-router)           | Portable URLs mapped into a typed route                                                   | TypeScript                                    |
-| [`unfurl-server`](unfurl-server)               | A server-owned resolver registry and normalized result                                    | TypeScript and runtime smoke test             |
+| Example                                        | What it demonstrates                                                                                   | Validation                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| [`astro`](astro)                               | A complete Astro MDX site, custom Chakra system module, and selective hydration                        | Production build and rendered HTML assertions |
+| [`astro-headless`](astro-headless)             | The same Astro article with `renderer: 'headless'`: `@postkit/react` views and `styles.css`, no Chakra | Production build and rendered HTML assertions |
+| [`behaviors`](behaviors)                       | Tabs and embed consent from `@postkit/core/behaviors`, driven with plain DOM                           | TypeScript                                    |
+| [`component-definition`](component-definition) | A custom component defined with `@postkit/core/components`, and the types derived from it              | TypeScript                                    |
+| [`create-postkit`](create-postkit)             | `createPostkit` with three kits and a custom component, headless and Chakra (03 step 8)                | TypeScript and `consumer:check`               |
+| [`email`](email)                               | Chakra Email rendering with Postkit's email-safe component fallbacks                                   | TypeScript                                    |
+| [`next`](next)                                 | Next.js's native `mdx-components.tsx` entry point                                                      | TypeScript                                    |
+| [`react-router`](react-router)                 | An MDX component map beneath React Router                                                              | TypeScript                                    |
+| [`tanstack-router`](tanstack-router)           | Portable URLs mapped into a typed route                                                                | TypeScript                                    |
+| [`unfurl-server`](unfurl-server)               | A server-owned resolver registry and normalized result                                                 | TypeScript and runtime smoke test             |
 
 The Astro article is the canonical sample content. Other framework examples
 focus on the adapter boundary rather than duplicating the authored document.

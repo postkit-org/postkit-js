@@ -48,6 +48,12 @@
       "import": "./dist/react.js",
       "default": "./dist/react.js"
     },
+    "./headless": {
+      "@postkit/source": "./src/headless.ts",
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.js",
+      "default": "./dist/headless.js"
+    },
     "./components/*": "./dist/components/*.astro"
   },
   "files": [
@@ -55,6 +61,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
+    "@postkit/react": "0.2.0",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
@@ -112,6 +119,7 @@
           "cwd": "packages/astro",
           "commands": [
             "astro build --root ../../examples/astro",
+            "astro build --root ../../examples/astro-headless",
             "node scripts/verify-fixture.mjs"
           ],
           "parallel": false

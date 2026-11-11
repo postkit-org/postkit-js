@@ -77,6 +77,12 @@ const renderers = [
  * and hydrate when they approach the viewport. The policy is documented in
  * `packages/astro/README.md` ("Hydration policy"); the check below keeps the
  * two in step.
+ *
+ * It is the same for both Astro renderers (`postkitAstro({ renderer })`):
+ * the wrappers are shared, and a headless view's behaviour comes from the
+ * same hooks as its Chakra view, so a component needs the browser under
+ * either renderer or neither. Only what an island loads differs: the
+ * `@postkit/react` view, or the `@postkit/chakra` view in Postkit's provider.
  */
 const hydrationPolicy = Object.freeze({
   static: undefined,
@@ -152,7 +158,7 @@ function astroWrapper(definition) {
 // ${header}
 // ${policy}
 import type { ${name}Props } from '@postkit/chakra';
-import { ${name} } from '../lib/react-bridges';
+import { ${name} } from '../lib/astro-views';
 
 type Props = ${name}Props;
 const props = Astro.props;
@@ -202,6 +208,82 @@ export const ${name} = withPostkitAstroProvider<${name}Props>(${name}View);`,
 `;
 }
 
+/*
+ * The headless bridges: the `@postkit/react` views as they are. They need no
+ * provider, so an island loads no Chakra. A component in `chakraOnly` (none
+ * today) falls back to its Chakra bridge.
+ */
+function headlessBridges() {
+  const headlessNames = definitions
+    .filter((definition) => !chakraOnly.has(definition.name))
+    .map(({ name }) => name);
+  const chakraNames = definitions
+    .filter((definition) => chakraOnly.has(definition.name))
+    .map(({ name }) => name);
+  return `// ${header}
+/**
+ * The \`@postkit/react\` headless views behind the Astro wrappers when the
+ * integration is configured with \`renderer: 'headless'\`. They emit the
+ * component anatomy and no styles, and need no provider.
+ *
+ * @module
+ */
+export {
+${headlessNames.map((name) => `  ${name},\n  type ${name}Props,`).join('\n')}
+} from '@postkit/react';
+${
+  chakraNames.length
+    ? `
+// No headless view yet (\`chakraOnly\`): these render with @postkit/chakra.
+export {
+${chakraNames.map((name) => `  ${name},`).join('\n')}
+} from './react-bridges.js';
+`
+    : ''
+}`;
+}
+
+/*
+ * The module every wrapper imports its view from. It reads the views from
+ * \`virtual:postkit/astro-views\`, which \`postkitAstro({ renderer })\` points at
+ * the Chakra or the headless bridges, so a site only loads one renderer. The
+ * module's own types stay renderer-neutral, so its declarations never name
+ * the virtual module.
+ */
+function astroViews() {
+  const names = definitions.map(({ name }) => name);
+  return `// ${header}
+/**
+ * The views the generated Astro wrappers render. \`postkitAstro({ renderer })\`
+ * resolves \`virtual:postkit/astro-views\` to the Chakra bridges
+ * (\`@postkit/astro/react\`, the default) or the headless views
+ * (\`@postkit/astro/headless\`).
+ *
+ * @module
+ */
+import type { ComponentType } from 'react';
+import * as views from 'virtual:postkit/astro-views';
+
+/** A view from the configured renderer. */
+export type PostkitAstroView = ComponentType<Record<string, unknown>>;
+
+${names.map((name) => `export const ${name}: PostkitAstroView = views.${name};`).join('\n')}
+`;
+}
+
+/* Types for the virtual module, for the package's own type check. */
+function astroViewsDeclaration() {
+  const names = definitions.map(({ name }) => name);
+  return `// ${header}
+declare module 'virtual:postkit/astro-views' {
+  import type { ComponentType } from 'react';
+
+  type View = ComponentType<Record<string, unknown>>;
+${names.map((name) => `  export const ${name}: View;`).join('\n')}
+}
+`;
+}
+
 function componentMap() {
   const names = definitions.map(({ name }) => name);
   return `// ${header}
@@ -242,6 +324,12 @@ for (const definition of definitions) {
 }
 for (const [path, source] of [
   [join(astroRoot, 'src', 'lib', 'react-bridges.tsx'), reactBridges()],
+  [join(astroRoot, 'src', 'lib', 'headless-bridges.ts'), headlessBridges()],
+  [join(astroRoot, 'src', 'lib', 'astro-views.ts'), astroViews()],
+  [
+    join(astroRoot, 'src', 'virtual-postkit-astro-views.d.ts'),
+    astroViewsDeclaration(),
+  ],
   [join(astroRoot, 'src', 'lib', 'components.ts'), componentMap()],
 ]) {
   outputs.set(path, await formatTypeScript(path, source));
@@ -274,6 +362,13 @@ if (!policySection) {
       );
     }
   }
+}
+
+// Both renderers share the wrappers, so the README documents the choice.
+if (!/^## Renderers\n[\s\S]*?renderer: 'headless'/m.test(readme)) {
+  problems.push(
+    'packages/astro/README.md has no "## Renderers" section showing renderer: \'headless\'.',
+  );
 }
 
 const display = (path) => relative(workspaceRoot, path);
