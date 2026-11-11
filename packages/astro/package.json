@@ -1,6 +1,6 @@
 {
   "name": "@postkit/astro",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Postkit components and Markdown integration for Astro",
   "keywords": [
     "postkit",
@@ -61,7 +61,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/react": "0.2.0",
+    "@postkit/react": "0.3.0",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
@@ -69,7 +69,7 @@
     "@astrojs/mdx": ">=6 <8",
     "@astrojs/react": ">=4 <7",
     "@chakra-ui/react": ">=3.29.0 <4",
-    "@postkit/chakra": "0.2.0",
+    "@postkit/chakra": "0.3.0",
     "astro": ">=6.4 <8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

@@ -1,6 +1,6 @@
 {
   "name": "@postkit/cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "The postkit command: add kits and components, eject and diff views, scaffold components and write manifests",
   "keywords": [
     "postkit",
@@ -43,13 +43,13 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/core": "0.2.0",
+    "@postkit/core": "0.3.0",
     "jiti": "^2.4.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@postkit/chakra": "0.2.0",
-    "@postkit/react": "0.2.0"
+    "@postkit/chakra": "0.3.0",
+    "@postkit/react": "0.3.0"
   },
   "publishConfig": {
     "access": "public",

@@ -24,8 +24,8 @@
   "dependencies": {
     "@chakra-email/core": "^0.1.0",
     "@postkit/content": "0.0.1",
-    "@postkit/core": "0.2.0",
-    "@postkit/email": "0.2.0",
+    "@postkit/core": "0.3.0",
+    "@postkit/email": "0.3.0",
     "@postkit/site-theme": "0.0.1",
     "resend": "^6.37.0",
     "yaml": "^2.9.0"

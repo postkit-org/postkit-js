@@ -24,7 +24,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@postkit/chakra": "0.2.0",
+    "@postkit/chakra": "0.3.0",
     "next-mdx-remote": "^6.0.0"
   }
 }

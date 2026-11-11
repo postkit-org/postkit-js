@@ -1,6 +1,6 @@
 {
   "name": "@postkit/nx",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An Nx plugin that scaffolds Postkit components with the same templates as postkit new",
   "keywords": [
     "postkit",
@@ -46,7 +46,7 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/cli": "0.2.0",
+    "@postkit/cli": "0.3.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

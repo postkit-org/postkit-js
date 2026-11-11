@@ -1,6 +1,6 @@
 {
   "name": "@postkit/shiki",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A lazy Shiki syntax-highlighting adapter for Postkit and Chakra CodeBlock",
   "keywords": [
     "postkit",

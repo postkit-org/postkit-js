@@ -1,6 +1,6 @@
 {
   "name": "@postkit/react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Headless, styleable React views for Postkit components",
   "keywords": [
     "postkit",
@@ -96,8 +96,8 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "@postkit/core": "0.2.0",
-    "@postkit/unfurl": "0.2.0",
+    "@postkit/core": "0.3.0",
+    "@postkit/unfurl": "0.3.0",
     "remark-directive": "^4.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
