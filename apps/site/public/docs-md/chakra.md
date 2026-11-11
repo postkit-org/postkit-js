@@ -76,6 +76,13 @@ import { PostkitProvider } from '@postkit/chakra';
 <PostkitProvider system={siteSystem}>{article}</PostkitProvider>;
 ```
 
+Without a `system`, `PostkitProvider` uses Chakra's `defaultSystem`, so it
+imports Chakra's complete theme, every built-in recipe included. If your system
+registers only the recipes you render (built on `defaultBaseConfig`), use
+`PostkitHostProvider` instead. It takes the same props with `system` required
+and never imports `defaultSystem`, so the unused recipes stay out of your
+bundle.
+
 ## Styling modes
 
 - Host-native: pass the site's `system` and omit `preset`. The host's Chakra
