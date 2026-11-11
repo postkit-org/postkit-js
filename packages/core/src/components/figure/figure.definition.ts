@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const figureDefinition = definePostkitComponent({
   name: 'Figure',
@@ -39,17 +40,7 @@ export const figureDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'mediaLink',
-    'media',
-    'image',
-    'figcaption',
-    'caption',
-    'credit',
-    'creditLink',
-    'number',
-  ],
+  slots: postkitBuiltInSlots.Figure,
   example: {
     props: { src: '/media/example.jpg', alt: 'A descriptive example' },
   },

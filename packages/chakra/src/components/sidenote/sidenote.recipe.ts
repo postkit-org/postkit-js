@@ -1,10 +1,10 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { sidenoteDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 import { postkitFootnoteTokens as tokens } from '../footnote/footnote.recipe.js';
 
 /** The Sidenote anatomy, from its (internal) definition. */
-export const postkitSidenoteSlots = sidenoteDefinition.slots;
+export const postkitSidenoteSlots = postkitBuiltInSlots.Sidenote;
 export type PostkitSidenoteSlot = (typeof postkitSidenoteSlots)[number];
 
 /**

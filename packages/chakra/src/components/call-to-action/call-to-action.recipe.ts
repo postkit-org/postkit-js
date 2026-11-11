@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { callToActionDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The CallToAction anatomy, from its definition. */
-export const postkitCallToActionSlots = callToActionDefinition.slots;
+export const postkitCallToActionSlots = postkitBuiltInSlots.CallToAction;
 
 export type PostkitCallToActionSlot = (typeof postkitCallToActionSlots)[number];
 

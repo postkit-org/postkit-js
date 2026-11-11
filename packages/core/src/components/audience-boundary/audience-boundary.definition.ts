@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const audienceBoundaryDefinition = definePostkitComponent({
   name: 'AudienceBoundary',
@@ -23,7 +24,7 @@ export const audienceBoundaryDefinition = definePostkitComponent({
       default: false,
     }),
   },
-  slots: ['root', 'label', 'content', 'fallback'],
+  slots: postkitBuiltInSlots.AudienceBoundary,
   example: {
     props: { audience: 'members' },
     children: 'Example content.',

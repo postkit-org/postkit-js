@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { socialPostDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The SocialPost anatomy, from its definition. */
-export const postkitSocialPostSlots = socialPostDefinition.slots;
+export const postkitSocialPostSlots = postkitBuiltInSlots.SocialPost;
 
 export type PostkitSocialPostSlot = (typeof postkitSocialPostSlots)[number];
 

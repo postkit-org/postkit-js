@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { fileTreeDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The FileTree anatomy, from its definition. */
-export const postkitFileTreeSlots = fileTreeDefinition.slots;
+export const postkitFileTreeSlots = postkitBuiltInSlots.FileTree;
 export type PostkitFileTreeSlot = (typeof postkitFileTreeSlots)[number];
 export const postkitFileTreeRecipe = defineSlotRecipe({
   className: 'postkit-file-tree',

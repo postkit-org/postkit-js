@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const authorCardDefinition = definePostkitComponent({
   name: 'AuthorCard',
@@ -27,18 +28,7 @@ export const authorCardDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'avatar',
-    'content',
-    'header',
-    'name',
-    'nameLink',
-    'role',
-    'bio',
-    'links',
-    'link',
-  ],
+  slots: postkitBuiltInSlots.AuthorCard,
   example: {
     props: { name: 'Ada Example' },
     children: 'Example content.',

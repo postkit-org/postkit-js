@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { calloutDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Callout anatomy, from its definition. Aside shares it. */
-export const postkitCalloutSlots = calloutDefinition.slots;
+export const postkitCalloutSlots = postkitBuiltInSlots.Callout;
 export type PostkitCalloutSlot = (typeof postkitCalloutSlots)[number];
 export const postkitCalloutRecipe = defineSlotRecipe({
   className: 'postkit-callout',

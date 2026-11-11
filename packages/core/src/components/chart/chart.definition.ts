@@ -1,6 +1,7 @@
 import { definePostkitComponent } from '../definition.js';
 import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const chartDefinition = definePostkitComponent({
   name: 'Chart',
@@ -32,25 +33,7 @@ export const chartDefinition = definePostkitComponent({
       { default: false },
     ),
   },
-  slots: [
-    'root',
-    'title',
-    'description',
-    'legend',
-    'legendItem',
-    'legendSwatch',
-    'plot',
-    'svg',
-    'gridLine',
-    'axisLabel',
-    'seriesMark',
-    'emptyState',
-    'tableContainer',
-    'table',
-    'headerCell',
-    'rowHeader',
-    'dataCell',
-  ],
+  slots: postkitBuiltInSlots.Chart,
   example: {
     props: { data: [{ label: 'January', value: 12 }], title: 'chart example' },
   },

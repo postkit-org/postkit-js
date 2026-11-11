@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { authorCardDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The AuthorCard anatomy, from its definition. */
-export const postkitAuthorCardSlots = authorCardDefinition.slots;
+export const postkitAuthorCardSlots = postkitBuiltInSlots.AuthorCard;
 
 export type PostkitAuthorCardSlot = (typeof postkitAuthorCardSlots)[number];
 

@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const videoDefinition = definePostkitComponent({
   name: 'Video',
@@ -40,15 +41,7 @@ export const videoDefinition = definePostkitComponent({
       'Marks a video without speech or meaningful sound, such as a silent loop, so it needs no captions track.',
     ),
   },
-  slots: [
-    'root',
-    'frame',
-    'player',
-    'caption',
-    'fallback',
-    'duration',
-    'number',
-  ],
+  slots: postkitBuiltInSlots.Video,
   example: {
     props: {
       src: '/media/video.mp4',

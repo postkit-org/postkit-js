@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const callToActionDefinition = definePostkitComponent({
   name: 'CallToAction',
@@ -24,16 +25,7 @@ export const callToActionDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'content',
-    'eyebrow',
-    'title',
-    'body',
-    'actions',
-    'primaryAction',
-    'secondaryAction',
-  ],
+  slots: postkitBuiltInSlots.CallToAction,
   example: {
     props: { title: 'call to action example' },
     children: 'Example content.',

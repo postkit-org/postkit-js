@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 /**
  * @internal The note beside its reference, rendered by `Footnote` for the
@@ -19,5 +20,5 @@ export const sidenoteDefinition = definePostkitComponent({
     ...presentation,
     index: prop.number('The note number.'),
   },
-  slots: ['root', 'number', 'content'],
+  slots: postkitBuiltInSlots.Sidenote,
 });

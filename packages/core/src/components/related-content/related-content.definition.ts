@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const relatedContentDefinition = definePostkitComponent({
   name: 'RelatedContent',
@@ -18,16 +19,7 @@ export const relatedContentDefinition = definePostkitComponent({
       default: 'Related content',
     }),
   },
-  slots: [
-    'root',
-    'title',
-    'list',
-    'item',
-    'link',
-    'itemTitle',
-    'description',
-    'meta',
-  ],
+  slots: postkitBuiltInSlots.RelatedContent,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

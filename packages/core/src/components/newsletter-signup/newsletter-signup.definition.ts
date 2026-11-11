@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const newsletterSignupDefinition = definePostkitComponent({
   name: 'NewsletterSignup',
@@ -36,19 +37,7 @@ export const newsletterSignupDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'content',
-    'title',
-    'description',
-    'form',
-    'label',
-    'fields',
-    'input',
-    'submit',
-    'status',
-    'privacy',
-  ],
+  slots: postkitBuiltInSlots.NewsletterSignup,
   example: {
     props: { title: 'newsletter signup example' },
     children: 'Example content.',

@@ -55,6 +55,7 @@ export {
   type PostkitTitleElement,
 } from './heading-level.js';
 export * from './built-ins.js';
+export { postkitBuiltInSlots, type PostkitBuiltInSlotsName } from './slots.js';
 export * from './manifest.js';
 export * from './email.js';
 export * from './prop-rules.js';

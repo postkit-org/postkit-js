@@ -1,10 +1,10 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { footnotesDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 import { postkitFootnoteTokens as tokens } from '../footnote/footnote.recipe.js';
 
 /** The Footnotes anatomy, from its definition. */
-export const postkitFootnotesSlots = footnotesDefinition.slots;
+export const postkitFootnotesSlots = postkitBuiltInSlots.Footnotes;
 export type PostkitFootnotesSlot = (typeof postkitFootnotesSlots)[number];
 
 const backlinkTarget = {

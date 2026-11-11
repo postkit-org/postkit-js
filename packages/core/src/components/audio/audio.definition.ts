@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const audioDefinition = definePostkitComponent({
   name: 'Audio',
@@ -20,7 +21,7 @@ export const audioDefinition = definePostkitComponent({
       default: 'metadata',
     }),
   },
-  slots: ['root', 'title', 'player', 'caption', 'fallback'],
+  slots: postkitBuiltInSlots.Audio,
   example: {
     props: { src: '/media/episode.mp3', title: 'audio example' },
   },

@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { relatedContentDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The RelatedContent anatomy, from its definition. */
-export const postkitRelatedContentSlots = relatedContentDefinition.slots;
+export const postkitRelatedContentSlots = postkitBuiltInSlots.RelatedContent;
 export type PostkitRelatedContentSlot =
   (typeof postkitRelatedContentSlots)[number];
 export const postkitRelatedContentRecipe = defineSlotRecipe({

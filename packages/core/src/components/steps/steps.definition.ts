@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const stepsDefinition = definePostkitComponent({
   name: 'Steps',
@@ -14,7 +15,7 @@ export const stepsDefinition = definePostkitComponent({
       required: true,
     }),
   },
-  slots: ['root', 'item', 'marker', 'content', 'title', 'description'],
+  slots: postkitBuiltInSlots.Steps,
   example: {
     props: { items: [{ title: 'First step', description: 'Start here.' }] },
   },

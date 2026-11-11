@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const terminalDefinition = definePostkitComponent({
   name: 'Terminal',
@@ -16,16 +17,7 @@ export const terminalDefinition = definePostkitComponent({
     prompt: prop.string('The shell prompt marker.', { default: '$' }),
     title: prop.string('The terminal window label.', { default: 'Terminal' }),
   },
-  slots: [
-    'root',
-    'header',
-    'dots',
-    'title',
-    'body',
-    'prompt',
-    'command',
-    'output',
-  ],
+  slots: postkitBuiltInSlots.Terminal,
   example: {
     props: { command: 'npm install @postkit/chakra' },
   },

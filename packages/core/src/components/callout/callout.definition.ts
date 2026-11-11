@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const calloutDefinition = definePostkitComponent({
   name: 'Callout',
@@ -19,7 +20,7 @@ export const calloutDefinition = definePostkitComponent({
       aliases: ['type'],
     }),
   },
-  slots: ['root', 'icon', 'content', 'title', 'body'],
+  slots: postkitBuiltInSlots.Callout,
   example: {
     children: 'Example content.',
   },

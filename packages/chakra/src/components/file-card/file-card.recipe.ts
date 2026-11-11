@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { fileCardDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The FileCard anatomy, from its definition. */
-export const postkitFileCardSlots = fileCardDefinition.slots;
+export const postkitFileCardSlots = postkitBuiltInSlots.FileCard;
 export type PostkitFileCardSlot = (typeof postkitFileCardSlots)[number];
 export const postkitFileCardRecipe = defineSlotRecipe({
   className: 'postkit-file-card',

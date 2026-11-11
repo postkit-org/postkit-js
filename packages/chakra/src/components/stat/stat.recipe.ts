@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { statDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Stat anatomy, from its definition. */
-export const postkitStatSlots = statDefinition.slots;
+export const postkitStatSlots = postkitBuiltInSlots.Stat;
 export type PostkitStatSlot = (typeof postkitStatSlots)[number];
 export const postkitStatRecipe = defineSlotRecipe({
   className: 'postkit-stat',

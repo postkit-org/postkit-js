@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { deviceDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Device anatomy, from its definition. */
-export const postkitDeviceSlots = deviceDefinition.slots;
+export const postkitDeviceSlots = postkitBuiltInSlots.Device;
 
 export type PostkitDeviceSlot = (typeof postkitDeviceSlots)[number];
 

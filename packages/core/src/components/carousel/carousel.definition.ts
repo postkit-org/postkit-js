@@ -1,6 +1,7 @@
 import { definePostkitComponent } from '../definition.js';
 import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const carouselDefinition = definePostkitComponent({
   name: 'Carousel',
@@ -28,22 +29,7 @@ export const carouselDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'slide',
-    'media',
-    'content',
-    'title',
-    'description',
-    'link',
-    'controls',
-    'previousTrigger',
-    'status',
-    'nextTrigger',
-    'emptyState',
-    'caption',
-    'number',
-  ],
+  slots: postkitBuiltInSlots.Carousel,
   example: {
     children: 'Example content.',
   },

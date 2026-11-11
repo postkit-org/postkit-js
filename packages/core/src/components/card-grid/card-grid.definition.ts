@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const cardGridDefinition = definePostkitComponent({
   name: 'CardGrid',
@@ -19,20 +20,7 @@ export const cardGridDefinition = definePostkitComponent({
       default: '2',
     }),
   },
-  slots: [
-    'root',
-    'header',
-    'title',
-    'description',
-    'grid',
-    'card',
-    'image',
-    'cardBody',
-    'cardTitle',
-    'cardDescription',
-    'meta',
-    'link',
-  ],
+  slots: postkitBuiltInSlots.CardGrid,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

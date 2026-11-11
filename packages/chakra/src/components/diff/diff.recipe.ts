@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { diffDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Diff anatomy, from its definition. */
-export const postkitDiffSlots = diffDefinition.slots;
+export const postkitDiffSlots = postkitBuiltInSlots.Diff;
 export type PostkitDiffSlot = (typeof postkitDiffSlots)[number];
 export const postkitDiffRecipe = defineSlotRecipe({
   className: 'postkit-diff',

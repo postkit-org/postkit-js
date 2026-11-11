@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const seriesNavigationDefinition = definePostkitComponent({
   name: 'SeriesNavigation',
@@ -17,16 +18,7 @@ export const seriesNavigationDefinition = definePostkitComponent({
     previous: prop.json('The previous article title and URL.'),
     next: prop.json('The next article title and URL.'),
   },
-  slots: [
-    'root',
-    'header',
-    'title',
-    'position',
-    'links',
-    'link',
-    'direction',
-    'linkTitle',
-  ],
+  slots: postkitBuiltInSlots.SeriesNavigation,
   example: {
     props: { title: 'series navigation example' },
   },

@@ -1,8 +1,9 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { seriesNavigationDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The SeriesNavigation anatomy, from its definition. */
-export const postkitSeriesNavigationSlots = seriesNavigationDefinition.slots;
+export const postkitSeriesNavigationSlots =
+  postkitBuiltInSlots.SeriesNavigation;
 export type PostkitSeriesNavigationSlot =
   (typeof postkitSeriesNavigationSlots)[number];
 export const postkitSeriesNavigationRecipe = defineSlotRecipe({

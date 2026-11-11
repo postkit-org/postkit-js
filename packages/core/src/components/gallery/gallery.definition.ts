@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const galleryDefinition = definePostkitComponent({
   name: 'Gallery',
@@ -27,18 +28,7 @@ export const galleryDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: [
-    'root',
-    'header',
-    'title',
-    'description',
-    'grid',
-    'item',
-    'imageLink',
-    'image',
-    'caption',
-    'number',
-  ],
+  slots: postkitBuiltInSlots.Gallery,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

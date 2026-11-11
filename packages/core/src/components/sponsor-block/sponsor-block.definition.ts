@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const sponsorBlockDefinition = definePostkitComponent({
   name: 'SponsorBlock',
@@ -23,7 +24,7 @@ export const sponsorBlockDefinition = definePostkitComponent({
       default: 'Sponsored',
     }),
   },
-  slots: ['root', 'disclosure', 'logo', 'content', 'name', 'message', 'action'],
+  slots: postkitBuiltInSlots.SponsorBlock,
   example: {
     props: { name: 'Ada Example' },
   },

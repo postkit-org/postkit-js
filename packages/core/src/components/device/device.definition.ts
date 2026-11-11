@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const deviceDefinition = definePostkitComponent({
   name: 'Device',
@@ -26,17 +27,7 @@ export const deviceDefinition = definePostkitComponent({
     ),
     caption: prop.string('Visible supporting text below the device.'),
   },
-  slots: [
-    'root',
-    'frame',
-    'notch',
-    'screen',
-    'image',
-    'base',
-    'figcaption',
-    'number',
-    'caption',
-  ],
+  slots: postkitBuiltInSlots.Device,
   keywords: ['screenshot', 'mockup', 'iphone', 'ipad', 'mac', 'frame'],
   example: {
     props: {

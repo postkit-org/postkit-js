@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { chartDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Chart anatomy, from its definition. */
-export const postkitChartSlots = chartDefinition.slots;
+export const postkitChartSlots = postkitBuiltInSlots.Chart;
 
 export type PostkitChartSlot = (typeof postkitChartSlots)[number];
 
