@@ -16,10 +16,10 @@ import { technical } from './technical.js';
 export { article, discovery, engagement, media, publishing, technical };
 export {
   definePostkitKit,
-  postkitBuiltInKit,
   type PostkitKit,
   type PostkitKitInput,
 } from './kit.js';
+export { postkitBuiltInKit } from './built-in-kit.js';
 
 /** All six built-in kits, in catalog order. */
 export const postkitKits = Object.freeze([

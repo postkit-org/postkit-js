@@ -1,10 +1,4 @@
-import {
-  postkitBuiltInDefinitions,
-  postkitComponentCategories,
-  postkitKitCategories,
-  type AnyPostkitComponentDefinition,
-  type PostkitKitId,
-} from '@postkit/core/components';
+import type { AnyPostkitComponentDefinition } from '@postkit/core/components';
 
 /**
  * A kit: a renderer-neutral list of component definitions that a site enables
@@ -62,20 +56,5 @@ export function definePostkitKit<const Id extends string>(
     label: input.label ?? input.id,
     package: input.package ?? null,
     definitions: Object.freeze([...input.definitions]),
-  });
-}
-
-/** One of Postkit's six built-in kits, from its catalog category. */
-export function postkitBuiltInKit<const Id extends PostkitKitId>(
-  id: Id,
-): PostkitKit<Id> {
-  const category = postkitKitCategories[id];
-  return definePostkitKit({
-    id,
-    label: postkitComponentCategories[category],
-    package: '@postkit/core',
-    definitions: Object.values(postkitBuiltInDefinitions).filter(
-      (definition) => definition.category === category,
-    ),
   });
 }
