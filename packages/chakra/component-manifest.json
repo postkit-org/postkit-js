@@ -2322,6 +2322,12 @@
           "description": "A JSON array of carousel items.",
           "themeVariant": false
         },
+        "headingLevel": {
+          "kind": "enum",
+          "values": ["2", "3", "4", "5", "6"],
+          "description": "Renders each item title as a heading at this level. Leave it unset and item titles are paragraphs, so the carousel never breaks the page's heading outline.",
+          "themeVariant": false
+        },
         "label": {
           "kind": "string",
           "description": "The accessible name for the carousel.",
@@ -2367,6 +2373,8 @@
         "size",
         "variant",
         "items",
+        "heading",
+        "level",
         "label",
         "initial",
         "index",
@@ -2426,6 +2434,12 @@
           "description": "The visible and accessible chart title.",
           "themeVariant": false
         },
+        "headingLevel": {
+          "kind": "enum",
+          "values": ["2", "3", "4", "5", "6"],
+          "description": "Renders the title as a heading at this level. Leave it unset and the title is a paragraph, so the chart never breaks the page's heading outline.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
           "description": "A concise explanation of the chart.",
@@ -2477,6 +2491,8 @@
         "data",
         "series",
         "title",
+        "heading",
+        "level",
         "description",
         "type",
         "show",
@@ -2731,6 +2747,12 @@
           "description": "An author-supplied title override.",
           "themeVariant": false
         },
+        "headingLevel": {
+          "kind": "enum",
+          "values": ["2", "3", "4", "5", "6"],
+          "description": "Renders the card title as a heading at this level. Leave it unset and the title is a paragraph, so the preview never breaks the page's heading outline.",
+          "themeVariant": false
+        },
         "description": {
           "kind": "string",
           "description": "An author-supplied description override.",
@@ -2799,6 +2821,8 @@
         "provider",
         "metadata",
         "title",
+        "heading",
+        "level",
         "description",
         "site",
         "name",

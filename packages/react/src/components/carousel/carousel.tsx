@@ -1,7 +1,10 @@
 import { carouselItemSnapAlign } from '@postkit/core/behaviors';
 import {
   carouselDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
   type PostkitSlotOf,
+  type PostkitTitleElement,
 } from '@postkit/core/components';
 import { Children, type ReactNode } from 'react';
 
@@ -33,8 +36,13 @@ export interface CarouselItem {
 
 export type CarouselProps = Omit<
   PostkitViewProps<typeof carouselDefinition>,
-  'items' | 'initialIndex'
+  'items' | 'initialIndex' | 'headingLevel'
 > & {
+  /**
+   * Renders each item title as `h2` to `h6`. Unset, item titles are `p`, so
+   * the carousel never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   /** The slides, or authored JSON text for them. Children are used without. */
   readonly items?: string | readonly CarouselItem[];
   /** The first slide shown: a number, or a string from a directive. */
@@ -50,6 +58,7 @@ type CarouselPart = PostkitPartGetter<CarouselSlot>;
 function itemContent(
   item: CarouselItem,
   part: CarouselPart,
+  Title: PostkitTitleElement,
   caption?: { readonly number?: string; readonly text?: string },
 ): ReactNode {
   const showCaption = Boolean(caption?.number || caption?.text);
@@ -60,7 +69,7 @@ function itemContent(
       ) : null}
       {item.title || item.description || showCaption ? (
         <div {...part('content')}>
-          {item.title ? <h3 {...part('title')}>{item.title}</h3> : null}
+          {item.title ? <Title {...part('title')}>{item.title}</Title> : null}
           {item.description ? (
             <p {...part('description')}>{item.description}</p>
           ) : null}
@@ -200,10 +209,12 @@ export const Carousel = postkitView<typeof carouselDefinition, CarouselProps>(
     const items = props.items
       ? postkitJsonItems<CarouselItem>(props.items, 'Carousel items')
       : [];
+    const titleElement = postkitTitleElement(props.headingLevel);
     const itemSlides = items.map((item, index) =>
       itemContent(
         item,
         part,
+        titleElement,
         peek ? undefined : { number: figure?.label(index), text: item.caption },
       ),
     );

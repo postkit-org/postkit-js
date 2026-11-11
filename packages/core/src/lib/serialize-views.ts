@@ -3,6 +3,7 @@ import {
   type PostkitBuiltInComponentName,
 } from '../components/built-ins.js';
 import type { AnyPostkitComponentDefinition } from '../components/definition.js';
+import { postkitTitleElement } from '../components/heading-level.js';
 import { postkitCanonicalProps } from '../components/prop-rules.js';
 import { postkitVideoDuration } from '../components/video/video.duration.js';
 import {
@@ -152,6 +153,21 @@ const slot: PostkitViewSlot = { type: 'slot' };
 /** A titled paragraph: `<p part><strong>text</strong></p>`, readable without styles. */
 function strongParagraph(part: string, text: string): PostkitViewElement {
   return h('p', part, null, h('strong', undefined, null, text));
+}
+
+/**
+ * A title with an authored `headingLevel` (P20): `h2` to `h6` when it's set,
+ * and the bold paragraph every other static title uses when it isn't.
+ */
+function titleElement(
+  part: string,
+  headingLevel: unknown,
+  ...children: Child[]
+): PostkitViewElement {
+  const name = postkitTitleElement(headingLevel);
+  return name === 'p'
+    ? h('p', part, null, h('strong', undefined, null, ...children))
+    : h(name, part, null, ...children);
 }
 
 /** A string prop, or a number shown as text. Blank strings count as missing. */
@@ -604,16 +620,10 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
                 'content',
                 null,
                 title
-                  ? h(
-                      'p',
+                  ? titleElement(
                       'title',
-                      null,
-                      h(
-                        'strong',
-                        undefined,
-                        null,
-                        link('link', href, null, title),
-                      ),
+                      props['headingLevel'],
+                      link('link', href, null, title),
                     )
                   : href
                     ? h('p', undefined, null, h('a', 'link', { href }, href))
@@ -658,7 +668,9 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
             'figcaption',
             undefined,
             null,
-            title ? strongParagraph('title', title) : undefined,
+            title
+              ? titleElement('title', props['headingLevel'], title)
+              : undefined,
             description ? h('p', 'description', null, description) : undefined,
           )
         : undefined,
@@ -1036,11 +1048,10 @@ const views: Readonly<Record<PostkitBuiltInComponentName, StaticView>> = {
         'div',
         'content',
         null,
-        h(
-          'p',
+        titleElement(
           'title',
-          null,
-          h('strong', undefined, null, link('anchor', href, null, label)),
+          props['headingLevel'],
+          link('anchor', href, null, label),
         ),
         description ? h('p', 'description', null, description) : undefined,
         siteName || domain

@@ -501,6 +501,11 @@ Article authors can then use typed MDX declarations:
 />
 ```
 
+The titles of `Chart`, `Carousel` items and `LinkPreview` cards are
+heading-styled paragraphs, so they never skip a level in the article's
+outline. Set `headingLevel` (`2` to `6`) to make one a heading at that level,
+such as `headingLevel={3}` for a chart under an `h2`.
+
 ## Standard article blocks
 
 `AuthorCard`, `CallToAction`, and `NewsletterSignup` cover common

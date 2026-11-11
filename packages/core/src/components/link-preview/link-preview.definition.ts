@@ -1,4 +1,5 @@
 import { definePostkitComponent } from '../definition.js';
+import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
 
 export const linkPreviewDefinition = definePostkitComponent({
@@ -38,6 +39,9 @@ export const linkPreviewDefinition = definePostkitComponent({
       'A normalized @postkit/unfurl result serialized as JSON.',
     ),
     title: prop.string('An author-supplied title override.'),
+    headingLevel: headingLevelProp(
+      "Renders the card title as a heading at this level. Leave it unset and the title is a paragraph, so the preview never breaks the page's heading outline.",
+    ),
     description: prop.string('An author-supplied description override.'),
     siteName: prop.string('An author-supplied site-name override.'),
     image: prop.string('An author-supplied primary image override.'),

@@ -18,7 +18,12 @@ import {
   carouselItemSnapAlign,
   postkitCarouselPeekConfig,
 } from '@postkit/core/behaviors';
-import { carouselDefinition } from '@postkit/core/components';
+import {
+  carouselDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
+  type PostkitTitleElement,
+} from '@postkit/core/components';
 import {
   usePostkitFigureNumber,
   type PostkitFigureNumber,
@@ -52,6 +57,11 @@ export interface CarouselItem {
 
 export type CarouselProps = {
   readonly items?: string | readonly CarouselItem[];
+  /**
+   * Renders each item title as `h2` to `h6`. Unset, item titles are `p`, so
+   * the carousel never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   readonly children?: ReactNode;
   readonly label?: string;
   readonly initialIndex?: number | string;
@@ -77,6 +87,7 @@ function itemContent(
   item: CarouselItem,
   size: unknown,
   part: CarouselPart,
+  titleElement: PostkitTitleElement,
   caption?: { readonly number?: string; readonly text?: string },
 ): ReactNode {
   const showCaption = Boolean(caption?.number || caption?.text);
@@ -89,7 +100,7 @@ function itemContent(
         <Box {...part('content')}>
           {item.title ? (
             <Heading
-              as="h3"
+              as={titleElement}
               size={postkitHeadingSize(size, {
                 sm: 'md',
                 md: 'lg',
@@ -244,11 +255,13 @@ export const Carousel = postkitChakraView<
   const items = props.items
     ? parseJsonProp<CarouselItem>(props.items, 'Carousel items')
     : [];
+  const titleElement = postkitTitleElement(props.headingLevel);
   const itemSlides = items.map((item, index) =>
     itemContent(
       item,
       variants['size'],
       part,
+      titleElement,
       peek ? undefined : { number: figure?.label(index), text: item.caption },
     ),
   );

@@ -1,5 +1,7 @@
 import {
   linkPreviewDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
   type PostkitSlotOf,
 } from '@postkit/core/components';
 import type {
@@ -28,8 +30,13 @@ export type LinkPreviewPresentation =
 
 export type LinkPreviewProps = Omit<
   PostkitViewProps<typeof linkPreviewDefinition>,
-  'metadata'
+  'metadata' | 'headingLevel'
 > & {
+  /**
+   * Renders the card title as `h2` to `h6`. Unset, the title is a `p`, so
+   * the preview never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   /** A normalized `@postkit/unfurl` result, or its JSON text. */
   readonly metadata?: string | ResolvedLinkPreview;
   /** The inline presentation's link text. */
@@ -155,6 +162,7 @@ export const LinkPreview = postkitView<
   const resolutionStatus = suppliedMetadata ? 'provided' : resolution.status;
   const resolvedPresentation = requestedPresentation(presentation, metadata);
   const title = props.title ?? metadata?.title;
+  const Title = postkitTitleElement(props.headingLevel);
   const description = props.description ?? metadata?.description;
   const siteName = props.siteName ?? metadata?.siteName ?? displayDomain(href);
   const favicon = props.favicon ?? metadata?.favicon;
@@ -206,7 +214,7 @@ export const LinkPreview = postkitView<
   // show the site row above it.
   const siteContent = (
     <div {...part('content')}>
-      <h3 {...part('title')}>{title ?? domain}</h3>
+      <Title {...part('title')}>{title ?? domain}</Title>
       <div {...part('siteRow')}>
         {favicon ? (
           <img src={favicon} alt="" loading="lazy" {...part('favicon')} />

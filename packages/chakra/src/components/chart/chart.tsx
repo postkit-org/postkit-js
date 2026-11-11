@@ -12,7 +12,11 @@ import {
   type TableRootProps,
   type UnstyledProp,
 } from '@chakra-ui/react';
-import { chartDefinition } from '@postkit/core/components';
+import {
+  chartDefinition,
+  postkitTitleElement,
+  type PostkitHeadingLevelInput,
+} from '@postkit/core/components';
 import { postkitChartLayout } from '@postkit/react';
 import { useId } from 'react';
 
@@ -36,6 +40,11 @@ export type ChartProps = {
   readonly data: string | readonly ChartDatum[];
   readonly series?: string | readonly ChartSeries[];
   readonly title: string;
+  /**
+   * Renders the title as `h2` to `h6`. Unset, the title is a `p`, so the
+   * chart never breaks the page's heading outline.
+   */
+  readonly headingLevel?: PostkitHeadingLevelInput;
   readonly description?: string;
   readonly type?: 'bar' | 'line';
   readonly showTable?: boolean | string;
@@ -76,7 +85,7 @@ export const Chart = postkitChakraView<typeof chartDefinition, ChartProps>(
       <Box as="figure" {...part('root')}>
         <Heading
           id={titleId}
-          as="h3"
+          as={postkitTitleElement(props.headingLevel)}
           size={postkitHeadingSize(variants['size'], {
             sm: 'md',
             md: 'lg',

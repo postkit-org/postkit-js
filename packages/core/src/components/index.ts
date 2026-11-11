@@ -46,6 +46,14 @@ export {
   type PostkitStringPropDefinition,
   type PostkitVariantPropOptions,
 } from './props.js';
+export {
+  headingLevelProp,
+  postkitHeadingLevels,
+  postkitTitleElement,
+  type PostkitHeadingLevel,
+  type PostkitHeadingLevelInput,
+  type PostkitTitleElement,
+} from './heading-level.js';
 export * from './built-ins.js';
 export * from './manifest.js';
 export * from './email.js';

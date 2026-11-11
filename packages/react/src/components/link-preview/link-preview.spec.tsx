@@ -90,7 +90,7 @@ describe('headless LinkPreview', () => {
       />,
     );
 
-    expect(markup).toContain('<h3 data-postkit-part="title">Mine</h3>');
+    expect(markup).toContain('<p data-postkit-part="title">Mine</p>');
     expect(markup).toContain('Site</span>');
     expect(markup).not.toContain('own.png');
     expect(markup).toContain('data-postkit-resolution="idle"');
@@ -263,7 +263,9 @@ describe('headless LinkPreview', () => {
         ?.getAttribute('data-postkit-resolution'),
     ).toBe('loading');
     await waitFor(() =>
-      expect(screen.getByRole('heading').textContent).toBe('An article'),
+      expect(
+        container.querySelector('[data-postkit-part="title"]')?.textContent,
+      ).toBe('An article'),
     );
     expect(
       container

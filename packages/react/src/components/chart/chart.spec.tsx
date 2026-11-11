@@ -119,7 +119,7 @@ describe('headless Chart', () => {
       '<figure data-postkit-component="Chart" data-postkit-part="root" data-size="md" data-variant="subtle">',
     );
     expect(markup).toMatch(
-      /<h3 data-postkit-part="title" id="([^"]+)-title">Visits<\/h3>/,
+      /<p data-postkit-part="title" id="([^"]+)-title">Visits<\/p>/,
     );
     expect(markup).toContain(
       '<div data-postkit-part="legend" aria-label="Chart legend">',
