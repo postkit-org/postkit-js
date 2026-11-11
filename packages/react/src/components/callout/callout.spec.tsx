@@ -1,10 +1,10 @@
 // @vitest-environment node
 
-import { calloutDefinition } from '@postkit/core/components';
+import { asideDefinition, calloutDefinition } from '@postkit/core/components';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { Aside } from '../aside/aside.js';
-import { Callout } from './callout.js';
+import { Callout, postkitCalloutMarks, type CalloutTone } from './callout.js';
 
 describe('headless Callout', () => {
   it('renders the anatomy with no styles or Chakra', () => {
@@ -45,5 +45,28 @@ describe('headless Callout', () => {
     expect(markup).toContain('data-postkit-component="Aside"');
     expect(markup).toContain('data-variant="plain"');
     expect(markup).toContain('data-postkit-part="body"');
+  });
+
+  it('never gives Aside a tone mark, for any tone or size (D14)', () => {
+    expect(asideDefinition.slots).not.toContain('icon');
+    for (const tone of Object.keys(postkitCalloutMarks)) {
+      for (const size of ['sm', 'md', 'lg'] as const) {
+        const markup = renderToStaticMarkup(
+          <Aside tone={tone as CalloutTone} size={size} title="Aside">
+            Context
+          </Aside>,
+        );
+
+        expect(markup).toContain(`data-tone="${tone}"`);
+        expect(markup).not.toContain('data-postkit-part="icon"');
+        expect(markup).not.toContain(
+          `>${postkitCalloutMarks[tone as CalloutTone]}<`,
+        );
+      }
+    }
+    // Callout keeps its mark.
+    expect(renderToStaticMarkup(<Callout>Body</Callout>)).toContain(
+      'data-postkit-part="icon"',
+    );
   });
 });

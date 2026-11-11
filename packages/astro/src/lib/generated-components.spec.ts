@@ -1,6 +1,9 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { postkitBuiltInDefinitions } from '@postkit/core/components';
+import * as Headless from '@postkit/react';
+import * as views from './astro-views.js';
 import { postkitAstroComponents } from './components.js';
+import * as headlessBridges from './headless-bridges.js';
 import * as bridges from './react-bridges.js';
 
 const componentsDirectory = new URL('../components/', import.meta.url);
@@ -26,7 +29,27 @@ describe('generated Astro components', () => {
 
     expect(wrappers).toEqual(names);
     expect(Object.keys(bridges).sort()).toEqual(names);
+    expect(Object.keys(headlessBridges).sort()).toEqual(names);
+    expect(Object.keys(views).sort()).toEqual(names);
     expect(Object.keys(postkitAstroComponents).sort()).toEqual(names);
+  });
+
+  it('renders the headless views, with no provider, for renderer "headless"', () => {
+    for (const name of Object.keys(headlessBridges)) {
+      expect(headlessBridges[name as keyof typeof headlessBridges]).toBe(
+        Headless[name as keyof typeof Headless],
+      );
+    }
+  });
+
+  it('reads every wrapper view from the renderer-switched module', () => {
+    for (const { name } of definitions) {
+      expect(wrapper(name)).toContain(
+        `import { ${name} } from '../lib/astro-views';`,
+      );
+    }
+    // Under the test config the virtual module is the default (Chakra) one.
+    expect(views.Callout).toBe(bridges.Callout);
   });
 
   it.each(definitions.map((definition) => [definition.name, definition]))(

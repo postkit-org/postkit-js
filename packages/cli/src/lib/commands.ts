@@ -42,6 +42,7 @@ import {
   appendToConfigArray,
   ensureNamedImport,
   importedNames,
+  readConfigComponentDefinitions,
   readConfigIdentifier,
   readConfigIdentifiers,
   readConfigStrings,
@@ -284,6 +285,22 @@ createPostkit({
         message = 'already';
         return undefined;
       }
+      // Added before (`postkit add` run twice): createPostkit rejects a
+      // component listed twice, so leave the config alone.
+      const names = importedNames(source, path);
+      const listed = readConfigComponentDefinitions(source, path).some(
+        (identifier) => {
+          const binding = names.get(identifier);
+          return (
+            binding?.module === '@postkit/core/components' &&
+            binding.imported === definitionExport
+          );
+        },
+      );
+      if (listed) {
+        message = 'listed';
+        return undefined;
+      }
       if (!rendererPackage) {
         throw new PostkitUnsafeSourceError(
           "a renderer that isn't chakra from @postkit/chakra",
@@ -312,6 +329,10 @@ createPostkit({
   if (message === 'already') {
     io.stdout(
       `${pascal} is already enabled (the ${kit} kit) in ${show(file as string)}.\n`,
+    );
+  } else if (message === 'listed') {
+    io.stdout(
+      `${pascal} is already in components in ${show(file as string)}. Nothing changed.\n`,
     );
   } else if (changed) {
     io.stdout(`✓ ${show(file as string)}   ${message}\n`);

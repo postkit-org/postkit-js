@@ -223,6 +223,13 @@ describe('styles.css', () => {
     expect(offenders).toEqual([]);
   });
 
+  it("never sets or reads Chakra's variables", () => {
+    expect(stylesheet).not.toContain('--chakra-');
+    for (const index of [1, 2, 3, 4]) {
+      expect(light.get(`--postkit-chart-${index}`)).toMatch(hexColor);
+    }
+  });
+
   it('gives every colour token a dark value, in both dark selectors', () => {
     expect(colorTokens.length).toBeGreaterThan(20);
     for (const [token] of colorTokens) {
@@ -264,7 +271,8 @@ describe('styles.css', () => {
   ] as const)('contrast in %s mode', (_, mode) => {
     const token = (name: string) => {
       const value = mode.get(`--postkit-${name}`);
-      if (!value || !hexColor.test(value)) throw new Error(`No ${name} colour.`);
+      if (!value || !hexColor.test(value))
+        throw new Error(`No ${name} colour.`);
       return value;
     };
     const tones = ['note', 'tip', 'important', 'warning', 'caution'];

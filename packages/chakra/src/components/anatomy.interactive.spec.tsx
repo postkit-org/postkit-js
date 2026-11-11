@@ -202,8 +202,9 @@ const linkPreviewContent = {
   anchor: [
     {
       content: [
-        { siteRow: ['favicon', 'siteName'] },
+        // The title leads the card link so its name starts with it.
         'title',
+        { siteRow: ['favicon', 'siteName'] },
         'description',
         'domain',
       ],

@@ -50,6 +50,18 @@ function shouldShowTable(value: boolean | string | undefined): boolean {
   return value === true || value === 'true';
 }
 
+/**
+ * Series colours when the author gives none: Chakra's `<palette>.fg` semantic
+ * tokens, which follow the colour mode and keep at least 3:1 against the page
+ * in light and dark. `currentColor` covers a system without those tokens.
+ */
+const chakraChartColors = [
+  'var(--chakra-colors-blue-fg, currentColor)',
+  'var(--chakra-colors-purple-fg, currentColor)',
+  'var(--chakra-colors-teal-fg, currentColor)',
+  'var(--chakra-colors-orange-fg, currentColor)',
+] as const;
+
 /** An accessible bar or line chart, styled by its Chakra recipe. */
 export const Chart = postkitChakraView<typeof chartDefinition, ChartProps>(
   chartDefinition,
@@ -58,7 +70,7 @@ export const Chart = postkitChakraView<typeof chartDefinition, ChartProps>(
     const titleId = `${useId()}-title`;
     const descriptionId = `${titleId}-description`;
     const { title, description } = props;
-    const layout = postkitChartLayout(props);
+    const layout = postkitChartLayout({ ...props, palette: chakraChartColors });
 
     return (
       <Box as="figure" {...part('root')}>

@@ -37,7 +37,7 @@
           "themeVariant": true
         }
       },
-      "slots": ["root", "icon", "content", "title", "body"],
+      "slots": ["root", "content", "title", "body"],
       "variants": ["size", "variant", "tone"],
       "category": "Article structure",
       "kit": "article",

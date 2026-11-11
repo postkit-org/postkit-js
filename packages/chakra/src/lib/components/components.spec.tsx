@@ -615,6 +615,22 @@ describe('Postkit article components', () => {
     expect(large).toContain('postkit-link-preview__carousel');
     expect(large).toContain('data-postkit-component="Carousel"');
     expect(large).toContain('1 / 2');
+
+    // WCAG 2.5.3: the card link is named by its content, which starts with
+    // the visible title, rather than by an aria-label that differs from it.
+    const anchorTag = /<a\b[^>]*data-postkit-part="anchor"[^>]*>/.exec(small);
+    expect(anchorTag?.[0]).toBeDefined();
+    expect(anchorTag?.[0]).not.toMatch(/aria-label(ledby)?=/);
+    const anchorContent = small.slice(
+      (anchorTag?.index ?? 0) + (anchorTag?.[0].length ?? 0),
+    );
+    expect(
+      anchorContent
+        .replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, ' ')
+        .replace(/<[^>]*>/g, ' ')
+        .trim()
+        .startsWith('A portable article'),
+    ).toBe(true);
   });
 
   it('renders native media and click-to-load isolated embeds without injecting provider HTML', () => {

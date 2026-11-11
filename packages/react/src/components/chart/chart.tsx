@@ -84,16 +84,18 @@ export interface PostkitChartLayout {
 }
 
 /**
- * Series colours when the author gives none: Chakra's `<palette>.fg` semantic
- * tokens, which follow the colour mode and keep at least 3:1 against the page in
- * light and dark. `currentColor` covers a host without those tokens.
+ * Series colours when the author gives none: the `--postkit-chart-1` to `-4`
+ * custom properties, which `styles.css` defines for light and dark. Without
+ * them, each falls back to a mid-tone of the same hue that keeps at least
+ * 3.9:1 against both a white and a near-black page, so an unstyled chart
+ * still reads in either colour mode.
  */
-const DEFAULT_COLORS = [
-  'var(--chakra-colors-blue-fg, currentColor)',
-  'var(--chakra-colors-purple-fg, currentColor)',
-  'var(--chakra-colors-teal-fg, currentColor)',
-  'var(--chakra-colors-orange-fg, currentColor)',
-] as const;
+export const postkitChartColors = Object.freeze([
+  'var(--postkit-chart-1, #5b7fb0)',
+  'var(--postkit-chart-2, #a8761e)',
+  'var(--postkit-chart-3, #3f8a5c)',
+  'var(--postkit-chart-4, #7a7a84)',
+] as const);
 
 const WIDTH = 640;
 const HEIGHT = 320;
@@ -124,8 +126,16 @@ export function postkitChartLayout(options: {
   readonly data: string | readonly ChartDatum[];
   readonly series?: string | readonly ChartSeries[];
   readonly type?: 'bar' | 'line';
+  /**
+   * Colours for series without an authored `color`, used in turn. Defaults
+   * to {@link postkitChartColors}; `@postkit/chakra` passes its own tokens.
+   */
+  readonly palette?: readonly string[];
 }): PostkitChartLayout {
   const records = parseJsonProp<ChartDatum>(options.data, 'Chart data');
+  const palette = options.palette?.length
+    ? options.palette
+    : postkitChartColors;
   const series = (
     options.series
       ? parseJsonProp<ChartSeries>(options.series, 'Chart series')
@@ -133,7 +143,7 @@ export function postkitChartLayout(options: {
   ).map((item, index) => ({
     key: item.key,
     label: item.label ?? item.key,
-    color: item.color ?? DEFAULT_COLORS[index % DEFAULT_COLORS.length],
+    color: item.color ?? palette[index % palette.length] ?? 'currentColor',
   }));
   const plotWidth = WIDTH - LEFT - RIGHT;
   const plotHeight = HEIGHT - TOP - BOTTOM;

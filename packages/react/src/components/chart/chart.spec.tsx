@@ -3,7 +3,7 @@
 import { chartDefinition } from '@postkit/core/components';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { Chart, postkitChartLayout } from './chart.js';
+import { Chart, postkitChartColors, postkitChartLayout } from './chart.js';
 
 const data = '[{"label":"Jan","a":1,"b":3},{"label":"Feb","a":2,"b":5}]';
 
@@ -17,12 +17,12 @@ describe('postkitChartLayout', () => {
       {
         key: 'a',
         label: 'a',
-        color: 'var(--chakra-colors-blue-fg, currentColor)',
+        color: 'var(--postkit-chart-1, #5b7fb0)',
       },
       {
         key: 'b',
         label: 'b',
-        color: 'var(--chakra-colors-purple-fg, currentColor)',
+        color: 'var(--postkit-chart-2, #a8761e)',
       },
     ]);
     expect(layout.gridLines.map((line) => line.value)).toEqual([5, 2.5, 0]);
@@ -71,6 +71,35 @@ describe('postkitChartLayout', () => {
     ]);
   });
 
+  it('colours series from the --postkit-chart tokens, with fallbacks, and cycles them', () => {
+    const fiveSeries = postkitChartLayout({
+      data: [{ label: 'Jan', a: 1, b: 2, c: 3, d: 4, e: 5 }],
+    });
+
+    expect(postkitChartColors).toHaveLength(4);
+    postkitChartColors.forEach((color, index) => {
+      expect(color).toMatch(
+        new RegExp(`^var\\(--postkit-chart-${index + 1}, #[0-9a-f]{6}\\)$`),
+      );
+    });
+    expect(fiveSeries.series.map((item) => item.color)).toEqual([
+      ...postkitChartColors,
+      postkitChartColors[0],
+    ]);
+    // Headless never depends on Chakra's variables.
+    expect(JSON.stringify(fiveSeries)).not.toContain('--chakra-');
+  });
+
+  it('takes a renderer palette for series without an authored colour', () => {
+    const layout = postkitChartLayout({
+      data,
+      series: [{ key: 'a' }, { key: 'b', color: 'red' }],
+      palette: ['blue', 'green'],
+    });
+
+    expect(layout.series.map((item) => item.color)).toEqual(['blue', 'red']);
+  });
+
   it('is empty without records or numeric series', () => {
     expect(postkitChartLayout({ data: [] }).empty).toBe(true);
     expect(
@@ -96,7 +125,7 @@ describe('headless Chart', () => {
       '<div data-postkit-part="legend" aria-label="Chart legend">',
     );
     expect(markup).toContain(
-      '<span data-postkit-part="legendSwatch" style="background:var(--chakra-colors-blue-fg, currentColor)" aria-hidden="true"></span>',
+      '<span data-postkit-part="legendSwatch" style="background:var(--postkit-chart-1, #5b7fb0)" aria-hidden="true"></span>',
     );
     expect(markup).toMatch(
       /<svg data-postkit-part="svg" role="img" aria-labelledby="[^"]+-title [^"]+-title-description" viewBox="0 0 640 320">/,

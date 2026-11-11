@@ -48,19 +48,43 @@ const toneStatus = {
   caution: 'error',
 } as const satisfies Record<CalloutTone, string>;
 
+type CalloutContext = PostkitChakraViewContext<
+  typeof calloutDefinition,
+  CalloutProps
+>;
+
 /**
- * The Chakra Callout render, shared by `Callout` and `Aside`.
+ * What the shared Chakra Callout render takes: the view context, and
+ * `mark: false` to leave out the tone mark (`Aside`, D14), whose anatomy has
+ * no `icon`.
  *
  * @internal
  */
-export function renderPostkitChakraCallout({
-  props,
-  variants,
-  part,
-}: Pick<
-  PostkitChakraViewContext<typeof calloutDefinition, CalloutProps>,
-  'part' | 'props' | 'variants'
->) {
+export type PostkitChakraCalloutRenderInput = Pick<
+  CalloutContext,
+  'props' | 'variants'
+> &
+  (
+    | { readonly part: CalloutContext['part']; readonly mark?: true }
+    | {
+        readonly part: (
+          name: Exclude<PostkitCalloutSlot, 'icon'>,
+          options?: Parameters<CalloutContext['part']>[1],
+        ) => ReturnType<CalloutContext['part']>;
+        readonly mark: false;
+      }
+  );
+
+/**
+ * The Chakra Callout render, shared by `Callout` and `Aside` (Aside's
+ * anatomy leaves out the `icon` part).
+ *
+ * @internal
+ */
+export function renderPostkitChakraCallout(
+  input: PostkitChakraCalloutRenderInput,
+) {
+  const { props, variants, part } = input;
   const tone: CalloutTone =
     typeof props.tone === 'string' && props.tone in postkitCalloutMarks
       ? props.tone
@@ -75,9 +99,11 @@ export function renderPostkitChakraCallout({
         ? { 'data-postkit-component': props.componentName }
         : undefined)}
     >
-      <Alert.Indicator aria-hidden="true" {...part('icon')}>
-        {props.icon ?? postkitCalloutMarks[tone]}
-      </Alert.Indicator>
+      {input.mark === false ? null : (
+        <Alert.Indicator aria-hidden="true" {...input.part('icon')}>
+          {props.icon ?? postkitCalloutMarks[tone]}
+        </Alert.Indicator>
+      )}
       <Alert.Content {...part('content')}>
         {props.title ? (
           <Alert.Title asChild>

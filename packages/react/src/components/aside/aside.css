@@ -13,9 +13,6 @@
   :where(:scope[data-size='lg']) {
     font-size: var(--postkit-text-md);
   }
-  :where([data-postkit-part='icon']) {
-    display: none;
-  }
   :where([data-postkit-part='content']) {
     min-width: 0;
   }

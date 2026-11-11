@@ -43,13 +43,18 @@ export const postkitLinkPreviewRecipe = defineSlotRecipe({
       minWidth: '0',
     },
     content: {
+      display: 'flex',
+      flexDirection: 'column',
       minWidth: '0',
     },
+    // The title leads the source, so the link's name starts with it; the
+    // site row shows above it.
     siteRow: {
       alignItems: 'center',
       color: 'fg.muted',
       display: 'flex',
       minWidth: '0',
+      order: '-1',
     },
     favicon: {
       flex: '0 0 auto',

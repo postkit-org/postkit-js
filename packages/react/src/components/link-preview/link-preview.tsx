@@ -201,15 +201,18 @@ export const LinkPreview = postkitView<
     );
   }
 
+  // The title leads the source so the card link's accessible name, taken
+  // from its content, starts with the visible title (WCAG 2.5.3). Styles
+  // show the site row above it.
   const siteContent = (
     <div {...part('content')}>
+      <h3 {...part('title')}>{title ?? domain}</h3>
       <div {...part('siteRow')}>
         {favicon ? (
           <img src={favicon} alt="" loading="lazy" {...part('favicon')} />
         ) : null}
         <span {...part('siteName')}>{siteName}</span>
       </div>
-      <h3 {...part('title')}>{title ?? domain}</h3>
       {description ? <p {...part('description')}>{description}</p> : null}
       <p {...part('domain')}>{domain}</p>
     </div>
@@ -344,7 +347,7 @@ export const LinkPreview = postkitView<
       {...part('root')}
     >
       {primaryContent}
-      <a href={href} aria-label={`Open ${title ?? domain}`} {...part('anchor')}>
+      <a href={href} {...part('anchor')}>
         {siteContent}
       </a>
     </article>

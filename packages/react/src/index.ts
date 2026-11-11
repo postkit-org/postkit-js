@@ -166,6 +166,7 @@ export {
 } from './components/call-to-action/call-to-action.js';
 export {
   Chart,
+  postkitChartColors,
   postkitChartLayout,
   type ChartDatum,
   type ChartProps,

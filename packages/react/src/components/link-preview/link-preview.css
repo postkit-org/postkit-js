@@ -39,9 +39,12 @@
     min-width: 0;
   }
   :where([data-postkit-part='content']) {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
     padding: var(--postkit-inset);
   }
+  /* The title leads the source, so the link's name starts with it; the site row shows above it. */
   :where([data-postkit-part='siteRow']) {
     align-items: center;
     color: var(--postkit-color-fg-muted);
@@ -49,6 +52,7 @@
     font-size: var(--postkit-text-sm);
     gap: var(--postkit-space-2);
     min-width: 0;
+    order: -1;
   }
   :where([data-postkit-part='favicon']) {
     flex: 0 0 auto;

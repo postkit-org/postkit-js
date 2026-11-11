@@ -304,6 +304,9 @@ export function LinkPreview({
     );
   }
 
+  // The title leads the source so the card link's accessible name, taken
+  // from its content, starts with the visible title (WCAG 2.5.3). The
+  // recipe shows the site row above it.
   const siteContent = (
     <Card.Body
       {...anatomy('content')}
@@ -311,6 +314,16 @@ export function LinkPreview({
       className={recipe.classNameMap.content}
       css={[styles.content, slotStyles?.content]}
     >
+      <Heading
+        as="h3"
+        size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
+        {...anatomy('title')}
+
+        className={recipe.classNameMap.title}
+        css={[styles.title, slotStyles?.title]}
+      >
+        {title ?? domain}
+      </Heading>
       <Flex
         {...anatomy('siteRow')}
 
@@ -338,16 +351,6 @@ export function LinkPreview({
           {siteName}
         </Text>
       </Flex>
-      <Heading
-        as="h3"
-        size={postkitHeadingSize(size, { sm: 'sm', md: 'lg', lg: 'xl' })}
-        {...anatomy('title')}
-
-        className={recipe.classNameMap.title}
-        css={[styles.title, slotStyles?.title]}
-      >
-        {title ?? domain}
-      </Heading>
       {description ? (
         <Text
           {...anatomy('description')}
@@ -543,7 +546,6 @@ export function LinkPreview({
       {primaryContent}
       <Link
         href={href}
-        aria-label={`Open ${title ?? domain}`}
         {...anatomy('anchor')}
 
         className={recipe.classNameMap.anchor}

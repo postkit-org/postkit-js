@@ -138,6 +138,7 @@ const packages = await Promise.all([
   import('@postkit/react-router'),
   import('@postkit/tanstack-router'),
   import('@postkit/astro'),
+  import('@postkit/astro/headless'),
 ]);
 if (packages.some((entry) => Object.keys(entry).length === 0)) {
   throw new Error('A Postkit package exported no public members.');
@@ -372,6 +373,7 @@ import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router'
 import { postkitAstro } from '@postkit/astro';
 import type { PostkitAstroComponents } from '@postkit/astro/components';
 import type { Audio } from '@postkit/astro/react';
+import type { Audio as HeadlessAudio } from '@postkit/astro/headless';
 
 void parsePostkitHtml;
 void serializePostkitJson;
@@ -438,8 +440,10 @@ void createPostkitNextComponents;
 void createPostkitReactRouterComponents;
 void createPostkitTanStackRouterComponents;
 void postkitAstro;
+void postkitAstro({ renderer: 'headless', styles: true });
 type _AstroComponents = PostkitAstroComponents;
 type _AstroReactBridge = typeof Audio;
+type _AstroHeadlessBridge = typeof HeadlessAudio;
 `,
   );
   // What a bundler's client types declare: CSS imports are side effects.

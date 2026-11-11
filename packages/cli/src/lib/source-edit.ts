@@ -448,6 +448,45 @@ export function readConfigIdentifiers(
   });
 }
 
+/**
+ * The identifiers given as `definition` in the options' `components` array:
+ * one per `{ definition: x, … }` (or `{ definition, … }`) item. Other items,
+ * such as a component built elsewhere and passed by name, are skipped.
+ */
+export function readConfigComponentDefinitions(
+  source: string,
+  fileName?: string,
+): string[] {
+  const parsed = parse(source, fileName);
+  const open = createPostkitObject(parsed);
+  const found = property(parsed, open, 'components');
+  if (!found) return [];
+  const definitions: string[] = [];
+  for (const item of listItems(parsed, literalOpen(parsed, found, '['))) {
+    const token = parsed.tokens[item.first];
+    if (
+      token.kind !== 'punct' ||
+      token.value !== '{' ||
+      parsed.match.get(item.first) !== item.last
+    ) {
+      continue;
+    }
+    const definition = objectProperties(parsed, item.first).find(
+      (entry) => entry.key === 'definition',
+    );
+    if (definition?.kind === 'shorthand') {
+      definitions.push('definition');
+    } else if (
+      definition?.kind === 'property' &&
+      definition.value === definition.item.last &&
+      parsed.tokens[definition.value].kind === 'ident'
+    ) {
+      definitions.push(parsed.tokens[definition.value].value);
+    }
+  }
+  return definitions;
+}
+
 /** The identifier the options' `key` is set to, `null` if unset. */
 export function readConfigIdentifier(
   source: string,

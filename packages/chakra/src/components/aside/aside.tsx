@@ -11,10 +11,12 @@ import {
 } from '../callout/callout.js';
 import { postkitFootnoteTokens as tokens } from '../footnote/footnote.recipe.js';
 
-export type AsideProps = CalloutProps;
+/** Callout's props without `icon`: Aside has no tone mark (D14). */
+export type AsideProps = Omit<CalloutProps, 'icon'>;
 
 /**
- * Aside is the authored sidenote (D14): where footnotes are sidenotes (the
+ * Aside is the authored sidenote (D14), with no tone mark in any placement
+ * or size: where footnotes are sidenotes (the
  * footnotes behaviour marks the text column `data-postkit-margin="side"`),
  * it moves into the margin column beside them, quieter and without a box.
  * Elsewhere it's a quiet block in the text column.
@@ -49,6 +51,7 @@ export const Aside = postkitChakraView<typeof asideDefinition, AsideProps>(
     renderPostkitChakraCallout({
       props,
       variants,
+      mark: false,
       part: (name, options) =>
         name === 'root'
           ? part('root', {

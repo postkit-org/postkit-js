@@ -1,15 +1,7 @@
 /* Chart: an accessible SVG chart with a legend and an optional data table. */
 @scope ([data-postkit-component='Chart']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  /* Series without an authored colour read --postkit-chart-1 to -4 (tokens.css). */
   :where(:scope) {
-    /*
-     * The view colours series without an authored colour from these
-     * properties (falling back to currentColor); point them at the chart
-     * tokens so series stay distinct without Chakra.
-     */
-    --chakra-colors-blue-fg: var(--postkit-chart-1);
-    --chakra-colors-purple-fg: var(--postkit-chart-2);
-    --chakra-colors-teal-fg: var(--postkit-chart-3);
-    --chakra-colors-orange-fg: var(--postkit-chart-4);
     border-radius: var(--postkit-radius-xl);
     padding: var(--postkit-space-5);
   }
