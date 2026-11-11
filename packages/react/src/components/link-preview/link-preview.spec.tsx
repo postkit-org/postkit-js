@@ -61,7 +61,22 @@ describe('headless LinkPreview', () => {
     expect(parts(container, 'domain')[0]?.textContent).toBe('example.com');
     expect(
       screen.getAllByRole('link', { name: 'Open An article' }),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
+  });
+
+  it('names the card link from its content, starting with the visible title (WCAG 2.5.3)', () => {
+    const { container } = render(
+      <LinkPreview href={article.url} metadata={article} images="none" />,
+    );
+    const anchor = parts(container, 'anchor')[0];
+    const title = parts(container, 'title')[0]?.textContent ?? '';
+
+    // No aria-label to drift from the visible text: the name is the content,
+    // and the title leads it.
+    expect(anchor?.hasAttribute('aria-label')).toBe(false);
+    expect(anchor?.hasAttribute('aria-labelledby')).toBe(false);
+    expect(anchor?.textContent?.startsWith(title)).toBe(true);
+    expect(screen.getByRole('link', { name: /^An article\b/ })).toBe(anchor);
   });
 
   it('applies author overrides and hides images with images="none"', () => {
