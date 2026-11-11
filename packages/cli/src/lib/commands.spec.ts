@@ -136,6 +136,37 @@ describe('postkit add', () => {
     );
   });
 
+  it('is idempotent: a second add changes nothing and manifest still works', async () => {
+    fixture.write(
+      'postkit.config.ts',
+      `export { postkit as default } from './lib/postkit';\n`,
+    );
+    expect((await fixture.run('add', 'poll')).stdout).toContain(
+      'components += Poll',
+    );
+    const once = fixture.read('lib/postkit.ts');
+
+    const again = await fixture.run('add', 'poll');
+    expect(again.code).toBe(0);
+    expect(again.stdout).toContain('Poll is already in components');
+    expect(fixture.read('lib/postkit.ts')).toBe(once);
+    expect(once.match(/definition: pollDefinition/g)).toHaveLength(1);
+
+    // The kit form is idempotent too.
+    await fixture.run('add', 'media');
+    const withKit = fixture.read('lib/postkit.ts');
+    expect((await fixture.run('add', 'media')).stdout).toContain(
+      'already enabled',
+    );
+    expect(fixture.read('lib/postkit.ts')).toBe(withKit);
+
+    const manifest = await fixture.run('manifest');
+    expect(manifest.code).toBe(0);
+    expect(Object.keys(JSON.parse(manifest.stdout).components)).toContain(
+      'Poll',
+    );
+  });
+
   it('prints the lines instead of editing a file it cannot read safely', async () => {
     const unsafe = `import { createPostkit } from '@postkit/react';
 import * as kits from '@postkit/react/kits';
