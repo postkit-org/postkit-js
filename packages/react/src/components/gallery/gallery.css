@@ -1,0 +1,100 @@
+/* Gallery: captioned images in a grid; `--postkit-gallery-columns` sets the columns. */
+@scope ([data-postkit-component='Gallery']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    display: grid;
+    gap: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='header']) {
+    display: grid;
+    gap: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='grid']) {
+    display: grid;
+    gap: var(--postkit-space-3);
+    grid-template-columns: repeat(
+      var(--postkit-gallery-columns, 2),
+      minmax(0, 1fr)
+    );
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='grid']) {
+    gap: var(--postkit-space-2);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='grid']) {
+    gap: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='item']) {
+    break-inside: avoid;
+    min-width: 0;
+  }
+  :where([data-postkit-part='imageLink']) {
+    display: block;
+  }
+  :where([data-postkit-part='image']) {
+    border-radius: var(--postkit-radius-lg);
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='caption']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: 0.875em;
+    margin-block-start: var(--postkit-space-2);
+  }
+
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+
+  /* Row: 2–3 related items side by side, whatever the column count. */
+  :where(:scope[data-presentation='row'] [data-postkit-part='grid']) {
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+  }
+  :where(
+    :scope[data-presentation='row'] [data-postkit-part='grid']:focus-visible
+  ) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='item']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-2);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='item']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-2);
+  }
+}
+
+@media (max-width: 30rem) {
+  @scope ([data-postkit-component='Gallery']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where([data-postkit-part='grid']) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* Row becomes a horizontal snap rail, the next item peeking in. */
+    :where(:scope[data-presentation='row'] [data-postkit-part='grid']) {
+      grid-auto-columns: 80%;
+      grid-template-columns: none;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      padding-block-end: var(--postkit-space-1);
+      scroll-snap-type: x mandatory;
+    }
+    :where(:scope[data-presentation='row'] [data-postkit-part='item']) {
+      scroll-snap-align: start;
+    }
+  }
+}

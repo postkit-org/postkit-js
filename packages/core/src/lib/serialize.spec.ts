@@ -13,10 +13,13 @@ import {
 } from '../index.js';
 
 describe('Postkit document serialization', () => {
-  it('keeps footnote references and definitions visible across output formats', () => {
+  it('keeps footnote references and definitions across output formats', () => {
     const document = parsePostkitMarkdown('Hello[^a].\n\n[^a]: Note text.');
     const html = serializePostkitHtml(document, { annotations: false });
-    expect(html).toBe('<p>Hello[^a].</p><p>[^a]: Note text.</p>');
+    expect(html).toBe(
+      '<p>Hello<sup data-postkit-component="Footnote" data-postkit-part="root" data-marker="superscript" id="fnref-1"><a data-postkit-part="marker" href="#fn-1" role="doc-noteref" aria-label="Note 1">1</a></sup>.</p>' +
+        '<section data-postkit-component="Footnotes" data-postkit-part="root"><h2 data-postkit-part="title" id="fn-title">Notes</h2><hr data-postkit-part="rule"><ol data-postkit-part="list" aria-labelledby="fn-title"><li data-postkit-part="item" id="fn-1"><div data-postkit-part="content"><p>Note text. <a data-postkit-part="backlink" href="#fnref-1" role="doc-backlink" aria-label="Back to reference 1">↩</a></p></div></li></ol></section>',
+    );
     for (const mdx of [false, true]) {
       const recovered = parsePostkitMarkdown(
         serializePostkitMarkdown(document, { mdx }),
@@ -352,7 +355,8 @@ const article = true
       },
       {
         type: 'component',
-        name: 'Callout',
+        // A custom component: built-ins render their static view instead.
+        name: 'Notice',
         children: [{ type: 'text', value: 'Notice' }],
       },
     ]);
@@ -360,7 +364,7 @@ const article = true
     const html = serializePostkitHtml(document, {
       annotations: false,
       documentElement: 'article',
-      componentElement: (node) => (node.name === 'Callout' ? 'aside' : 'div'),
+      componentElement: (node) => (node.name === 'Notice' ? 'aside' : 'div'),
     });
 
     expect(html).toBe(

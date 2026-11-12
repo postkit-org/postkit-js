@@ -1,26 +1,26 @@
 # `@postkit/react-router`
 
-PostKit article components, MDX mapping, and internal-link routing for React
+Postkit article components, MDX mapping, and internal-link routing for React
 Router.
 
 ## When to use it
 
 Use this adapter when a React Router application renders Markdown or MDX with
-PostKit. It routes internal destinations through React Router and leaves
+Postkit. It routes internal destinations through React Router and leaves
 external URLs, protocol links, hashes, downloads, and explicit non-default
 targets as native anchors.
 
 ## Install
 
 ```sh
-npm install @postkit/react-router @postkit/react @chakra-ui/react @emotion/react react react-dom react-router
+npm install @postkit/react-router @postkit/chakra @chakra-ui/react @emotion/react react react-dom react-router
 ```
 
 Supported peer versions:
 
 - React Router 7
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -35,7 +35,7 @@ export const mdxComponents = createPostkitReactRouterComponents();
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx
-import { PostkitProvider, postkitDefaultTheme } from '@postkit/react';
+import { PostkitProvider, postkitDefaultTheme } from '@postkit/chakra';
 import { BrowserRouter } from 'react-router';
 
 export function App() {
@@ -79,9 +79,37 @@ export const mdxComponents = createPostkitReactRouterComponents({
 });
 ```
 
+## With `createPostkit`
+
+The `createPostkit` preset configures a site from its kits, components,
+defaults and overrides, with internal links routed through React Router:
+
+```ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/react-router';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
+```
+
+It needs `@postkit/react` installed alongside `@postkit/chakra`.
+
 ## Public API
 
-- `createPostkitReactRouterComponents(options?)`
+- `createPostkit(options)`: `createPostkit` from `@postkit/react` with `link`
+  set to the React Router link (pass link options or a component as `link`)
+- `CreatePostkitReactRouterOptions`
+- `createPostkitReactRouterLink(options?)`
+- `createPostkitReactRouterComponents(options?)`: prose and component views, with each view
+  loading the first time a page renders it (`createPostkitLazyMdxComponents`
+  from `@postkit/chakra`). A streaming server render waits for the views, so
+  the HTML is complete. For a synchronous render such as
+  `renderToStaticMarkup`, pass `components: postkitChakraViews`.
 - `PostkitReactRouterComponentsOptions`
 - `PostkitReactRouterLinkOptions`
 
@@ -89,12 +117,12 @@ export const mdxComponents = createPostkitReactRouterComponents({
 
 - If React Router reports missing context, move the rendered article beneath
   the router provider.
-- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
-  register PostKit slot recipes in the host Chakra system.
+- If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register Postkit slot recipes in the host Chakra system.
 - If links use native navigation, confirm this adapter's component map is
   passed to the MDX runtime.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [React Router example](../../examples/react-router) is included in the
 repository.

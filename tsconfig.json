@@ -7,7 +7,7 @@
       "path": "./packages/unfurl"
     },
     {
-      "path": "./packages/react"
+      "path": "./packages/chakra"
     },
     {
       "path": "./packages/next"
@@ -20,18 +20,6 @@
     },
     {
       "path": "./packages/astro"
-    },
-    {
-      "path": "./packages/strings"
-    },
-    {
-      "path": "./packages/colors"
-    },
-    {
-      "path": "./packages/async"
-    },
-    {
-      "path": "./packages/utils"
     },
     {
       "path": "./apps/site"
@@ -47,6 +35,33 @@
     },
     {
       "path": "./packages/core"
+    },
+    {
+      "path": "./libs/site-theme"
+    },
+    {
+      "path": "./libs/site-telemetry"
+    },
+    {
+      "path": "./libs/site-feeds"
+    },
+    {
+      "path": "./libs/site-search"
+    },
+    {
+      "path": "./libs/site-newsletter"
+    },
+    {
+      "path": "./libs/site-emails"
+    },
+    {
+      "path": "./packages/react"
+    },
+    {
+      "path": "./packages/cli"
+    },
+    {
+      "path": "./packages/nx"
     }
   ],
   "compilerOptions": {}

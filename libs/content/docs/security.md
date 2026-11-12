@@ -2,12 +2,10 @@
 title: Security and trust boundaries
 summary: Keep credentials, remote fetching, embed markup, authored URLs, and host callbacks inside explicit trust boundaries.
 category: Reference
-order: 87
+order: 7
 ---
 
-# Security and trust boundaries
-
-PostKit separates portable authored content from trusted application
+Postkit separates portable authored content from trusted application
 infrastructure. Treat every URL, metadata response, saved snapshot, and
 Markdown document as untrusted input.
 
@@ -29,7 +27,7 @@ request forgery:
 
 ## Embeds
 
-Resolvers may retain provider markup as `embed.rawHtml`. PostKit's React
+Resolvers may retain provider markup as `embed.rawHtml`. Postkit's React
 renderer never injects that field. A host that chooses to render it owns HTML
 sanitization, iframe isolation, content security policy, consent, and provider
 allowlisting.

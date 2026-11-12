@@ -1,0 +1,64 @@
+/* Aside: the authored sidenote (D14). Callout's anatomy, no tone mark, a step smaller. */
+@scope ([data-postkit-component='Aside']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-lg);
+    color: var(--postkit-color-fg-muted);
+    display: block;
+    font-size: var(--postkit-text-sm);
+    padding: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='sm']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg']) {
+    font-size: var(--postkit-text-md);
+  }
+  :where([data-postkit-part='content']) {
+    min-width: 0;
+  }
+  :where([data-postkit-part='title']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='title'] + [data-postkit-part='body']) {
+    margin-block-start: var(--postkit-space-1);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-inline-start: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+    border-radius: 0;
+    padding-block: 0;
+    padding-inline-end: 0;
+  }
+
+  /* Beside the text where footnotes are sidenotes (D14): the authored
+     sidenote shares the margin column, quieter and without a box. */
+  :where([data-postkit-margin='side'] > :scope) {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    clear: inline-end;
+    float: inline-end;
+    font-size: var(--postkit-footnote-text-size);
+    margin-block: 0.2em var(--postkit-space-4);
+    margin-inline-end: calc(
+      -1 * (var(--postkit-sidenote-width) + var(--postkit-sidenote-gap))
+    );
+    padding: 0 0 0 var(--postkit-space-3);
+    width: var(--postkit-sidenote-width);
+  }
+  @media print {
+    :where([data-postkit-margin='side'] > :scope) {
+      float: none;
+      margin-inline-end: 0;
+      width: auto;
+    }
+  }
+}

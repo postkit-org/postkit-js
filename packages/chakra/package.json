@@ -1,0 +1,116 @@
+{
+  "name": "@postkit/chakra",
+  "version": "0.3.0",
+  "description": "Chakra-based React components and Markdown tooling for articles",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "structured-content",
+    "typescript",
+    "react",
+    "markdown",
+    "mdx",
+    "content-components",
+    "article-components",
+    "chakra-ui",
+    "unified",
+    "remark"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/chakra"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    "./component-manifest.json": "./component-manifest.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./theme": {
+      "@postkit/source": "./src/theme.ts",
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "default": "./dist/theme.js"
+    },
+    "./remark": {
+      "@postkit/source": "./src/remark.ts",
+      "types": "./dist/remark.d.ts",
+      "import": "./dist/remark.js",
+      "default": "./dist/remark.js"
+    },
+    "./document": {
+      "@postkit/source": "./src/document.ts",
+      "types": "./dist/document.d.ts",
+      "import": "./dist/document.js",
+      "default": "./dist/document.js"
+    }
+  },
+  "files": [
+    "dist",
+    "component-manifest.json",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "@postkit/core": "0.3.0",
+    "@postkit/react": "0.3.0",
+    "@postkit/unfurl": "0.3.0",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": ">=3.29.0 <4",
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:chakra"
+    ],
+    "targets": {
+      "eject-assets": {
+        "command": "node tools/generate-eject-assets.mjs packages/chakra chakra",
+        "inputs": [
+          "{projectRoot}/package.json",
+          "{projectRoot}/src/**/*",
+          "!{projectRoot}/src/**/*.spec.ts",
+          "!{projectRoot}/src/**/*.spec.tsx",
+          "{workspaceRoot}/tools/generate-eject-assets.mjs"
+        ],
+        "outputs": [
+          "{projectRoot}/dist/eject"
+        ],
+        "cache": true
+      },
+      "build": {
+        "dependsOn": [
+          "^build",
+          "eject-assets"
+        ]
+      }
+    }
+  }
+}

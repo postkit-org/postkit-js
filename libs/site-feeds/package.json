@@ -1,0 +1,46 @@
+{
+  "name": "@postkit/site-feeds",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "name": "site-feeds",
+    "tags": [
+      "npm:private",
+      "scope:postkit",
+      "type:util"
+    ]
+  },
+  "dependencies": {
+    "@chakra-docs/core": "^0.3.0",
+    "@chakra-docs/feed": "^0.3.0",
+    "@postkit/chakra": "0.3.0",
+    "@postkit/content": "0.0.1",
+    "@postkit/core": "0.3.0",
+    "mdast-util-directive": "^3.1.0",
+    "mdast-util-gfm": "^3.1.0",
+    "mdast-util-mdx": "^3.0.0",
+    "mdast-util-to-markdown": "^2.1.2",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "tslib": "^2.3.0",
+    "unified": "^11.0.5",
+    "yaml": "^2.9.0"
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ]
+}

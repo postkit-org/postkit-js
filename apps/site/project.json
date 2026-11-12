@@ -11,10 +11,151 @@
         {
           "projects": ["@postkit/content"],
           "target": "build"
-        }
+        },
+        "feeds",
+        "icons",
+        "og-images",
+        "renderer-styles"
       ]
     },
+    "feeds": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "{projectRoot}/scripts/build-feeds.mts",
+        "^production",
+        {
+          "externalDependencies": ["@chakra-docs/feed"]
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
+      ],
+      "outputs": ["{projectRoot}/public/feeds"],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-feeds.mts",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    },
+    "icons": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/scripts/build-icons.mts",
+        "{workspaceRoot}/docs/design/handoff/assets/brand/favicon.svg",
+        "^production",
+        {
+          "externalDependencies": ["sharp", "jiti"]
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/public/favicon.svg",
+        "{projectRoot}/public/favicon.ico",
+        "{projectRoot}/public/apple-touch-icon.png",
+        "{projectRoot}/public/icon-192.png",
+        "{projectRoot}/public/icon-512.png",
+        "{projectRoot}/public/site.webmanifest"
+      ],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-icons.mts"
+      }
+    },
+    "og-images": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "{projectRoot}/og/**/*",
+        "{projectRoot}/scripts/build-og-images.mts",
+        "{projectRoot}/src/lib/components.ts",
+        "{projectRoot}/src/lib/docs-layout.ts",
+        "{projectRoot}/src/lib/notes.ts",
+        "{projectRoot}/src/lib/share-images.ts",
+        "{projectRoot}/src/lib/site-sections.ts",
+        "{projectRoot}/src/lib/site-url.ts",
+        "^production",
+        {
+          "externalDependencies": ["next", "react", "sharp", "jiti", "yaml"]
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
+      ],
+      "outputs": ["{projectRoot}/public/og"],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-og-images.mts",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    },
+    "renderer-styles": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "inputs": [
+        "{projectRoot}/scripts/build-renderer-styles.mts",
+        "{projectRoot}/src/components/home/renderer-stylesheet.ts",
+        "^production",
+        {
+          "externalDependencies": ["jiti"]
+        }
+      ],
+      "outputs": ["{projectRoot}/public/renderers"],
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/build-renderer-styles.mts"
+      }
+    },
+    "release-email": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "cache": false,
+      "options": {
+        "cwd": "apps/site",
+        "command": "node scripts/release-email.mts"
+      }
+    },
     "build": {
+      "dependsOn": [
+        "^build",
+        "^typecheck",
+        "feeds",
+        "icons",
+        "og-images",
+        "renderer-styles"
+      ],
+      "inputs": [
+        "default",
+        "^default",
+        {
+          "externalDependencies": ["next"]
+        },
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts",
+          "transitive": true
+        },
+        {
+          "env": "NEXT_PUBLIC_FATHOM_SITE_ID"
+        },
+        {
+          "env": "NEXT_PUBLIC_SENTRY_DSN"
+        },
+        {
+          "env": "SENTRY_AUTH_TOKEN"
+        },
+        {
+          "env": "SENTRY_ORG"
+        },
+        {
+          "env": "SENTRY_PROJECT"
+        },
+        {
+          "env": "NEXT_PUBLIC_SITE_URL"
+        }
+      ],
       "options": {
         "env": {
           "NODE_ENV": "production"

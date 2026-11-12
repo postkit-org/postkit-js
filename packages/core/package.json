@@ -1,7 +1,7 @@
 {
   "name": "@postkit/core",
-  "version": "0.2.0",
-  "description": "Portable Postkit document model, parsers, and serializers",
+  "version": "0.3.0",
+  "description": "Portable Postkit document model, parsers, serializers, component definitions, and framework-free behaviours",
   "keywords": [
     "postkit",
     "publishing",
@@ -33,6 +33,24 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./components": {
+      "@postkit/source": "./src/components/index.ts",
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
+    "./behaviors": {
+      "@postkit/source": "./src/behaviors/index.ts",
+      "types": "./dist/behaviors/index.d.ts",
+      "import": "./dist/behaviors/index.js",
+      "default": "./dist/behaviors/index.js"
+    },
+    "./behaviors/testing": {
+      "@postkit/source": "./src/behaviors/testing/index.ts",
+      "types": "./dist/behaviors/testing/index.d.ts",
+      "import": "./dist/behaviors/testing/index.js",
+      "default": "./dist/behaviors/testing/index.js"
     }
   },
   "files": [
@@ -40,14 +58,41 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
+    "@types/hast": "^3.0.4",
     "hast-util-from-html": "^2.0.3",
     "hast-util-raw": "^9.1.0",
+    "mdast-util-directive": "^3.1.0",
     "mdast-util-from-markdown": "^2.0.3",
     "mdast-util-gfm": "^3.1.0",
     "mdast-util-mdx": "^3.0.0",
+    "micromark-extension-directive": "^4.0.0",
     "micromark-extension-gfm": "^3.0.0",
     "micromark-extension-mdxjs": "^3.0.0",
     "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@zag-js/carousel": "^1.27.0",
+    "@zag-js/clipboard": "^1.27.0",
+    "@zag-js/core": "^1.27.0",
+    "@zag-js/tabs": "^1.27.0",
+    "@zag-js/types": "^1.27.0"
+  },
+  "peerDependenciesMeta": {
+    "@zag-js/carousel": {
+      "optional": true
+    },
+    "@zag-js/clipboard": {
+      "optional": true
+    },
+    "@zag-js/core": {
+      "optional": true
+    },
+    "@zag-js/tabs": {
+      "optional": true
+    },
+    "@zag-js/types": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "access": "public",
@@ -58,6 +103,14 @@
       "npm:public",
       "scope:postkit",
       "layer:foundation"
+    ]
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/index.ts",
+      "src/components/index.ts",
+      "src/behaviors/index.ts",
+      "src/behaviors/testing/index.ts"
     ]
   }
 }

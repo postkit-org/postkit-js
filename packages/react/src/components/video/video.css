@@ -1,0 +1,64 @@
+/* Video: a native player in a letterboxed frame, with an optional caption. */
+@scope ([data-postkit-component='Video']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-media-radius: var(--postkit-radius-xl);
+    font-size: inherit;
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-media-radius: var(--postkit-radius-md);
+  }
+  :where([data-postkit-part='frame']) {
+    background: var(--postkit-color-letterbox);
+    border-radius: var(--postkit-media-radius);
+    line-height: 0;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='player']) {
+    display: block;
+    height: auto;
+    max-height: 80vh;
+    width: 100%;
+  }
+  :where([data-postkit-part='fallback']) {
+    color: var(--postkit-color-on-letterbox);
+  }
+  :where([data-postkit-part='caption']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+  :where([data-postkit-part='duration']) {
+    font-variant-numeric: tabular-nums;
+    margin-inline-start: 0.5em;
+  }
+  :where([data-postkit-part='duration']:first-child) {
+    margin-inline-start: 0;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='caption']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='caption']) {
+    font-size: var(--postkit-text-md);
+    margin-block-start: var(--postkit-space-3);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-2);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='frame']) {
+    border-radius: var(--postkit-radius-lg);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='caption']) {
+    padding-inline: var(--postkit-space-1);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='frame']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+}

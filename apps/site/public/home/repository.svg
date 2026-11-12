@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="t">
+  <title id="t">The postkit-js repository</title>
+  <rect width="600" height="400" fill="#EDEDEB"/>
+  <rect x="150" y="90" width="300" height="220" rx="20" fill="#FFFFFF"/>
+  <rect x="180" y="124" width="150" height="18" rx="9" fill="#1D1D1F"/>
+  <rect x="180" y="164" width="240" height="10" rx="5" fill="#A1A1A6"/>
+  <rect x="180" y="188" width="240" height="10" rx="5" fill="#A1A1A6"/>
+  <rect x="180" y="212" width="180" height="10" rx="5" fill="#A1A1A6"/>
+  <rect x="180" y="250" width="72" height="30" rx="15" fill="#F5F5F4"/>
+  <rect x="262" y="250" width="72" height="30" rx="15" fill="#F5F5F4"/>
+</svg>

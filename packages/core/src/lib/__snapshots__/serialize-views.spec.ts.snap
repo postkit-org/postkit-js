@@ -1,0 +1,434 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`static component views > AppearsOn > serializes to plain text 1`] = `
+"Appears on
+
+- Bluesky (https://bsky.app/profile/postkit.org/post/1) 2026-11-01
+- Example publication (https://example.com)
+- mastodon (/m/1) (pending)
+"
+`;
+
+exports[`static component views > AppearsOn > serializes to readable HTML 1`] = `"<aside data-postkit-component="AppearsOn" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="inline"><p data-postkit-part="label">Appears on</p><ul data-postkit-part="list"><li data-postkit-part="item"><a data-postkit-part="link" href="https://bsky.app/profile/postkit.org/post/1" rel="syndication">Bluesky</a> <time data-postkit-part="date" datetime="2026-11-01">2026-11-01</time></li><li data-postkit-part="item"><a data-postkit-part="link" href="https://example.com" rel="syndication">Example publication</a></li><li data-postkit-part="item"><a data-postkit-part="link" href="/m/1" rel="syndication">mastodon</a> <span data-postkit-part="status">(pending)</span></li></ul></aside>"`;
+
+exports[`static component views > Aside > serializes to plain text 1`] = `
+"Background
+
+Postkit grew out of Prismark.
+"
+`;
+
+exports[`static component views > Aside > serializes to readable HTML 1`] = `"<aside data-postkit-component="Aside" data-postkit-part="root" data-size="md" data-variant="subtle" data-tone="note"><div data-postkit-part="content"><p data-postkit-part="title"><strong>Background</strong></p><div data-postkit-part="body"><p>Postkit grew out of Prismark.</p></div></div></aside>"`;
+
+exports[`static component views > AudienceBoundary > serializes to plain text 1`] = `
+"Audience: members
+
+Members-only notes.
+"
+`;
+
+exports[`static component views > AudienceBoundary > serializes to readable HTML 1`] = `"<div data-postkit-component="AudienceBoundary" data-postkit-part="root" data-size="md" data-variant="subtle" data-postkit-audience="members"><p data-postkit-part="label">Audience: members</p><div data-postkit-part="content"><p>Members-only notes.</p></div></div>"`;
+
+exports[`static component views > Audio > serializes to plain text 1`] = `
+"Episode 1
+
+Open Episode 1 (/media/episode.mp3)
+
+Recorded live.
+"
+`;
+
+exports[`static component views > Audio > serializes to readable HTML 1`] = `"<figure data-postkit-component="Audio" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="title">Episode 1</p><audio data-postkit-part="player" src="/media/episode.mp3" controls preload="metadata" aria-label="Episode 1"><a data-postkit-part="fallback" href="/media/episode.mp3">Open Episode 1</a></audio><figcaption data-postkit-part="caption">Recorded live.</figcaption></figure>"`;
+
+exports[`static component views > AuthorCard > serializes to plain text 1`] = `
+"[Ada]
+
+Ada Example (/authors/ada)
+
+Editor
+
+Ada writes about portable content.
+
+- Website (https://ada.example)
+"
+`;
+
+exports[`static component views > AuthorCard > serializes to readable HTML 1`] = `"<aside data-postkit-component="AuthorCard" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="card" aria-label="About Ada Example"><img data-postkit-part="avatar" src="/ada.png" alt="Ada" loading="lazy"><div data-postkit-part="content"><div data-postkit-part="header"><p data-postkit-part="name"><strong><a data-postkit-part="nameLink" href="/authors/ada" rel="author">Ada Example</a></strong></p><p data-postkit-part="role">Editor</p></div><div data-postkit-part="bio"><p>Ada writes about portable content.</p></div><ul data-postkit-part="links"><li><a data-postkit-part="link" href="https://ada.example">Website</a></li></ul></div></aside>"`;
+
+exports[`static component views > CallToAction > serializes to plain text 1`] = `
+"New
+
+Try Postkit
+
+Install it in a minute.
+
+Get started (/docs/installation) · Read the guide (/docs/introduction)
+"
+`;
+
+exports[`static component views > CallToAction > serializes to readable HTML 1`] = `"<aside data-postkit-component="CallToAction" data-postkit-part="root" data-size="md" data-variant="subtle" data-alignment="start"><div data-postkit-part="content"><p data-postkit-part="eyebrow">New</p><p data-postkit-part="title"><strong>Try Postkit</strong></p><p data-postkit-part="body">Install it in a minute.</p></div><p data-postkit-part="actions"><a data-postkit-part="primaryAction" href="/docs/installation">Get started</a> · <a data-postkit-part="secondaryAction" href="/docs/introduction">Read the guide</a></p></aside>"`;
+
+exports[`static component views > Callout > serializes to plain text 1`] = `
+"Keep the content
+
+Change the renderer without changing the article.
+"
+`;
+
+exports[`static component views > Callout > serializes to readable HTML 1`] = `"<aside data-postkit-component="Callout" data-postkit-part="root" data-size="md" data-variant="subtle" data-tone="tip"><div data-postkit-part="content"><p data-postkit-part="title"><strong>Keep the content</strong></p><div data-postkit-part="body"><p>Change the renderer without changing the article.</p></div></div></aside>"`;
+
+exports[`static component views > CardGrid > serializes to plain text 1`] = `
+"Guides
+
+Where to go next.
+
+[A terminal]
+
+Install
+
+Add the packages.
+
+2 min
+
+Learn more (/docs/installation)
+
+Theme
+
+Theme it (/docs/theming)
+"
+`;
+
+exports[`static component views > CardGrid > serializes to readable HTML 1`] = `"<div data-postkit-component="CardGrid" data-postkit-part="root" data-size="md" data-variant="subtle"><div data-postkit-part="header"><p data-postkit-part="title"><strong>Guides</strong></p><p data-postkit-part="description">Where to go next.</p></div><div data-postkit-part="grid"><article data-postkit-part="card"><img data-postkit-part="image" src="/install.png" alt="A terminal" loading="lazy"><div data-postkit-part="cardBody"><p data-postkit-part="cardTitle"><strong>Install</strong></p><p data-postkit-part="cardDescription">Add the packages.</p><p data-postkit-part="meta">2 min</p><p><a data-postkit-part="link" href="/docs/installation">Learn more</a></p></div></article><article data-postkit-part="card"><div data-postkit-part="cardBody"><p data-postkit-part="cardTitle"><strong>Theme</strong></p><p><a data-postkit-part="link" href="/docs/theming">Theme it</a></p></div></article></div></div>"`;
+
+exports[`static component views > Carousel > serializes to plain text 1`] = `
+"[The editor]
+
+Editor (/editor)
+
+Write once.
+
+[The feed]
+
+A slide from children.
+"
+`;
+
+exports[`static component views > Carousel > serializes to readable HTML 1`] = `"<section data-postkit-component="Carousel" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="slides" aria-label="Screenshots"><figure data-postkit-part="slide"><img data-postkit-part="media" src="/one.png" alt="The editor" loading="lazy"><figcaption data-postkit-part="content"><p data-postkit-part="title"><strong><a data-postkit-part="link" href="/editor">Editor</a></strong></p><p data-postkit-part="description">Write once.</p></figcaption></figure><figure data-postkit-part="slide"><img data-postkit-part="media" src="/two.png" alt="The feed" loading="lazy"></figure><div data-postkit-part="slide"><p>A slide from children.</p></div></section>"`;
+
+exports[`static component views > Chart > serializes to plain text 1`] = `
+"Downloads
+
+Weekly npm downloads.
+
+Label | @postkit/core | @postkit/react
+Week 1 | 120 | 80
+Week 2 | 150 | 95
+"
+`;
+
+exports[`static component views > Chart > serializes to readable HTML 1`] = `"<figure data-postkit-component="Chart" data-postkit-part="root" data-size="md" data-variant="subtle"><figcaption><p data-postkit-part="title"><strong>Downloads</strong></p><p data-postkit-part="description">Weekly npm downloads.</p></figcaption><table data-postkit-part="table"><thead><tr><th data-postkit-part="headerCell" scope="col">Label</th><th data-postkit-part="headerCell" scope="col">@postkit/core</th><th data-postkit-part="headerCell" scope="col">@postkit/react</th></tr></thead><tbody><tr><th data-postkit-part="rowHeader" scope="row">Week 1</th><td data-postkit-part="dataCell">120</td><td data-postkit-part="dataCell">80</td></tr><tr><th data-postkit-part="rowHeader" scope="row">Week 2</th><td data-postkit-part="dataCell">150</td><td data-postkit-part="dataCell">95</td></tr></tbody></table></figure>"`;
+
+exports[`static component views > CodeBlock > serializes to plain text 1`] = `
+"post.mdx
+
+<Callout tone="tip">
+  Keep it.
+</Callout>
+"
+`;
+
+exports[`static component views > CodeBlock > serializes to readable HTML 1`] = `
+"<figure data-postkit-component="CodeBlock" data-postkit-part="root" data-size="md" data-variant="subtle"><figcaption data-postkit-part="header"><span data-postkit-part="filename">post.mdx</span></figcaption><pre data-postkit-part="content"><code class="language-mdx">&lt;Callout tone="tip"&gt;
+  Keep it.
+&lt;/Callout&gt;</code></pre></figure>"
+`;
+
+exports[`static component views > CodeGroup > serializes to plain text 1`] = `
+"npm
+
+npm install @postkit/core
+
+pnpm · shell
+
+pnpm add @postkit/core
+"
+`;
+
+exports[`static component views > CodeGroup > serializes to readable HTML 1`] = `"<div data-postkit-component="CodeGroup" data-postkit-part="root" data-size="md" data-variant="subtle" role="group" aria-label="Code examples"><figure data-postkit-part="panel"><figcaption data-postkit-part="tab">npm</figcaption><pre><code class="language-sh">npm install @postkit/core</code></pre></figure><figure data-postkit-part="panel"><figcaption data-postkit-part="tab">pnpm · shell</figcaption><pre><code class="language-sh">pnpm add @postkit/core</code></pre></figure></div>"`;
+
+exports[`static component views > Comparison > serializes to plain text 1`] = `
+"Plans
+
+What each plan includes.
+
+Feature | Starter | Pro
+Portable content | Yes | Yes
+Seats | 1 | Unlimited
+Support | No | —
+"
+`;
+
+exports[`static component views > Comparison > serializes to readable HTML 1`] = `"<div data-postkit-component="Comparison" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="title"><strong>Plans</strong></p><p data-postkit-part="description">What each plan includes.</p><table data-postkit-part="table"><thead data-postkit-part="head"><tr><th data-postkit-part="header" scope="col">Feature</th><th data-postkit-part="header" scope="col">Starter</th><th data-postkit-part="header" scope="col">Pro</th></tr></thead><tbody><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Portable content</th><td data-postkit-part="value">Yes</td><td data-postkit-part="value">Yes</td></tr><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Seats</th><td data-postkit-part="value">1</td><td data-postkit-part="value">Unlimited</td></tr><tr data-postkit-part="row"><th data-postkit-part="label" scope="row">Support</th><td data-postkit-part="value">No</td><td data-postkit-part="value">—</td></tr></tbody></table></div>"`;
+
+exports[`static component views > Device > serializes to plain text 1`] = `
+"[The home screen]
+
+The companion app.
+"
+`;
+
+exports[`static component views > Device > serializes to readable HTML 1`] = `"<figure data-postkit-component="Device" data-postkit-part="root" data-size="md" data-variant="subtle" data-kind="iphone"><div data-postkit-part="frame"><span data-postkit-part="notch" aria-hidden="true"></span><div data-postkit-part="screen"><img data-postkit-part="image" src="/media/home.png" alt="The home screen" loading="lazy"></div></div><figcaption data-postkit-part="figcaption"><span data-postkit-part="caption">The companion app.</span></figcaption></figure>"`;
+
+exports[`static component views > Diff > serializes to plain text 1`] = `
+"package.json
+
+- "@postkit/react": "0.2.0"
++ "@postkit/react": "0.3.0"
+  "react": "19"
+"
+`;
+
+exports[`static component views > Diff > serializes to readable HTML 1`] = `
+"<div data-postkit-component="Diff" data-postkit-part="root" data-size="md" data-variant="subtle"><div data-postkit-part="header"><p data-postkit-part="title">package.json</p></div><pre data-postkit-part="code"><code class="language-diff"><span data-postkit-part="line" data-diff="deletion">- "@postkit/react": "0.2.0"
+</span><span data-postkit-part="line" data-diff="addition">+ "@postkit/react": "0.3.0"
+</span><span data-postkit-part="line" data-diff="context">  "react": "19"</span></code></pre></div>"
+`;
+
+exports[`static component views > Disclosure > serializes to plain text 1`] = `
+"Why?
+
+Because content outlives renderers.
+"
+`;
+
+exports[`static component views > Disclosure > serializes to readable HTML 1`] = `"<details data-postkit-component="Disclosure" data-postkit-part="root" data-size="md" data-variant="subtle" open><summary data-postkit-part="summary">Why?</summary><div data-postkit-part="content"><p>Because content outlives renderers.</p></div></details>"`;
+
+exports[`static component views > Figure > serializes to plain text 1`] = `
+"[A desk with a notebook]
+
+The lead image. Photo: Ada (https://ada.example)
+"
+`;
+
+exports[`static component views > Figure > serializes to readable HTML 1`] = `"<figure data-postkit-component="Figure" data-postkit-part="root" data-size="md" data-variant="subtle" data-layout="inline"><img data-postkit-part="image" src="/media/lead.jpg" alt="A desk with a notebook" loading="lazy" width="1200" height="800" srcset="/media/lead.jpg 1x, /media/lead@2x.jpg 2x"><figcaption data-postkit-part="figcaption"><span data-postkit-part="caption">The lead image.</span> <span data-postkit-part="credit"><a data-postkit-part="creditLink" href="https://ada.example">Photo: Ada</a></span></figcaption></figure>"`;
+
+exports[`static component views > FileCard > serializes to plain text 1`] = `
+"guide.pdf
+
+The printable guide.
+
+PDF · 2 MB
+
+Download (/files/guide.pdf)
+"
+`;
+
+exports[`static component views > FileCard > serializes to readable HTML 1`] = `"<div data-postkit-component="FileCard" data-postkit-part="root" data-size="md" data-variant="subtle"><div data-postkit-part="content"><p data-postkit-part="name"><strong>guide.pdf</strong></p><p data-postkit-part="description">The printable guide.</p><p data-postkit-part="meta">PDF · 2 MB</p></div><p><a data-postkit-part="action" href="/files/guide.pdf" download>Download</a></p></div>"`;
+
+exports[`static component views > FileTree > serializes to plain text 1`] = `
+"Project
+
+- src/
+- src/index.ts entry
+"
+`;
+
+exports[`static component views > FileTree > serializes to readable HTML 1`] = `"<div data-postkit-component="FileTree" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="title"><strong>Project</strong></p><ul data-postkit-part="list"><li data-postkit-part="item" data-type="folder"><code data-postkit-part="path">src/</code></li><li data-postkit-part="item"><code data-postkit-part="path">src/index.ts</code> <span data-postkit-part="meta">entry</span></li></ul></div>"`;
+
+exports[`static component views > Gallery > serializes to plain text 1`] = `
+"Gallery
+
+[A] (/a)
+
+First
+
+[B]
+"
+`;
+
+exports[`static component views > Gallery > serializes to readable HTML 1`] = `"<div data-postkit-component="Gallery" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="grid"><div data-postkit-part="header"><p data-postkit-part="title"><strong>Gallery</strong></p></div><div data-postkit-part="grid"><figure data-postkit-part="item"><a data-postkit-part="imageLink" href="/a"><img data-postkit-part="image" src="/a.jpg" alt="A" loading="lazy"></a><figcaption data-postkit-part="caption">First</figcaption></figure><figure data-postkit-part="item"><img data-postkit-part="image" src="/b.jpg" alt="B" loading="lazy"></figure></div></div>"`;
+
+exports[`static component views > KeyTakeaway > serializes to plain text 1`] = `
+"Summary
+
+In short
+
+- Components are defined once.
+- Views are headless.
+"
+`;
+
+exports[`static component views > KeyTakeaway > serializes to readable HTML 1`] = `"<aside data-postkit-component="KeyTakeaway" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="eyebrow">Summary</p><p data-postkit-part="title"><strong>In short</strong></p><ul data-postkit-part="list"><li data-postkit-part="item">Components are defined once.</li><li data-postkit-part="item">Views are headless.</li></ul></aside>"`;
+
+exports[`static component views > LinkPreview > serializes to plain text 1`] = `
+"postkit-org/postkit-js (https://github.com/postkit-org/postkit-js)
+
+Portable web and email components.
+
+GitHub · github.com
+"
+`;
+
+exports[`static component views > LinkPreview > serializes to readable HTML 1`] = `"<div data-postkit-component="LinkPreview" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="card"><div data-postkit-part="content"><p data-postkit-part="title"><strong><a data-postkit-part="anchor" href="https://github.com/postkit-org/postkit-js">postkit-org/postkit-js</a></strong></p><p data-postkit-part="description">Portable web and email components.</p><p data-postkit-part="siteRow"><span data-postkit-part="siteName">GitHub</span> · <span data-postkit-part="domain">github.com</span></p></div></div>"`;
+
+exports[`static component views > NewsletterSignup > serializes to plain text 1`] = `
+"Get the newsletter
+
+Monthly, no spam.
+
+Release notes in your inbox.
+
+Subscribe (https://postkit.org/subscribe)
+"
+`;
+
+exports[`static component views > NewsletterSignup > serializes to readable HTML 1`] = `"<aside data-postkit-component="NewsletterSignup" data-postkit-part="root" data-size="md" data-variant="subtle" data-alignment="start"><div data-postkit-part="content"><p data-postkit-part="title"><strong>Get the newsletter</strong></p><p data-postkit-part="description">Monthly, no spam.</p><div data-postkit-part="description"><p>Release notes in your inbox.</p></div></div><p data-postkit-part="form"><a data-postkit-part="submit" href="https://postkit.org/subscribe">Subscribe</a></p></aside>"`;
+
+exports[`static component views > Poll > serializes to plain text 1`] = `
+"Which renderer?
+
+Pick one.
+
+- React (75%, 3 votes)
+- Astro (25%, 1 vote)
+
+4 votes
+"
+`;
+
+exports[`static component views > Poll > serializes to readable HTML 1`] = `"<div data-postkit-component="Poll" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="question"><strong>Which renderer?</strong></p><p data-postkit-part="description">Pick one.</p><ul data-postkit-part="options"><li data-postkit-part="option"><span data-postkit-part="optionLabel">React</span> <span data-postkit-part="result">(75%, 3 votes)</span></li><li data-postkit-part="option"><span data-postkit-part="optionLabel">Astro</span> <span data-postkit-part="result">(25%, 1 vote)</span></li></ul><p data-postkit-part="status">4 votes</p></div>"`;
+
+exports[`static component views > ProductCard > serializes to plain text 1`] = `
+"[A notebook]
+
+Pick
+
+Notebook
+
+A paper notebook.
+
+★★★★☆ (4 out of 5)
+
+$12 View product (https://shop.example/notebook)
+"
+`;
+
+exports[`static component views > ProductCard > serializes to readable HTML 1`] = `"<article data-postkit-component="ProductCard" data-postkit-part="root" data-size="md" data-variant="subtle"><img data-postkit-part="image" src="/notebook.jpg" alt="A notebook" loading="lazy"><div data-postkit-part="content"><p data-postkit-part="badge">Pick</p><p data-postkit-part="title"><strong>Notebook</strong></p><p data-postkit-part="description">A paper notebook.</p><p data-postkit-part="rating">★★★★☆ (4 out of 5)</p><p data-postkit-part="footer"><span data-postkit-part="price">$12</span> <a data-postkit-part="action" href="https://shop.example/notebook" rel="sponsored">View product</a></p></div></article>"`;
+
+exports[`static component views > PullQuote > serializes to plain text 1`] = `
+"> The file stays plain text.
+
+— Postkit design principles, The handbook
+"
+`;
+
+exports[`static component views > PullQuote > serializes to readable HTML 1`] = `"<figure data-postkit-component="PullQuote" data-postkit-part="root" data-size="md" data-variant="subtle"><blockquote data-postkit-part="quote"><p>The file stays plain text.</p></blockquote><figcaption data-postkit-part="attribution">— Postkit design principles, <cite data-postkit-part="cite">The handbook</cite></figcaption></figure>"`;
+
+exports[`static component views > RelatedContent > serializes to plain text 1`] = `
+"Related content
+
+- Introduction (/docs/introduction) — Start here. (Docs)
+"
+`;
+
+exports[`static component views > RelatedContent > serializes to readable HTML 1`] = `"<aside data-postkit-component="RelatedContent" data-postkit-part="root" data-size="md" data-variant="subtle"><p data-postkit-part="title"><strong>Related content</strong></p><ul data-postkit-part="list"><li data-postkit-part="item"><a data-postkit-part="link" href="/docs/introduction"><span data-postkit-part="itemTitle">Introduction</span></a> — <span data-postkit-part="description">Start here.</span> <span data-postkit-part="meta">(Docs)</span></li></ul></aside>"`;
+
+exports[`static component views > SeriesNavigation > serializes to plain text 1`] = `
+"Portable content
+
+2 of 3
+
+- Previous: Part one (/notes/one)
+- Next: Part three (/notes/three)
+"
+`;
+
+exports[`static component views > SeriesNavigation > serializes to readable HTML 1`] = `"<nav data-postkit-component="SeriesNavigation" data-postkit-part="root" data-size="md" data-variant="subtle" aria-label="Portable content series navigation"><div data-postkit-part="header"><p data-postkit-part="title"><strong>Portable content</strong></p><p data-postkit-part="position">2 of 3</p></div><ul data-postkit-part="links"><li><a data-postkit-part="link" href="/notes/one" rel="prev"><span data-postkit-part="direction">Previous: </span><span data-postkit-part="linkTitle">Part one</span></a></li><li><a data-postkit-part="link" href="/notes/three" rel="next"><span data-postkit-part="direction">Next: </span><span data-postkit-part="linkTitle">Part three</span></a></li></ul></nav>"`;
+
+exports[`static component views > ShareActions > serializes to plain text 1`] = `
+"Share this post: One article, four renderers (https://postkit.org/notes/one)
+"
+`;
+
+exports[`static component views > ShareActions > serializes to readable HTML 1`] = `"<p data-postkit-component="ShareActions" data-postkit-part="root" data-size="md" data-variant="subtle" data-layout="buttons"><span data-postkit-part="label">Share this post</span>: <a data-postkit-part="action" href="https://postkit.org/notes/one">One article, four renderers</a></p>"`;
+
+exports[`static component views > SocialPost > serializes to plain text 1`] = `
+"> Postkit 0.3.0 is out.
+>
+> Headless views.
+
+— Postkit @postkit.org, 2026-11-01T10:00:00Z · View on Bluesky (https://bsky.app/profile/postkit.org/post/3)
+"
+`;
+
+exports[`static component views > SocialPost > serializes to readable HTML 1`] = `"<figure data-postkit-component="SocialPost" data-postkit-part="root" data-size="md" data-variant="subtle" data-presentation="auto" data-branding="subtle"><blockquote data-postkit-part="content"><p>Postkit 0.3.0 is out.</p><p>Headless views.</p></blockquote><figcaption data-postkit-part="footer">— <span data-postkit-part="authorName">Postkit</span> <span data-postkit-part="handle">@postkit.org</span>, <time data-postkit-part="timestamp" datetime="2026-11-01T10:00:00Z">2026-11-01T10:00:00Z</time> · <a data-postkit-part="originalLink" href="https://bsky.app/profile/postkit.org/post/3">View on Bluesky</a></figcaption></figure>"`;
+
+exports[`static component views > SponsorBlock > serializes to plain text 1`] = `
+"Sponsored
+
+[Acme]
+
+Acme
+
+Acme makes tools.
+
+Learn more (https://acme.example)
+"
+`;
+
+exports[`static component views > SponsorBlock > serializes to readable HTML 1`] = `"<aside data-postkit-component="SponsorBlock" data-postkit-part="root" data-size="md" data-variant="subtle" aria-label="Sponsored by Acme"><p data-postkit-part="disclosure">Sponsored</p><img data-postkit-part="logo" src="/acme.svg" alt="Acme" loading="lazy"><div data-postkit-part="content"><p data-postkit-part="name"><strong>Acme</strong></p><p data-postkit-part="message">Acme makes tools.</p><p><a data-postkit-part="action" href="https://acme.example" rel="sponsored">Learn more</a></p></div></aside>"`;
+
+exports[`static component views > Stat > serializes to plain text 1`] = `
+"Faster builds: 42%
++8%
+Since 0.2.0.
+"
+`;
+
+exports[`static component views > Stat > serializes to readable HTML 1`] = `"<dl data-postkit-component="Stat" data-postkit-part="root" data-size="md" data-variant="subtle"><dt data-postkit-part="label">Faster builds</dt><dd data-postkit-part="value"><strong>42%</strong></dd><dd data-postkit-part="trend">+8%</dd><dd data-postkit-part="description">Since 0.2.0.</dd></dl>"`;
+
+exports[`static component views > Steps > serializes to plain text 1`] = `
+"1. Theme the parts.
+   Style root, icon and title.
+2. Eject the view.
+"
+`;
+
+exports[`static component views > Steps > serializes to readable HTML 1`] = `"<ol data-postkit-component="Steps" data-postkit-part="root" data-size="md" data-variant="subtle"><li data-postkit-part="item"><div data-postkit-part="content"><p data-postkit-part="title"><strong>Theme the parts.</strong></p><p data-postkit-part="description">Style root, icon and title.</p></div></li><li data-postkit-part="item"><div data-postkit-part="content"><p data-postkit-part="title"><strong>Eject the view.</strong></p></div></li></ol>"`;
+
+exports[`static component views > Tabs > serializes to plain text 1`] = `
+"React
+
+Use the headless views.
+
+Chakra
+
+Use the recipes.
+
+Or the theme.
+"
+`;
+
+exports[`static component views > Tabs > serializes to readable HTML 1`] = `"<div data-postkit-component="Tabs" data-postkit-part="root" data-size="md" data-variant="subtle" role="group" aria-label="Tabbed content"><div data-postkit-part="panels"><section data-postkit-part="panel"><p data-postkit-part="tab"><strong>React</strong></p><p>Use the headless views.</p></section><section data-postkit-part="panel"><p data-postkit-part="tab"><strong>Chakra</strong></p><p>Use the recipes.</p><p>Or the theme.</p></section></div></div>"`;
+
+exports[`static component views > Terminal > serializes to plain text 1`] = `
+"Terminal
+
+$ npm install @postkit/react
+added 1 package in 2s
+"
+`;
+
+exports[`static component views > Terminal > serializes to readable HTML 1`] = `
+"<figure data-postkit-component="Terminal" data-postkit-part="root" data-size="md" data-variant="subtle"><figcaption data-postkit-part="header"><span data-postkit-part="title">Terminal</span></figcaption><pre data-postkit-part="body"><code class="language-shell"><span data-postkit-part="prompt">$</span> <span data-postkit-part="command">npm install @postkit/react</span>
+<samp data-postkit-part="output">added 1 package in 2s</samp></code></pre></figure>"
+`;
+
+exports[`static component views > Video > serializes to plain text 1`] = `
+"Open Demo (/media/demo.mp4)
+
+A two-minute demo. 2:04
+"
+`;
+
+exports[`static component views > Video > serializes to readable HTML 1`] = `"<figure data-postkit-component="Video" data-postkit-part="root" data-size="md" data-variant="subtle"><video data-postkit-part="player" src="/media/demo.mp4" poster="/media/demo.jpg" title="Demo" preload="metadata" controls><track kind="captions" src="/media/demo.vtt" srclang="en" label="Captions" default><a data-postkit-part="fallback" href="/media/demo.mp4">Open Demo</a></video><figcaption data-postkit-part="caption">A two-minute demo. <time data-postkit-part="duration" datetime="PT2M4S">2:04</time></figcaption></figure>"`;

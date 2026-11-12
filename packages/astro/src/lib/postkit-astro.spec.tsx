@@ -3,7 +3,11 @@ import {
   createPostkitAstroComponents,
   postkitAstroComponents,
 } from './components.js';
-import { POSTKIT_ASTRO_SYSTEM_ID, postkitAstro } from './integration.js';
+import {
+  POSTKIT_ASTRO_SYSTEM_ID,
+  POSTKIT_ASTRO_VIEWS_ID,
+  postkitAstro,
+} from './integration.js';
 import { createPostkitAstroMdxOptions } from './mdx-options.js';
 import { Audio, CallToAction, Figure, SocialPost } from './react-bridges.js';
 
@@ -15,7 +19,7 @@ describe('Postkit Astro adapter', () => {
       Callout: () => undefined,
     });
 
-    expect(Object.keys(postkitAstroComponents)).toHaveLength(35);
+    expect(Object.keys(postkitAstroComponents)).toHaveLength(38);
     expect(Object.keys(postkitAstroComponents)).toEqual(
       expect.arrayContaining([
         'AppearsOn',
@@ -96,52 +100,117 @@ describe('Postkit Astro adapter', () => {
     expect(defaultSource).toContain('defaultSystem');
     expect(customSource).toContain('/fixture/src/postkit-system.ts');
   });
+
+  it('points the wrappers at the Chakra views by default and the headless views on request', async () => {
+    const chakra = await configuredSystemSource(
+      postkitAstro(),
+      POSTKIT_ASTRO_VIEWS_ID,
+    );
+    const explicit = await configuredSystemSource(
+      postkitAstro({ renderer: 'chakra' }),
+      POSTKIT_ASTRO_VIEWS_ID,
+    );
+    const headless = await configuredSystemSource(
+      postkitAstro({ renderer: 'headless' }),
+      POSTKIT_ASTRO_VIEWS_ID,
+    );
+
+    expect(chakra).toMatch(/^export \* from ".*react-bridges\.js";$/);
+    expect(explicit).toBe(chakra);
+    expect(headless).toMatch(/^export \* from ".*headless-bridges\.js";$/);
+  });
+
+  it('adds the headless stylesheet to every page only when asked', async () => {
+    expect(
+      await injectedScripts(
+        postkitAstro({ renderer: 'headless', styles: true }),
+      ),
+    ).toEqual([['page-ssr', "import '@postkit/react/styles.css';"]]);
+    expect(
+      await injectedScripts(postkitAstro({ renderer: 'headless' })),
+    ).toEqual([]);
+    expect(await injectedScripts(postkitAstro())).toEqual([]);
+  });
+
+  it('rejects options that belong to the other renderer', () => {
+    expect(() =>
+      postkitAstro({ renderer: 'headless', chakraSystem: './system.ts' }),
+    ).toThrow('chakraSystem applies to the Chakra renderer only');
+    expect(() => postkitAstro({ styles: true })).toThrow(
+      'needs renderer: "headless"',
+    );
+    expect(() => postkitAstro({ renderer: 'elements' as never })).toThrow(
+      'renderer must be "chakra" or "headless"',
+    );
+  });
 });
+
+type SetupHookInput = {
+  config: { root: URL };
+  injectScript: (stage: string, content: string) => void;
+  updateConfig: (config: {
+    vite?: {
+      plugins?: Array<{
+        resolveId(id: string): unknown;
+        load(id: string): unknown;
+      }>;
+    };
+  }) => void;
+};
+
+async function injectedScripts(
+  integration: ReturnType<typeof postkitAstro>,
+): Promise<[string, string][]> {
+  const scripts: [string, string][] = [];
+  const hook = integration.hooks['astro:config:setup'];
+  if (!hook) throw new Error('Expected the Astro config setup hook.');
+  const input: SetupHookInput = {
+    config: { root: new URL('file:///fixture/') },
+    injectScript: (stage, content) => {
+      scripts.push([stage, content]);
+    },
+    updateConfig: () => undefined,
+  };
+  await hook(input as never);
+  return scripts;
+}
 
 async function configuredSystemSource(
   integration: ReturnType<typeof postkitAstro>,
+  moduleId: string = POSTKIT_ASTRO_SYSTEM_ID,
 ): Promise<string> {
-  let vitePlugin:
-    | {
-        resolveId(id: string): unknown;
-        load(id: string): unknown;
-      }
-    | undefined;
+  let vitePlugins: NonNullable<
+    NonNullable<
+      Parameters<SetupHookInput['updateConfig']>[0]['vite']
+    >['plugins']
+  > = [];
   const hook = integration.hooks['astro:config:setup'];
 
   if (!hook) {
     throw new Error('Expected the Astro config setup hook.');
   }
 
-  await hook({
+  const input: SetupHookInput = {
     config: {
       root: new URL('file:///fixture/'),
     },
-    updateConfig: (config: {
-      vite?: {
-        plugins?: Array<{
-          resolveId(id: string): unknown;
-          load(id: string): unknown;
-        }>;
-      };
-    }) => {
-      vitePlugin = config.vite?.plugins?.[0];
+    injectScript: () => undefined,
+    updateConfig: (config) => {
+      vitePlugins = config.vite?.plugins ?? [];
     },
-  } as never);
+  };
+  await hook(input as never);
 
-  if (!vitePlugin) {
-    throw new Error('Expected the Postkit Chakra system Vite plugin.');
+  for (const vitePlugin of vitePlugins) {
+    const resolvedId = await vitePlugin.resolveId(moduleId);
+    if (typeof resolvedId !== 'string') continue;
+
+    const source = await vitePlugin.load(resolvedId);
+    if (typeof source !== 'string') {
+      throw new Error(`Expected the ${moduleId} module source.`);
+    }
+    return source;
   }
 
-  const resolvedId = await vitePlugin.resolveId(POSTKIT_ASTRO_SYSTEM_ID);
-  if (typeof resolvedId !== 'string') {
-    throw new Error('Expected the Postkit Chakra system virtual module.');
-  }
-
-  const source = await vitePlugin.load(resolvedId);
-  if (typeof source !== 'string') {
-    throw new Error('Expected the Postkit Chakra system module source.');
-  }
-
-  return source;
+  throw new Error(`Expected a Vite plugin for ${moduleId}.`);
 }

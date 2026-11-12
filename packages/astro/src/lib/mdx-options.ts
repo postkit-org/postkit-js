@@ -8,7 +8,7 @@ import {
 import {
   createPostkitRemarkPlugins,
   type PostkitRemarkPresetOptions,
-} from '@postkit/react';
+} from '@postkit/react/remark';
 
 export interface PostkitAstroMdxOptions {
   readonly processor: MarkdownProcessor<UnifiedResolvedOptions>;

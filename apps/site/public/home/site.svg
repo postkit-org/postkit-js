@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="t">
+  <title id="t">The article on a website</title>
+  <rect width="600" height="400" fill="#EDEDEB"/>
+  <rect x="60" y="40" width="480" height="360" rx="18" fill="#FFFFFF"/>
+  <rect x="60" y="40" width="480" height="44" rx="18" fill="#F5F5F4"/>
+  <circle cx="92" cy="62" r="7" fill="#D2D2D0"/>
+  <circle cx="114" cy="62" r="7" fill="#D2D2D0"/>
+  <circle cx="136" cy="62" r="7" fill="#D2D2D0"/>
+  <rect x="110" y="118" width="300" height="22" rx="11" fill="#1D1D1F"/>
+  <rect x="110" y="158" width="380" height="12" rx="6" fill="#A1A1A6"/>
+  <rect x="110" y="182" width="340" height="12" rx="6" fill="#A1A1A6"/>
+  <rect x="110" y="220" width="380" height="76" rx="14" fill="#E5EFE9"/>
+  <rect x="130" y="242" width="140" height="12" rx="6" fill="#23794A"/>
+  <rect x="130" y="266" width="260" height="10" rx="5" fill="#6E8F7B"/>
+  <rect x="110" y="322" width="380" height="12" rx="6" fill="#A1A1A6"/>
+</svg>

@@ -9,24 +9,33 @@ import {
 import NextLink from 'next/link';
 
 import {
-  formatChangelogDate,
+  changelogHref,
+  formatChangelogRelease,
   type ChangelogEntrySummary,
 } from '../lib/changelog';
+import { asStatement } from './changelog/release-row';
+import { ReleaseStatusBadge } from './changelog/release-status-badge';
 
 export interface ChangelogCardProps {
   readonly entry: ChangelogEntrySummary;
   readonly featured?: boolean;
+  /** Marks the newest released entry. Upcoming entries are marked "In development" instead. */
+  readonly latest?: boolean;
 }
 
-export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
+export function ChangelogCard({
+  entry,
+  featured = false,
+  latest = false,
+}: ChangelogCardProps) {
   return (
     <Box
       as="article"
-      bg={featured ? 'postkitInk' : 'whiteAlpha.700'}
-      borderColor={featured ? 'postkitInk' : 'blackAlpha.200'}
+      bg={featured ? 'bg.inverted' : 'bg.subtle'}
+      borderColor={featured ? 'fg' : 'border'}
       borderRadius="2xl"
       borderWidth="1px"
-      color={featured ? 'white' : 'postkitInk'}
+      color={featured ? 'fg.inverted' : 'fg'}
       padding={{ base: '6', md: featured ? '9' : '7' }}
     >
       <Flex
@@ -40,17 +49,18 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
             {entry.version}
           </Badge>
           <Text
-            color={featured ? 'whiteAlpha.700' : 'blackAlpha.600'}
+            color={featured ? 'fg.inverted' : 'fg.muted'}
             fontFamily="mono"
             fontSize="xs"
           >
-            {formatChangelogDate(entry.date)}
+            {formatChangelogRelease(entry)}
           </Text>
+          <ReleaseStatusBadge status={entry.status} latest={latest} />
         </Flex>
         <Flex gap="2" flexWrap="wrap">
           {entry.tags.map((tag) => (
             <Text
-              color={featured ? 'whiteAlpha.600' : 'blackAlpha.500'}
+              color={featured ? 'fg.inverted' : 'fg.quiet'}
               fontFamily="mono"
               fontSize="xs"
               key={tag}
@@ -68,10 +78,13 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
         fontWeight="500"
         marginTop="5"
       >
-        {entry.title}
+        {asStatement(entry.title)}{' '}
+        <Text as="span" color={featured ? 'fg.inverted' : 'fg.muted'}>
+          {entry.subtitle}
+        </Text>
       </Heading>
       <Text
-        color={featured ? 'whiteAlpha.800' : 'blackAlpha.700'}
+        color={featured ? 'fg.inverted' : 'fg.secondary'}
         lineHeight="1.7"
         marginTop="3"
         maxW="3xl"
@@ -80,15 +93,13 @@ export function ChangelogCard({ entry, featured = false }: ChangelogCardProps) {
       </Text>
       <ChakraLink
         asChild
-        color={featured ? 'green.200' : 'green.700'}
+        color={featured ? 'fg.inverted' : 'accent'}
         display="inline-flex"
         fontWeight="700"
         marginTop="6"
         textDecoration="none"
       >
-        <NextLink href={`/changelog/${entry.slug}`}>
-          Read release notes →
-        </NextLink>
+        <NextLink href={changelogHref(entry)}>Read release notes →</NextLink>
       </ChakraLink>
     </Box>
   );

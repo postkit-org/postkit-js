@@ -1,6 +1,6 @@
 {
   "name": "@postkit/email",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Email-safe Postkit components rendered with Chakra Email primitives",
   "keywords": [
     "postkit",
@@ -47,7 +47,17 @@
   ],
   "dependencies": {
     "@chakra-email/core": "^0.1.0",
-    "tslib": "^2.3.0"
+    "@postkit/core": "0.3.0",
+    "@postkit/react": "0.3.0",
+    "mdast-util-directive": "^3.1.0",
+    "mdast-util-gfm": "^3.1.0",
+    "mdast-util-mdx": "^3.0.0",
+    "mdast-util-to-markdown": "^2.1.2",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "tslib": "^2.3.0",
+    "unified": "^11.0.5",
+    "vfile": "^6.0.3"
   },
   "peerDependencies": {
     "react": "^19.1.0",

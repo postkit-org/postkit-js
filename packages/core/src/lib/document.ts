@@ -30,8 +30,36 @@ export interface PostkitComponentNode {
   readonly children: readonly PostkitNode[];
 }
 
+/**
+ * A footnote mark in the text (inline). `identifier` is the normalized id
+ * that links it to its {@link PostkitFootnoteDefinitionNode}; `label` is the
+ * id as the author wrote it (`[^Plain]`), kept for round trips. Labels are
+ * ids, never numbers: notes are numbered by first reference (03 §7.1).
+ */
+export interface PostkitFootnoteReferenceNode {
+  readonly type: 'footnoteReference';
+  readonly identifier: string;
+  readonly label?: string;
+}
+
+/**
+ * A footnote's content (block). Where it sits in the document doesn't
+ * matter: renderers list the notes at the `Footnotes` component, or at the
+ * end of the document.
+ */
+export interface PostkitFootnoteDefinitionNode {
+  readonly type: 'footnoteDefinition';
+  readonly identifier: string;
+  readonly label?: string;
+  readonly children: readonly PostkitNode[];
+}
+
 export type PostkitNode =
-  PostkitComponentNode | PostkitElementNode | PostkitTextNode;
+  | PostkitComponentNode
+  | PostkitElementNode
+  | PostkitFootnoteDefinitionNode
+  | PostkitFootnoteReferenceNode
+  | PostkitTextNode;
 
 export interface PostkitDocument {
   readonly type: 'document';

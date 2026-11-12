@@ -1,26 +1,26 @@
 # `@postkit/tanstack-router`
 
-PostKit article components, MDX mapping, and internal-link routing for TanStack
+Postkit article components, MDX mapping, and internal-link routing for TanStack
 Router.
 
 ## When to use it
 
 Use this adapter when a TanStack Router application renders Markdown or MDX
-with PostKit. It converts internal Markdown destinations into router links and
+with Postkit. It converts internal Markdown destinations into router links and
 keeps external URLs, protocol links, hashes, downloads, and explicit
 non-default targets as native anchors.
 
 ## Install
 
 ```sh
-npm install @postkit/tanstack-router @postkit/react @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/tanstack-router @postkit/chakra @tanstack/react-router @chakra-ui/react @emotion/react react react-dom
 ```
 
 Supported peer versions:
 
 - TanStack Router 1.x
 - React 19
-- The matching `@postkit/react` release
+- The matching `@postkit/chakra` release
 
 ## Quick start
 
@@ -35,7 +35,7 @@ export const mdxComponents = createPostkitTanStackRouterComponents();
 Render the article beneath the application's TanStack Router provider and
 `PostkitProvider`. The application owns its generated route tree, data loading,
 and page layout. `PostkitProvider` is host-native by default; pass
-`preset={postkitDefaultTheme}` only when PostKit's standalone visual treatment
+`preset={postkitDefaultTheme}` only when Postkit's standalone visual treatment
 is wanted.
 
 ## Recover typed routes
@@ -74,9 +74,37 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 });
 ```
 
+## With `createPostkit`
+
+The `createPostkit` preset configures a site from its kits, components,
+defaults and overrides, with internal links routed through TanStack Router:
+
+```ts
+import { chakra } from '@postkit/chakra';
+import { createPostkit } from '@postkit/tanstack-router';
+import { article, media, technical } from '@postkit/react/kits';
+
+export const postkit = createPostkit({
+  renderer: chakra,
+  kits: [article, technical, media],
+});
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
+```
+
+It needs `@postkit/react` installed alongside `@postkit/chakra`.
+
 ## Public API
 
-- `createPostkitTanStackRouterComponents(options?)`
+- `createPostkit(options)`: `createPostkit` from `@postkit/react` with `link`
+  set to the TanStack Router link (pass link options or a component as `link`)
+- `CreatePostkitTanStackRouterOptions`
+- `createPostkitTanStackRouterLink(options?)`
+- `createPostkitTanStackRouterComponents(options?)`: prose and component views, with each view
+  loading the first time a page renders it (`createPostkitLazyMdxComponents`
+  from `@postkit/chakra`). A streaming server render waits for the views, so
+  the HTML is complete. For a synchronous render such as
+  `renderToStaticMarkup`, pass `components: postkitChakraViews`.
 - `PostkitTanStackRouterComponentsOptions`
 - `PostkitTanStackRouterLinkOptions`
 - `PostkitTanStackLinkProps`
@@ -86,10 +114,10 @@ export const mdxComponents = createPostkitTanStackRouterComponents({
 - If router context is missing, move the article beneath the router provider.
 - If a generated route rejects a portable string, translate it in
   `mapLinkProps`.
-- If PostKit-specific layouts are bare, opt into `postkitDefaultTheme` or
-  register PostKit slot recipes in the host Chakra system.
+- If Postkit-specific layouts are bare, opt into `postkitDefaultTheme` or
+  register Postkit slot recipes in the host Chakra system.
 
-See the [`@postkit/react`](../react) guide for components, declarations,
+See the [`@postkit/chakra`](../chakra) guide for components, declarations,
 Markdown directives, and theming. A checked
 [TanStack Router example](../../examples/tanstack-router) is included in the
 repository.

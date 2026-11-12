@@ -1,72 +1,83 @@
-import { createSystem, defaultConfig } from '@chakra-ui/react';
+import { createSystem } from '@chakra-ui/react';
+import { chakraDocsThemeConfig } from '@chakra-docs/chakra/theme';
 import {
-  createPostkitSystem,
   createPostkitTheme,
   postkitDefaultTheme,
-} from '@postkit/react';
+  type PostkitHostProviderProps,
+} from '@postkit/chakra';
+import { fontStacks, siteSystem as baseSystem } from '@postkit/site-theme';
 
-const chakraSystem = createSystem(defaultConfig, {
-  globalCss: {
-    html: {
-      background: 'postkitPaper',
-      color: 'postkitInk',
-    },
-    body: {
-      background: 'postkitPaper',
-      color: 'postkitInk',
-      fontFamily: 'body',
-      textRendering: 'optimizeLegibility',
-    },
-  },
-  theme: {
-    tokens: {
-      colors: {
-        postkitAccent: { value: '#16845b' },
-        postkitInk: { value: '#142019' },
-        postkitPaper: { value: '#f4f1e8' },
-      },
-    },
-  },
-});
+import { siteDocsThemeConfig } from './docs-theme';
 
+/** Jumps land below the sticky header with room to spare. */
+const JUMP_MARGIN = 'calc({sizes.header} + 24px)';
+
+/**
+ * Postkit's components inside the site take the site's fonts. Everything else
+ * (colours, light and dark, type scale, breakpoints) comes from
+ * `@postkit/site-theme`, layered over Postkit's default component theme.
+ */
 const postkitSiteTheme = createPostkitTheme({
   typography: {
-    body: '"Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif',
-    heading: 'Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif',
-    mono: '"SFMono-Regular", "Roboto Mono", Consolas, "Liberation Mono", monospace',
+    body: fontStacks.sans,
+    heading: fontStacks.sans,
+    mono: fontStacks.mono,
   },
-  callout: {
+  // Footnotes in the site's house style (CompFootnotes, SiteArticle): accent marks, notes at
+  // 15px under a short faint rule. Sidenotes are styled with the article (`note-body.tsx`).
+  footnote: {
     base: {
-      root: {
-        borderRadius: '2xl',
+      marker: {
+        color: 'accent',
+        scrollMarginTop: JUMP_MARGIN,
+        '& sup': { fontSize: '0.68em' },
+        '&[aria-expanded=true], [data-highlighted] > &': { bg: 'tint.note' },
       },
     },
-  },
-  codeBlock: {
-    base: {
-      root: {
-        borderRadius: '2xl',
-      },
+    variants: {
+      variant: { subtle: { marker: { _hover: { bg: 'tint.note' } } } },
     },
   },
-  prose: {
+  footnotes: {
     base: {
-      root: {
-        colorPalette: 'green',
-        fontSize: { base: 'md', md: 'lg' },
+      root: { color: 'fg.secondary', fontSize: '15px', lineHeight: '1.55' },
+      item: {
+        scrollMarginTop: JUMP_MARGIN,
+        '&:target, &[data-targeted]': { bg: 'tint.note' },
+        // The number keeps 4.5:1 on the tint.
+        '&:target > [data-postkit-part=number], &[data-targeted] > [data-postkit-part=number]':
+          { color: 'fg.secondary' },
       },
-      h2: {
-        fontWeight: '500',
-      },
-      h3: {
-        fontWeight: '600',
+      number: { color: 'fg.muted' },
+      backlink: { color: 'accent', '& a': { color: 'accent' } },
+    },
+    variants: {
+      variant: {
+        plain: { rule: { borderBlockStartColor: 'border.faint' } },
       },
     },
   },
 });
 
-export const siteSystem = createPostkitSystem({
-  system: chakraSystem,
+/**
+ * The docs pages are built on chakra-docs (PK-035). Its config only adds `chakraDocs*` slot
+ * recipes; it goes first, with the site's restyling of them (`docs-theme.ts`) next, so the
+ * site's own config, the Postkit preset and the Postkit theme all win wherever they meet.
+ */
+const docsAwareBaseSystem = createSystem(
+  chakraDocsThemeConfig,
+  siteDocsThemeConfig,
+  baseSystem._config,
+);
+
+/**
+ * `PostkitHostProvider` composes these in `_app.tsx`: Postkit's preset beneath the site's
+ * system, `postkitSiteTheme` above it. Unlike `createPostkitSystem` and `PostkitProvider`, it
+ * never imports Chakra's `defaultSystem`, so the Chakra recipes the site's system leaves out
+ * (`@postkit/site-theme`'s `chakra-theme.ts`) stay out of the bundle.
+ */
+export const sitePostkitSystem = {
+  system: docsAwareBaseSystem,
   preset: postkitDefaultTheme,
   theme: postkitSiteTheme,
-});
+} satisfies Pick<PostkitHostProviderProps, 'system' | 'preset' | 'theme'>;

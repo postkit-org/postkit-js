@@ -1,0 +1,104 @@
+/* Chart: an accessible SVG chart with a legend and an optional data table. */
+@scope ([data-postkit-component='Chart']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  /* Series without an authored colour read --postkit-chart-1 to -4 (tokens.css). */
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-5);
+  }
+  :where(:scope[data-size='sm']) {
+    padding: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='lg']) {
+    padding: var(--postkit-space-6);
+  }
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.125em;
+    font-weight: var(--postkit-weight-semibold);
+    line-height: var(--postkit-leading-tight);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    margin-block-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='legend']) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-2) var(--postkit-space-4);
+    margin-block-start: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='legendItem']) {
+    align-items: center;
+    display: flex;
+    font-size: 0.875em;
+    gap: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='legendSwatch']) {
+    border-radius: var(--postkit-radius-sm);
+    flex: 0 0 auto;
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+  :where([data-postkit-part='plot']) {
+    margin-block-start: var(--postkit-space-4);
+    overflow-x: auto;
+  }
+  :where([data-postkit-part='plot']:focus-visible) {
+    outline-offset: calc(var(--postkit-focus-width) * -1);
+  }
+  :where([data-postkit-part='svg']) {
+    display: block;
+    min-width: 32rem;
+    width: 100%;
+  }
+  :where([data-postkit-part='gridLine']) {
+    stroke: var(--postkit-color-border);
+  }
+  :where([data-postkit-part='axisLabel']) {
+    fill: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='emptyState']) {
+    color: var(--postkit-color-fg-muted);
+    margin-block-start: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='tableContainer']) {
+    margin-block-start: var(--postkit-space-4);
+    overflow-x: auto;
+  }
+  :where([data-postkit-part='table']) {
+    border-collapse: collapse;
+    font-size: 0.875em;
+    width: 100%;
+  }
+  :where(
+    [data-postkit-part='headerCell'],
+    [data-postkit-part='rowHeader'],
+    [data-postkit-part='dataCell']
+  ) {
+    padding: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='headerCell']) {
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+    font-weight: var(--postkit-weight-semibold);
+    text-align: start;
+  }
+  :where([data-postkit-part='rowHeader']) {
+    font-weight: var(--postkit-weight-medium);
+    text-align: start;
+  }
+  :where([data-postkit-part='dataCell']) {
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

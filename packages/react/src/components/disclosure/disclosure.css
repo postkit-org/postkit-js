@@ -1,0 +1,53 @@
+/* Disclosure: a native details/summary that opens in place. */
+@scope ([data-postkit-component='Disclosure']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-lg);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='summary']) {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    font-weight: var(--postkit-weight-semibold);
+    gap: var(--postkit-space-2);
+    justify-content: space-between;
+    list-style: none;
+  }
+  :where([data-postkit-part='summary'])::-webkit-details-marker {
+    display: none;
+  }
+  :where([data-postkit-part='indicator']) {
+    color: var(--postkit-color-fg-muted);
+    flex: 0 0 auto;
+    font-weight: var(--postkit-weight-medium);
+    line-height: 1;
+  }
+  :where(:scope[open] [data-postkit-part='indicator']) {
+    rotate: 45deg;
+  }
+  :where([data-postkit-part='content']) {
+    color: var(--postkit-color-fg-muted);
+    padding-block-start: var(--postkit-space-3);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+    border-radius: 0;
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @scope ([data-postkit-component='Disclosure']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where([data-postkit-part='indicator']) {
+      transition: rotate var(--postkit-duration) ease-out;
+    }
+  }
+}

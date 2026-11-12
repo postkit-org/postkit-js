@@ -1,6 +1,6 @@
 {
   "name": "@postkit/tanstack-router",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Postkit MDX components and link routing for TanStack Router",
   "keywords": [
     "postkit",
@@ -47,7 +47,8 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@postkit/react": "0.2.0",
+    "@postkit/chakra": "0.3.0",
+    "@postkit/react": "0.3.0",
     "@tanstack/react-router": ">=1.120 <2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

@@ -1,11 +1,12 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "name": "PostKit API",
+  "name": "Postkit API",
   "entryPointStrategy": "packages",
   "entryPoints": [
     "packages/core",
     "packages/unfurl",
     "packages/react",
+    "packages/chakra",
     "packages/email",
     "packages/shiki",
     "packages/next",

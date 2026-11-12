@@ -1,0 +1,73 @@
+/* Diff: added and removed lines, marked and tinted, in a scrollable code region. */
+@scope ([data-postkit-component='Diff']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    overflow: hidden;
+  }
+  :where([data-postkit-part='header']) {
+    border-block-end: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+    padding: var(--postkit-space-2) var(--postkit-space-3);
+  }
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='code']) {
+    display: block;
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    line-height: var(--postkit-leading);
+    overflow-x: auto;
+    padding-block: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='code']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='code']) {
+    font-size: var(--postkit-text-md);
+  }
+  :where([data-postkit-part='code']:focus-visible) {
+    outline-offset: calc(var(--postkit-focus-width) * -1);
+  }
+  :where([data-postkit-part='code'] > code) {
+    font: inherit;
+  }
+  :where([data-postkit-part='line']) {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    min-width: max-content;
+    padding-inline-end: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='line'][data-diff='addition']) {
+    background: var(--postkit-tone-tip-surface);
+  }
+  :where([data-postkit-part='line'][data-diff='deletion']) {
+    background: var(--postkit-tone-caution-surface);
+  }
+  :where([data-postkit-part='marker']) {
+    color: var(--postkit-color-fg-muted);
+    text-align: center;
+    user-select: none;
+  }
+  :where([data-diff='addition'] > [data-postkit-part='marker']) {
+    color: var(--postkit-tone-tip);
+  }
+  :where([data-diff='deletion'] > [data-postkit-part='marker']) {
+    color: var(--postkit-tone-caution);
+  }
+  :where([data-postkit-part='content']) {
+    white-space: pre;
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+}

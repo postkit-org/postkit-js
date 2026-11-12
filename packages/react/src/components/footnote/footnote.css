@@ -1,0 +1,79 @@
+/* Footnote: the reference mark (03 §7.1). Accent-coloured, line height held
+   so the line never jumps, with a 24px tap target however small it's drawn. */
+@scope ([data-postkit-component='Footnote']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    font-style: normal;
+  }
+  :where([data-postkit-part='marker']) {
+    border-radius: var(--postkit-radius-sm);
+    color: var(--postkit-footnote-marker-color);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--postkit-weight-medium);
+    padding-inline: 0.12em;
+    position: relative;
+    scroll-margin-block: var(--postkit-space-8);
+    text-decoration: none;
+    transition: background-color var(--postkit-duration) ease-out;
+  }
+  :where([data-postkit-part='marker'] sup) {
+    font-size: var(--postkit-footnote-marker-size);
+    line-height: 0;
+    vertical-align: super;
+  }
+  :where(:scope[data-marker='bracket'] [data-postkit-part='marker']) {
+    font-size: 0.85em;
+  }
+  :where(:scope[data-marker='pill'] [data-postkit-part='marker']) {
+    background: var(--postkit-footnote-accent);
+    border-radius: var(--postkit-radius-full);
+    color: var(--postkit-color-accent-fg);
+    display: inline-block;
+    font-size: var(--postkit-footnote-marker-size);
+    line-height: 1.5;
+    min-width: 1.5em;
+    padding-inline: 0.4em;
+    text-align: center;
+    vertical-align: 0.2em;
+  }
+  /* The hit area is at least 24×24 (WCAG 2.5.8). */
+  :where([data-postkit-part='marker'])::after {
+    content: '';
+    height: max(100%, 24px);
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 24px);
+  }
+  :where(
+    [data-postkit-part='marker']:hover,
+    [data-postkit-part='marker'][aria-expanded='true'],
+    :scope[data-highlighted] [data-postkit-part='marker']
+  ) {
+    background: var(--postkit-footnote-target-bg);
+  }
+  :where(:scope[data-marker='pill'] [data-postkit-part='marker']:hover) {
+    background: var(--postkit-footnote-accent);
+  }
+  :where([data-postkit-part='marker']:focus-visible) {
+    outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
+    outline-offset: var(--postkit-focus-offset);
+  }
+
+  :where(:scope[data-size='sm']) {
+    --postkit-footnote-marker-size: 0.65em;
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-footnote-marker-size: 0.8em;
+  }
+  /* Variants style the note beside the mark (Sidenote); the mark is the same. */
+  :where(:scope[data-variant='outline'], :scope[data-variant='plain']) {
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-postkit-part='marker']) {
+      transition: none;
+    }
+  }
+}

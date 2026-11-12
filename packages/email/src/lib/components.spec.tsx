@@ -11,6 +11,65 @@ import {
 } from './components.js';
 import { createPostkitEmailMdxComponents } from './mdx-components.js';
 import { PostkitEmailProvider } from './provider.js';
+import { postkitEmailTheme, postkitEmailTones } from './theme.js';
+
+/** `green.50`, `gray.200`, `brand.500`: a palette token that never resolved. */
+const tokenLike = /\b[a-z]+\.\d{2,3}\b/;
+
+/** Every inline `style` declaration and legacy colour attribute in the HTML. */
+function cssDeclarations(html: string): string[] {
+  const declarations: string[] = [];
+  for (const [, style] of html.matchAll(/style="([^"]*)"/g)) {
+    declarations.push(
+      ...style
+        .split(';')
+        .map((declaration) => declaration.trim())
+        .filter(Boolean),
+    );
+  }
+  for (const [attribute] of html.matchAll(/\b(?:bgcolor|color)="[^"]*"/g)) {
+    declarations.push(attribute);
+  }
+  return declarations;
+}
+
+function everyComponent(tone: (typeof postkitEmailTones)[number]) {
+  return (
+    <>
+      <Callout title="Titled" tone={tone}>
+        Callout body.
+      </Callout>
+      <Aside tone={tone}>Aside body.</Aside>
+      <CallToAction
+        eyebrow="New"
+        title="Read the guide"
+        description="A practical introduction."
+        primaryLabel="Read now"
+        primaryHref="https://example.com/guide"
+        secondaryLabel="Browse"
+        secondaryHref="https://example.com/guides"
+      />
+      <Figure
+        src="https://images.example/chart.png"
+        alt="Chart"
+        caption="Caption."
+        credit="Studio"
+        creditHref="https://example.com/studio"
+      />
+      <Audio
+        src="https://media.example/episode.mp3"
+        title="Episode"
+        caption="Thirty minutes"
+      />
+      <Video
+        src="https://media.example/demo.mp4"
+        poster="https://media.example/demo.jpg"
+        title="Demo"
+        caption="Two minutes"
+      />
+    </>
+  );
+}
 
 describe('@postkit/email components', () => {
   it('renders callouts with email-safe table layout and tone styles', async () => {
@@ -35,6 +94,9 @@ describe('@postkit/email components', () => {
     expect(html).toContain('data-postkit-component="Aside"');
     expect(html).toContain('aria-label="tip"');
     expect(html).not.toContain('font-weight:bold');
+    // No tone mark (D14): the tone shows only as the border and tint.
+    expect(html).not.toContain('data-postkit-part="icon"');
+    expect(html).not.toContain('>✓<');
   });
 
   it('renders calls to action as bulletproof links without client behavior', async () => {
@@ -114,6 +176,95 @@ describe('@postkit/email components', () => {
     expect(html).toContain('#b91c1c');
   });
 
+  it.each(postkitEmailTones)(
+    'resolves every colour to a literal value for the %s tone',
+    async (tone) => {
+      const htmls = [
+        await render(everyComponent(tone)),
+        await render(
+          <PostkitEmailProvider>{everyComponent(tone)}</PostkitEmailProvider>,
+        ),
+      ];
+
+      for (const html of htmls) {
+        const declarations = cssDeclarations(html);
+        expect(declarations.length).toBeGreaterThan(0);
+        expect(declarations.filter((value) => tokenLike.test(value))).toEqual(
+          [],
+        );
+        expect(html).not.toContain('var(');
+      }
+    },
+  );
+
+  it('applies the light Postkit email theme by default', async () => {
+    const html = await render(
+      <PostkitEmailProvider>
+        <Callout title="Keep the content" tone="tip">
+          Tip body.
+        </Callout>
+      </PostkitEmailProvider>,
+    );
+
+    expect(html).toContain(
+      `background-color:${postkitEmailTheme.colors.tint.tip}`,
+    );
+    expect(html).toContain(
+      `border-left:4px solid ${postkitEmailTheme.colors.tone.tip}`,
+    );
+  });
+
+  it.each(postkitEmailTones)(
+    'draws the %s Callout border in its tone, not its text colour',
+    async (tone) => {
+      const html = await render(<Callout tone={tone}>Body.</Callout>);
+      const style = /<table[^>]*style="([^"]*)"/.exec(html)?.[1] ?? '';
+
+      expect(style).toContain(
+        `border-left:4px solid ${postkitEmailTheme.colors.tone[tone]}`,
+      );
+      expect(style).not.toContain('border-color');
+      expect(style).toContain(`color:${postkitEmailTheme.colors.fg.DEFAULT}`);
+    },
+  );
+
+  it('draws neutral card borders in their border colour', async () => {
+    const html = await render(
+      <>
+        <CallToAction title="Card" />
+        <Audio src="https://media.example/a.mp3" title="Audio" />
+        <Video src="https://media.example/v.mp4" title="Video" />
+      </>,
+    );
+
+    expect(html.match(/border:1px solid #E2E8F0/g)).toHaveLength(3);
+    expect(html).not.toMatch(/border:1px solid(;|")/);
+  });
+
+  it('lets a host theme override tone colours', async () => {
+    const html = await render(
+      <PostkitEmailProvider
+        theme={{
+          colors: {
+            tone: { warning: '#a15c00' },
+            tint: { warning: '#f4ebe0' },
+            fg: '#1d1d1f',
+          },
+        }}
+      >
+        <Callout tone="warning">Host tones.</Callout>
+        <Callout tone="note">Package tones.</Callout>
+      </PostkitEmailProvider>,
+    );
+
+    expect(html).toContain('border-left:4px solid #a15c00');
+    expect(html).toContain('background-color:#f4ebe0');
+    expect(html).toContain('color:#1d1d1f');
+    expect(html).toContain(
+      `border-left:4px solid ${postkitEmailTheme.colors.tone.note}`,
+    );
+  });
+
   it('provides an explicit MDX component map for the supported subset', () => {
     expect(Object.keys(createPostkitEmailMdxComponents()).sort()).toEqual([
       'Aside',
@@ -121,6 +272,14 @@ describe('@postkit/email components', () => {
       'CallToAction',
       'Callout',
       'Figure',
+      'Footnote',
+      'Footnotes',
+      'KeyTakeaway',
+      'LinkPreview',
+      'ProductCard',
+      'PullQuote',
+      'Stat',
+      'Steps',
       'Video',
     ]);
   });

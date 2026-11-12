@@ -1,0 +1,58 @@
+/* CodeGroup: tabbed code blocks on one code surface that stays dark (§5.5). */
+@scope ([data-postkit-component='CodeGroup']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-color-focus-ring: var(--postkit-code-focus-ring);
+    background: var(--postkit-code-bg);
+    border-radius: var(--postkit-radius-xl);
+    color: var(--postkit-code-fg);
+    color-scheme: dark;
+    font-size: inherit;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='tabs']) {
+    background: var(--postkit-code-header-bg);
+    display: flex;
+    gap: var(--postkit-space-1);
+    overflow-x: auto;
+    padding: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='tab']) {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-code-fg-muted);
+    cursor: pointer;
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    padding: 0.375rem var(--postkit-space-3);
+    white-space: nowrap;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='tab']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where([data-postkit-part='tab']:hover) {
+    color: var(--postkit-code-fg);
+  }
+  :where(
+    [data-postkit-part='tab']:is(
+      [aria-selected='true'],
+      [data-selected],
+      [data-state='active']
+    )
+  ) {
+    background: var(--postkit-code-selected);
+    box-shadow: inset 0 -2px 0 var(--postkit-code-fg);
+    color: var(--postkit-code-fg);
+  }
+  :where([data-postkit-part='panel']) {
+    min-width: 0;
+  }
+
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-code-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+}

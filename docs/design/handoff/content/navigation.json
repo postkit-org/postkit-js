@@ -1,0 +1,311 @@
+{
+ "header": [
+  {
+   "label": "Components",
+   "href": "/components"
+  },
+  {
+   "label": "Docs",
+   "href": "/docs/introduction"
+  },
+  {
+   "label": "Notes",
+   "href": "/notes"
+  },
+  {
+   "label": "GitHub",
+   "href": "https://github.com/postkit-org/postkit-js",
+   "external": true
+  }
+ ],
+ "headerCta": {
+  "label": "Get started",
+  "href": "/docs/quick-start"
+ },
+ "menu": [
+  {
+   "label": "Components",
+   "description": "35 components in six kits",
+   "href": "/components",
+   "note": "count from the manifest"
+  },
+  {
+   "label": "Docs",
+   "description": "Install, customize, render",
+   "href": "/docs/introduction"
+  },
+  {
+   "label": "Notes",
+   "description": "Guides, releases and case studies",
+   "href": "/notes"
+  },
+  {
+   "label": "Changelog",
+   "description": "Latest: {latest version}",
+   "href": "/changelog"
+  }
+ ],
+ "menuSecondary": [
+  {
+   "label": "GitHub",
+   "href": "https://github.com/postkit-org/postkit-js"
+  },
+  {
+   "label": "npm",
+   "href": "https://www.npmjs.com/org/postkit"
+  },
+  {
+   "label": "Bluesky",
+   "href": null,
+   "note": "09 Q8"
+  }
+ ],
+ "footer": {
+  "brand": "Richer posts, written once, right everywhere.",
+  "columns": [
+   {
+    "title": "Product",
+    "links": [
+     [
+      "Components",
+      "/components"
+     ],
+     [
+      "Docs",
+      "/docs/introduction"
+     ],
+     [
+      "Notes",
+      "/notes"
+     ],
+     [
+      "Changelog",
+      "/changelog"
+     ]
+    ]
+   },
+   {
+    "title": "Packages",
+    "links": [
+     [
+      "@postkit/react",
+      "https://www.npmjs.com/package/@postkit/react"
+     ],
+     [
+      "@postkit/chakra",
+      "https://www.npmjs.com/package/@postkit/chakra"
+     ],
+     [
+      "@postkit/email",
+      "https://www.npmjs.com/package/@postkit/email"
+     ],
+     [
+      "@postkit/core",
+      "https://www.npmjs.com/package/@postkit/core"
+     ]
+    ]
+   },
+   {
+    "title": "Elsewhere",
+    "links": [
+     [
+      "GitHub",
+      "https://github.com/postkit-org/postkit-js"
+     ],
+     [
+      "npm",
+      "https://www.npmjs.com/org/postkit"
+     ],
+     [
+      "Bluesky",
+      null
+     ],
+     [
+      "X / Twitter",
+      null
+     ]
+    ]
+   }
+  ],
+  "legal": "© 2026 Postkit. MIT licensed.",
+  "bottom": [
+   [
+    "Licensing",
+    "/licensing"
+   ],
+   [
+    "Privacy",
+    "/privacy"
+   ],
+   [
+    "Made with OSS",
+    "/withoss"
+   ]
+  ],
+  "commune": {
+   "href": "https://commune.software/open-source/postkit",
+   "label": "By Commune"
+  }
+ },
+ "docs": [
+  {
+   "group": "Get started",
+   "items": [
+    {
+     "label": "Introduction",
+     "slug": "introduction"
+    },
+    {
+     "label": "Installation",
+     "slug": "installation"
+    },
+    {
+     "label": "Quick start",
+     "slug": "quick-start"
+    },
+    {
+     "label": "Kits",
+     "slug": "kits"
+    }
+   ]
+  },
+  {
+   "group": "Writing",
+   "items": [
+    {
+     "label": "MDX",
+     "slug": "mdx"
+    },
+    {
+     "label": "Markdown directives",
+     "slug": "markdown-directives"
+    },
+    {
+     "label": "Validation",
+     "slug": "validation"
+    },
+    {
+     "label": "Portable documents and feeds",
+     "slug": "portable-documents"
+    },
+    {
+     "label": "Link previews and unfurling",
+     "slug": "link-previews"
+    },
+    {
+     "label": "Writing in Prismark",
+     "slug": "writing-in-prismark"
+    }
+   ]
+  },
+  {
+   "group": "Customizing",
+   "items": [
+    {
+     "label": "Tokens",
+     "slug": "tokens"
+    },
+    {
+     "label": "Part styles",
+     "slug": "part-styles"
+    },
+    {
+     "label": "Defaults and slots",
+     "slug": "defaults-and-slots"
+    },
+    {
+     "label": "Views",
+     "slug": "views"
+    },
+    {
+     "label": "Eject",
+     "slug": "eject"
+    },
+    {
+     "label": "New components",
+     "slug": "new-components"
+    }
+   ]
+  },
+  {
+   "group": "Renderers",
+   "items": [
+    {
+     "label": "Headless",
+     "slug": "headless"
+    },
+    {
+     "label": "Chakra",
+     "slug": "chakra"
+    },
+    {
+     "label": "Email",
+     "slug": "email"
+    },
+    {
+     "label": "Web components",
+     "slug": "web-components",
+     "soon": true
+    }
+   ]
+  },
+  {
+   "group": "Frameworks",
+   "items": [
+    {
+     "label": "Next.js",
+     "slug": "nextjs"
+    },
+    {
+     "label": "React Router",
+     "slug": "react-router"
+    },
+    {
+     "label": "TanStack Router",
+     "slug": "tanstack-router"
+    },
+    {
+     "label": "Astro",
+     "slug": "astro"
+    }
+   ]
+  },
+  {
+   "group": "Reference",
+   "items": [
+    {
+     "label": "createPostkit",
+     "slug": "create-postkit"
+    },
+    {
+     "label": "definePostkitComponent",
+     "slug": "define-postkit-component"
+    },
+    {
+     "label": "Manifest",
+     "slug": "manifest"
+    },
+    {
+     "label": "CLI",
+     "slug": "cli"
+    },
+    {
+     "label": "API reference",
+     "slug": "api-reference"
+    },
+    {
+     "label": "Compatibility",
+     "slug": "compatibility"
+    },
+    {
+     "label": "Security",
+     "slug": "security"
+    },
+    {
+     "label": "Troubleshooting",
+     "slug": "troubleshooting"
+    }
+   ]
+  }
+ ]
+}

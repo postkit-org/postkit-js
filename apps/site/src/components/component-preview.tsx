@@ -1,50 +1,38 @@
-import { Box } from '@chakra-ui/react';
 import {
-  AppearsOn,
-  Aside,
-  Audio,
-  AudienceBoundary,
-  AuthorCard,
-  Callout,
-  CallToAction,
-  CardGrid,
-  Carousel,
-  Chart,
-  CodeBlock,
-  CodeGroup,
-  Comparison,
-  Diff,
-  Disclosure,
-  Figure,
-  FileCard,
-  FileTree,
-  Gallery,
-  KeyTakeaway,
-  LinkPreview,
-  NewsletterSignup,
-  Poll,
-  ProductCard,
-  PullQuote,
-  RelatedContent,
-  SeriesNavigation,
-  ShareActions,
-  SocialPost,
-  SponsorBlock,
-  Stat,
-  Steps,
-  Tabs,
-  Terminal,
-  Video,
+  postkitChakraLazyViews,
   type PostkitComponentName,
-} from '@postkit/react';
+} from '@postkit/chakra';
+import type { ComponentType, ReactNode } from 'react';
 
-type PreviewSize = 'sm' | 'md' | 'lg';
-type PreviewVariant = 'outline' | 'subtle' | 'plain';
+import { createPostkitSample } from '../lib/code-samples';
 
-export interface ComponentPreviewProps {
-  readonly name: PostkitComponentName;
-  readonly size?: PreviewSize;
-  readonly variant?: PreviewVariant;
+/** A prop value in a sample: what an author can write in MDX or a directive attribute. */
+export type PreviewPropValue =
+  | string
+  | number
+  | boolean
+  | readonly unknown[]
+  | { readonly [key: string]: unknown };
+
+export type PreviewProps = Readonly<Record<string, PreviewPropValue>>;
+
+/**
+ * The content a component is previewed with. The same data renders the live preview and
+ * writes the Usage source, so the code always matches what's on screen.
+ */
+export interface PreviewSample {
+  /** Authored props (no `tone`, `variant` or `size` unless the sample fixes one). */
+  readonly props: PreviewProps;
+  /** The body, for components that take one (`childMode: mdx`). Plain text or Markdown. */
+  readonly children?: string;
+  /**
+   * The Markdown form, where the boards write it differently from the MDX one (a list body
+   * instead of a JSON attribute, a one-line command instead of a multi-line file).
+   */
+  readonly markdown?: {
+    readonly props: PreviewProps;
+    readonly children?: string;
+  };
 }
 
 const previewImage = '/component-preview.svg';
@@ -53,506 +41,540 @@ const silentAudio =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
 const posterOnlyVideo = 'data:video/mp4;base64,';
 
-const shared = (size?: PreviewSize, variant?: PreviewVariant) => ({
-  size,
-  variant,
-});
+/**
+ * One sample per catalog component. The four designed components (Callout, KeyTakeaway,
+ * CodeBlock, Figure) use their boards' content; typed against the component union, so a
+ * new component fails the build until it has a sample.
+ */
+export const componentPreviewSamples: Readonly<
+  Record<PostkitComponentName, PreviewSample>
+> = {
+  AppearsOn: {
+    props: {
+      label: 'Read this story on',
+      showDates: true,
+      items: [
+        {
+          service: 'bluesky',
+          url: previewHref,
+          label: 'Bluesky',
+          publishedAt: '2026-08-28T14:00:00Z',
+          status: 'published',
+        },
+        {
+          service: 'mastodon',
+          url: previewHref,
+          label: 'Mastodon',
+          publishedAt: '2026-08-28T14:05:00Z',
+          status: 'published',
+        },
+      ],
+    },
+  },
+  AudienceBoundary: {
+    props: { audience: 'Postkit members', showLabel: true },
+    children: 'This section is available to the intended audience.',
+  },
+  Aside: {
+    props: { title: 'A note from the editor', tone: 'note' },
+    children:
+      'Use an aside for context that supports the article without interrupting its main thread.',
+  },
+  Audio: {
+    props: {
+      src: silentAudio,
+      title: 'The portable publishing briefing',
+      caption: 'Episode 12 · 18 minutes',
+    },
+  },
+  AuthorCard: {
+    props: {
+      name: 'Ada Hart',
+      role: 'Independent publisher',
+      avatarSrc: previewImage,
+      bio: 'Writing about durable content systems and the open web.',
+      links: [
+        { label: 'Articles', href: previewHref },
+        { label: 'Profile', href: previewHref },
+      ],
+    },
+  },
+  Callout: {
+    props: { tone: 'tip', title: 'Keep the content' },
+    children: 'Change the renderer without changing the article.',
+  },
+  CallToAction: {
+    props: {
+      eyebrow: 'Ready to publish?',
+      title: 'Build a portable article system',
+      description:
+        'Start with the React package and add framework adapters only when you need them.',
+      primaryLabel: 'Get started',
+      primaryHref: previewHref,
+      secondaryLabel: 'Read the guide',
+      secondaryHref: previewHref,
+    },
+  },
+  CardGrid: {
+    props: {
+      title: 'Explore Postkit',
+      description: 'Choose the path that matches your publishing workflow.',
+      columns: '3',
+      items: [
+        {
+          title: 'Author content',
+          description: 'Markdown, MDX, and portable documents.',
+          href: previewHref,
+        },
+        {
+          title: 'Compose a theme',
+          description: 'Inherit from Chakra and override by recipe.',
+          href: previewHref,
+        },
+        {
+          title: 'Ship anywhere',
+          description: 'Use the adapter for your preferred framework.',
+          href: previewHref,
+        },
+      ],
+    },
+  },
+  Carousel: {
+    props: {
+      label: 'Featured stories',
+      items: [
+        {
+          id: 'one',
+          image: { src: previewImage, alt: 'Abstract editorial artwork' },
+          title: 'A component vocabulary for articles',
+          description: 'Rich stories, represented as portable content.',
+        },
+        {
+          id: 'two',
+          image: { src: previewImage, alt: 'Abstract editorial artwork' },
+          title: 'Themes that belong to the host',
+          description: 'Use Chakra recipes without fighting library CSS.',
+        },
+      ],
+    },
+  },
+  Chart: {
+    props: {
+      title: 'Readers by channel',
+      description: 'Monthly audience growth across owned channels.',
+      data: [
+        { label: 'June', newsletter: 28, web: 52 },
+        { label: 'July', newsletter: 41, web: 68 },
+        { label: 'August', newsletter: 57, web: 83 },
+      ],
+      series: [
+        { key: 'newsletter', label: 'Newsletter' },
+        { key: 'web', label: 'Web' },
+      ],
+    },
+  },
+  CodeBlock: {
+    props: {
+      filename: 'lib/postkit.ts',
+      language: 'ts',
+      lineNumbers: true,
+      highlightLines: '4',
+      code: createPostkitSample,
+    },
+    markdown: {
+      props: {
+        language: 'sh',
+        code: 'npm install @postkit/react',
+        copy: true,
+      },
+    },
+  },
+  CodeGroup: {
+    props: {
+      label: 'Install Postkit',
+      items: [
+        {
+          label: 'npm',
+          code: 'npm install @postkit/chakra',
+          language: 'shell',
+        },
+        { label: 'pnpm', code: 'pnpm add @postkit/chakra', language: 'shell' },
+      ],
+    },
+  },
+  Comparison: {
+    props: {
+      title: 'Choose a rendering model',
+      columns: ['Static HTML', 'Interactive React'],
+      items: [
+        { label: 'Portable document', values: [true, true] },
+        { label: 'Client JavaScript', values: ['None', 'As needed'] },
+        { label: 'Interactive controls', values: [false, true] },
+      ],
+    },
+  },
+  Diff: {
+    props: {
+      title: 'theme.ts',
+      diff: "- fontWeight: 'bold'\n+ fontWeight: 'inherit'\n  color: 'fg'",
+    },
+  },
+  Disclosure: {
+    props: { summary: 'What makes Postkit portable?', open: true },
+    children:
+      'Its authored component contract is independent from the framework adapter and presentation layer.',
+  },
+  Figure: {
+    props: {
+      src: previewImage,
+      alt: 'Abstract Postkit editorial artwork',
+      caption: 'A portable story can retain its meaning across renderers.',
+      credit: 'Postkit',
+      aspectRatio: '16 / 9',
+    },
+  },
+  FileCard: {
+    props: {
+      href: previewHref,
+      name: 'postkit-content-model.pdf',
+      description: 'The portable document and component contract.',
+      fileType: 'PDF',
+      fileSize: '2.4 MB',
+      download: true,
+    },
+  },
+  FileTree: {
+    props: {
+      title: 'Publishing project',
+      items: [
+        { path: 'content', type: 'folder' },
+        { path: 'content/articles', type: 'folder' },
+        { path: 'content/articles/hello.mdx', type: 'file', meta: '2 KB' },
+        { path: 'postkit.config.ts', type: 'file' },
+      ],
+    },
+  },
+  Gallery: {
+    props: {
+      title: 'From the field',
+      description: 'A responsive collection of article media.',
+      columns: '3',
+      items: [
+        {
+          src: previewImage,
+          alt: 'Abstract editorial artwork',
+          caption: 'Dispatch one',
+        },
+        {
+          src: previewImage,
+          alt: 'Abstract editorial artwork',
+          caption: 'Dispatch two',
+        },
+        {
+          src: previewImage,
+          alt: 'Abstract editorial artwork',
+          caption: 'Dispatch three',
+        },
+      ],
+    },
+  },
+  KeyTakeaway: {
+    props: {
+      eyebrow: 'In short',
+      title: 'What ships in 0.3',
+      items: [
+        'Definitions outside any framework',
+        'Headless React views',
+        'Chakra as its own package',
+      ],
+    },
+    markdown: {
+      props: { eyebrow: 'In short', title: 'What ships in 0.3' },
+      children:
+        '- Definitions outside any framework\n- Headless React views\n- Chakra as its own package',
+    },
+  },
+  LinkPreview: {
+    props: {
+      href: previewHref,
+      title: 'Designing content that travels well',
+      description:
+        'A field guide to portable semantics, host-owned themes, and renderer boundaries.',
+      siteName: 'Postkit Journal',
+      image: previewImage,
+      imageAlt: 'Abstract Postkit editorial artwork',
+    },
+  },
+  NewsletterSignup: {
+    props: {
+      title: 'The portable publishing letter',
+      description: 'Occasional notes on content systems and the open web.',
+      emailPlaceholder: 'reader@example.com',
+      buttonLabel: 'Join the list',
+      privacy: 'No tracking pixels. Unsubscribe whenever you like.',
+    },
+  },
+  Poll: {
+    props: {
+      question: 'Where do you publish most often?',
+      description: "Select one channel to see the component's feedback state.",
+      options: [
+        { id: 'site', label: 'My own site', votes: 42 },
+        { id: 'newsletter', label: 'A newsletter', votes: 31 },
+        { id: 'social', label: 'Social platforms', votes: 18 },
+      ],
+    },
+  },
+  ProductCard: {
+    props: {
+      title: "The Independent Publisher's Field Notes",
+      description: 'A compact notebook for planning durable stories.',
+      href: previewHref,
+      imageSrc: previewImage,
+      imageAlt: 'Abstract cover artwork',
+      price: '$18',
+      rating: 4.5,
+      badge: "Editor's pick",
+    },
+  },
+  PullQuote: {
+    props: {
+      quote:
+        'The best publishing systems preserve meaning while letting presentation evolve.',
+      attribution: 'Ada Hart',
+      cite: 'The Portable Web',
+    },
+  },
+  RelatedContent: {
+    props: {
+      title: 'Continue reading',
+      items: [
+        {
+          title: 'Authoring with portable directives',
+          description: 'Add rich semantics without coupling content to React.',
+          meta: '7 min read',
+          href: previewHref,
+        },
+        {
+          title: 'Composing a host-owned theme',
+          description: 'Layer Postkit recipes into an existing Chakra system.',
+          meta: '5 min read',
+          href: previewHref,
+        },
+      ],
+    },
+  },
+  SeriesNavigation: {
+    props: {
+      title: 'Portable publishing foundations',
+      current: 2,
+      total: 4,
+      previous: { title: 'The content contract', href: previewHref },
+      next: { title: 'Framework adapters', href: previewHref },
+    },
+  },
+  ShareActions: {
+    props: {
+      url: 'https://postkit.org/components',
+      title: 'Postkit component library',
+      text: 'Publishing components that travel well.',
+      services: ['copy', 'email'],
+      label: 'Share this guide',
+    },
+  },
+  SocialPost: {
+    props: {
+      href: previewHref,
+      service: 'bluesky',
+      authorName: 'Postkit',
+      authorHandle: '@postkit.org',
+      authorAvatar: previewImage,
+      text: 'A portable component contract lets the same story feel at home in every renderer.',
+      publishedAt: '2026-08-28T14:00:00Z',
+    },
+  },
+  SponsorBlock: {
+    props: {
+      name: 'Open Web Fund',
+      message: 'Supporting independent tools for durable, portable publishing.',
+      href: previewHref,
+      actionLabel: 'Meet the sponsor',
+      logoSrc: previewImage,
+      logoAlt: 'Open Web Fund',
+    },
+  },
+  Stat: {
+    props: {
+      value: '84%',
+      label: 'Content reused across channels',
+      trend: '↑ 12% this quarter',
+      description: 'Across web, email, and syndication feeds.',
+    },
+  },
+  Steps: {
+    props: {
+      items: [
+        { title: 'Install', description: 'Add the React package.' },
+        {
+          title: 'Provide',
+          description: 'Connect Postkit to your Chakra system.',
+        },
+        {
+          title: 'Publish',
+          description: 'Render the same content wherever it belongs.',
+        },
+      ],
+    },
+  },
+  Tabs: {
+    props: {
+      label: 'Rendering approaches',
+      items: [
+        { label: 'MDX', content: 'Map authored tags to Postkit components.' },
+        {
+          label: 'Markdown',
+          content: 'Use portable directives for rich content.',
+        },
+        { label: 'JSON', content: 'Render a structured portable document.' },
+      ],
+    },
+  },
+  Terminal: {
+    props: {
+      title: 'Terminal',
+      prompt: '$',
+      command: 'npm install @postkit/chakra',
+      output: 'added 1 package in 842ms',
+    },
+  },
+  Video: {
+    props: {
+      src: posterOnlyVideo,
+      poster: previewImage,
+      title: 'Postkit in two minutes',
+      caption: 'A quick tour of the portable publishing contract.',
+      duration: '2:00',
+      // The preview has no media (a poster only), so there's nothing to caption.
+      decorative: true,
+    },
+  },
+  Device: {
+    props: {
+      kind: 'iphone',
+      src: previewImage,
+      alt: 'Abstract Postkit editorial artwork on a phone screen',
+      caption: 'A screenshot in a plain, CSS-drawn frame.',
+    },
+  },
+  // CompFootnotes: a reference and its note only make sense together, so both previews
+  // render the board's sentence with its two notes (`FootnotesPreview`).
+  Footnote: {
+    props: { marker: 'superscript' },
+    children:
+      'Markdown with directives, or MDX. Both parse to the same portable document.',
+  },
+  Footnotes: {
+    props: { title: 'Notes' },
+  },
+};
 
+// Lazy views: a page downloads only the components it previews (P21).
+const { Footnote, Footnotes } = postkitChakraLazyViews;
+
+const previewNotes = [
+  'Markdown with directives, or MDX. Both parse to the same portable document.',
+  'Headless, Chakra, email or web components, chosen per site rather than per article.',
+] as const;
+
+/**
+ * The board's sentence with two marks, then the list (end placement): the real `Footnote`
+ * and `Footnotes`, with the preview's props on both.
+ */
+function FootnotesPreview(props: Record<string, unknown>) {
+  const shared = { ...props, scope: 'preview', placement: 'end' as const };
+  return (
+    <div>
+      <p>
+        Postkit keeps the article in plain text
+        <Footnote {...shared} index={1} />
+        {' and lets each renderer decide how the notes appear'}
+        <Footnote {...shared} index={2} />.
+      </p>
+      <Footnotes {...shared}>
+        {previewNotes.map((note, position) => (
+          <Footnote key={note} index={position + 1}>
+            <p>{note}</p>
+          </Footnote>
+        ))}
+      </Footnotes>
+    </div>
+  );
+}
+
+type PreviewView = ComponentType<
+  Record<string, unknown> & { readonly children?: ReactNode }
+>;
+
+// The real `@postkit/chakra` components (01 §1 dogfood): the site never draws its own. Each
+// is a lazy view, so a page downloads only the views it previews; the server render waits for
+// them, so the HTML is the same.
+const views = {
+  ...postkitChakraLazyViews,
+  Footnote: FootnotesPreview,
+  Footnotes: FootnotesPreview,
+} as unknown as Readonly<Record<PostkitComponentName, PreviewView>>;
+
+export interface ComponentPreviewProps {
+  readonly name: PostkitComponentName;
+  /**
+   * Theme-variant values from the preview controls (`tone`, `variant`, `size`), applied
+   * over the sample's props.
+   */
+  readonly values?: Readonly<Record<string, string | undefined>>;
+  readonly size?: 'sm' | 'md' | 'lg';
+  readonly variant?: 'outline' | 'subtle' | 'plain';
+}
+
+/** The sample's props with the controls' values applied: what the preview renders. */
+export function resolvePreviewProps(
+  name: PostkitComponentName,
+  values: Readonly<Record<string, string | undefined>> = {},
+): PreviewProps {
+  const resolved: Record<string, PreviewPropValue> = {
+    ...componentPreviewSamples[name].props,
+  };
+  for (const [prop, value] of Object.entries(values)) {
+    if (value !== undefined) resolved[prop] = value;
+  }
+  return resolved;
+}
+
+/**
+ * Downloads the views a component's preview renders, for a preview that should appear only
+ * once it can render in full (catalog tiles).
+ */
+export function preloadComponentPreview(
+  name: PostkitComponentName,
+): Promise<void> {
+  const names: readonly PostkitComponentName[] =
+    name === 'Footnote' || name === 'Footnotes'
+      ? ['Footnote', 'Footnotes']
+      : [name];
+  return Promise.all(
+    names.map((view) => postkitChakraLazyViews[view].preload()),
+  ).then(() => undefined);
+}
+
+/** A live preview of one catalog component, rendered by `@postkit/chakra`. */
 export function ComponentPreview({
   name,
+  values,
   size,
   variant,
 }: ComponentPreviewProps) {
-  const presentation = shared(size, variant);
+  const View = views[name];
+  const sample = componentPreviewSamples[name];
+  const props = resolvePreviewProps(name, { size, variant, ...values });
 
-  switch (name) {
-    case 'AppearsOn':
-      return (
-        <AppearsOn
-          {...presentation}
-          label="Read this story on"
-          showDates
-          items={[
-            {
-              service: 'bluesky',
-              url: previewHref,
-              label: 'Bluesky',
-              publishedAt: '2026-08-28T14:00:00Z',
-              status: 'published',
-            },
-            {
-              service: 'mastodon',
-              url: previewHref,
-              label: 'Mastodon',
-              publishedAt: '2026-08-28T14:05:00Z',
-              status: 'published',
-            },
-          ]}
-        />
-      );
-    case 'AudienceBoundary':
-      return (
-        <AudienceBoundary
-          {...presentation}
-          audience="PostKit members"
-          authorized
-          showLabel
-        >
-          This section is available to the intended audience.
-        </AudienceBoundary>
-      );
-    case 'Aside':
-      return (
-        <Aside {...presentation} title="A note from the editor" tone="note">
-          Use an aside for context that supports the article without
-          interrupting its main thread.
-        </Aside>
-      );
-    case 'Audio':
-      return (
-        <Audio
-          {...presentation}
-          src={silentAudio}
-          title="The portable publishing briefing"
-          caption="Episode 12 · 18 minutes"
-        />
-      );
-    case 'AuthorCard':
-      return (
-        <AuthorCard
-          {...presentation}
-          name="Ada Hart"
-          role="Independent publisher"
-          avatarSrc={previewImage}
-          bio="Writing about durable content systems and the open web."
-          links={[
-            { label: 'Articles', href: previewHref },
-            { label: 'Profile', href: previewHref },
-          ]}
-        />
-      );
-    case 'Callout':
-      return (
-        <Callout {...presentation} title="Portable by default" tone="tip">
-          Keep the authored content. Change the renderer whenever the product
-          needs to move.
-        </Callout>
-      );
-    case 'CallToAction':
-      return (
-        <CallToAction
-          {...presentation}
-          eyebrow="Ready to publish?"
-          title="Build a portable article system"
-          description="Start with the React package and add framework adapters only when you need them."
-          primaryLabel="Get started"
-          primaryHref={previewHref}
-          secondaryLabel="Read the guide"
-          secondaryHref={previewHref}
-        />
-      );
-    case 'CardGrid':
-      return (
-        <CardGrid
-          {...presentation}
-          title="Explore PostKit"
-          description="Choose the path that matches your publishing workflow."
-          columns={3}
-          items={[
-            {
-              title: 'Author content',
-              description: 'Markdown, MDX, and portable documents.',
-              href: previewHref,
-            },
-            {
-              title: 'Compose a theme',
-              description: 'Inherit from Chakra and override by recipe.',
-              href: previewHref,
-            },
-            {
-              title: 'Ship anywhere',
-              description: 'Use the adapter for your preferred framework.',
-              href: previewHref,
-            },
-          ]}
-        />
-      );
-    case 'Carousel':
-      return (
-        <Carousel
-          {...presentation}
-          label="Featured stories"
-          items={[
-            {
-              id: 'one',
-              image: { src: previewImage, alt: 'Abstract editorial artwork' },
-              title: 'A component vocabulary for articles',
-              description: 'Rich stories, represented as portable content.',
-            },
-            {
-              id: 'two',
-              image: { src: previewImage, alt: 'Abstract editorial artwork' },
-              title: 'Themes that belong to the host',
-              description: 'Use Chakra recipes without fighting library CSS.',
-            },
-          ]}
-        />
-      );
-    case 'Chart':
-      return (
-        <Chart
-          {...presentation}
-          title="Readers by channel"
-          description="Monthly audience growth across owned channels."
-          data={[
-            { label: 'June', newsletter: 28, web: 52 },
-            { label: 'July', newsletter: 41, web: 68 },
-            { label: 'August', newsletter: 57, web: 83 },
-          ]}
-          series={[
-            { key: 'newsletter', label: 'Newsletter' },
-            { key: 'web', label: 'Web' },
-          ]}
-        />
-      );
-    case 'CodeBlock':
-      return (
-        <CodeBlock
-          {...presentation}
-          code={`import { Callout } from '@postkit/react';\n\nexport function Note() {\n  return <Callout title="Portable">Write once.</Callout>;\n}`}
-          filename="note.tsx"
-          language="tsx"
-          highlightLines="3"
-        />
-      );
-    case 'CodeGroup':
-      return (
-        <CodeGroup
-          {...presentation}
-          label="Install PostKit"
-          items={[
-            {
-              label: 'npm',
-              code: 'npm install @postkit/react',
-              language: 'shell',
-            },
-            {
-              label: 'pnpm',
-              code: 'pnpm add @postkit/react',
-              language: 'shell',
-            },
-          ]}
-        />
-      );
-    case 'Comparison':
-      return (
-        <Comparison
-          {...presentation}
-          title="Choose a rendering model"
-          columns={['Static HTML', 'Interactive React']}
-          items={[
-            { label: 'Portable document', values: [true, true] },
-            { label: 'Client JavaScript', values: ['None', 'As needed'] },
-            { label: 'Interactive controls', values: [false, true] },
-          ]}
-        />
-      );
-    case 'Diff':
-      return (
-        <Diff
-          {...presentation}
-          title="theme.ts"
-          diff={`- fontWeight: 'bold'\n+ fontWeight: 'inherit'\n  color: 'fg'`}
-        />
-      );
-    case 'Disclosure':
-      return (
-        <Disclosure
-          {...presentation}
-          summary="What makes PostKit portable?"
-          open
-        >
-          Its authored component contract is independent from the framework
-          adapter and presentation layer.
-        </Disclosure>
-      );
-    case 'Figure':
-      return (
-        <Figure
-          {...presentation}
-          src={previewImage}
-          alt="Abstract PostKit editorial artwork"
-          caption="A portable story can retain its meaning across renderers."
-          credit="PostKit"
-          aspectRatio="16 / 9"
-        />
-      );
-    case 'FileCard':
-      return (
-        <FileCard
-          {...presentation}
-          href={previewHref}
-          name="postkit-content-model.pdf"
-          description="The portable document and component contract."
-          fileType="PDF"
-          fileSize="2.4 MB"
-          download
-        />
-      );
-    case 'FileTree':
-      return (
-        <FileTree
-          {...presentation}
-          title="Publishing project"
-          items={[
-            { path: 'content', type: 'folder' },
-            { path: 'content/articles', type: 'folder' },
-            { path: 'content/articles/hello.mdx', type: 'file', meta: '2 KB' },
-            { path: 'postkit.config.ts', type: 'file' },
-          ]}
-        />
-      );
-    case 'Gallery':
-      return (
-        <Gallery
-          {...presentation}
-          title="From the field"
-          description="A responsive collection of article media."
-          columns={3}
-          items={[
-            {
-              src: previewImage,
-              alt: 'Abstract editorial artwork',
-              caption: 'Dispatch one',
-            },
-            {
-              src: previewImage,
-              alt: 'Abstract editorial artwork',
-              caption: 'Dispatch two',
-            },
-            {
-              src: previewImage,
-              alt: 'Abstract editorial artwork',
-              caption: 'Dispatch three',
-            },
-          ]}
-        />
-      );
-    case 'KeyTakeaway':
-      return (
-        <KeyTakeaway
-          {...presentation}
-          eyebrow="In brief"
-          title="Content should outlive its renderer"
-          items={[
-            'Keep semantics in the authored source.',
-            'Let the host own typography and tokens.',
-            'Add interaction only where it creates value.',
-          ]}
-        />
-      );
-    case 'LinkPreview':
-      return (
-        <LinkPreview
-          {...presentation}
-          href={previewHref}
-          title="Designing content that travels well"
-          description="A field guide to portable semantics, host-owned themes, and renderer boundaries."
-          siteName="PostKit Journal"
-          image={previewImage}
-          imageAlt="Abstract PostKit editorial artwork"
-        />
-      );
-    case 'NewsletterSignup':
-      return (
-        <NewsletterSignup
-          {...presentation}
-          title="The portable publishing letter"
-          description="Occasional notes on content systems and the open web."
-          emailPlaceholder="reader@example.com"
-          buttonLabel="Join the list"
-          privacy="No tracking pixels. Unsubscribe whenever you like."
-        />
-      );
-    case 'Poll':
-      return (
-        <Poll
-          {...presentation}
-          question="Where do you publish most often?"
-          description="Select one channel to see the component's feedback state."
-          options={[
-            { id: 'site', label: 'My own site', votes: 42 },
-            { id: 'newsletter', label: 'A newsletter', votes: 31 },
-            { id: 'social', label: 'Social platforms', votes: 18 },
-          ]}
-        />
-      );
-    case 'ProductCard':
-      return (
-        <ProductCard
-          {...presentation}
-          title="The Independent Publisher's Field Notes"
-          description="A compact notebook for planning durable stories."
-          href={previewHref}
-          imageSrc={previewImage}
-          imageAlt="Abstract cover artwork"
-          price="$18"
-          rating="4.5"
-          badge="Editor's pick"
-        />
-      );
-    case 'PullQuote':
-      return (
-        <PullQuote
-          {...presentation}
-          quote="The best publishing systems preserve meaning while letting presentation evolve."
-          attribution="Ada Hart"
-          cite="The Portable Web"
-        />
-      );
-    case 'RelatedContent':
-      return (
-        <RelatedContent
-          {...presentation}
-          title="Continue reading"
-          items={[
-            {
-              title: 'Authoring with portable directives',
-              description:
-                'Add rich semantics without coupling content to React.',
-              meta: '7 min read',
-              href: previewHref,
-            },
-            {
-              title: 'Composing a host-owned theme',
-              description:
-                'Layer PostKit recipes into an existing Chakra system.',
-              meta: '5 min read',
-              href: previewHref,
-            },
-          ]}
-        />
-      );
-    case 'SeriesNavigation':
-      return (
-        <SeriesNavigation
-          {...presentation}
-          title="Portable publishing foundations"
-          current="2"
-          total="4"
-          previous={{ title: 'The content contract', href: previewHref }}
-          next={{ title: 'Framework adapters', href: previewHref }}
-        />
-      );
-    case 'ShareActions':
-      return (
-        <ShareActions
-          {...presentation}
-          url="https://postkit.test/components"
-          title="PostKit component library"
-          text="Publishing components that travel well."
-          services={['copy', 'email']}
-          label="Share this guide"
-        />
-      );
-    case 'SocialPost':
-      return (
-        <SocialPost
-          {...presentation}
-          href={previewHref}
-          service="bluesky"
-          authorName="PostKit"
-          authorHandle="@postkit.test"
-          authorAvatar={previewImage}
-          text="A portable component contract lets the same story feel at home in every renderer."
-          publishedAt="2026-08-28T14:00:00Z"
-        />
-      );
-    case 'SponsorBlock':
-      return (
-        <SponsorBlock
-          {...presentation}
-          name="Open Web Fund"
-          message="Supporting independent tools for durable, portable publishing."
-          href={previewHref}
-          actionLabel="Meet the sponsor"
-          logoSrc={previewImage}
-          logoAlt="Open Web Fund"
-        />
-      );
-    case 'Stat':
-      return (
-        <Stat
-          {...presentation}
-          value="84%"
-          label="Content reused across channels"
-          trend="↑ 12% this quarter"
-          description="Across web, email, and syndication feeds."
-        />
-      );
-    case 'Steps':
-      return (
-        <Steps
-          {...presentation}
-          items={[
-            { title: 'Install', description: 'Add the React package.' },
-            {
-              title: 'Provide',
-              description: 'Connect PostKit to your Chakra system.',
-            },
-            {
-              title: 'Publish',
-              description: 'Render the same content wherever it belongs.',
-            },
-          ]}
-        />
-      );
-    case 'Tabs':
-      return (
-        <Tabs
-          {...presentation}
-          label="Rendering approaches"
-          items={[
-            {
-              label: 'MDX',
-              content: 'Map authored tags to PostKit components.',
-            },
-            {
-              label: 'Markdown',
-              content: 'Use portable directives for rich content.',
-            },
-            {
-              label: 'JSON',
-              content: 'Render a structured portable document.',
-            },
-          ]}
-        />
-      );
-    case 'Terminal':
-      return (
-        <Terminal
-          {...presentation}
-          title="Terminal"
-          prompt="$"
-          command="npm install @postkit/react"
-          output="added 1 package in 842ms"
-        />
-      );
-    case 'Video':
-      return (
-        <Video
-          {...presentation}
-          src={posterOnlyVideo}
-          poster={previewImage}
-          title="PostKit in two minutes"
-          caption="A quick tour of the portable publishing contract."
-        />
-      );
-    default:
-      return (
-        <Box color="fg.muted" fontSize="sm">
-          Preview unavailable.
-        </Box>
-      );
-  }
+  return <View {...props}>{sample.children}</View>;
 }

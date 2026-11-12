@@ -17,9 +17,9 @@ const entries = [
     manifest: { name: '@postkit/unfurl' },
   },
   {
-    packageName: '@postkit/react',
+    packageName: '@postkit/chakra',
     manifest: {
-      name: '@postkit/react',
+      name: '@postkit/chakra',
       dependencies: {
         '@postkit/core': '0.1.1',
         '@postkit/unfurl': '0.1.1',
@@ -30,7 +30,7 @@ const entries = [
     packageName: '@postkit/next',
     manifest: {
       name: '@postkit/next',
-      peerDependencies: { '@postkit/react': '0.1.1' },
+      peerDependencies: { '@postkit/chakra': '0.1.1' },
     },
   },
 ];
@@ -39,14 +39,14 @@ const graph = createPostkitPackageGraph(entries);
 const order = entries.map((entry) => entry.packageName);
 
 test('resolves transitive Postkit dependencies and peers in release order', () => {
-  assert.deepEqual(resolvePostkitPackageClosure('@postkit/react', graph), [
+  assert.deepEqual(resolvePostkitPackageClosure('@postkit/chakra', graph), [
     '@postkit/core',
     '@postkit/unfurl',
   ]);
   assert.deepEqual(resolvePostkitPackageClosure('@postkit/next', graph), [
     '@postkit/core',
     '@postkit/unfurl',
-    '@postkit/react',
+    '@postkit/chakra',
   ]);
 });
 
@@ -56,7 +56,7 @@ test('returns only closure packages not already linked to a consumer', () => {
       consumerPath: '/consumer',
       installations: {
         '@postkit/core': ['/consumer'],
-        '@postkit/react': ['/consumer'],
+        '@postkit/chakra': ['/consumer'],
       },
       packageName: '@postkit/next',
       packageGraph: graph,

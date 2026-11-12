@@ -3,17 +3,38 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@chakra-docs/chakra": "^0.3.0",
+    "@chakra-docs/core": "^0.3.0",
+    "@chakra-docs/next": "^0.3.0",
+    "@chakra-docs/search": "^0.3.0",
     "@chakra-ui/react": "^3.36.0",
     "@content-collections/core": "^0.15.2",
     "@content-collections/next": "^0.2.11",
     "@emotion/react": "^11.14.0",
+    "@postkit/chakra": "0.3.0",
     "@postkit/content": "0.0.1",
-    "@postkit/next": "0.2.0",
-    "@postkit/react": "0.2.0",
-    "@postkit/shiki": "0.2.0",
+    "@postkit/next": "0.3.0",
+    "@postkit/react": "0.3.0",
+    "@postkit/shiki": "0.3.0",
+    "@postkit/site-emails": "0.0.1",
+    "@postkit/site-feeds": "0.0.1",
+    "@postkit/site-newsletter": "0.0.1",
+    "@postkit/site-search": "0.0.1",
+    "@postkit/site-telemetry": "0.0.1",
+    "@postkit/site-theme": "0.0.1",
+    "@sentry/nextjs": "^11.11.0",
+    "fathom-client": "^3.7.2",
+    "github-slugger": "^2.0.0",
     "next": "^16.3.3",
     "next-mdx-remote": "^6.0.0",
+    "next-meta": "^0.5.0",
+    "next-themes": "^0.4.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-fathom": "^0.3.0",
+    "react-structured": "^0.2.0"
+  },
+  "devDependencies": {
+    "sharp": "0.35.4"
   }
 }

@@ -17,7 +17,6 @@ export default defineConfig({
         'src/**/*.spec.{ts,tsx}',
         'src/**/*.test.{ts,tsx}',
         'src/**/*.d.ts',
-        'src/**/testing/**',
       ],
       reporter: [
         'text-summary',

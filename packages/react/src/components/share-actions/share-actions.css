@@ -1,0 +1,88 @@
+/* ShareActions: share and copy-link actions, as buttons or an inline row. */
+@scope ([data-postkit-component='ShareActions']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-control-height: 2.25rem;
+    display: grid;
+    gap: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-control-height: 2rem;
+    gap: var(--postkit-space-2);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-control-height: 2.5rem;
+    gap: var(--postkit-space-4);
+  }
+  :where([data-postkit-part='label']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='actions']) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--postkit-space-2);
+    list-style: none;
+    padding: 0;
+  }
+  :where([data-postkit-part='action']) {
+    align-items: center;
+    appearance: none;
+    background: none;
+    border: var(--postkit-border-width) solid transparent;
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-fg);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.875em;
+    font-weight: var(--postkit-weight-medium);
+    gap: var(--postkit-space-2);
+    min-height: var(--postkit-control-height);
+    padding-inline: var(--postkit-space-3);
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='icon']) {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    justify-content: center;
+  }
+  /* A service without an icon shows its initial. It's drawn here, not
+     written into the button, so the button's text is its label alone and its
+     accessible name starts with what the reader sees (WCAG 2.5.3). */
+  :where([data-postkit-part='icon'][data-postkit-initial])::before {
+    content: attr(data-postkit-initial);
+  }
+  :where([data-postkit-part='icon'] svg) {
+    height: 1em;
+    width: 1em;
+  }
+  :where([data-postkit-part='status']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+  }
+
+  :where(:scope[data-variant='subtle'] [data-postkit-part='action']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='action']:hover) {
+    background: var(--postkit-color-surface-emphasized);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='action']) {
+    background: var(--postkit-color-bg);
+    border-color: var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='action']:hover) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='action']) {
+    padding-inline: var(--postkit-space-1);
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='action']:hover) {
+    background: var(--postkit-color-surface);
+  }
+
+  :where(:scope[data-layout='inline']) {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

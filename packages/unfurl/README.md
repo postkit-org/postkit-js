@@ -9,7 +9,7 @@ does not ship API keys or origin-fetching logic to article readers.
 Use `@postkit/unfurl` when a server or build process needs to turn an arbitrary
 URL into a stable `ResolvedLinkPreview` for link cards, media, oEmbed, or social
 post rendering. Applications that already produce this normalized contract can
-use PostKit renderers without this package.
+use Postkit renderers without this package.
 
 ## Install
 
@@ -310,8 +310,8 @@ option.
 - Unexpected fallback costs: fallback providers are disabled unless listed in
   `fallbackProviders`.
 - Unsafe embed markup: `embed.rawHtml` is retained for a host-owned
-  sanitization boundary but is never injected by PostKit's React renderer.
+  sanitization boundary but is never injected by Postkit's React renderer.
 
 Use the result with `LinkPreview` or `SocialPost` from
-[`@postkit/react`](../react). The repository includes a checked
+[`@postkit/chakra`](../chakra). The repository includes a checked
 [server resolver example](../../examples/unfurl-server).

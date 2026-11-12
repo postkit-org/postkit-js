@@ -1,952 +1,347 @@
 # `@postkit/react`
 
-Postkit is a Chakra-based React component library for articles and blog posts.
-It includes accessible carousels, video and audio players, author cards, calls
-to action, newsletter signups, link and social-post previews, syndication
-references, share actions, bar and line charts, an MDX component map, a
-composable Remark preset, and a literal-only Markdown directive transformer.
+Headless, styleable React views for Postkit components. Each view renders the
+component's semantic markup and its **anatomy**, and no styles: no Chakra, no
+Emotion, no CSS-in-JS.
 
-## When to use it
+> **Coming from `@postkit/react` 0.2?** From 0.3.0 this package is headless.
+> Today's styled components moved to
+> [`@postkit/chakra`](https://github.com/postkit-org/postkit-js/tree/main/packages/chakra#readme) unchanged: replace the dependency and
+> update imports.
 
-Use this package directly for a React application or a framework-neutral
-Markdown/MDX pipeline. Next.js, React Router, TanStack Router, and Astro
-applications should begin with their PostKit adapter, which depends on this
-component system and adds native framework behavior.
+This package is new in 0.3.0. It ships headless views for all 38 built-in
+components, the behaviour hooks the interactive ones are built on, and
+`postkitView` for building views from any `@postkit/core/components`
+definition:
+
+- **Article structure:** `Callout`, `Aside`, `Figure`, `CardGrid`, `Disclosure`,
+  `Gallery`, `Steps`, `Tabs`, `Footnote`, `Footnotes` (placement `end`,
+  `side`, `popover` or `inline`, or one per breakpoint, through
+  `useFootnotes`)
+- **Technical content:** `CodeBlock`, `CodeGroup`, `Terminal`, `Diff`,
+  `FileTree`, `FileCard`
+- **Publication:** `PullQuote`, `KeyTakeaway`, `Stat`, `Comparison`,
+  `ProductCard`, `RelatedContent`, `SeriesNavigation`, `SponsorBlock`,
+  `AudienceBoundary`
+- **Media and discovery:** `AppearsOn`, `Audio`, `AuthorCard`, `CallToAction`,
+  `Carousel`, `Chart`, `Device`, `LinkPreview`, `SocialPost`, `Video`
+- **Engagement:** `Poll`, `NewsletterSignup`, `ShareActions`
+
+The nine interactive views (`Tabs`, `CodeBlock`, `CodeGroup`, `Carousel`,
+`Poll`, `LinkPreview`, `NewsletterSignup`, `ShareActions`, `SocialPost`) read
+their behaviour from the [hooks](#behaviour-hooks) below and pass the same
+shared behaviour specs as their `@postkit/chakra` views. No built-in component
+is Chakra-only any more: the `chakraOnly` export is kept as an empty, frozen
+array so code that reads it keeps working.
 
 ## Install
 
 ```sh
-npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/react react react-dom
 ```
 
-Supported peer versions:
+The interactive components and hooks run on [Zag](https://zagjs.com). If your
+site uses `@postkit/chakra` (or Chakra UI), Zag is already installed through
+Chakra and Postkit uses that same copy. Headless-only sites install it too:
 
-- Chakra UI 3.29 or newer within the 3.x line
-- React 19
-
-The package is ESM-only and includes TypeScript declarations.
-
-## What it exports
-
-- Chakra-backed article and publishing components
-- `PostkitProvider`, `createPostkitSystem`, and `createPostkitTheme`
-- `createPostkitMdxComponents`
-- `DocumentRenderer` and the `@postkit/react/document` interchange entry point
-- `createPostkitRemarkPlugins` and `createPostkitRemarkPreset`
-- `postkitDeclarationManifest` for editor integrations
-- `postkitComponentCatalog` and `component-manifest.json` for component
-  discovery
-
-Shared theme libraries should import from `@postkit/react/theme`, and Markdown
-build pipelines can import from `@postkit/react/remark`. These focused entry
-points avoid loading the root component declaration graph during TypeScript
-checking. The root exports remain available for compatibility.
-
-- Slot recipes, recipe keys, and typed style overrides
-
-## Render portable documents
-
-`@postkit/react/document` combines the React-independent parser contract from
-`@postkit/core` with a Chakra-backed renderer. This is useful for RSS, API, and
-other content whose source format is selected at runtime:
-
-```tsx
-import { DocumentRenderer, parsePostkit } from '@postkit/react/document';
-
-const document = parsePostkit(feedItem.content, { format: 'html' });
-
-<PostkitProvider system={siteSystem}>
-  <DocumentRenderer document={document} />
-</PostkitProvider>;
+```sh
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
 ```
 
-Semantic nodes use the same host-native primitives as authored Markdown:
-headings use Chakra `Heading`, lists use `List`, tables use `Table`, images use
-`Image`, and fenced code uses Postkit's Chakra `CodeBlock`. Replace a semantic
-element or rich component without replacing the rest of the registry:
+The Zag packages are optional peer dependencies so a Chakra site never ends up
+with two copies (03 D7).
+
+The package is ESM-only, includes TypeScript declarations, and supports
+React 19. The behaviour hooks run on [Zag](https://zagjs.com) machines, which
+`@postkit/react` takes as peer dependencies (`@zag-js/react`, `@zag-js/tabs`,
+`@zag-js/carousel`, `@zag-js/clipboard`, `@zag-js/core`, `@zag-js/types`, all
+`^1.27.0`). npm installs them for you; in a Chakra UI host they resolve to the
+copy Chakra already uses, so the page bundles Zag once.
+
+## Render a component
 
 ```tsx
-<DocumentRenderer
-  document={document}
-  components={{
-    a: SiteLink,
-    img: FeedImage,
-  }}
-/>
+import { Callout, Figure } from '@postkit/react';
+
+<Callout tone="tip" title="Keep the content">
+  Change the renderer without changing the article.
+</Callout>;
+
+<Figure src="/studio.jpg" alt="The studio" caption="Final session." />;
 ```
 
-Unknown elements and components are unwrapped by default so readable children
-survive without creating arbitrary DOM tags. The renderer emits versioned
-`data-postkit-*` annotations by default, and the HTML parser recognizes those
-annotations when rendered output needs to become a Postkit document again.
-Set `annotate={false}` only when reconstruction is not needed.
+The Callout renders:
 
-Portable attributes are allowlisted content metadata, not Chakra configuration.
-The renderer strips polymorphic props (`as`, `asChild`), raw HTML, handlers, and
-host styling controls. Apply intentional styling and behavior through trusted
-component overrides or `wrapperProps`, never through feed annotations.
+```html
+<aside
+  data-postkit-component="Callout"
+  data-postkit-part="root"
+  data-size="md"
+  data-variant="subtle"
+  data-tone="tip"
+  data-postkit-tone="tip"
+>
+  <span data-postkit-part="icon" aria-hidden="true">✓</span>
+  <div data-postkit-part="content">
+    <p data-postkit-part="title">Keep the content</p>
+    <div data-postkit-part="body">
+      Change the renderer without changing the article.
+    </div>
+  </div>
+</aside>
+```
 
-## Quick start
+`@postkit/chakra` stamps the same attributes on the same parts, so selectors
+written against the anatomy work with either renderer.
 
-Mount `PostkitProvider` near the application root. It owns the Chakra provider,
-uses the host's Chakra system without adding Postkit presentation by default,
-and provides optional link resolution to every `LinkPreview`.
+## Styling
 
-```tsx
-import { PostkitProvider } from '@postkit/react';
+The views ship no styles. For a quiet, neutral starting point, import the
+optional baseline once, at your app's root:
 
-export function App({ children }: { children: React.ReactNode }) {
-  return <PostkitProvider>{children}</PostkitProvider>;
+```ts
+import '@postkit/react/styles.css';
+```
+
+It styles all 38 built-in components: structure, prose rhythm and restrained
+monochrome, with `subtle` (the default), `outline` and `plain` variants, `sm`,
+`md` and `lg` sizes, and Callout tones. It is built only from the anatomy
+attributes and `--postkit-*` custom properties, and follows the colour mode:
+
+- dark values apply under `@media (prefers-color-scheme: dark)`, unless the
+  root has `class="light"` or `data-theme="light"`;
+- and under `.dark` or `[data-theme="dark"]`, for class-based hosts such as
+  next-themes. A `.light` or `[data-theme="light"]` subtree inside a dark page
+  switches back.
+
+A light-only site that ignores the reader's OS setting should mark its root
+`class="light"` (or `data-theme="light"`), so the components stay light too.
+CodeBlock, CodeGroup and Terminal keep their own dark surface in both modes.
+
+### Tokens
+
+Set any of these on `:root` (or any element, for a subtree) to retheme every
+component. The baseline declares them with zero specificity, so your own rule
+wins whatever the order. Give each colour you change a dark value too.
+
+| Group           | Tokens                                                                                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Colour          | `--postkit-color-bg`, `-fg`, `-fg-muted`, `-surface`, `-surface-emphasized`, `-border`, `-border-muted`, `-border-strong`, `-accent`, `-accent-fg`, `-focus-ring`, `-highlight`, `-letterbox`, `-on-letterbox`; `--postkit-color-scheme` (`light` or `dark`) |
+| Tone            | `--postkit-tone-{note,tip,important,warning,caution}` and `--postkit-tone-{tone}-surface`                                                                                                                                                                    |
+| Chart           | `--postkit-chart-1` … `--postkit-chart-4`: the view reads them for series without an authored colour, with mid-tone fallbacks (`postkitChartColors`) when unset                                                                                              |
+| Code surface    | `--postkit-code-bg`, `-header-bg`, `-selected`, `-border`, `-fg`, `-fg-muted`, `-success`, `-focus-ring`                                                                                                                                                     |
+| Type            | `--postkit-font-body` and `--postkit-font-heading` (unset: inherit the host's), `--postkit-font-mono`; `--postkit-text-{xs,sm,md,lg,xl,2xl,3xl,4xl}`; `--postkit-leading`, `--postkit-leading-tight`; `--postkit-weight-{medium,semibold,bold}`              |
+| Space and shape | `--postkit-space-{1,2,3,4,5,6,8}`, `--postkit-space-flow` (between blocks); `--postkit-radius-{sm,md,lg,xl,full}`; `--postkit-border-width`, `--postkit-rule-width`; `--postkit-focus-width`, `--postkit-focus-offset`; `--postkit-duration`                 |
+| Footnotes       | `--postkit-footnote-{accent,marker-color,marker-size,number-color,number-size,text-size,text-color,rule,rule-width,target-bg}`, `--postkit-sidenote-width`, `--postkit-sidenote-gap`                                                                         |
+
+```css
+:root {
+  --postkit-font-heading: 'Fraunces', serif;
+  --postkit-color-accent: #3b2f8f;
+  --postkit-radius-xl: 0.25rem;
+}
+.dark {
+  --postkit-color-accent: #c9c1ff;
 }
 ```
 
-This host-native mode is the right default for an existing Chakra application:
-Postkit headings, links, buttons, inputs, lists, blockquotes, tables, tabs,
-code, and other primitives use their Chakra components, so the host's
-component recipes flow through. This includes both authored Markdown and lists
-inside publishing components. The code-block copy action is a Chakra `Button`,
-while Postkit retains its clipboard behavior and placement. Postkit still
-supplies semantic structure, accessible behavior, wrapper-owned prose rhythm,
-stable slots, and explicit overrides.
+Inside a component, `--postkit-inset` (padding for the size) and
+`--postkit-tone` / `--postkit-tone-surface` (the resolved tone) are set on the
+root, so part overrides can reuse them.
 
-Multipart publishing controls follow the same rule: `NewsletterSignup` uses
-Chakra `Field`, `PullQuote` uses `Blockquote`, `Stat` uses `Stat`, poll results
-use `Progress`, and product ratings use a read-only `RatingGroup`. Postkit owns
-their content contract while the host's corresponding recipes remain active.
-Card-like publishing surfaces compose Chakra `Card`; author imagery composes
-`Avatar`; callouts and takeaways compose `Alert`; and video or embed frames use
-`AspectRatio`. Semantic roots such as `article` and `aside` are preserved with
-polymorphic Chakra roots. `Carousel` delegates paging, pointer dragging, and
-accessible controls to Chakra `Carousel`, while retaining Postkit's article
-item model and stable content slots. Instructional `Steps` compose Chakra
-`List` while retaining their numbered editorial markers. `Disclosure`
-intentionally uses native `details` and `summary`, preserving toggle behavior
-when client-side JavaScript is unavailable.
+### Override a part
 
-For a standalone application, opt into Postkit's visual preset:
+Every rule is wrapped in `:where()`, so a single class or attribute selector
+beats it:
+
+```css
+[data-postkit-component='Callout'] [data-postkit-part='icon'] {
+  border-radius: 0.25rem;
+}
+```
+
+Or pass a class with `classNames={{ icon: 'rounded-sm' }}`. To opt one
+instance out, pass `unstyled`; to keep the baseline below your own layers, import
+it into one: `@import '@postkit/react/styles.css' layer(postkit);`.
+
+The baseline scopes each component with CSS `@scope`, ending at any nested
+component, so a Callout's rules never reach a component placed inside it.
+Browsers without `@scope` show the semantic markup unstyled.
+
+## Style the anatomy
+
+The root carries `data-postkit-component` and one attribute per theme-variant
+prop (`data-tone`, `data-size`, `data-variant`, `data-layout`, …) with the
+resolved value, defaults included. Every part carries `data-postkit-part`.
+
+```css
+[data-postkit-component='Callout'] {
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+[data-postkit-component='Callout'][data-tone='warning']
+  [data-postkit-part='icon'] {
+  color: darkorange;
+}
+```
+
+Every view also accepts:
+
+- `classNames`: a class per part, for utility CSS such as Tailwind
+  (`classNames={{ root: 'rounded-xl p-4', icon: 'text-amber-600' }}`).
+- `slotStyles`: inline styles per part.
+- `rootProps`: attributes for the root element. Its `className` and `style`
+  merge after the view's own.
+- `unstyled`: marks the root `data-postkit-unstyled` so shared stylesheets can
+  skip the instance.
+
+`Figure` applies `aspectRatio`, `objectFit` and `objectPosition` as inline
+styles, since they describe the content rather than the theme.
+
+`FileTree` indents each item by its depth with an inline
+`padding-inline-start`, and each `Diff` line carries
+`data-diff="addition" | "deletion" | "context"`.
+
+`CodeBlock` renders its source as plain-text `<span data-line>` lines, with
+`data-highlight` on highlighted ones. Five of its parts also answer to an older
+slot name (`filename` to `title`, `control` to `actions`, `copyTrigger` to
+`button`, `content` to `scroller`, `codeText` to `lineContent`) and take the
+`classNames` and `slotStyles` of both.
+
+## Behaviour hooks
+
+Behaviour is written once, in `@postkit/core/behaviors`, and the hooks are
+thin React wrappers over it. Each returns the behaviour's API: state plus prop
+getters to spread onto your own elements.
+
+| Hook                  | Behaviour                                                          |
+| --------------------- | ------------------------------------------------------------------ |
+| `useTabs`             | Tabs: roving focus, arrow, Home and End keys, automatic activation |
+| `useCarousel`         | Carousel paging: wrapping buttons, keyboard paging, progress text  |
+| `useCodeCopy`         | Copy to clipboard with a timed "copied" state                      |
+| `useEmbedConsent`     | Consent before a third-party embed loads (`activation: 'click'`)   |
+| `usePoll`             | One vote per poll, results and status                              |
+| `useNewsletterSignup` | The signup form's states and host-owned submission                 |
+| `useShareActions`     | Native share, copy link, email and configured share services       |
 
 ```tsx
-import { PostkitProvider } from '@postkit/react';
-import { postkitDefaultTheme } from '@postkit/react/theme';
+import { useTabs } from '@postkit/react';
 
-export function App({ children }: { children: React.ReactNode }) {
+function Install() {
+  const api = useTabs({ values: ['npm', 'pnpm'] });
   return (
-    <PostkitProvider preset={postkitDefaultTheme}>{children}</PostkitProvider>
+    <div {...api.getRootProps()}>
+      <div {...api.getListProps()} aria-label="Install">
+        <button {...api.getTriggerProps({ value: 'npm' })}>npm</button>
+        <button {...api.getTriggerProps({ value: 'pnpm' })}>pnpm</button>
+      </div>
+      <div {...api.getContentProps({ value: 'npm' })}>npm install</div>
+      <div {...api.getContentProps({ value: 'pnpm' })}>pnpm add</div>
+    </div>
   );
 }
 ```
 
-Pass the site's existing Chakra `SystemContext` through `system`. Postkit
-preserves its tokens, recipes, conditions, utilities, and global styles. The
-layering order is:
+`useTabs`, `useCarousel` and `useCodeCopy` are Zag machines configured as
+`@postkit/chakra` configures them; the others are plain TypeScript. With
+`useEmbedConsent`'s default `click` activation, render the prompt until
+`shouldRenderFrame` is true and the frame only after, so nothing from the
+embed's origin reaches the page before the reader asks for it. `LinkPreview`
+and `SocialPost` work this way.
 
-1. The optional `preset`, such as `postkitDefaultTheme`.
-2. The site-wide Chakra `system`.
-3. The explicit `theme` supplied to the nearest `PostkitProvider`.
+The views that need host configuration take it as props, since the headless
+package has no provider: `LinkPreview` and `SocialPost` take `resolveLink` (an
+`@postkit/unfurl` resolver callback) and `socialServices`,
+`NewsletterSignup` takes `newsletter`, `ShareActions` takes `socialServices`
+and `onShare`, and `Poll` takes `onVote`.
 
-That makes the same recipe keys useful at two levels: a site can establish
-global defaults for Postkit components, and an article or documentation area
-can narrow those defaults within its Postkit context.
+## Build a view from a definition
+
+`postkitView` turns a definition from `@postkit/core/components` (or your own
+`definePostkitComponent` definition) into a view. `part(name)` returns
+everything a part needs: the anatomy attributes, the `classNames` entry,
+`slotStyles` and, on the root, `rootProps`.
 
 ```tsx
-import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
-import { Carousel, PostkitProvider } from '@postkit/react';
-import {
-  createPostkitSystem,
-  createPostkitTheme,
-  postkitDefaultTheme,
-} from '@postkit/react/theme';
+import { calloutDefinition } from '@postkit/core/components';
+import { postkitView } from '@postkit/react';
 
-const baseSiteSystem = createSystem(defaultConfig, {
-  theme: {
-    tokens: {
-      colors: {
-        articleAccent: { value: '#663399' },
-      },
-      fonts: {
-        body: { value: '"Inter", sans-serif' },
-        heading: { value: '"Newsreader", serif' },
-        mono: { value: '"JetBrains Mono", monospace' },
-      },
-    },
-  },
-});
+export const InkCallout = postkitView(calloutDefinition, ({ props, part }) => (
+  <aside {...part('root')}>
+    <span {...part('icon')} aria-hidden="true">
+      ✒
+    </span>
+    <div {...part('content')}>
+      {props.title ? <p {...part('title')}>{props.title}</p> : null}
+      <div {...part('body')}>{props.children}</div>
+    </div>
+  </aside>
+));
+```
 
-const siteSystem = createPostkitSystem({
-  system: baseSiteSystem,
-  // Omit this in a site that defines all Postkit slot recipes itself.
-  preset: postkitDefaultTheme,
-  theme: createPostkitTheme({
-    carousel: {
-      base: {
-        root: {
-          borderRadius: '2xl',
-          boxShadow: 'sm',
-        },
-      },
-    },
-    prose: {
-      base: {
-        h1: {
-          fontSize: '6xl',
-        },
-        h2: {
-          fontSize: '4xl',
-        },
-        p: {
-          fontSize: 'lg',
-        },
-      },
-    },
-  }),
-});
+The view applies the definition's defaults to `props`, falls back from enum
+values the definition doesn't allow, and in development warns once about a
+missing required prop or a value of the wrong kind (`validatePostkitProps`).
+`resolvePostkitViewState` and `postkitPartAttributes` expose the same logic
+for other renderers.
 
-const documentationTheme = createPostkitTheme({
-  typography: {
-    heading: '"IBM Plex Serif", serif',
-  },
-  carousel: {
-    base: {
-      root: {
-        borderRadius: 'md',
-        boxShadow: 'none',
-      },
-    },
-  },
-});
+## Configure a site with `createPostkit`
 
-export function App({ documentation }: { documentation: React.ReactNode }) {
-  return (
-    <ChakraProvider value={siteSystem}>
-      {/* Uses the site-wide Carousel defaults. */}
-      <Carousel items={[]} />
+`createPostkit` configures a site from the set it uses: kits, its own
+components, defaults and overrides. Omit `renderer` for these headless views,
+or pass `chakra` or `chakraLazy` from `@postkit/chakra`. Without `renderer`,
+each headless view loads the first time a page renders it
+(`postkitHeadlessRenderer`), so a page ships only the views its content uses;
+`postkitHeadlessEagerRenderer` imports them all, for a synchronous render
+such as `renderToStaticMarkup`.
 
-      <PostkitProvider system={siteSystem} theme={documentationTheme}>
-        {/* Carousels here use the documentation-context override. */}
-        {documentation}
-      </PostkitProvider>
-    </ChakraProvider>
-  );
+```tsx
+import { createPostkit, type PostkitSlotProps } from '@postkit/react';
+import { article, technical, media } from '@postkit/react/kits';
+
+function InkMark(props: PostkitSlotProps) {
+  return <span {...props} className={`ink ${props.className ?? ''}`} />;
 }
-```
 
-### Typography
-
-Postkit routes heading-like content through Chakra's `Heading` recipe and uses
-Chakra recipes for the other primitives it owns. The host therefore controls
-font family, weight, size, line height, letter spacing, and color through its
-normal component recipes. Postkit's optional preset avoids restating heading
-typography in prose and heading-like slots.
-
-The opt-in Postkit preset uses Chakra's three standard font tokens for the
-remaining content-specific treatment:
-
-- `fonts.body` for every Postkit component root, prose, descriptions, labels,
-  and controls.
-- `fonts.heading` for deliberate editorial display treatments such as pull
-  quotes and statistics. Regular headings and titles use Chakra `Heading`.
-- `fonts.mono` for inline code, code blocks, terminals, diffs, and file trees.
-
-Configure those tokens in the site's Chakra system, as shown above, when the
-fonts should apply everywhere. Use the `typography` shorthand when a
-`PostkitProvider` context should select different stacks:
-
-```tsx
-const editorialTheme = createPostkitTheme({
-  typography: {
-    body: '"Source Sans 3", sans-serif',
-    heading: '"Source Serif 4", serif',
-    mono: '"Source Code Pro", monospace',
-  },
-});
-
-<PostkitProvider system={siteSystem} theme={editorialTheme}>
-  {article}
-</PostkitProvider>;
-```
-
-Each role is optional and independently configurable. A component-specific
-recipe override remains the final layer, so an exceptional heading can still
-select another token or a literal font stack:
-
-```tsx
-createPostkitTheme({
-  typography: {
-    heading: '"Source Serif 4", serif',
-  },
-  prose: {
-    base: {
-      h1: { fontFamily: 'display' },
+export const postkit = createPostkit({
+  kits: [article, technical, media],
+  exclude: ['Gallery'],
+  components: [{ definition: showcaseDefinition, view: Showcase }],
+  defaults: { Callout: { variant: 'plain' } },
+  overrides: {
+    Callout: {
+      slots: { icon: InkMark },
+      classNames: { title: 'font-display' },
     },
   },
 });
+
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
 ```
 
-`createPostkitTheme` offers typed typography and component-specific overrides for
-`prose`,
-`appearsOn`, `audio`, `authorCard`, `callToAction`, `carousel`, `chart`,
-`figure`, `linkPreview`, `newsletterSignup`, `shareActions`, `socialPost`, and
-`video`. For lower-level composition, `postkitRecipeKeys` exposes the stable
-Chakra slot-recipe keys and `createPostkitSystem` performs the same merge
-outside React.
-
-Register the component map with the site's MDX runtime:
-
-```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
-
-export const mdxComponents = createPostkitMdxComponents({
-  components: {
-    h2: ArticleHeading,
-  },
-});
-```
-
-By default the map supplies Chakra-backed components for:
-
-- Headings `h1` through `h6`, paragraphs, links, blockquotes, strong,
-  emphasis, strikethrough, horizontal rules, and line breaks.
-- Ordered, unordered, and task lists routed through Chakra's List recipe while
-  preserving native ordered-list attributes such as `start`, `reversed`, and
-  `type`.
-- Inline code, code blocks, keyboard input, highlights, and small text.
-- GFM tables and their sections, rows, headers, and cells.
-- Images, figures, captions, footnote elements, definition lists, details,
-  and summaries.
-- Every Postkit rich component.
-
-Each semantic element consumes its matching `prose` slot. Site component-map
-entries still take final precedence, so a framework can replace any element
-without disabling the rest of the prose system. The map also exposes
-`wrapper: Prose`; MDX runtimes with wrapper support use it as the prose
-root automatically.
-
-The wrapper owns external content rhythm rather than placing margins on Chakra
-headings and other individual primitives. It applies overridable spacing tokens
-for normal flow, blocks, sections, headings, titles, and internal list rhythm:
-
-```tsx
-const documentationTheme = createPostkitTheme({
-  prose: {
-    base: {
-      root: {
-        '--postkit-prose-flow-space': 'spacing.5',
-        '--postkit-prose-block-space': 'spacing.8',
-        '--postkit-prose-section-space': 'spacing.10',
-        '--postkit-prose-heading-space': 'spacing.12',
-        '--postkit-prose-title-space': 'spacing.16',
-        '--postkit-prose-list-indent': 'spacing.8',
-        '--postkit-prose-list-item-space': 'spacing.2',
-        '--postkit-prose-list-item-indent': 'spacing.1',
-      },
-    },
-  },
-});
-```
-
-These structural defaults apply in host-native and preset modes. Pass
-`unstyled` directly to `Prose` when even the wrapper rhythm should be removed.
-Pass `unstyled` to a mapped `ul` or `ol` for a bare list subtree. The exported
-`postkitProseRhythm` and `postkitProseListRhythm` objects are available for
-lower-level composition.
-
-The root emits `data-postkit-component="Prose"`, semantic elements emit
-`data-postkit-prose-element`, and rich components emit their own
-`data-postkit-component` value. These attributes provide a stable CSS escape
-hatch in addition to the typed recipe APIs.
-
-Fenced Markdown code is automatically promoted from `pre > code` into
-`CodeBlock`, which composes Chakra's CodeBlock primitive. Plain-text
-rendering works without another dependency. To add syntax highlighting, install
-`@postkit/shiki` and supply its lazy adapter through `PostkitProvider`:
-
-```tsx
-import { PostkitProvider } from '@postkit/react';
-import { createPostkitShikiAdapter } from '@postkit/shiki';
-
-const codeBlockAdapter = createPostkitShikiAdapter();
-
-<PostkitProvider codeBlockAdapter={codeBlockAdapter}>
-  {article}
-</PostkitProvider>;
-```
-
-Keeping the adapter host-owned lets each application select only the languages
-and themes it needs through the `languages` and `themes` options. The
-highlighter is loaded once by Chakra and reused by every Postkit code block
-beneath that provider.
-
-Postkit's neutral defaults copy non-empty code, show the visible label
-`"Copy code"`, hide line numbers, and keep long lines unwrapped with horizontal
-scrolling. Configure every direct and fenced code block at the provider:
-
-```tsx
-<PostkitProvider
-  codeBlock={{
-    colorScheme: 'light',
-    copy: true,
-    lineNumbers: false,
-    size: 'md',
-    variant: 'outline',
-    wrap: false,
-  }}
->
-  {article}
-</PostkitProvider>
-```
-
-Direct `CodeBlock` props override provider values, and provider values override
-the neutral defaults. `colorScheme` selects both Chakra's semantic-token scope
-and the adapter highlighting theme; Chakra CodeBlock uses `"dark"` when it is
-not configured.
-
-Copy-control content is host-configurable at the same boundary. The trigger
-remains Chakra's `Button` and `CodeBlock.CopyTrigger`, so the host Button recipe
-and Postkit's `copyTrigger` slot continue to control its presentation:
-
-```tsx
-<PostkitProvider
-  codeBlock={{
-    copyAriaLabel: 'Copy code',
-    copyFeedback: 'tooltip',
-    copyIcon: <ClipboardIcon aria-hidden="true" />,
-    copyLabel: null,
-    copiedIcon: <CheckIcon aria-hidden="true" />,
-    copiedLabel: 'Copied!',
-  }}
->
-  {article}
-</PostkitProvider>
-```
-
-Set `copyFeedback` to `"tooltip"` for a compact icon-only control. After a
-successful copy, the trigger swaps to `copiedIcon` and the copied label appears
-in a tooltip. When `copiedIcon` is omitted, Chakra's CodeBlock check icon is
-used. The default `"inline"` mode keeps both the copied icon and label inside
-the trigger.
-
-`copyFeedback`, `copyLabel`, `copiedLabel`, `copyIcon`, `copiedIcon`, and
-`copyAriaLabel` are also available directly on `CodeBlock`; component props
-take precedence over provider defaults. Passing `null` explicitly suppresses a
-configured icon or visible label. Both feedback modes expose the copied label
-through a polite live region for assistive technology.
-
-When a Markdown pipeline forwards the fence metadata through `meta`,
-`metastring`, or `data-meta`, Postkit recognizes a literal-only subset:
-
-````md
-```tsx title="button.tsx" lineNumbers wrap {2-3} maxHeight="24rem"
-export function Button() {
-  return <button>Save</button>;
-}
-```
-````
-
-Supported options are `title`/`filename`, `lineNumbers`/`noLineNumbers`,
-`wrap`/`noWrap`, highlighted ranges such as `{1,3-5}`, and `maxHeight` using a
-non-negative number or ordinary CSS length. Pipeline adapters can provide the
-same values explicitly through `data-title`, `data-filename`,
-`data-line-numbers`, `data-wrap`, `data-highlight-lines`, and
-`data-max-height`. Explicit attributes override the metadata string, and both
-override provider defaults. CSS expressions and arbitrary authored JavaScript
-are not accepted.
-
-Article authors can then use typed MDX declarations:
-
-```mdx
-<Video
-  src="/media/interview.mp4"
-  title="Interview with Ada"
-  poster="/media/interview.jpg"
-  caption="Recorded in Brooklyn."
-/>
-
-<Chart
-  title="Monthly readers"
-  type="line"
-  data={[
-    { label: 'Jan', readers: 1200 },
-    { label: 'Feb', readers: 1840 },
-  ]}
-  series={[{ key: 'readers', label: 'Readers' }]}
-  showTable
-/>
-```
-
-## Standard article blocks
-
-`AuthorCard`, `CallToAction`, and `NewsletterSignup` cover common
-article-level identity and conversion patterns while keeping authored content
-portable:
-
-```mdx
-<AuthorCard
-  name="Ada Lovelace"
-  role="Contributing editor"
-  avatarSrc="/authors/ada.jpg"
-  href="/authors/ada"
-  links={[{ label: 'Archive', href: '/authors/ada/archive' }]}
->
-  Ada writes about durable publishing systems.
-</AuthorCard>
-
-<CallToAction
-  eyebrow="Continue reading"
-  title="Explore the field guide"
-  primaryLabel="Open the guide"
-  primaryHref="/guide"
-  secondaryLabel="View examples"
-  secondaryHref="/examples"
->
-  A practical reference for the full publishing workflow.
-</CallToAction>
-
-<NewsletterSignup
-  title="Get the field notes"
-  list="weekly"
-  privacy="Unsubscribe at any time."
-/>
-```
-
-Newsletter submission is deliberately host-owned. Configure either an async
-adapter or a native form endpoint on `PostkitProvider`; documents can select a
-host-defined `list`, but cannot supply an endpoint or callback:
-
-```tsx
-<PostkitProvider
-  newsletter={{
-    subscribe: async ({ email, list }) => {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, list }),
-      });
-      if (!response.ok) throw new Error('Unable to subscribe.');
-      return { message: 'Check your inbox.' };
-    },
-  }}
->
-  {children}
-</PostkitProvider>
-```
-
-For a provider that accepts regular form submissions, set `action`, `method`,
-field-name overrides, and optional `hiddenFields` instead. An unconfigured
-form remains visible but disabled, which makes missing host setup explicit.
-Sites can also replace any of these names in the MDX component map when their
-product requires a fully custom implementation.
-
-## Link previews and unfurling
-
-Explicit `metadata` keeps `LinkPreview` deterministic and always takes
-precedence. Resolve links in a server, build, or trusted editor process with
-`@postkit/unfurl`, then pass the normalized result to the component:
-
-```tsx
-import { LinkPreview } from '@postkit/react';
-import {
-  createIframelyResolver,
-  createLinkResolverRegistry,
-  createOpenGraphsResolver,
-} from '@postkit/unfurl';
-
-const resolver = createLinkResolverRegistry({
-  resolvers: [
-    createOpenGraphsResolver({
-      apiKey: process.env.OPENGRAPHS_API_KEY,
-    }),
-    createIframelyResolver({
-      apiKey: process.env.IFRAMELY_API_KEY!,
-    }),
-  ],
-});
-
-const metadata = await resolver.resolve('https://example.com/article');
-
-export function Preview() {
-  return (
-    <LinkPreview
-      href="https://example.com/article"
-      metadata={metadata}
-      presentation="card"
-      size="lg"
-      images="carousel"
-    />
-  );
-}
-```
-
-The provider can also resolve links whose metadata was not embedded. A custom
-callback is useful for calling a same-origin application endpoint without
-shipping provider credentials to the browser:
-
-```tsx
-import { PostkitProvider } from '@postkit/react';
-
-const resolveLink = async (url, options) => {
-  const response = await fetch('/api/unfurl', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      url,
-      provider: options?.provider,
-      force: options?.force,
-    }),
-    signal: options?.signal,
-  });
-
-  if (!response.ok) throw new Error('Unable to resolve link metadata.');
-  return response.json();
-};
-
-export function App({ children }) {
-  return (
-    <PostkitProvider resolver={resolveLink} defaultResolver="opengraphs">
-      {children}
-    </PostkitProvider>
-  );
-}
-```
-
-Alternatively, configure a resolver registry directly on the provider:
-
-```tsx
-<PostkitProvider
-  resolvers={[openGraphs, iframely, customResolver]}
-  defaultResolver="opengraphs"
-  fallbackResolvers={['iframely']}
-  onResolverError={(error, context) => reportError(error, context)}
->
-  {children}
-</PostkitProvider>
-```
-
-The `provider` prop on an individual `LinkPreview` overrides the configured
-default. Without an explicit `metadata` value or a provider resolver,
-`LinkPreview` retains its existing URL-only fallback. Built-in service
-resolvers should only run in the browser when their credentials and endpoint
-policy are safe to expose; a same-origin callback is the recommended runtime
-configuration.
-
-OpenGraphs is the registry default. A host can choose another global default,
-or an authoring/publishing integration can override the provider for one link:
-
-```ts
-const resolver = createLinkResolverRegistry({
-  resolvers: [openGraphs, iframely, embedly, microlink, customResolver],
-  defaultProvider: 'microlink',
-  fallbackProviders: ['opengraphs'],
-});
-
-const metadata = await resolver.resolve(url, { provider: 'iframely' });
-```
-
-Fallbacks are deliberately opt-in so a failure cannot unexpectedly consume
-credits with another service. The built-in adapters cover OpenGraphs,
-Iframely, Embedly, and Microlink; any object implementing `LinkResolver` can be
-registered alongside them. `createCallbackResolver(id, callback)` adapts an
-application callback for use outside `PostkitProvider`.
-
-The component supports `inline`, `card`, `embed`, `media`, and `auto`
-presentations. `size="sm"` produces a compact card, while a large card can use
-`images="carousel"`. Auto prefers direct native video or audio, then an
-isolated embed, then a card. External embeds are click-to-load by default,
-render only validated iframe source URLs, and never inject the provider's raw
-HTML.
-
-## Social posts, sharing, and syndication
-
-`SocialPost` uses the same provider resolver as `LinkPreview`. When OpenGraphs
-returns structured `social` metadata, `presentation="auto"` renders a
-service-branded native card. `presentation="embed"` can instead activate a
-validated provider iframe; embeds are click-to-load by default.
-
-```tsx
-<SocialPost
-  href="https://bsky.app/profile/ada.example/post/abc"
-  presentation="auto"
-  showMetrics
-/>
-
-<ShareActions
-  url="https://example.com/posts/launch"
-  title="Launch notes"
-  services={['native', 'copy', 'email', 'bluesky', 'linkedin']}
-/>
-
-<AppearsOn
-  items={[
-    {
-      service: 'linegraph',
-      label: 'Linegraph',
-      url: 'https://linegraph.example/posts/launch',
-      publishedAt: '2026-07-26T14:30:00Z',
-      status: 'published',
-    },
-  ]}
-  showDates
-/>
-```
-
-### Live and captured social posts
-
-`SocialPost` records resolution intent independently from its metadata:
-
-- `resolution="live"` ignores embedded metadata and resolves the current post.
-- `resolution="snapshot"` renders only the embedded snapshot.
-- `resolution="snapshot-fallback"` renders embedded metadata when present and
-  resolves live only when it is missing. This is the backward-compatible
-  default.
-
-Use `createPostkitSocialPostSnapshot` from `@postkit/unfurl` to preserve when
-an authoring tool captured a post separately from when the resolver originally
-fetched it:
-
-```tsx
-import {
-  createPostkitSocialPostSnapshot,
-  createOpenGraphsResolver,
-} from '@postkit/unfurl';
-
-const resolver = createOpenGraphsResolver();
-const metadata = await resolver.resolve(
-  'https://bsky.app/profile/ada.example/post/abc',
-);
-const snapshot = createPostkitSocialPostSnapshot(metadata);
-
-<SocialPost
-  href={metadata.url}
-  metadata={snapshot}
-  resolution="snapshot"
-  snapshotInfo="auto"
-/>;
-```
-
-The versioned envelope contains `capturedAt`, the resolver identity, the
-normalized metadata, and—when known—`resolvedAt`, `cacheStrategy`, and
-`cacheResult`.
-`snapshotInfo="auto"` and `"visible"` render that provenance beneath the card;
-`"hidden"` keeps it available to authoring tools without displaying it.
-Existing normalized `metadata` values remain supported.
-
-`PostkitProvider` includes a shared social-service registry. Pass
-`socialServices` to add or override branding and share behavior once for
-`SocialPost`, `ShareActions`, and `AppearsOn`:
-
-```tsx
-<PostkitProvider
-  socialServices={{
-    linegraph: {
-      label: 'Linegraph',
-      accent: '#6d5efc',
-      createShareUrl: ({ url, title }) =>
-        `https://linegraph.example/share?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title ?? '')}`,
-    },
-  }}
->
-  {children}
-</PostkitProvider>
-```
-
-`ShareActions` never loads third-party scripts. It uses the native share API,
-the clipboard, email, a configured `createShareUrl`, or a custom async `share`
-callback. Bluesky, Facebook, LinkedIn, Threads, and X have built-in web share
-URLs; services without a universal web intent can be enabled through the
-provider registry. `AppearsOn` renders publication destinations as
-syndication relationships, keeping the origin article distinct from its
-copies.
-
-## Link routing
-
-Markdown always declares destinations with `href`. Postkit renders links as
-native anchors by default and offers a framework-neutral adapter for client
-routers:
-
-```tsx
-import { createPostkitMdxComponents } from '@postkit/react';
-import { Link } from 'some-router';
-
-export const mdxComponents = createPostkitMdxComponents({
-  link: {
-    adapter: {
-      component: Link,
-      mapProps: ({ href, ...props }) => ({
-        ...props,
-        to: href,
-      }),
-    },
-  },
-});
-```
-
-The adapter receives internal document destinations. Absolute URLs, protocol
-links such as `mailto:`, same-page hashes, downloads, and links with an
-explicit non-default target remain native anchors. `isInternal` can replace
-the default classifier, while `externalComponent` and
-`openExternalInNewTab` customize native link behavior.
-
-## Base Markdown setup
-
-The base preset includes:
-
-- GFM autolinks, footnotes, strikethrough, tables, and task lists.
-- YAML and TOML frontmatter recognition.
-- Markdown directives.
-- Postkit directive-to-component transformation.
-
-```ts
-import { createPostkitRemarkPlugins } from '@postkit/react/remark';
-
-export const markdownOptions = {
-  remarkPlugins: createPostkitRemarkPlugins(),
-};
-```
-
-Sites can add plugins before or after the defaults, configure built-ins,
-replace framework-provided equivalents, or disable a feature:
-
-```ts
-import remarkCustomHeading from './remark-custom-heading';
-import {
-  createPostkitRemarkPreset,
-  type PostkitRemarkPresetOptions,
-} from '@postkit/react/remark';
-
-const options: PostkitRemarkPresetOptions = {
-  before: [remarkCustomHeading],
-  gfm: { singleTilde: false },
-  frontmatter: false,
-  postkit: { output: 'mdx', strict: true },
-  // A host framework can replace a default without changing its ordering:
-  // overrides: { gfm: frameworkGfmPlugin },
-};
-
-export const { remarkPlugins, capabilities } =
-  createPostkitRemarkPreset(options);
-```
-
-Each declaration lists the plugins required by its directive form through
-`directiveRemarkPlugins`. This lets an editor or build system explain why a
-component cannot be parsed instead of failing later during rendering.
-
-## Plain Markdown directives
-
-The default output is MDX JSX. Set `{ output: 'hast' }` for a renderer that
-uses `data.hName` and `data.hProperties`, such as a configured
-`react-markdown` pipeline.
-
-```md
-::postkit-video{src="/media/interview.mp4" title="Interview with Ada" caption="Recorded in Brooklyn."}
-
-::postkit-audio{src="/media/episode.mp3" title="Episode 12" preload="metadata"}
-
-::postkit-chart{title="Monthly readers" type="bar" data='[{"label":"Jan","readers":1200},{"label":"Feb","readers":1840}]' series='[{"key":"readers","label":"Readers"}]' showTable}
-
-::postkit-carousel{label="Field notes" items='[{"image":{"src":"/media/ridge.jpg","alt":"A mountain ridge"},"title":"Day one"},{"title":"Day two","description":"Back at sea level."}]'}
-
-::postkit-link-preview{href="https://example.com/article" provider="opengraphs" presentation="card" size="lg" images="carousel"}
-
-::postkit-social-post{href="https://bsky.app/profile/ada.example/post/abc" provider="opengraphs" resolution="live" presentation="auto" showMetrics}
-
-::postkit-share-actions{url="https://example.com/posts/launch" title="Launch notes" services='["native","copy","email","bluesky"]'}
-
-::postkit-appears-on{label="Also published on" items='[{"service":"linegraph","url":"https://linegraph.example/posts/launch","status":"published"}]' showDates}
-
-:::postkit-author-card{name="Ada Lovelace" role="Contributing editor" avatarSrc="/authors/ada.jpg" links='[{"label":"Archive","href":"/authors/ada/archive"}]'}
-Ada writes about durable publishing systems.
-:::
-
-:::postkit-call-to-action{eyebrow="Continue reading" title="Explore the field guide" primaryLabel="Open the guide" primaryHref="/guide"}
-A practical reference for the full publishing workflow.
-:::
-
-:::postkit-newsletter-signup{title="Get the field notes" list="weekly" privacy="Unsubscribe at any time."}
-One thoughtful publishing note each week.
-:::
-```
-
-Directive props are allowlisted by `postkitDeclarationManifest`. The plugin
-emits string and boolean literals only—never authored JavaScript expressions.
-Unknown, missing, or invalid props fail the site build by default. Sites can
-use `{ strict: false }` during a staged schema migration, which drops unknown
-props instead of rendering them.
-
-## Multi-part styling
-
-Every Postkit component can resolve an exported Chakra slot recipe from the
-active system. With no preset or host registration, most visual recipes are
-empty; the `Prose` wrapper retains structural rhythm, while `CodeBlock`,
-`CodeGroup`, and `Terminal` retain small semantic structural recipes. Their
-opinionated dark palettes remain exclusive to `postkitDefaultTheme`.
-Components still expose stable slots and share `sm`, `md`, and `lg` sizes;
-`outline`, `subtle`, and `plain` variants; and an `unstyled` mode. Each
-component also accepts a typed `slotStyles` object for one-off instance
-styling:
-
-```tsx
-<Audio
-  src="/media/episode.mp3"
-  title="Episode 12"
-  size="lg"
-  variant="subtle"
-  slotStyles={{
-    root: { borderRadius: '2xl' },
-    title: { color: 'purple.600', letterSpacing: 'tight' },
-    player: { opacity: 0.95 },
-  }}
-/>
-```
-
-The default theme, theme helper, recipes, stable recipe keys, and slot-name
-constants are exported for type-safe composition:
-
-```ts
-import {
-  postkitAudioRecipe,
-  postkitAudioSlots,
-  postkitProseRhythm,
-  type PostkitAudioSlot,
-  type PostkitSlotStyles,
-} from '@postkit/react';
-import {
-  createPostkitTheme,
-  postkitDefaultTheme,
-  postkitRecipeKeys,
-} from '@postkit/react/theme';
-```
-
-Stable classes such as `.postkit-audio__root`,
-`.postkit-audio__player`, and `.postkit-audio__caption` provide a CSS escape
-hatch. `rootProps` can supply standard Chakra props and a site class name
-without replacing the generated slot class.
-
-Code blocks expose conceptual `title`, `language`, `control`, `copyTrigger`,
-`copyIndicator`, `content`, `code`, `codeText`, `line`, and `lineNumber` slots.
-The earlier `filename`, `actions`, `button`, `scroller`, and `lineContent` names
-remain compatibility aliases and style the same elements.
-
-## Integration boundary
-
-`postkitDeclarationManifest` is intentionally independent from React. It gives
-Prismark and other editors stable component names, directives, prop types, and
-child modes without importing or executing web component code.
-
-The bundled `@postkit/prismark` adapter exposes these declarations to
-Prismark's property inspector and inert desktop preview. That preview remains
-fail-closed and limited to packages bundled and integrity-pinned by the app;
-published sites use the interactive React renderers.
-
-## Troubleshooting
-
-- Unexpectedly bare Postkit-specific layouts: pass
-  `preset={postkitDefaultTheme}`, register the exported Postkit slot recipes in
-  the host system, or provide explicit `theme` overrides.
-- Unknown MDX components: pass `createPostkitMdxComponents()` to the active MDX
-  runtime.
-- Ignored plain Markdown directives: enable `createPostkitRemarkPlugins()` and
-  use directive syntax only in plain Markdown.
-- Unresolved previews: configure a server/build-time resolver through
-  `PostkitProvider`; do not place provider credentials in a browser bundle.
-
-Framework-specific routing belongs in `@postkit/next`,
-`@postkit/react-router`, `@postkit/tanstack-router`, or `@postkit/astro`.
+- Kits are renderer-neutral lists of definitions: `@postkit/react/kits`, or
+  one at a time from `@postkit/react/kits/article`, `/technical`, `/media`,
+  `/discovery`, `/engagement` and `/publishing`.
+- `defaults` apply beneath `postkit.Provider`; an author's prop always wins.
+- `<postkit.Provider figures="numbered">` numbers Figure, Video and Device
+  ("Fig. 1", "Fig. 2") in reading order. A Carousel or Gallery is one figure
+  whose items read "Fig. 3", "Fig. 3b", "Fig. 3c". `figureLabel` changes
+  "Fig.". `@postkit/chakra`'s `PostkitProvider` takes the same props.
+- `postkitRemarkPlugins(postkit, options?)` from `@postkit/react/remark`
+  gives the set its Remark plugins, which validate directives against the
+  enabled set. A `chakra-only` component on the headless renderer fails the
+  build, and throws if rendered, with an error naming it. It's build-time
+  code, kept out of `createPostkit` so the Markdown tooling never reaches the
+  browser.
+- Each kit imports only its own definitions, so a site bundles just the kits
+  it enables.
+- A view can load on first render: `postkitLazyView(() => import('./showcase.js').then((m) => m.Showcase), { definition })`
+  returns a view whose code downloads when a page renders it, inside its own
+  Suspense boundary (pass the definition so it reads defaults and part
+  overrides like the view itself, or `postkitView: true` to do so without
+  shipping the definition). `postkitLazyViews(loaders, { postkitViews: true })`
+  builds a map of them and `preloadPostkitViews(views, names)` starts the
+  downloads early. `postkitHeadlessViewLoaders` has a loader per headless view
+  and `postkitHeadlessLazyViews` the lazy views built on them;
+  `postkitHeadlessViewNames` lists the headless views without importing them.

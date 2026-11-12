@@ -1,0 +1,64 @@
+/* Terminal: a shell command and its output, on a code surface that stays dark (§5.5). */
+@scope ([data-postkit-component='Terminal']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-color-focus-ring: var(--postkit-code-focus-ring);
+    background: var(--postkit-code-bg);
+    border-radius: var(--postkit-radius-xl);
+    color: var(--postkit-code-fg);
+    color-scheme: dark;
+    font-size: inherit;
+    overflow: hidden;
+  }
+  :where([data-postkit-part='header']) {
+    align-items: center;
+    background: var(--postkit-code-header-bg);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    padding: var(--postkit-space-2) var(--postkit-space-3);
+  }
+  :where([data-postkit-part='dots']) {
+    color: var(--postkit-code-fg-muted);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+  }
+  :where([data-postkit-part='title']) {
+    color: var(--postkit-code-fg-muted);
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-xs);
+  }
+  :where([data-postkit-part='body']) {
+    font-family: var(--postkit-font-mono);
+    font-size: var(--postkit-text-sm);
+    overflow-x: auto;
+    padding: var(--postkit-space-4);
+    white-space: pre-wrap;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='body']) {
+    font-size: var(--postkit-text-xs);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='body']) {
+    font-size: var(--postkit-text-md);
+  }
+  :where([data-postkit-part='prompt']) {
+    color: var(--postkit-code-success);
+    margin-inline-end: var(--postkit-space-2);
+    user-select: none;
+  }
+  :where([data-postkit-part='command']) {
+    color: var(--postkit-code-fg);
+    font: inherit;
+  }
+  :where([data-postkit-part='output']) {
+    color: var(--postkit-code-fg-muted);
+    display: block;
+    font: inherit;
+    margin-block-start: var(--postkit-space-2);
+  }
+
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-code-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+}

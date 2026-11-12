@@ -13,7 +13,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
-    }
+    },
+    "./build-env": "./build-env.cjs"
   },
   "files": [
     "dist",
@@ -22,5 +23,9 @@
   "dependencies": {
     "@content-collections/core": "^0.15.2",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@postkit/chakra": "0.3.0",
+    "next-mdx-remote": "^6.0.0"
   }
 }

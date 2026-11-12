@@ -15,7 +15,8 @@ or rendering environment changes.
 | Package                                                | Use it when                                                                                               |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | [`@postkit/core`](packages/core)                       | An API, feed reader, or renderer needs versioned HTML, Markdown, MDX, and JSON interchange without React. |
-| [`@postkit/react`](packages/react)                     | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
+| [`@postkit/react`](packages/react)                     | A React application needs headless component markup and anatomy to style with its own CSS, no Chakra.     |
+| [`@postkit/chakra`](packages/chakra)                   | A React application needs article components, Markdown/MDX mappings, directives, or Chakra-based theming. |
 | [`@postkit/email`](packages/email)                     | An email build needs Postkit content rendered with Chakra Email primitives and email-safe fallbacks.      |
 | [`@postkit/shiki`](packages/shiki)                     | A Postkit application needs lazy Shiki syntax highlighting for Chakra code blocks.                        |
 | [`@postkit/next`](packages/next)                       | A Next.js application needs the React component map with `next/link` routing.                             |
@@ -24,15 +25,15 @@ or rendering environment changes.
 | [`@postkit/astro`](packages/astro)                     | An Astro site needs Markdown/MDX integration with selective React hydration.                              |
 | [`@postkit/unfurl`](packages/unfurl)                   | A server or build process needs normalized Open Graph, oEmbed, link-preview, or social-post metadata.     |
 
-Framework adapters depend on `@postkit/react`; install the adapter that matches
+Framework adapters depend on `@postkit/chakra`; install the adapter that matches
 the application rather than assembling its routing integration by hand.
 
-## Start in React
+## Start with Chakra UI in React
 
 Install Postkit and its peer dependencies:
 
 ```sh
-npm install @postkit/react @chakra-ui/react @emotion/react react react-dom
+npm install @postkit/chakra @chakra-ui/react @emotion/react react react-dom
 ```
 
 Mount `PostkitProvider`, then use individual components or the supplied MDX
@@ -43,7 +44,7 @@ import {
   createPostkitMdxComponents,
   Callout,
   PostkitProvider,
-} from '@postkit/react';
+} from '@postkit/chakra';
 
 export const mdxComponents = createPostkitMdxComponents();
 
@@ -94,7 +95,7 @@ normalized result without receiving provider credentials.
 
 ## Documentation
 
-- [Component and theming guide](packages/react)
+- [Component and theming guide](packages/chakra)
 - [Email rendering guide](packages/email)
 - [Shiki code-block adapter](packages/shiki)
 - [Unfurling and oEmbed guide](packages/unfurl)

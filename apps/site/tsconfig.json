@@ -21,7 +21,7 @@
       "content-collections": ["./.content-collections/generated"]
     },
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
@@ -29,6 +29,9 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
+    "og/**/*.ts",
+    "og/**/*.tsx",
+    "src/content/*.json",
     "index.d.ts",
     "next-env.d.ts"
   ],
@@ -47,13 +50,37 @@
   ],
   "references": [
     {
+      "path": "../../packages/email"
+    },
+    {
+      "path": "../../libs/site-theme"
+    },
+    {
+      "path": "../../libs/site-telemetry"
+    },
+    {
+      "path": "../../libs/site-search"
+    },
+    {
+      "path": "../../libs/site-newsletter"
+    },
+    {
+      "path": "../../libs/site-feeds"
+    },
+    {
+      "path": "../../libs/site-emails"
+    },
+    {
       "path": "../../packages/shiki"
     },
     {
-      "path": "../../packages/react"
+      "path": "../../packages/next"
     },
     {
-      "path": "../../packages/next"
+      "path": "../../packages/chakra"
+    },
+    {
+      "path": "../../packages/react"
     },
     {
       "path": "../../libs/content"

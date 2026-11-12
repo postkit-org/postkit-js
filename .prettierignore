@@ -5,3 +5,6 @@
 /.nx/workspace-data
 .nx/self-healing
 apps/site/next-env.d.ts
+
+# The design handoff is kept as delivered (reference previews, specs, tokens).
+docs/design/handoff

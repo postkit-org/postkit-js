@@ -1,0 +1,47 @@
+/* Stat: one figure, its label and an optional trend. */
+@scope ([data-postkit-component='Stat']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    display: grid;
+    gap: var(--postkit-space-1);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='label']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='value']) {
+    font-family: var(--postkit-font-heading);
+    font-size: var(--postkit-text-3xl);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--postkit-weight-bold);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='value']) {
+    font-size: var(--postkit-text-2xl);
+  }
+  :where(:scope[data-size='lg'] [data-postkit-part='value']) {
+    font-size: var(--postkit-text-4xl);
+  }
+  :where([data-postkit-part='trend']) {
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-1);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

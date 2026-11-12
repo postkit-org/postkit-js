@@ -20,7 +20,7 @@ npm run site:check
 Prefer Nx targets when working on one package:
 
 ```sh
-npm exec nx test @postkit/react
+npm exec nx test @postkit/chakra
 npm exec nx lint @postkit/unfurl
 npm exec nx build @postkit/astro
 ```
@@ -60,7 +60,7 @@ complete set:
 npx yalc add \
   @postkit/core \
   @postkit/unfurl \
-  @postkit/react \
+  @postkit/chakra \
   @postkit/email \
   @postkit/shiki \
   @postkit/next \

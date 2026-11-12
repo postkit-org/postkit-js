@@ -1,0 +1,192 @@
+/* Carousel: slides with previous/next controls and a position status, or (peek) a centred item with arrows and its caption. */
+@scope ([data-postkit-component='Carousel']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    overflow: hidden;
+  }
+  :where(:scope[data-size='sm']) {
+    border-radius: var(--postkit-radius-md);
+  }
+  :where([data-postkit-part='slide']) {
+    min-height: 8rem;
+    min-width: 0;
+  }
+  :where([data-postkit-part='media']) {
+    display: block;
+    max-height: 32rem;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='content']) {
+    padding: var(--postkit-inset);
+  }
+  /* The title is a `p` unless `headingLevel` makes it a heading, so it sets
+     its own type rather than relying on a heading's browser defaults. */
+  :where([data-postkit-part='title']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.125em;
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    margin-block-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='link']) {
+    display: block;
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='link']:hover [data-postkit-part='title']) {
+    text-decoration-line: underline;
+  }
+  :where([data-postkit-part='controls']) {
+    align-items: center;
+    display: flex;
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+    padding: var(--postkit-space-3);
+  }
+  :where(
+    [data-postkit-part='previousTrigger'],
+    [data-postkit-part='nextTrigger']
+  ) {
+    align-items: center;
+    appearance: none;
+    background: var(--postkit-color-bg);
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-md);
+    color: var(--postkit-color-fg);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-medium);
+    gap: var(--postkit-space-1);
+    min-height: 2rem;
+    padding-inline: var(--postkit-space-3);
+  }
+  :where(
+    [data-postkit-part='previousTrigger']:hover,
+    [data-postkit-part='nextTrigger']:hover
+  ) {
+    border-color: var(--postkit-color-border-strong);
+  }
+  :where(
+    :is(
+      [data-postkit-part='previousTrigger'],
+      [data-postkit-part='nextTrigger']
+    ):is(:disabled, [aria-disabled='true'], [data-disabled])
+  ) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  :where([data-postkit-part='status']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  :where([data-postkit-part='emptyState']) {
+    color: var(--postkit-color-fg-muted);
+    padding: var(--postkit-inset);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='controls']) {
+    border-block-start: var(--postkit-border-width) solid
+      var(--postkit-color-border-muted);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='outline'] [data-postkit-part='controls']) {
+    border-block-start: var(--postkit-border-width) solid
+      var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-radius: 0;
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='content']) {
+    padding-inline: 0;
+  }
+  :where(:scope[data-variant='plain'] [data-postkit-part='controls']) {
+    padding-inline: 0;
+  }
+  :where([data-postkit-part='caption']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-2);
+  }
+  :where([data-postkit-part='number']) {
+    color: var(--postkit-color-fg);
+    font-weight: var(--postkit-weight-semibold);
+    margin-inline-end: 0.5em;
+  }
+
+  /* Peek: the current item centred, its neighbours at 35%, arrows only. */
+  :where(:scope[data-presentation='peek']) {
+    --postkit-carousel-peek-inset: 12%;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+  :where(:scope[data-presentation='peek'] [data-postkit-part='slide']) {
+    min-height: 0;
+    transition: opacity 200ms ease;
+  }
+  :where(
+    :scope[data-presentation='peek']
+      [data-postkit-part='slide'][aria-hidden='true']
+  ) {
+    opacity: 0.35;
+  }
+  :where(:scope[data-presentation='peek'] [data-postkit-part='media']) {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--postkit-radius-lg);
+    height: auto;
+    max-height: none;
+  }
+  :where(:scope[data-presentation='peek'] [data-postkit-part='content']) {
+    padding-inline: 0;
+  }
+  :where(:scope[data-presentation='peek'] [data-postkit-part='controls']) {
+    align-items: flex-start;
+    border-block-start: 0;
+    justify-content: flex-end;
+    padding-inline: var(--postkit-carousel-peek-inset);
+  }
+  :where(:scope[data-presentation='peek'] [data-postkit-part='caption']) {
+    flex: 1;
+    margin-block: 0;
+    min-height: 2.75rem;
+  }
+  :where(
+    :scope[data-presentation='peek']
+      :is(
+        [data-postkit-part='previousTrigger'],
+        [data-postkit-part='nextTrigger']
+      )
+  ) {
+    background: transparent;
+    font-size: var(--postkit-text-md);
+    height: 2.75rem;
+    justify-content: center;
+    padding: 0;
+    width: 2.75rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  @scope ([data-postkit-component='Carousel']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where(:scope[data-presentation='peek'] [data-postkit-part='media']) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @scope ([data-postkit-component='Carousel']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+    :where([data-postkit-part='slide']) {
+      transition: none;
+    }
+  }
+}

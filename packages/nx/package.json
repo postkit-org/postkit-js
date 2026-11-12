@@ -1,0 +1,66 @@
+{
+  "name": "@postkit/nx",
+  "version": "0.3.0",
+  "description": "An Nx plugin that scaffolds Postkit components with the same templates as postkit new",
+  "keywords": [
+    "postkit",
+    "publishing",
+    "typescript",
+    "nx",
+    "nx-plugin",
+    "generator",
+    "scaffolding",
+    "content-components"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postkit-org/postkit-js.git",
+    "directory": "packages/nx"
+  },
+  "homepage": "https://github.com/postkit-org/postkit-js/tree/main/packages/nx#readme",
+  "bugs": {
+    "url": "https://github.com/postkit-org/postkit-js/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "generators": "./generators.json",
+  "exports": {
+    "./package.json": "./package.json",
+    "./generators.json": "./generators.json",
+    "./generators/component/schema.json": "./generators/component/schema.json",
+    ".": {
+      "@postkit/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "generators.json",
+    "generators",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "@postkit/cli": "0.3.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@nx/devkit": "23.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "nx": {
+    "tags": [
+      "npm:public",
+      "scope:postkit",
+      "layer:tooling"
+    ]
+  }
+}

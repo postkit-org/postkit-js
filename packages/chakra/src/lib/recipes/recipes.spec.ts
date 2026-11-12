@@ -1,0 +1,244 @@
+import { postkitBuiltInDefinitions } from '@postkit/core/components';
+
+import { postkitDefaultTheme, postkitRecipeKeys } from '../theme.js';
+import {
+  postkitAudioRecipe,
+  postkitAudioSlots,
+} from '../../components/audio/audio.recipe.js';
+import {
+  postkitAuthorCardRecipe,
+  postkitAuthorCardSlots,
+} from '../../components/author-card/author-card.recipe.js';
+import {
+  postkitCallToActionRecipe,
+  postkitCallToActionSlots,
+} from '../../components/call-to-action/call-to-action.recipe.js';
+import {
+  postkitCarouselRecipe,
+  postkitCarouselSlots,
+} from '../../components/carousel/carousel.recipe.js';
+import {
+  postkitChartRecipe,
+  postkitChartSlots,
+} from '../../components/chart/chart.recipe.js';
+import {
+  postkitLinkPreviewRecipe,
+  postkitLinkPreviewSlots,
+} from '../../components/link-preview/link-preview.recipe.js';
+import {
+  postkitNewsletterSignupRecipe,
+  postkitNewsletterSignupSlots,
+} from '../../components/newsletter-signup/newsletter-signup.recipe.js';
+import {
+  postkitShareActionsRecipe,
+  postkitShareActionsSlots,
+} from '../../components/share-actions/share-actions.recipe.js';
+import {
+  postkitSocialPostRecipe,
+  postkitSocialPostSlots,
+} from '../../components/social-post/social-post.recipe.js';
+import {
+  postkitVideoRecipe,
+  postkitVideoSlots,
+} from '../../components/video/video.recipe.js';
+import {
+  postkitAppearsOnRecipe,
+  postkitAppearsOnSlots,
+} from '../../components/appears-on/appears-on.recipe.js';
+import {
+  postkitFigureRecipe,
+  postkitFigureSlots,
+} from '../../components/figure/figure.recipe.js';
+import {
+  postkitProseListRhythm,
+  postkitProseRecipe,
+  postkitProseRhythm,
+  postkitProseSlots,
+} from './prose.recipe.js';
+import {
+  postkitCodeBlockRecipe,
+  postkitCodeBlockSlots,
+  postkitStandaloneCodeBlockRecipe,
+} from '../../components/code-block/code-block.recipe.js';
+import {
+  postkitCodeGroupRecipe,
+  postkitCodeGroupSlots,
+  postkitStandaloneCodeGroupRecipe,
+} from '../../components/code-group/code-group.recipe.js';
+import {
+  postkitStandaloneTerminalRecipe,
+  postkitTerminalRecipe,
+  postkitTerminalSlots,
+} from '../../components/terminal/terminal.recipe.js';
+
+describe('Postkit slot recipes', () => {
+  it.each([
+    ['AppearsOn', postkitAppearsOnRecipe, postkitAppearsOnSlots],
+    ['Audio', postkitAudioRecipe, postkitAudioSlots],
+    ['AuthorCard', postkitAuthorCardRecipe, postkitAuthorCardSlots],
+    ['CallToAction', postkitCallToActionRecipe, postkitCallToActionSlots],
+    ['Carousel', postkitCarouselRecipe, postkitCarouselSlots],
+    ['Chart', postkitChartRecipe, postkitChartSlots],
+    ['CodeBlock', postkitCodeBlockRecipe, postkitCodeBlockSlots],
+    ['CodeGroup', postkitCodeGroupRecipe, postkitCodeGroupSlots],
+    ['Figure', postkitFigureRecipe, postkitFigureSlots],
+    ['LinkPreview', postkitLinkPreviewRecipe, postkitLinkPreviewSlots],
+    [
+      'NewsletterSignup',
+      postkitNewsletterSignupRecipe,
+      postkitNewsletterSignupSlots,
+    ],
+    ['ShareActions', postkitShareActionsRecipe, postkitShareActionsSlots],
+    ['SocialPost', postkitSocialPostRecipe, postkitSocialPostSlots],
+    ['Terminal', postkitTerminalRecipe, postkitTerminalSlots],
+    ['Video', postkitVideoRecipe, postkitVideoSlots],
+  ])(
+    '%s exposes stable multi-part styling slots and variants',
+    (_, recipe, slots) => {
+      expect(recipe.slots).toEqual(slots);
+      expect(recipe.slots).toContain('root');
+      expect(new Set(recipe.slots).size).toBe(recipe.slots.length);
+      expect(recipe.className).toMatch(/^postkit-/);
+      expect(Object.keys(recipe.variants?.size ?? {})).toEqual([
+        'sm',
+        'md',
+        'lg',
+      ]);
+      expect(Object.keys(recipe.variants?.variant ?? {})).toEqual([
+        'outline',
+        'subtle',
+        'plain',
+      ]);
+    },
+  );
+
+  it('keeps technical-content structure semantic and standalone visuals opt-in', () => {
+    expect(postkitCodeBlockSlots).toEqual(
+      expect.arrayContaining([
+        'title',
+        'filename',
+        'control',
+        'actions',
+        'copyTrigger',
+        'button',
+        'copyIndicator',
+        'content',
+        'scroller',
+        'codeText',
+        'lineContent',
+      ]),
+    );
+    expect(postkitCodeBlockRecipe.base?.root).toMatchObject({
+      background: 'bg',
+      color: 'fg',
+    });
+    expect(postkitCodeBlockRecipe.base?.language?.color).toBe('fg.muted');
+    expect(postkitCodeBlockRecipe.base?.lineNumber?.color).toBe('fg.muted');
+    expect(postkitCodeBlockRecipe.base?.code?.minWidth).toBeUndefined();
+    expect(postkitCodeGroupRecipe.base?.tabs?.background).toBe('bg.muted');
+    expect(postkitTerminalRecipe.base?.root?.background).toBe('bg');
+    expect(postkitTerminalRecipe.base?.output?.color).toBe('fg.muted');
+
+    expect(postkitStandaloneCodeBlockRecipe.base?.root).toMatchObject({
+      background: 'bg.code',
+      color: 'fg.onCode',
+    });
+    expect(postkitStandaloneCodeGroupRecipe.base?.tabs?.background).toBe(
+      'bg.codeMuted',
+    );
+    expect(postkitStandaloneTerminalRecipe.base?.root?.background).toBe(
+      'bg.code',
+    );
+  });
+
+  it('exposes prose as a stable multi-part Markdown recipe', () => {
+    expect(postkitProseRecipe.slots).toEqual(postkitProseSlots);
+    expect(postkitProseRecipe.slots).toContain('root');
+    expect(postkitProseRecipe.slots).toEqual(
+      expect.arrayContaining([
+        'h1',
+        'h2',
+        'h3',
+        'p',
+        'a',
+        'blockquote',
+        'pre',
+        'code',
+        'table',
+        'input',
+      ]),
+    );
+    expect(new Set(postkitProseRecipe.slots).size).toBe(
+      postkitProseRecipe.slots.length,
+    );
+    expect(postkitProseRecipe.className).toBe('postkit-prose');
+    expect(postkitProseRecipe.base?.h2?.marginBlockStart).toBeUndefined();
+    expect(postkitProseRhythm['--postkit-prose-flow-space']).toBe(
+      'var(--chakra-spacing-4)',
+    );
+    expect(postkitProseListRhythm.ul.paddingInlineStart).toContain(
+      '--postkit-prose-list-indent',
+    );
+    expect(postkitProseListRhythm.li.marginBlock).toContain(
+      '--postkit-prose-list-item-space',
+    );
+    expect(postkitProseRecipe.base?.ul).toEqual({});
+    expect(postkitProseRecipe.base?.ol).toEqual({});
+    expect(
+      postkitProseRhythm['& > :where(* + [data-postkit-prose-element="h2"])'],
+    ).toEqual({
+      marginBlockStart: 'var(--postkit-prose-heading-space)',
+    });
+  });
+});
+
+describe('D12: subtle is the default variant', () => {
+  // Aside shares the Callout recipe, so it has no recipe key of its own.
+  const themed = Object.values(postkitBuiltInDefinitions).filter(
+    (definition) => definition.name !== 'Aside',
+  );
+  const slotRecipes = postkitDefaultTheme.theme?.slotRecipes ?? {};
+
+  it.each(themed.map((definition) => [definition.name, definition] as const))(
+    "%s's recipe default variant matches its definition",
+    (name, definition) => {
+      const themeKey = (name.charAt(0).toLowerCase() +
+        name.slice(1)) as keyof typeof postkitRecipeKeys;
+      const recipe = slotRecipes[postkitRecipeKeys[themeKey]];
+      const props = definition.props as {
+        readonly variant?: { readonly default?: unknown };
+      };
+
+      expect(recipe).toBeDefined();
+      expect(props.variant?.default).toBe('subtle');
+      expect(recipe?.defaultVariants?.variant).toBe('subtle');
+      // Subtle fills a quiet surface, so it must style something.
+      expect(
+        Object.keys(recipe?.variants?.variant?.subtle ?? {}),
+      ).not.toHaveLength(0);
+    },
+  );
+
+  it('keeps the code surfaces ink when subtle', () => {
+    for (const recipe of [
+      postkitStandaloneCodeBlockRecipe,
+      postkitStandaloneCodeGroupRecipe,
+      postkitStandaloneTerminalRecipe,
+    ]) {
+      expect(recipe.defaultVariants?.variant).toBe('subtle');
+      expect(recipe.variants?.variant?.subtle).toEqual({
+        root: { background: 'bg.code' },
+      });
+    }
+    // The host-native fallbacks render without the preset's ink token.
+    for (const recipe of [
+      postkitCodeBlockRecipe,
+      postkitCodeGroupRecipe,
+      postkitTerminalRecipe,
+    ]) {
+      expect(recipe.variants?.variant?.subtle).toEqual({
+        root: { background: 'bg.subtle' },
+      });
+    }
+  });
+});

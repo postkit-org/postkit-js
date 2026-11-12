@@ -2,17 +2,15 @@
 title: API reference
 summary: Browse generated TypeScript exports or consume the same API model as structured JSON.
 category: Reference
-order: 85
+order: 5
 ---
 
-# API reference
-
-PostKit generates its API reference from the public exports of every published
+Postkit generates its API reference from the public exports of every published
 package.
 
 - [Browse the TypeScript API reference](/api/)
 - [Download the TypeDoc JSON model](/api/postkit-api.json)
-- [Download the component manifest](https://unpkg.com/@postkit/react/component-manifest.json)
+- [Download the component manifest](https://unpkg.com/@postkit/chakra/component-manifest.json)
 
 Use the guides for task-oriented setup and the API reference for exact
 signatures, return types, and exported interfaces. The component manifest is

@@ -1,0 +1,120 @@
+import { defineSlotRecipe } from '@chakra-ui/react';
+import { postkitBuiltInSlots } from '@postkit/core/components';
+
+/** The Figure anatomy, from its definition. */
+export const postkitFigureSlots = postkitBuiltInSlots.Figure;
+
+export type PostkitFigureSlot = (typeof postkitFigureSlots)[number];
+
+export const postkitFigureRecipe = defineSlotRecipe({
+  className: 'postkit-figure',
+  slots: postkitFigureSlots,
+  base: {
+    root: {
+      marginBlock: '0',
+    },
+    mediaLink: {
+      color: 'inherit',
+      display: 'block',
+      textDecoration: 'none',
+      _hover: {
+        textDecoration: 'none',
+      },
+    },
+    media: {
+      lineHeight: '0',
+      overflow: 'hidden',
+    },
+    image: {
+      display: 'block',
+      height: 'auto',
+      width: '100%',
+    },
+    figcaption: {
+      color: 'fg.muted',
+    },
+    caption: {
+      display: 'block',
+      // After a figure number ("Fig. 1"), the caption runs on.
+      '[data-postkit-part="number"] + &': { display: 'inline' },
+    },
+    number: {
+      color: 'fg',
+      fontWeight: 'semibold',
+      marginEnd: '0.5em',
+    },
+    // The credit takes the caption's `fg.muted`. Dimming it further dropped it
+    // below 4.5:1 on the subtle surface.
+    credit: {
+      display: 'block',
+    },
+    creditLink: {
+      color: 'inherit',
+      textDecoration: 'underline',
+      textUnderlineOffset: '0.15em',
+    },
+  },
+  variants: {
+    size: {
+      sm: {
+        media: { borderRadius: 'md' },
+        figcaption: { fontSize: 'xs', marginTop: '2' },
+        credit: { fontSize: '2xs', marginTop: '1' },
+      },
+      md: {
+        media: { borderRadius: 'xl' },
+        figcaption: { fontSize: 'sm', marginTop: '2' },
+        credit: { fontSize: 'xs', marginTop: '1' },
+      },
+      lg: {
+        media: { borderRadius: '2xl' },
+        figcaption: { fontSize: 'md', marginTop: '3' },
+        credit: { fontSize: 'sm', marginTop: '1.5' },
+      },
+    },
+    variant: {
+      outline: {
+        media: {
+          borderColor: 'border',
+          borderWidth: '1px',
+        },
+      },
+      // The default (D12): a quiet surface in both colour modes.
+      subtle: {
+        root: {
+          background: 'bg.subtle',
+          borderRadius: 'xl',
+          padding: '2',
+        },
+      },
+      plain: {},
+    },
+    layout: {
+      inline: {
+        root: {
+          marginInline: 'auto',
+          maxWidth: '48rem',
+        },
+      },
+      wide: {
+        root: {
+          marginInline: 'auto',
+          maxWidth: '72rem',
+          width: '100%',
+        },
+      },
+      bleed: {
+        root: {
+          marginInline: 'calc(50% - 50vw)',
+          maxWidth: '100vw',
+          width: '100vw',
+        },
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+    variant: 'subtle',
+    layout: 'inline',
+  },
+});

@@ -1,0 +1,260 @@
+[
+  {
+    "title": "The library",
+    "description": "What Postkit stands on, from Markdown to the views.",
+    "items": [
+      {
+        "name": "unified",
+        "tag": null,
+        "description": "The pipeline that turns Markdown and MDX into one tree every renderer reads.",
+        "url": "https://unifiedjs.com"
+      },
+      {
+        "name": "remark",
+        "tag": null,
+        "description": "Markdown processing, with the GFM, directive and frontmatter plugins.",
+        "url": "https://github.com/remarkjs/remark"
+      },
+      {
+        "name": "micromark",
+        "tag": null,
+        "description": "The spec-compliant tokenizer under remark, with GFM and MDX extensions.",
+        "url": "https://github.com/micromark/micromark"
+      },
+      {
+        "name": "mdast and hast",
+        "tag": null,
+        "description": "Syntax-tree utilities for Markdown and HTML.",
+        "url": "https://github.com/syntax-tree"
+      },
+      {
+        "name": "React",
+        "tag": null,
+        "description": "The component model every Postkit view is written in.",
+        "url": "https://react.dev"
+      },
+      {
+        "name": "Chakra UI",
+        "tag": null,
+        "description": "The design system behind @postkit/chakra.",
+        "url": "https://chakra-ui.com"
+      },
+      {
+        "name": "Zag",
+        "tag": null,
+        "description": "State machines for the interactive views, headless and Chakra alike. A Chakra site shares one copy.",
+        "url": "https://zagjs.com"
+      },
+      {
+        "name": "Chakra Email",
+        "tag": "Commune",
+        "description": "Email-safe components behind @postkit/email.",
+        "url": "https://chakra.email"
+      },
+      {
+        "name": "Shiki",
+        "tag": "Optional",
+        "description": "Code highlighting with real grammars, in @postkit/shiki.",
+        "url": "https://shiki.style"
+      },
+      {
+        "name": "tslib",
+        "tag": null,
+        "description": "Runtime helpers for the compiled TypeScript.",
+        "url": "https://github.com/microsoft/tslib"
+      }
+    ]
+  },
+  {
+    "title": "Framework adapters",
+    "description": "Install only the one your site runs on.",
+    "items": [
+      {
+        "name": "Next.js",
+        "tag": null,
+        "description": "@postkit/next",
+        "url": "https://nextjs.org"
+      },
+      {
+        "name": "React Router",
+        "tag": null,
+        "description": "@postkit/react-router",
+        "url": "https://reactrouter.com"
+      },
+      {
+        "name": "TanStack Router",
+        "tag": null,
+        "description": "@postkit/tanstack-router",
+        "url": "https://tanstack.com/router"
+      },
+      {
+        "name": "Astro",
+        "tag": null,
+        "description": "@postkit/astro",
+        "url": "https://astro.build"
+      }
+    ]
+  },
+  {
+    "title": "This site",
+    "description": "postkit.org renders its own docs and notes with Postkit.",
+    "items": [
+      {
+        "name": "Next.js",
+        "tag": null,
+        "description": "Pages, routing and the build.",
+        "url": "https://nextjs.org"
+      },
+      {
+        "name": "Chakra UI",
+        "tag": null,
+        "description": "Every component on this page.",
+        "url": "https://chakra-ui.com"
+      },
+      {
+        "name": "Emotion",
+        "tag": null,
+        "description": "The styling engine under Chakra.",
+        "url": "https://emotion.sh"
+      },
+      {
+        "name": "Zag",
+        "tag": "Via Chakra and Postkit",
+        "description": "The tabs, carousels and copy buttons on these pages.",
+        "url": "https://zagjs.com"
+      },
+      {
+        "name": "Chakra Docs",
+        "tag": "Commune",
+        "description": "The docs pages: navigation, pager and the Markdown model under them (@chakra-docs/core, next and chakra).",
+        "url": "https://chakra-docs.dev"
+      },
+      {
+        "name": "Chakra Docs Search",
+        "tag": "Commune",
+        "description": "Site search: the index built at deploy time and the client in the search dialog (@chakra-docs/search).",
+        "url": "https://chakra-docs.dev/docs/search"
+      },
+      {
+        "name": "MiniSearch",
+        "tag": "Via Chakra Docs Search",
+        "description": "The full-text index behind search.",
+        "url": "https://lucaong.github.io/minisearch"
+      },
+      {
+        "name": "Chakra Docs Feed",
+        "tag": "Commune",
+        "description": "RSS, Atom and JSON Feed for the notes and changelog (@chakra-docs/feed).",
+        "url": "https://chakra-docs.dev"
+      },
+      {
+        "name": "Content Collections",
+        "tag": null,
+        "description": "Typed content from the notes, docs and changelog folders.",
+        "url": "https://www.content-collections.dev"
+      },
+      {
+        "name": "next-mdx-remote",
+        "tag": null,
+        "description": "MDX compiled at build time.",
+        "url": "https://github.com/hashicorp/next-mdx-remote"
+      },
+      {
+        "name": "github-slugger",
+        "tag": null,
+        "description": "Heading anchors, the same ones GitHub would make.",
+        "url": "https://github.com/Flet/github-slugger"
+      },
+      {
+        "name": "next-meta",
+        "tag": "Commune",
+        "description": "Page titles, descriptions and Open Graph tags.",
+        "url": "https://next-meta.dev"
+      },
+      {
+        "name": "react-structured",
+        "tag": "Commune",
+        "description": "Structured data, so search engines know a note from a doc page.",
+        "url": "https://react-structured.dev"
+      },
+      {
+        "name": "react-fathom",
+        "tag": "Commune",
+        "description": "Cookie-free page counts.",
+        "url": "https://react-fathom.dev"
+      },
+      {
+        "name": "Sentry",
+        "tag": null,
+        "description": "Error reports when a page breaks (@sentry/nextjs).",
+        "url": "https://github.com/getsentry/sentry-javascript"
+      },
+      {
+        "name": "next-themes",
+        "tag": null,
+        "description": "Light, dark and system themes without a flash.",
+        "url": "https://github.com/pacocoursey/next-themes"
+      },
+      {
+        "name": "Resend Node SDK",
+        "tag": null,
+        "description": "Sends subscribe confirmations and release emails.",
+        "url": "https://github.com/resend/resend-node"
+      },
+      {
+        "name": "@vercel/og",
+        "tag": "Via next/og",
+        "description": "Share images, rendered at build time.",
+        "url": "https://vercel.com/docs/og-image-generation"
+      },
+      {
+        "name": "sharp",
+        "tag": null,
+        "description": "The favicons, app icons and share images, as PNGs.",
+        "url": "https://sharp.pixelplumbing.com"
+      }
+    ]
+  },
+  {
+    "title": "Tooling",
+    "description": "How it’s built, tested and published.",
+    "items": [
+      {
+        "name": "Nx",
+        "tag": null,
+        "description": "The monorepo: tasks, caching and releases.",
+        "url": "https://nx.dev"
+      },
+      {
+        "name": "TypeScript",
+        "tag": null,
+        "description": "Types for every package and prop.",
+        "url": "https://www.typescriptlang.org"
+      },
+      {
+        "name": "Vitest",
+        "tag": null,
+        "description": "Unit and render tests, on Vite.",
+        "url": "https://vitest.dev"
+      },
+      {
+        "name": "TypeDoc",
+        "tag": null,
+        "description": "The API reference.",
+        "url": "https://typedoc.org"
+      },
+      {
+        "name": "ESLint and Prettier",
+        "tag": null,
+        "description": "Linting and formatting.",
+        "url": "https://eslint.org"
+      },
+      {
+        "name": "Verdaccio and yalc",
+        "tag": null,
+        "description": "Local registries for testing releases before they ship.",
+        "url": "https://verdaccio.org"
+      }
+    ]
+  }
+]

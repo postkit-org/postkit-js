@@ -1,0 +1,15 @@
+{
+  "$note": "Permanent redirects for changed changelog URLs (handoff 01 §3; source list in docs/design/handoff/content/redirects.json). permanent: true sends 308; permanent: false sends 307.",
+  "redirects": [
+    {
+      "source": "/changelog/2026-07-27-postkit-0-1-0",
+      "destination": "/changelog/0-1-0",
+      "permanent": true
+    },
+    {
+      "source": "/changelog/2026-09-03-postkit-0-2-0",
+      "destination": "/changelog/0-2-0",
+      "permanent": true
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import {
 
 describe('Postkit document parsing', () => {
   it.each([false, true])(
-    'preserves unsupported footnote syntax literally (mdx=%s)',
+    'parses footnotes into portable nodes (mdx=%s)',
     (mdx) => {
       const document = parsePostkitMarkdown(
         'Hello[^A], again[^A].\n\n[^A]: A **formatted** note.\n    Continued.',
@@ -20,19 +20,29 @@ describe('Postkit document parsing', () => {
         name: 'p',
         children: [
           { type: 'text', value: 'Hello' },
-          { type: 'text', value: '[^A]' },
+          { type: 'footnoteReference', identifier: 'a', label: 'A' },
           { type: 'text', value: ', again' },
-          { type: 'text', value: '[^A]' },
+          { type: 'footnoteReference', identifier: 'a', label: 'A' },
           { type: 'text', value: '.' },
         ],
       });
       expect(document.children[1]).toEqual({
-        type: 'element',
-        name: 'p',
+        type: 'footnoteDefinition',
+        identifier: 'a',
+        label: 'A',
         children: [
           {
-            type: 'text',
-            value: '[^A]: A **formatted** note.\n    Continued.',
+            type: 'element',
+            name: 'p',
+            children: [
+              { type: 'text', value: 'A ' },
+              {
+                type: 'element',
+                name: 'strong',
+                children: [{ type: 'text', value: 'formatted' }],
+              },
+              { type: 'text', value: ' note.\nContinued.' },
+            ],
           },
         ],
       });

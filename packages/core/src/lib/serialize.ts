@@ -8,15 +8,40 @@ import {
 } from './document.js';
 import { PostkitParseError } from './parse-error.js';
 import { parsePostkitMarkdown } from './parse-markdown.js';
+import {
+  createPostkitFootnoteContext,
+  postkitFootnoteListHtml,
+  postkitFootnoteReferenceHtml,
+  type PostkitFootnoteRenderContext,
+} from './serialize-footnotes.js';
+import {
+  serializePostkitText,
+  type SerializePostkitTextOptions,
+} from './serialize-text.js';
+import {
+  escapeHtml,
+  resolvePostkitUrl,
+  safePostkitUrl,
+} from './serialize-url.js';
+import {
+  renderPostkitStaticView,
+  type PostkitStaticViewOptions,
+  type PostkitViewAttributeValue,
+  type PostkitViewElement,
+  type PostkitViewNode,
+} from './serialize-views.js';
 
-export type PostkitOutputFormat = 'html' | 'json' | 'markdown' | 'mdx';
+export type PostkitOutputFormat = 'html' | 'json' | 'markdown' | 'mdx' | 'text';
 
-export interface SerializePostkitHtmlOptions {
+export interface SerializePostkitHtmlOptions extends PostkitStaticViewOptions {
   /** Include versioned reconstruction annotations. Defaults to true. */
   readonly annotations?: boolean;
   /** Optional document wrapper. Serialization is wrapper-free by default. */
   readonly documentElement?: string | false;
-  /** Element used to carry annotated component nodes. Defaults to `div`. */
+  /**
+   * Element used to carry annotated custom component nodes. Defaults to
+   * `div`. Built-in components render their static view instead.
+   */
   readonly componentElement?: string | ((node: PostkitComponentNode) => string);
 }
 
@@ -36,6 +61,7 @@ export interface SerializePostkitOptions {
   readonly html?: SerializePostkitHtmlOptions;
   readonly json?: SerializePostkitJsonOptions;
   readonly markdown?: SerializePostkitMarkdownOptions;
+  readonly text?: SerializePostkitTextOptions;
 }
 
 const voidElements = new Set([
@@ -139,13 +165,6 @@ function safeElementName(name: string): string {
   return normalized;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
-}
-
 function escapeAttribute(value: string): string {
   return escapeHtml(value).replaceAll('"', '&quot;');
 }
@@ -180,6 +199,7 @@ function safeUrlAttribute(name: string, value: PostkitAttributeValue): boolean {
 function serializeAttribute(
   name: string,
   value: PostkitAttributeValue,
+  baseUrl: string | undefined,
 ): string {
   const normalized = name.toLowerCase();
   const htmlName = htmlAttributeNames[normalized] ?? normalized;
@@ -192,16 +212,212 @@ function serializeAttribute(
   }
   if (value === false) return '';
   if (value === true) return ` ${htmlName}`;
-  const serialized = Array.isArray(value) ? value.join(' ') : String(value);
+  const serialized = Array.isArray(value)
+    ? value.join(' ')
+    : urlAttributes.has(htmlName)
+      ? resolvePostkitUrl(String(value), baseUrl)
+      : htmlName === 'srcset'
+        ? resolveSrcset(String(value), baseUrl)
+        : String(value);
   return ` ${htmlName}="${escapeAttribute(serialized)}"`;
+}
+
+const urlAttributes = new Set(['cite', 'href', 'poster', 'src']);
+
+function resolveSrcset(value: string, baseUrl: string | undefined): string {
+  if (!baseUrl) return value;
+  return value
+    .split(',')
+    .map((candidate) => {
+      const [url = '', ...descriptors] = candidate.trim().split(/\s+/);
+      return [resolvePostkitUrl(url, baseUrl), ...descriptors].join(' ');
+    })
+    .join(', ');
 }
 
 function serializeAttributes(
   attributes: Readonly<Record<string, PostkitAttributeValue>> | undefined,
+  baseUrl: string | undefined,
 ): string {
   return Object.entries(attributes ?? {})
-    .map(([name, value]) => serializeAttribute(name, value))
+    .map(([name, value]) => serializeAttribute(name, value, baseUrl))
     .join('');
+}
+
+/**
+ * An attribute a static view sets. Views use fixed names, but their values
+ * come from props, so URLs are checked again (http, https, mailto or
+ * relative only) and resolved against `baseUrl`.
+ */
+function serializeViewAttribute(
+  name: string,
+  value: PostkitViewAttributeValue,
+  baseUrl: string | undefined,
+): string {
+  if (value === undefined || value === false) return '';
+  if (!/^[a-z][a-z-]*$/.test(name)) return '';
+  if (value === true) return ` ${name}`;
+  let serialized = String(value);
+  if (urlAttributes.has(name)) {
+    const url = safePostkitUrl(serialized, baseUrl);
+    if (url === undefined) return '';
+    serialized = url;
+  } else if (name === 'srcset') {
+    if (!safeUrlAttribute('srcset', serialized)) return '';
+    const candidates = serialized.split(',').map((candidate) => {
+      const [url = '', ...descriptors] = candidate.trim().split(/\s+/);
+      return [safePostkitUrl(url, baseUrl), ...descriptors];
+    });
+    if (candidates.some(([url]) => url === undefined)) return '';
+    serialized = candidates.map((candidate) => candidate.join(' ')).join(', ');
+  }
+  return ` ${name}="${escapeAttribute(serialized)}"`;
+}
+
+interface StaticViewContext {
+  readonly node: PostkitComponentNode;
+  readonly options: SerializePostkitHtmlOptions;
+  readonly markdown: boolean;
+}
+
+function serializeViewNode(
+  node: PostkitViewNode,
+  context: StaticViewContext,
+  root = false,
+): string {
+  if (node.type === 'slot') {
+    return context.node.children
+      .map((child) =>
+        serializeHtmlNode(child, context.options, false, context.markdown),
+      )
+      .join('');
+  }
+  if (node.type === 'text') {
+    const text = escapeHtml(node.value);
+    // Inside Markdown, a blank line would end the HTML block early.
+    return context.markdown ? text.replaceAll('\n', '&#10;') : text;
+  }
+  return serializeViewElement(node, context, root);
+}
+
+function serializeViewElement(
+  element: PostkitViewElement,
+  context: StaticViewContext,
+  root: boolean,
+): string {
+  const { node, options } = context;
+  const annotated = options.annotations !== false;
+  const name = safeElementName(element.name);
+  const attributes = [
+    root ? ` data-postkit-component="${escapeAttribute(node.name)}"` : '',
+    element.part ? ` data-postkit-part="${escapeAttribute(element.part)}"` : '',
+    ...Object.entries(element.attributes ?? {}).map(([key, value]) =>
+      serializeViewAttribute(key, value, options.baseUrl),
+    ),
+    root && annotated ? reconstructionAnnotations(node, 'static') : '',
+    annotated && element.children.some((child) => child.type === 'slot')
+      ? ' data-postkit-slot="children"'
+      : '',
+  ].join('');
+  if (voidElements.has(name)) return `<${name}${attributes}>`;
+  return `<${name}${attributes}>${element.children
+    .map((child) => serializeViewNode(child, context))
+    .join('')}</${name}>`;
+}
+
+function reconstructionAnnotations(
+  node: PostkitComponentNode,
+  view?: 'omitted' | 'static',
+): string {
+  return ` data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"${
+    node.props && Object.keys(node.props).length > 0
+      ? ` data-postkit-props="${escapeAttribute(JSON.stringify(node.props))}"`
+      : ''
+  }${view ? ` data-postkit-view="${view}"` : ''}`;
+}
+
+/**
+ * A built-in component as its static view: readable markup with the anatomy
+ * attributes. With annotations, the root also carries the props and marks the
+ * view (`data-postkit-view`), and the element holding the authored children is
+ * marked `data-postkit-slot`, so the parser drops the generated markup and
+ * recovers the component node exactly. Returns `undefined` for components
+ * without a view.
+ */
+function serializeStaticView(
+  node: PostkitComponentNode,
+  options: SerializePostkitHtmlOptions,
+  markdown: boolean,
+): string | undefined {
+  const view = renderPostkitStaticView(node, options);
+  if (!view) return undefined;
+  const context: StaticViewContext = { node, options, markdown };
+  if (view.kind === 'view') return serializeViewNode(view.root, context, true);
+  // Nothing to show statically. Annotated output keeps a hidden carrier so the
+  // component survives a round trip.
+  if (options.annotations === false) return '';
+  const children =
+    node.children.length > 0
+      ? `<div data-postkit-slot="children">${serializeViewNode({ type: 'slot' }, context)}</div>`
+      : '';
+  return `<div data-postkit-component="${escapeAttribute(node.name)}" data-postkit-part="root"${reconstructionAnnotations(node, 'omitted')} hidden>${children}</div>`;
+}
+
+/** Each HTML serialization's numbered notes, keyed by its options object. */
+const footnoteContexts = new WeakMap<
+  SerializePostkitHtmlOptions,
+  PostkitFootnoteRenderContext
+>();
+
+/**
+ * Footnote nodes and the `Footnotes` list (03 §7.1). Definitions render in
+ * the list, where the `Footnotes` component sits or at the end. Returns
+ * `undefined` for other nodes.
+ */
+function serializeFootnoteHtml(
+  node: PostkitNode,
+  options: SerializePostkitHtmlOptions,
+  mdx: boolean,
+  markdown: boolean,
+): string | undefined {
+  const context = footnoteContexts.get(options);
+  const annotated = options.annotations !== false;
+  if (node.type === 'footnoteReference') {
+    return postkitFootnoteReferenceHtml(context, node, annotated);
+  }
+  if (node.type === 'footnoteDefinition') {
+    if (context) return '';
+    // No document to number it in (a Markdown fallback): keep it readable
+    // and recoverable.
+    const children = node.children
+      .map((child) => serializeHtmlNode(child, options, mdx, markdown))
+      .join('');
+    return annotated
+      ? `<div data-postkit-node="footnoteDefinition" data-postkit-identifier="${escapeAttribute(node.identifier)}"${
+          node.label
+            ? ` data-postkit-label="${escapeAttribute(node.label)}"`
+            : ''
+        } data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"><div data-postkit-slot="children">${children}</div></div>`
+      : `<div>${children}</div>`;
+  }
+  if (
+    context &&
+    node.type === 'component' &&
+    node.name === 'Footnotes' &&
+    !mdx
+  ) {
+    if (context.rendered) return '';
+    return postkitFootnoteListHtml(
+      context,
+      (children) =>
+        children
+          .map((child) => serializeHtmlNode(child, options, mdx, markdown))
+          .join(''),
+      annotated,
+      node,
+    );
+  }
+  return undefined;
 }
 
 function componentElement(
@@ -217,9 +433,15 @@ function serializeHtmlNode(
   node: PostkitNode,
   options: SerializePostkitHtmlOptions,
   mdx = false,
+  markdown = mdx,
 ): string {
   if (node.type === 'text')
     return mdx ? escapeMdxText(escapeHtml(node.value)) : escapeHtml(node.value);
+  const footnote = serializeFootnoteHtml(node, options, mdx, markdown);
+  if (footnote !== undefined) return footnote;
+  if (node.type === 'footnoteReference' || node.type === 'footnoteDefinition') {
+    return '';
+  }
   if (node.type === 'component') {
     if (!/^[A-Z][A-Za-z0-9.]*$/.test(node.name)) {
       throw new PostkitParseError(
@@ -227,17 +449,16 @@ function serializeHtmlNode(
         `Invalid Postkit component name: ${node.name}.`,
       );
     }
+    // MDX keeps literal component carriers: an MDX renderer supplies the view.
+    const view = mdx ? undefined : serializeStaticView(node, options, markdown);
+    if (view !== undefined) return view;
     const name = componentElement(node, options.componentElement);
     const annotations =
       options.annotations === false
         ? ''
-        : ` data-postkit-component="${escapeAttribute(node.name)}" data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"${
-            node.props && Object.keys(node.props).length > 0
-              ? ` data-postkit-props="${escapeAttribute(JSON.stringify(node.props))}"`
-              : ''
-          }`;
+        : ` data-postkit-component="${escapeAttribute(node.name)}"${reconstructionAnnotations(node)}`;
     return `<${name}${annotations}>${node.children
-      .map((child) => serializeHtmlNode(child, options, mdx))
+      .map((child) => serializeHtmlNode(child, options, mdx, markdown))
       .join('')}</${name}>`;
   }
   const name = safeElementName(node.name);
@@ -254,7 +475,7 @@ function serializeHtmlNode(
     options.annotations === false
       ? ''
       : ` data-postkit-node="${name}" data-postkit-version="${POSTKIT_DOCUMENT_VERSION}"`;
-  const opening = `<${name}${serializeAttributes(attributes)}${annotations}>`;
+  const opening = `<${name}${serializeAttributes(attributes, options.baseUrl)}${annotations}>`;
   if (voidElements.has(name))
     return mdx ? `${opening.slice(0, -1)} />` : opening;
   const checkbox = isTask
@@ -275,7 +496,7 @@ function serializeHtmlNode(
       )
     : '';
   return `${opening}${checkbox}${node.children
-    .map((child) => serializeHtmlNode(child, options, mdx))
+    .map((child) => serializeHtmlNode(child, options, mdx, markdown))
     .join('')}</${name}>`;
 }
 
@@ -284,9 +505,22 @@ export function serializePostkitHtml(
   options: SerializePostkitHtmlOptions = {},
 ): string {
   assertDocument(document);
-  const body = document.children
-    .map((node) => serializeHtmlNode(node, options))
+  // A fresh options object keys this document's footnote numbering.
+  const htmlOptions: SerializePostkitHtmlOptions = { ...options };
+  const footnotes = createPostkitFootnoteContext(document, options.footnotes);
+  if (footnotes) footnoteContexts.set(htmlOptions, footnotes);
+  let body = document.children
+    .map((node) => serializeHtmlNode(node, htmlOptions))
     .join('');
+  if (footnotes && !footnotes.rendered) {
+    body += postkitFootnoteListHtml(
+      footnotes,
+      (children) =>
+        children.map((child) => serializeHtmlNode(child, htmlOptions)).join(''),
+      htmlOptions.annotations !== false,
+      undefined,
+    );
+  }
   if (
     options.documentElement === false ||
     options.documentElement === undefined
@@ -312,9 +546,37 @@ export function serializePostkitJson(
 function textContent(nodes: readonly PostkitNode[]): string {
   return nodes
     .map((node) =>
-      node.type === 'text' ? node.value : textContent(node.children),
+      node.type === 'text'
+        ? node.value
+        : node.type === 'footnoteReference'
+          ? ''
+          : textContent(node.children),
     )
     .join('');
+}
+
+/** A footnote label as GFM accepts it: no whitespace, brackets or carets. */
+function footnoteLabel(node: {
+  readonly identifier: string;
+  readonly label?: string;
+}): string {
+  return (
+    (node.label ?? node.identifier)
+      .replace(/[\s\][^\\]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'note'
+  );
+}
+
+/** `[^id]: text`, continuation lines indented four spaces. */
+function serializeFootnoteDefinition(
+  node: Extract<PostkitNode, { readonly type: 'footnoteDefinition' }>,
+  options: SerializePostkitMarkdownOptions,
+): string {
+  const content = serializeMarkdownNodes(node.children, options).trim();
+  const [first = '', ...rest] = content.split('\n');
+  return `[^${footnoteLabel(node)}]: ${first}${rest
+    .map((line) => (line ? `\n    ${line}` : '\n'))
+    .join('')}`;
 }
 
 function escapeMdxText(value: string): string {
@@ -386,6 +648,7 @@ function htmlFallback(
       annotations: options.annotations,
     },
     options.mdx,
+    true,
   );
 }
 
@@ -394,6 +657,8 @@ function serializeInlineNode(
   options: SerializePostkitMarkdownOptions,
 ): string {
   if (node.type === 'text') return escapeMarkdown(node.value, options);
+  if (node.type === 'footnoteReference') return `[^${footnoteLabel(node)}]`;
+  if (node.type === 'footnoteDefinition') return htmlFallback(node, options);
   if (node.type === 'component') {
     return options.mdx
       ? mdxComponent(node, options, true)
@@ -552,6 +817,10 @@ function serializeBlockNode(
   options: SerializePostkitMarkdownOptions,
 ): string {
   if (node.type === 'text') return escapeMarkdown(node.value, options);
+  if (node.type === 'footnoteReference') return `[^${footnoteLabel(node)}]`;
+  if (node.type === 'footnoteDefinition') {
+    return serializeFootnoteDefinition(node, options);
+  }
   if (node.type === 'component') {
     return options.mdx
       ? mdxComponent(node, options)
@@ -628,6 +897,8 @@ export function serializePostkit(
       return serializePostkitMarkdown(document, options.markdown);
     case 'mdx':
       return serializePostkitMdx(document, options.markdown);
+    case 'text':
+      return serializePostkitText(document, options.text);
     default:
       throw new PostkitParseError(
         'unsupported-format',

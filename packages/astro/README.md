@@ -1,12 +1,13 @@
 # Postkit for Astro
 
-`@postkit/astro` renders Postkit declarations through Astro MDX,
-provides Chakra context for every isolated React rendering boundary, and
-hydrates only components that require a React runtime.
+`@postkit/astro` renders Postkit declarations through Astro MDX with the
+`@postkit/chakra` views (in Chakra context for every isolated React rendering
+boundary) or the headless `@postkit/react` views, and hydrates only components
+that require a React runtime.
 
 ## When to use it
 
-Use this adapter when an Astro site needs the PostKit component contract in
+Use this adapter when an Astro site needs the Postkit component contract in
 imported MDX or content collections. It owns the Astro-to-React bridge and
 selective hydration policy while leaving content loading, layouts, and asset
 handling to the site.
@@ -14,7 +15,7 @@ handling to the site.
 ## Install
 
 ```sh
-npm install @postkit/astro @postkit/react
+npm install @postkit/astro @postkit/chakra
 ```
 
 Enable Astro's React and MDX integrations:
@@ -63,10 +64,10 @@ postkitAstro({
 });
 ```
 
-Opt into PostKit's standalone preset from that module when desired:
+Opt into Postkit's standalone preset from that module when desired:
 
 ```ts
-import { createPostkitSystem, postkitDefaultTheme } from '@postkit/react';
+import { createPostkitSystem, postkitDefaultTheme } from '@postkit/chakra';
 
 export default createPostkitSystem({ preset: postkitDefaultTheme });
 ```
@@ -74,6 +75,50 @@ export default createPostkitSystem({ preset: postkitDefaultTheme });
 The relative path resolves from the Astro project root and is imported by both
 the server renderer and hydrated islands. This avoids trying to serialize a
 Chakra system through Astro island props.
+
+## Renderers
+
+The Astro components render the `@postkit/chakra` views by default. Set
+`renderer: 'headless'` to render the `@postkit/react` views instead: the same
+components, anatomy and hydration policy, with no Chakra or Emotion on the
+page.
+
+```ts
+// astro.config.ts
+export default defineConfig({
+  integrations: [
+    postkitAstro({ renderer: 'headless', styles: true }),
+    react(),
+    mdx(createPostkitAstroMdxOptions()),
+  ],
+});
+```
+
+| Option         | Renderer   | Default    | What it does                                                                            |
+| -------------- | ---------- | ---------- | --------------------------------------------------------------------------------------- |
+| `renderer`     | both       | `'chakra'` | `'chakra'` renders `@postkit/chakra` views; `'headless'` renders `@postkit/react` views |
+| `chakraSystem` | `chakra`   | Chakra's   | A module that default-exports the site's `SystemContext`                                |
+| `styles`       | `headless` | `false`    | Adds `@postkit/react/styles.css`, the token-driven baseline, to every page              |
+
+Without `styles`, the headless views emit the anatomy and no styles: target
+`[data-postkit-component="Callout"] [data-postkit-part="icon"]` from your own
+CSS, or import `@postkit/react/styles.css` in a layout and override its
+`--postkit-*` tokens. The options that belong to the other renderer are
+rejected rather than ignored.
+
+The choice is site-wide. It changes which module the generated wrappers read
+their views from (`virtual:postkit/astro-views`), so pages and islands load
+one renderer's views and nothing from the other.
+
+`@postkit/react` is a dependency of `@postkit/astro`, so a headless site
+needs nothing else from Postkit. `@postkit/chakra` already depends on the same
+`@postkit/react` version, so a Chakra site installs and bundles one copy, as
+before. The interactive headless views run on Zag; a site without Chakra
+installs it as the [`@postkit/react` guide](../react#install) describes:
+
+```sh
+npm install @zag-js/react @zag-js/core @zag-js/types @zag-js/carousel @zag-js/tabs @zag-js/clipboard
+```
 
 ## Render MDX
 
@@ -145,6 +190,19 @@ use `client:visible` and hydrate only when they approach the viewport. This
 keeps forms, sharing, runtime link resolution, and consent-gated embeds
 interactive without shipping a page-wide React root.
 
+The policy follows each component definition's `runtime`: `static` and
+`native-controls` render on the server only, while `client` and `resolver`
+hydrate with `client:visible`. The Astro wrappers in `src/components/` and the
+React bridges are generated from the definitions by
+`npm run components:generate`, and each wrapper states its policy in a
+comment.
+
+The policy is the same for both renderers. The wrappers are shared, and each
+headless view's behaviour comes from the same hooks as its Chakra view, so a
+component either needs the browser under both or under neither. What an
+island loads differs: with `renderer: 'headless'` it is the `@postkit/react`
+view and its Zag machine, with no Chakra provider, system or Emotion runtime.
+
 Poll selections are local unless the host supplies persistence. Host callbacks
 such as `onVote` belong inside a hydrated React wrapper; functions cannot be
 serialized as props across an Astro island boundary.
@@ -160,7 +218,8 @@ site-owned wrappers that control their hydration behavior.
 - `postkitAstroComponents`
 - `createPostkitAstroComponents(overrides?)`
 - Individual Astro components from `@postkit/astro/components/*`
-- React bridges from `@postkit/astro/react`
+- Chakra React bridges from `@postkit/astro/react`
+- Headless React bridges from `@postkit/astro/headless`
 
 ## Troubleshooting
 
@@ -170,9 +229,13 @@ site-owned wrappers that control their hydration behavior.
   `createPostkitAstroMdxOptions()`.
 - Chakra context errors in islands: configure `chakraSystem` with a module that
   default-exports the site's `SystemContext`.
+- Unstyled components with `renderer: 'headless'`: set `styles: true`, or
+  style the anatomy yourself.
+- `Cannot find module '@zag-js/…'` with `renderer: 'headless'`: install Zag
+  (see [Renderers](#renderers)).
 - Unexpected client JavaScript: check the hydration policy before wrapping
   static components in a site-owned client island.
 
-See the [`@postkit/react`](../react) guide for the shared component,
+See the [`@postkit/chakra`](../chakra) guide for the shared component,
 declaration, and theming APIs. The complete
 [Astro example](../../examples/astro) is built and inspected in CI.

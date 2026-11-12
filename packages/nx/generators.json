@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "component": {
+      "factory": "./dist/generators/component/generator",
+      "schema": "./generators/component/schema.json",
+      "description": "Scaffold a Postkit component: definition, headless view, CSS, and optionally a Chakra view, recipe and specs."
+    }
+  }
+}

@@ -58,3 +58,23 @@ vitest.config.*.timestamp*
 .content-collections
 out
 /apps/site/public/api/
+
+# Design handoff renders (15 MB of JPEGs; regenerate from reference/previews or keep locally)
+docs/design/handoff/reference/renders/
+
+# Generated at build time by `nx run site:feeds` (PK-042)
+/apps/site/public/feeds/
+
+# Generated at build time by `nx run site:icons` from docs/design/handoff/assets/brand/favicon.svg (PK-060)
+/apps/site/public/favicon.svg
+/apps/site/public/favicon.ico
+/apps/site/public/apple-touch-icon.png
+/apps/site/public/icon-192.png
+/apps/site/public/icon-512.png
+/apps/site/public/site.webmanifest
+
+# Generated at build time by `nx run site:og-images` (PK-061)
+/apps/site/public/og/
+
+# Generated at build time by `nx run site:renderer-styles` (PK-030): @postkit/react/styles.css
+/apps/site/public/renderers/

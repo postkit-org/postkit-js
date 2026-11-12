@@ -1,31 +1,53 @@
-import { PostkitProvider } from '@postkit/react';
+import { PostkitHostProvider } from '@postkit/chakra';
+import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { MetaProvider } from 'next-meta';
 
+import { siteMetaDefaults } from '../components/layout/page-meta';
+import { SiteAnalytics } from '../components/site-analytics';
 import { SiteShell } from '../components/site-shell';
+import { SearchProvider } from '../lib/search';
 import { siteCodeBlockAdapter } from '../lib/code-block-adapter';
-import { siteSystem } from '../lib/site-theme';
+import { siteCodeBlockConfig } from '../lib/code-block-config';
+import { fontVariablesCss } from '../lib/fonts';
+import { sitePostkitSystem } from '../lib/site-theme';
 import './styles.css';
 
 function CustomApp({ Component, pageProps }: AppProps) {
+  const { asPath } = useRouter();
+
   return (
-    <PostkitProvider
-      system={siteSystem}
-      codeBlockAdapter={siteCodeBlockAdapter}
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
     >
-      <Head>
-        <meta
-          name="description"
-          content="PostKit is a portable publishing component system for React and the web."
-        />
-        <meta name="theme-color" content="#f4f1e8" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <title>PostKit</title>
-      </Head>
-      <SiteShell>
-        <Component {...pageProps} />
-      </SiteShell>
-    </PostkitProvider>
+      <PostkitHostProvider
+        {...sitePostkitSystem}
+        codeBlockAdapter={siteCodeBlockAdapter}
+        codeBlock={siteCodeBlockConfig}
+      >
+        <Head>
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        </Head>
+        <style jsx global>
+          {fontVariablesCss}
+        </style>
+        {/* Title, description, canonical and social defaults; each page's PageMeta overrides them. */}
+        <MetaProvider {...siteMetaDefaults(asPath)}>
+          <SiteAnalytics>
+            <SearchProvider>
+              <SiteShell>
+                <Component {...pageProps} />
+              </SiteShell>
+            </SearchProvider>
+          </SiteAnalytics>
+        </MetaProvider>
+      </PostkitHostProvider>
+    </ThemeProvider>
   );
 }
 

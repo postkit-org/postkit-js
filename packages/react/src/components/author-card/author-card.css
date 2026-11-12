@@ -1,0 +1,101 @@
+/* AuthorCard: who wrote this, with an avatar, role, bio and links. */
+@scope ([data-postkit-component='AuthorCard']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    --postkit-avatar-size: 3.5rem;
+    align-items: flex-start;
+    display: flex;
+    gap: var(--postkit-space-4);
+  }
+  :where(:scope[data-size='sm']) {
+    --postkit-avatar-size: 2.5rem;
+    gap: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='lg']) {
+    --postkit-avatar-size: 5rem;
+    gap: var(--postkit-space-5);
+  }
+  :where([data-postkit-part='avatar']) {
+    align-items: center;
+    aspect-ratio: 1;
+    background: var(--postkit-color-surface-emphasized);
+    border-radius: var(--postkit-radius-full);
+    display: flex;
+    flex: 0 0 auto;
+    font-size: calc(var(--postkit-avatar-size) * 0.4);
+    font-weight: var(--postkit-weight-semibold);
+    height: var(--postkit-avatar-size);
+    justify-content: center;
+    overflow: hidden;
+    width: var(--postkit-avatar-size);
+  }
+  :where([data-postkit-part='avatar'] img) {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  :where([data-postkit-part='content']) {
+    display: grid;
+    gap: var(--postkit-space-2);
+    min-width: 0;
+  }
+  :where([data-postkit-part='header']) {
+    display: grid;
+  }
+  :where([data-postkit-part='name']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='nameLink']) {
+    text-decoration-line: none;
+  }
+  :where([data-postkit-part='nameLink']:hover) {
+    text-decoration-line: underline;
+  }
+  :where([data-postkit-part='role'], [data-postkit-part='bio']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: 0.875em;
+  }
+  :where([data-postkit-part='links']) {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.875em;
+    gap: var(--postkit-space-2) var(--postkit-space-4);
+    list-style: none;
+    padding: 0;
+  }
+  :where([data-postkit-part='link']) {
+    font-weight: var(--postkit-weight-medium);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-inset);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-inset);
+  }
+
+  :where(:scope[data-presentation='compact']) {
+    --postkit-avatar-size: 2.5rem;
+  }
+  :where(:scope[data-presentation='compact'] [data-postkit-part='bio']) {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  :where(:scope[data-presentation='inline']) {
+    --postkit-avatar-size: 2rem;
+    align-items: center;
+  }
+  :where(
+    :scope[data-presentation='inline']
+      :is([data-postkit-part='bio'], [data-postkit-part='links'])
+  ) {
+    display: none;
+  }
+}

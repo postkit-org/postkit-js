@@ -1,17 +1,15 @@
 ---
 title: Troubleshooting
 summary: Diagnose provider, theme, routing, hydration, directive, and remote metadata integration issues.
-category: Help
-order: 90
+category: Reference
+order: 8
 ---
-
-# Troubleshooting
 
 ## Components render with only host styling
 
-This is the default. PostKit inherits the host Chakra system and does not apply
+This is the default. Postkit inherits the host Chakra system and does not apply
 its visual preset automatically. Pass `preset={postkitDefaultTheme}` for the
-standalone appearance, register PostKit slot recipes in the host system, or use
+standalone appearance, register Postkit slot recipes in the host system, or use
 `theme={createPostkitTheme(...)}` for deliberate scoped overrides. The article
 must still render beneath `PostkitProvider` so Chakra context is available.
 CodeBlock, CodeGroup, and Terminal retain semantic structural styling in this
@@ -25,7 +23,7 @@ internal URL by the adapter.
 
 ## A plain Markdown directive is ignored
 
-Enable PostKit's Remark plugins and use the `postkit-` directive name. Use JSX
+Enable Postkit's Remark plugins and use the `postkit-` directive name. Use JSX
 instead of directive brace syntax inside MDX files.
 
 ## Astro hydration fails
@@ -40,6 +38,6 @@ Run the resolver on a server or at build time. Check the provider configuration,
 URL policy, response contract, and cache independently from the rendering
 component.
 
-When reporting an issue, include the PostKit package version, framework and
+When reporting an issue, include the Postkit package version, framework and
 runtime versions, a minimal content sample, and whether the failure occurs at
 build time, server rendering, hydration, or client interaction.

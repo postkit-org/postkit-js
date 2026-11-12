@@ -1,0 +1,116 @@
+/* Poll: a question with options; the chosen option is pressed, with result bars. */
+@scope ([data-postkit-component='Poll']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-space-5);
+  }
+  :where(:scope[data-size='sm']) {
+    padding: var(--postkit-space-4);
+  }
+  :where(:scope[data-size='lg']) {
+    padding: var(--postkit-space-6);
+  }
+  :where([data-postkit-part='question']) {
+    font-family: var(--postkit-font-heading);
+    font-size: 1.125em;
+    font-weight: var(--postkit-weight-semibold);
+    line-height: var(--postkit-leading-tight);
+  }
+  :where([data-postkit-part='description']) {
+    color: var(--postkit-color-fg-muted);
+    margin-block-start: var(--postkit-space-1);
+  }
+  :where([data-postkit-part='options']) {
+    display: grid;
+    gap: var(--postkit-space-2);
+    list-style: none;
+    margin-block-start: var(--postkit-space-4);
+    padding: 0;
+  }
+  :where([data-postkit-part='option']) {
+    appearance: none;
+    background: var(--postkit-color-bg);
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+    border-radius: var(--postkit-radius-lg);
+    color: inherit;
+    cursor: pointer;
+    display: grid;
+    gap: var(--postkit-space-2);
+    padding: var(--postkit-space-3);
+    text-align: start;
+    width: 100%;
+  }
+  :where([data-postkit-part='option']:hover) {
+    border-color: var(--postkit-color-border-strong);
+  }
+  :where(
+    [data-postkit-part='option']:is(
+      [aria-pressed='true'],
+      [aria-checked='true'],
+      [data-selected],
+      [data-state='checked']
+    )
+  ) {
+    background: var(--postkit-color-surface-emphasized);
+    border-color: var(--postkit-color-fg);
+    box-shadow: inset 0 0 0 1px var(--postkit-color-fg);
+  }
+  :where(
+    [data-postkit-part='option']:is(
+      :disabled,
+      [aria-disabled='true'],
+      [data-disabled]
+    )
+  ) {
+    cursor: not-allowed;
+  }
+  :where([data-postkit-part='optionLabel']) {
+    align-items: center;
+    display: flex;
+    font-weight: var(--postkit-weight-medium);
+    gap: var(--postkit-space-3);
+    justify-content: space-between;
+  }
+  :where([data-postkit-part='result']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+  :where([data-postkit-part='bar']) {
+    background: var(--postkit-color-accent);
+    border-radius: var(--postkit-radius-full);
+    display: block;
+    height: 0.25rem;
+  }
+  :where(progress[data-postkit-part='bar'], meter[data-postkit-part='bar']) {
+    appearance: none;
+    background: var(--postkit-color-surface-emphasized);
+    border: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+  :where(progress[data-postkit-part='bar'])::-webkit-progress-bar {
+    background: var(--postkit-color-surface-emphasized);
+  }
+  :where(progress[data-postkit-part='bar'])::-webkit-progress-value {
+    background: var(--postkit-color-accent);
+  }
+  :where(progress[data-postkit-part='bar'])::-moz-progress-bar {
+    background: var(--postkit-color-accent);
+  }
+  :where([data-postkit-part='status']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-xs);
+    margin-block-start: var(--postkit-space-3);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

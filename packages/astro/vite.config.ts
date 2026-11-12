@@ -11,6 +11,11 @@ export default defineConfig({
         replacement: resolve(__dirname, 'src/lib/testing/default-system.ts'),
       },
       {
+        // The integration's default renderer.
+        find: 'virtual:postkit/astro-views',
+        replacement: resolve(__dirname, 'src/lib/react-bridges.tsx'),
+      },
+      {
         find: /^.*\.astro$/,
         replacement: resolve(__dirname, 'src/lib/testing/astro-component.ts'),
       },

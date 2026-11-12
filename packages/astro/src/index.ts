@@ -6,4 +6,5 @@ export {
 export {
   postkitAstro,
   type PostkitAstroIntegrationOptions,
+  type PostkitAstroRenderer,
 } from './lib/integration.js';

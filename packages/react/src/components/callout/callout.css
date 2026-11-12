@@ -1,0 +1,58 @@
+/* Callout: a highlighted note, tip, warning or caution, tinted by its tone. */
+@scope ([data-postkit-component='Callout']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    align-items: flex-start;
+    border-radius: var(--postkit-radius-xl);
+    display: flex;
+    gap: var(--postkit-space-3);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='icon']) {
+    align-items: center;
+    background: var(--postkit-tone-surface);
+    border-radius: var(--postkit-radius-full);
+    color: var(--postkit-tone);
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--postkit-text-sm);
+    font-weight: var(--postkit-weight-bold);
+    height: 1.5rem;
+    justify-content: center;
+    line-height: 1;
+    width: 1.5rem;
+  }
+  :where([data-postkit-part='content']) {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-block-start: 0.1em;
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+  }
+  :where([data-postkit-part='body']) {
+    color: var(--postkit-color-fg-muted);
+  }
+  :where([data-postkit-part='title'] + [data-postkit-part='body']) {
+    margin-block-start: var(--postkit-space-1);
+  }
+
+  /* subtle (default): the tone's tint; body text keeps full contrast. */
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-tone-surface);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='icon']) {
+    background: var(--postkit-color-bg);
+  }
+  :where(:scope[data-variant='subtle'] [data-postkit-part='body']) {
+    color: var(--postkit-color-fg);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    border-inline-start: var(--postkit-rule-width) solid var(--postkit-tone);
+    border-radius: 0;
+    padding-block: var(--postkit-space-1);
+    padding-inline-end: 0;
+  }
+}

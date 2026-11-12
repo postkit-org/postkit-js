@@ -8,7 +8,7 @@ const resolver = createCallbackResolver('example', async (url) => ({
   url,
   title: 'Portable publishing',
   description: 'A normalized response owned by the server boundary.',
-  siteName: 'PostKit example',
+  siteName: 'Postkit example',
   images: [],
   audio: [],
   video: [],
@@ -27,4 +27,4 @@ if (
   throw new Error('The unfurl example returned an unexpected result.');
 }
 
-process.stdout.write('PostKit unfurl example verified.\n');
+process.stdout.write('Postkit unfurl example verified.\n');

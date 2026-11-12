@@ -13,6 +13,9 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../chakra/tsconfig.lib.json"
+    },
+    {
       "path": "../react/tsconfig.lib.json"
     }
   ],

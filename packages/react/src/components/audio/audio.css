@@ -1,0 +1,33 @@
+/* Audio: a titled native player with an optional caption. */
+@scope ([data-postkit-component='Audio']:not([data-postkit-unstyled])) to ([data-postkit-component]) {
+  :where(:scope) {
+    border-radius: var(--postkit-radius-xl);
+    padding: var(--postkit-inset);
+  }
+  :where([data-postkit-part='title']) {
+    font-weight: var(--postkit-weight-semibold);
+    margin-block-end: var(--postkit-space-3);
+  }
+  :where([data-postkit-part='player']) {
+    display: block;
+    width: 100%;
+  }
+  :where([data-postkit-part='caption']) {
+    color: var(--postkit-color-fg-muted);
+    font-size: var(--postkit-text-sm);
+    margin-block-start: var(--postkit-space-3);
+  }
+  :where(:scope[data-size='sm'] [data-postkit-part='caption']) {
+    font-size: var(--postkit-text-xs);
+  }
+
+  :where(:scope[data-variant='subtle']) {
+    background: var(--postkit-color-surface);
+  }
+  :where(:scope[data-variant='outline']) {
+    border: var(--postkit-border-width) solid var(--postkit-color-border);
+  }
+  :where(:scope[data-variant='plain']) {
+    padding-inline: 0;
+  }
+}

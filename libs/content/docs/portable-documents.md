@@ -1,11 +1,9 @@
 ---
 title: Portable documents and feeds
 summary: Normalize HTML, Markdown, MDX, or JSON and render it through a host Chakra system.
-category: Authoring
-order: 55
+category: Writing
+order: 5
 ---
-
-# Portable documents and feeds
 
 Use `@postkit/core` when an API or feed needs to offer the same article as
 HTML, Markdown, MDX, or versioned JSON. The package has no React dependency.
@@ -29,18 +27,21 @@ and exports. JSON input must match the current versioned document schema.
 
 Task lists retain checked and unchecked state through HTML using disabled
 checkboxes. Markdown exports escape literal block markers, entities, and link
-destinations to preserve their meaning. Footnotes are currently a literal-text
-fallback: both references and definitions remain visible, but Postkit does not
-generate linked footnote sections or backlinks.
+destinations to preserve their meaning. Footnotes are portable: `[^id]` and
+`:footnote[…]` become `footnoteReference` and `footnoteDefinition` nodes,
+numbered by first reference. HTML gets linked marks and an end list with
+backlinks (ids prefixed by `footnotes.scope`), plain text gets `[1]` marks
+and a numbered list, and a reference with no definition fails with its line
+and column.
 
 ## Render through Chakra
 
-`@postkit/react/document` supplies `DocumentRenderer`. Semantic input is mapped
+`@postkit/chakra/document` supplies `DocumentRenderer`. Semantic input is mapped
 through Postkit's Chakra-backed prose primitives, so the host's Heading, List,
 Table, Image, Code, and other recipes continue to apply.
 
 ```tsx
-import { DocumentRenderer, parsePostkitHtml } from '@postkit/react/document';
+import { DocumentRenderer, parsePostkitHtml } from '@postkit/chakra/document';
 
 const document = parsePostkitHtml(rssItem.content);
 
@@ -60,6 +61,11 @@ Unknown nodes are unwrapped by default, retaining readable children. Use the
 `unknownElements` and `unknownComponents` props to drop them instead.
 
 ## Reconstruct rendered output
+
+`DocumentRenderer`'s component views load the first time a document renders
+them, so a page downloads only the views its document uses. A server render
+that waits for Suspense (as Next.js does) has them in its HTML; for a
+synchronous render, pass `components={postkitChakraViews}`.
 
 HTML serialization and `DocumentRenderer` emit versioned `data-postkit-*`
 annotations by default. They identify semantic nodes, rich component names,

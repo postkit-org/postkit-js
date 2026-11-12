@@ -26,7 +26,7 @@ function fail(message) {
 }
 
 if (nxConfiguration.release?.projectsRelationship !== 'fixed') {
-  fail('Public PostKit packages must use a fixed Nx release relationship.');
+  fail('Public Postkit packages must use a fixed Nx release relationship.');
 }
 if (
   JSON.stringify(nxConfiguration.release?.projects) !==
@@ -170,10 +170,32 @@ for (const packageName of publicPackages) {
     }
   }
   if (
-    packageName === '@postkit/react' &&
+    packageName === '@postkit/chakra' &&
     !paths.includes('component-manifest.json')
   ) {
-    fail('@postkit/react tarball is missing component-manifest.json.');
+    fail('@postkit/chakra tarball is missing component-manifest.json.');
+  }
+  if (packageName === '@postkit/react' && !paths.includes('dist/styles.css')) {
+    fail('@postkit/react tarball is missing dist/styles.css.');
+  }
+  // Every file an export points at must be in the tarball.
+  const exportTargets = new Set();
+  const collectTargets = (value, condition) => {
+    if (typeof value === 'string') {
+      if (condition !== '@postkit/source' && !value.includes('*')) {
+        exportTargets.add(value.replace(/^\.\//, ''));
+      }
+    } else if (value && typeof value === 'object') {
+      for (const [key, entry] of Object.entries(value)) {
+        collectTargets(entry, key);
+      }
+    }
+  };
+  collectTargets(manifests.get(packageName).manifest.exports);
+  for (const target of exportTargets) {
+    if (!paths.includes(target)) {
+      fail(`${packageName} exports ${target}, which isn't in its tarball.`);
+    }
   }
   if (!paths.some((path) => path.endsWith('.js'))) {
     fail(`${packageName} tarball has no compiled JavaScript.`);
@@ -200,5 +222,5 @@ for (const packageName of publicPackages) {
 }
 
 process.stdout.write(
-  `Validated ${publicPackages.length} public PostKit packages.\n`,
+  `Validated ${publicPackages.length} public Postkit packages.\n`,
 );

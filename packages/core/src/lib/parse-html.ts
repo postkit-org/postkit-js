@@ -278,12 +278,224 @@ function convertChildren(
   return result;
 }
 
+function hasProperty(node: HastElement, name: string): boolean {
+  const kebab = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+  return name in node.properties || kebab in node.properties;
+}
+
+/**
+ * A component's static view (`data-postkit-view`, written by
+ * `serializePostkitHtml`) is markup generated from its props. Only the element
+ * marked `data-postkit-slot` holds authored children; everything else is
+ * dropped so the component node round-trips exactly.
+ */
+function staticViewChildren(node: HastElement): HastNode[] {
+  for (const child of node.children) {
+    if (child.type !== 'element') continue;
+    if (hasProperty(child, 'dataPostkitSlot')) return child.children;
+    // A nested component's slot belongs to that component.
+    if (hasProperty(child, 'dataPostkitComponent')) continue;
+    const found = staticViewChildren(child);
+    if (found.length > 0) return found;
+  }
+  return [];
+}
+
+/** The id a GFM footnote fragment names: `#user-content-fn-plain` → `plain`. */
+function gfmFootnoteIdentifier(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const match = /(?:^|[#-])fn-(.+)$/.exec(value.replace(/^#/, ''));
+  return match?.[1] ? decodeURIComponent(match[1]) : undefined;
+}
+
+function footnoteLabel(properties: HastProperties): { label?: string } {
+  const label = propertyString(
+    properties,
+    'dataPostkitLabel',
+    'data-postkit-label',
+  );
+  return label ? { label } : {};
+}
+
+/**
+ * Drops the space a removed backlink leaves at the end of a note, so a
+ * parsed note serializes as it was.
+ */
+function trimNoteEnd(children: readonly PostkitNode[]): PostkitNode[] {
+  const last = children.at(-1);
+  if (last?.type === 'text') {
+    const value = last.value.replace(/[ \t]+$/, '');
+    return value
+      ? [...children.slice(0, -1), { ...last, value }]
+      : children.slice(0, -1);
+  }
+  if (last?.type === 'element' && last.name === 'p') {
+    return [
+      ...children.slice(0, -1),
+      { ...last, children: trimNoteEnd(last.children) },
+    ];
+  }
+  return [...children];
+}
+
+/** The elements of a tree, depth first, that match `test`. */
+function findElements(
+  node: HastNode,
+  test: (element: HastElement) => boolean,
+): HastElement[] {
+  if (node.type === 'element' && test(node)) return [node];
+  if (!('children' in node)) return [];
+  return (node.children as HastNode[]).flatMap((child) =>
+    findElements(child, test),
+  );
+}
+
+/**
+ * Footnotes, as `serializePostkitHtml` writes them (annotated with
+ * `data-postkit-node`) or as GFM HTML does (`data-footnote-ref`,
+ * `section[data-footnotes]`). Returns `undefined` for other elements.
+ */
+function convertFootnote(
+  node: HastElement,
+  options: ParsePostkitHtmlOptions,
+  allowed: ReadonlySet<string>,
+): PostkitNode[] | undefined {
+  const kind = propertyString(
+    node.properties,
+    'dataPostkitNode',
+    'data-postkit-node',
+  );
+  const identifier = propertyString(
+    node.properties,
+    'dataPostkitIdentifier',
+    'data-postkit-identifier',
+  );
+  if (kind === 'footnoteReference' && identifier) {
+    return [
+      {
+        type: 'footnoteReference',
+        identifier,
+        ...footnoteLabel(node.properties),
+      },
+    ];
+  }
+  if (kind === 'footnoteDefinition' && identifier) {
+    const [content] = findElements(node, (element) =>
+      hasProperty(element, 'dataPostkitSlot'),
+    );
+    return [
+      {
+        type: 'footnoteDefinition',
+        identifier,
+        ...footnoteLabel(node.properties),
+        children: trimNoteEnd(
+          convertChildren(content?.children ?? node.children, options, allowed),
+        ),
+      },
+    ];
+  }
+  if (kind === 'footnotes') {
+    const definitions = findElements(
+      node,
+      (element) =>
+        propertyString(
+          element.properties,
+          'dataPostkitNode',
+          'data-postkit-node',
+        ) === 'footnoteDefinition',
+    ).flatMap((item) => convertFootnote(item, options, allowed) ?? []);
+    // A list the author placed (`<Footnotes />`) stays where it was.
+    if (!hasProperty(node, 'dataPostkitPlaced')) return definitions;
+    const props = annotatedProps(node.properties);
+    return [
+      {
+        type: 'component',
+        name: 'Footnotes',
+        ...(props ? { props } : {}),
+        children: [],
+      },
+      ...definitions,
+    ];
+  }
+  // Unannotated Postkit output: the ids carry the notes' links.
+  const component = propertyString(
+    node.properties,
+    'dataPostkitComponent',
+    'data-postkit-component',
+  );
+  if (component === 'Footnote' && !kind) {
+    const [link] = findElements(
+      node,
+      (element) =>
+        element.tagName === 'a' &&
+        gfmFootnoteIdentifier(element.properties['href']) !== undefined,
+    );
+    const identifier = link && gfmFootnoteIdentifier(link.properties['href']);
+    if (identifier) return [{ type: 'footnoteReference', identifier }];
+  }
+  if (component === 'Footnotes' && !kind) {
+    return findElements(
+      node,
+      (element) =>
+        element.tagName === 'li' &&
+        gfmFootnoteIdentifier(element.properties['id']) !== undefined,
+    ).map((item) => {
+      const [content] = findElements(
+        item,
+        (element) =>
+          propertyString(element.properties, 'dataPostkitPart') === 'content',
+      );
+      return {
+        type: 'footnoteDefinition',
+        identifier: gfmFootnoteIdentifier(item.properties['id']) as string,
+        children: trimNoteEnd(
+          convertChildren((content ?? item).children, options, allowed),
+        ),
+      };
+    });
+  }
+  if (hasProperty(node, 'dataFootnoteRef')) {
+    const gfm = gfmFootnoteIdentifier(node.properties['href']);
+    if (gfm) return [{ type: 'footnoteReference', identifier: gfm }];
+  }
+  if (hasProperty(node, 'dataFootnotes')) {
+    return findElements(
+      node,
+      (element) =>
+        element.tagName === 'li' &&
+        gfmFootnoteIdentifier(element.properties['id']) !== undefined,
+    ).map((item) => ({
+      type: 'footnoteDefinition',
+      identifier: gfmFootnoteIdentifier(item.properties['id']) as string,
+      children: trimNoteEnd(convertChildren(item.children, options, allowed)),
+    }));
+  }
+  // The way back to a reference is generated markup, never content.
+  if (
+    hasProperty(node, 'dataFootnoteBackref') ||
+    propertyString(node.properties, 'dataPostkitPart') === 'backlink'
+  ) {
+    return [];
+  }
+  return undefined;
+}
+
 function convertElement(
   node: HastElement,
   options: ParsePostkitHtmlOptions,
   allowed: ReadonlySet<string>,
 ): PostkitNode[] {
+  const footnote = convertFootnote(node, options, allowed);
+  if (footnote) return footnote;
   const children = convertChildren(node.children, options, allowed);
+  // GFM wraps a reference in `<sup>`; the reference is the whole of it.
+  if (
+    node.tagName === 'sup' &&
+    children.length === 1 &&
+    children[0]?.type === 'footnoteReference'
+  ) {
+    return children;
+  }
   if (
     'dataPostkitDocument' in node.properties ||
     'data-postkit-document' in node.properties
@@ -315,7 +527,9 @@ function convertElement(
         type: 'component',
         name: componentName,
         ...(props ? { props } : {}),
-        children,
+        children: hasProperty(node, 'dataPostkitView')
+          ? convertChildren(staticViewChildren(node), options, allowed)
+          : children,
       },
     ];
   }

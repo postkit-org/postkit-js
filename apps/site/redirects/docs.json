@@ -1,0 +1,50 @@
+{
+  "$note": "Permanent redirects for changed docs URLs (handoff 01 §3; source list in docs/design/handoff/content/redirects.json). permanent: true sends 308; permanent: false sends 307.",
+  "redirects": [
+    {
+      "source": "/docs/choosing-a-package",
+      "destination": "/docs/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/docs/core-concepts",
+      "destination": "/docs/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/docs/getting-started",
+      "destination": "/docs/quick-start",
+      "permanent": true
+    },
+    {
+      "source": "/docs/markdown-and-mdx",
+      "destination": "/docs/mdx",
+      "permanent": true
+    },
+    {
+      "source": "/docs/theming",
+      "destination": "/docs/part-styles",
+      "permanent": true
+    },
+    {
+      "source": "/docs/framework-guides",
+      "destination": "/docs/nextjs",
+      "permanent": true
+    },
+    {
+      "source": "/docs/unfurling",
+      "destination": "/docs/link-previews",
+      "permanent": true
+    },
+    {
+      "source": "/docs/components",
+      "destination": "/components",
+      "permanent": true
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs/introduction",
+      "permanent": false
+    }
+  ]
+}
