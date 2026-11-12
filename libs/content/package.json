@@ -13,7 +13,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
-    }
+    },
+    "./build-env": "./build-env.cjs"
   },
   "files": [
     "dist",

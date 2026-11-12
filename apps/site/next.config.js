@@ -5,11 +5,12 @@ const path = require('node:path');
 
 const { withContentCollections } = require('@content-collections/next');
 const { withSentryConfig } = require('@sentry/nextjs/config');
+// Not `@postkit/content` itself: Nx loads this config to build its project graph before
+// anything is built, so only the library's plain, build-free rules are used here.
 const {
-  changelogEntrySchema,
-  getLatestChangelogRelease,
-  selectVisibleNotes,
-} = require('@postkit/content');
+  hasVisibleNotes,
+  latestReleasedVersion,
+} = require('@postkit/content/build-env');
 const { parse: parseYaml } = require('yaml');
 
 // One file per content area, so docs and changelog URL changes stay separate.
@@ -30,12 +31,11 @@ function readLatestReleasedVersion() {
     .map((file) => {
       const source = readFileSync(path.join(directory, file), 'utf8');
       const frontmatter = /^---\n([\s\S]*?)\n---\n/.exec(source)?.[1] ?? '';
-      return changelogEntrySchema.parse({
-        ...parseYaml(frontmatter),
-        content: '',
-      });
+      const { version, status } = parseYaml(frontmatter) ?? {};
+      return { version: String(version), status };
     });
-  return getLatestChangelogRelease(entries)?.version ?? '';
+  // The content collection validates each entry's frontmatter when the site builds.
+  return latestReleasedVersion(entries);
 }
 
 /**
@@ -53,7 +53,7 @@ function readNotesLive() {
       const { status = 'published' } = parseYaml(frontmatter) ?? {};
       return { status };
     });
-  return selectVisibleNotes(notes).length > 0 ? 'true' : '';
+  return hasVisibleNotes(notes) ? 'true' : '';
 }
 
 /**
