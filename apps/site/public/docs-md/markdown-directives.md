@@ -37,9 +37,10 @@ directive syntax, and the Postkit transform. Pass options to adjust it:
   and `postkit: { footnotes: false }` leaves GFM's own footnotes alone (see
   [Footnotes](#footnotes)).
 
-With [`createPostkit`](/docs/create-postkit), use `postkit.remarkPlugins`
-instead: it's the same preset, validating against the components your kits
-enable, and takes the same options through `createPostkit({ remark })`.
+With [`createPostkit`](/docs/create-postkit), use
+`postkitRemarkPlugins(postkit, options)` from `@postkit/react/remark` instead:
+it's the same preset, validating against the components your kits enable, and
+takes the same options.
 
 The focused `@postkit/chakra/remark` entry point keeps React components and
 Chakra theme declarations out of build-only Markdown tooling. Existing root

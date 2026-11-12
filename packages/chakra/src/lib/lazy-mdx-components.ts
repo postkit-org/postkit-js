@@ -1,4 +1,4 @@
-import { postkitLazyViews, type PostkitLazyView } from '@postkit/react';
+import type { PostkitLazyView } from '@postkit/react';
 import type { ComponentProps } from 'react';
 
 import {
@@ -11,17 +11,8 @@ import type {
   CreatePostkitMdxComponentsOptions,
   PostkitMdxComponents,
 } from './mdx-components.js';
-import {
-  postkitChakraViewLoaders,
-  type PostkitChakraViewName,
-} from './view-loaders.js';
-
-/**
- * The MDX map's lazy views (`postkitLazyView`), keyed by component name. They
- * don't carry definitions, so the map doesn't ship every definition; the
- * renderer's `chakraLazy` views do.
- */
-const postkitMdxLazyViews = postkitLazyViews(postkitChakraViewLoaders);
+import { postkitChakraLazyViews } from './chakra-lazy-views.js';
+import type { PostkitChakraViewName } from './view-loaders.js';
 
 /** `postkitMdxComponents` with lazy views: prose stays as it is. */
 export type PostkitLazyMdxComponents = ProseComponents & {
@@ -56,7 +47,7 @@ export function createPostkitLazyMdxComponents<
 
   return {
     ...postkitProseComponents,
-    ...postkitMdxLazyViews,
+    ...postkitChakraLazyViews,
     a: createPostkitProseLink(link),
     ...options.components,
   } as unknown as PostkitLazyMdxComponentMap<TComponents>;

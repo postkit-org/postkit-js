@@ -412,7 +412,9 @@ export function definePostkitComponent<
     runtime,
     stability,
     props: { ...props },
-    slots: [...slots],
+    // A frozen anatomy (`postkitBuiltInSlots`) is kept as is, so a recipe that
+    // reads it shares the very array the definition holds.
+    slots: Object.isFrozen(slots) ? slots : [...slots],
     themeVariants: Object.entries(props)
       .filter(([, prop]) => prop.themeVariant)
       .map(([propName]) => propName),

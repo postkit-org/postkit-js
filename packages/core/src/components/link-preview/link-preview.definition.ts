@@ -1,6 +1,7 @@
 import { definePostkitComponent } from '../definition.js';
 import { headingLevelProp } from '../heading-level.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const linkPreviewDefinition = definePostkitComponent({
   name: 'LinkPreview',
@@ -51,25 +52,7 @@ export const linkPreviewDefinition = definePostkitComponent({
       'An accessible title for a resolved iframe embed.',
     ),
   },
-  slots: [
-    'root',
-    'anchor',
-    'media',
-    'image',
-    'carousel',
-    'content',
-    'siteRow',
-    'favicon',
-    'siteName',
-    'title',
-    'description',
-    'domain',
-    'embedFrame',
-    'embed',
-    'consent',
-    'consentButton',
-    'mediaPlayer',
-  ],
+  slots: postkitBuiltInSlots.LinkPreview,
   example: {
     props: { href: 'https://example.com/article' },
   },

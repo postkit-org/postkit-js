@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { appearsOnDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The AppearsOn anatomy, from its definition. */
-export const postkitAppearsOnSlots = appearsOnDefinition.slots;
+export const postkitAppearsOnSlots = postkitBuiltInSlots.AppearsOn;
 
 export type PostkitAppearsOnSlot = (typeof postkitAppearsOnSlots)[number];
 

@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const appearsOnDefinition = definePostkitComponent({
   name: 'AppearsOn',
@@ -27,7 +28,7 @@ export const appearsOnDefinition = definePostkitComponent({
       default: false,
     }),
   },
-  slots: ['root', 'label', 'list', 'item', 'link', 'icon', 'date', 'status'],
+  slots: postkitBuiltInSlots.AppearsOn,
   example: {
     props: {
       items: [{ name: 'Example publication', href: 'https://example.com' }],

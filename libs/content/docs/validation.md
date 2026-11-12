@@ -24,7 +24,7 @@ export const remarkPlugins = createPostkitRemarkPlugins();
 ```
 
 The same preset is exported from `@postkit/react/remark`. With
-[`createPostkit`](/docs/create-postkit), use `postkit.remarkPlugins`, which
+[`createPostkit`](/docs/create-postkit), use `postkitRemarkPlugins(postkit)`, which
 validates against exactly the components your [kits](/docs/kits) enable.
 
 Each directive is matched to a component by its directive name, such as

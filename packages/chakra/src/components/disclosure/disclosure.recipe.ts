@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { disclosureDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Disclosure anatomy, from its definition. */
-export const postkitDisclosureSlots = disclosureDefinition.slots;
+export const postkitDisclosureSlots = postkitBuiltInSlots.Disclosure;
 
 export type PostkitDisclosureSlot = (typeof postkitDisclosureSlots)[number];
 

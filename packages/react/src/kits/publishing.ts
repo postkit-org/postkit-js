@@ -1,4 +1,15 @@
-import { postkitBuiltInKit } from './kit.js';
+import {
+  productCardDefinition,
+  sponsorBlockDefinition,
+} from '@postkit/core/components';
 
-/** The `publishing` kit: Postkit's built-in definitions for the category. */
-export const publishing = postkitBuiltInKit('publishing');
+import { definePostkitBuiltInKit } from './built-in.js';
+
+/**
+ * The `publishing` kit: Postkit's built-in definitions for the category. It
+ * imports only its own definitions, so a site ships just the kits it enables.
+ */
+export const publishing = definePostkitBuiltInKit('publishing', [
+  productCardDefinition,
+  sponsorBlockDefinition,
+]);

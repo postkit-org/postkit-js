@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const comparisonDefinition = definePostkitComponent({
   name: 'Comparison',
@@ -20,18 +21,7 @@ export const comparisonDefinition = definePostkitComponent({
     title: prop.string('The comparison heading.'),
     description: prop.string('Supporting comparison copy.'),
   },
-  slots: [
-    'root',
-    'title',
-    'description',
-    'scroller',
-    'table',
-    'head',
-    'header',
-    'row',
-    'label',
-    'value',
-  ],
+  slots: postkitBuiltInSlots.Comparison,
   example: {
     props: {
       columns: ['Starter', 'Pro'],

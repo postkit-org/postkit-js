@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { keyTakeawayDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The KeyTakeaway anatomy, from its definition. */
-export const postkitKeyTakeawaySlots = keyTakeawayDefinition.slots;
+export const postkitKeyTakeawaySlots = postkitBuiltInSlots.KeyTakeaway;
 export type PostkitKeyTakeawaySlot = (typeof postkitKeyTakeawaySlots)[number];
 export const postkitKeyTakeawayRecipe = defineSlotRecipe({
   className: 'postkit-key-takeaway',

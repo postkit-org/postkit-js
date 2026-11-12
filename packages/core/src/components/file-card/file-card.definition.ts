@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const fileCardDefinition = definePostkitComponent({
   name: 'FileCard',
@@ -21,7 +22,7 @@ export const fileCardDefinition = definePostkitComponent({
     }),
     actionLabel: prop.string('The visible action text.'),
   },
-  slots: ['root', 'icon', 'content', 'name', 'description', 'meta', 'action'],
+  slots: postkitBuiltInSlots.FileCard,
   example: {
     props: { href: 'https://example.com/article', name: 'Ada Example' },
   },

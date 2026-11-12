@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const codeBlockDefinition = definePostkitComponent({
   name: 'CodeBlock',
@@ -29,25 +30,7 @@ export const codeBlockDefinition = definePostkitComponent({
     wrap: prop.boolean('Whether long lines wrap.', { default: false }),
     maxHeight: prop.string('An optional maximum scrolling height.'),
   },
-  slots: [
-    'root',
-    'header',
-    'title',
-    'filename',
-    'language',
-    'control',
-    'actions',
-    'copyTrigger',
-    'button',
-    'copyIndicator',
-    'content',
-    'scroller',
-    'code',
-    'codeText',
-    'lineContent',
-    'line',
-    'lineNumber',
-  ],
+  slots: postkitBuiltInSlots.CodeBlock,
   example: {
     props: { code: "console.log('Hello, Postkit')" },
   },

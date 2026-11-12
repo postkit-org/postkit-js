@@ -1,6 +1,7 @@
 import { definePostkitComponent } from '../definition.js';
 import { postkitFootnoteSharedProps } from '../footnote/footnote.definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const footnotesDefinition = definePostkitComponent({
   name: 'Footnotes',
@@ -23,16 +24,7 @@ export const footnotesDefinition = definePostkitComponent({
     ),
     ...postkitFootnoteSharedProps,
   },
-  slots: [
-    'root',
-    'title',
-    'rule',
-    'list',
-    'item',
-    'number',
-    'content',
-    'backlink',
-  ],
+  slots: postkitBuiltInSlots.Footnotes,
   keywords: ['footnotes', 'endnotes', 'notes', 'references', 'sidenotes'],
   example: {
     props: { title: 'Notes' },

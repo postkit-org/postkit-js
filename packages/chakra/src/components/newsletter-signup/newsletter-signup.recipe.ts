@@ -1,8 +1,9 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { newsletterSignupDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The NewsletterSignup anatomy, from its definition. */
-export const postkitNewsletterSignupSlots = newsletterSignupDefinition.slots;
+export const postkitNewsletterSignupSlots =
+  postkitBuiltInSlots.NewsletterSignup;
 
 export type PostkitNewsletterSignupSlot =
   (typeof postkitNewsletterSignupSlots)[number];

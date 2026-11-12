@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { cardGridDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The CardGrid anatomy, from its definition. */
-export const postkitCardGridSlots = cardGridDefinition.slots;
+export const postkitCardGridSlots = postkitBuiltInSlots.CardGrid;
 
 export type PostkitCardGridSlot = (typeof postkitCardGridSlots)[number];
 

@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { terminalDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Terminal anatomy, from its definition. */
-export const postkitTerminalSlots = terminalDefinition.slots;
+export const postkitTerminalSlots = postkitBuiltInSlots.Terminal;
 export type PostkitTerminalSlot = (typeof postkitTerminalSlots)[number];
 export const postkitTerminalRecipe = defineSlotRecipe({
   className: 'postkit-terminal',

@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const socialPostDefinition = definePostkitComponent({
   name: 'SocialPost',
@@ -52,35 +53,7 @@ export const socialPostDefinition = definePostkitComponent({
     ),
     iframeTitle: prop.string('An accessible title for a provider iframe.'),
   },
-  slots: [
-    'root',
-    'serviceRow',
-    'serviceBadge',
-    'serviceIcon',
-    'authorRow',
-    'avatar',
-    'author',
-    'authorName',
-    'handle',
-    'timestamp',
-    'content',
-    'media',
-    'image',
-    'metrics',
-    'metric',
-    'quote',
-    'quoteAuthor',
-    'quoteContent',
-    'footer',
-    'originalLink',
-    'snapshotInfo',
-    'snapshotLabel',
-    'snapshotTime',
-    'embedFrame',
-    'embed',
-    'consent',
-    'consentButton',
-  ],
+  slots: postkitBuiltInSlots.SocialPost,
   example: {
     props: { href: 'https://example.com/article' },
   },

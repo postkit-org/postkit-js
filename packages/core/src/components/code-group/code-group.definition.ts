@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const codeGroupDefinition = definePostkitComponent({
   name: 'CodeGroup',
@@ -21,7 +22,7 @@ export const codeGroupDefinition = definePostkitComponent({
       default: 0,
     }),
   },
-  slots: ['root', 'tabs', 'tab', 'panel'],
+  slots: postkitBuiltInSlots.CodeGroup,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { sponsorBlockDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The SponsorBlock anatomy, from its definition. */
-export const postkitSponsorBlockSlots = sponsorBlockDefinition.slots;
+export const postkitSponsorBlockSlots = postkitBuiltInSlots.SponsorBlock;
 export type PostkitSponsorBlockSlot = (typeof postkitSponsorBlockSlots)[number];
 export const postkitSponsorBlockRecipe = defineSlotRecipe({
   className: 'postkit-sponsor-block',

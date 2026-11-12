@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { footnoteDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Footnote anatomy, from its definition. */
-export const postkitFootnoteSlots = footnoteDefinition.slots;
+export const postkitFootnoteSlots = postkitBuiltInSlots.Footnote;
 export type PostkitFootnoteSlot = (typeof postkitFootnoteSlots)[number];
 
 /**

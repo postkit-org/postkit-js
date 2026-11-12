@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { shareActionsDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The ShareActions anatomy, from its definition. */
-export const postkitShareActionsSlots = shareActionsDefinition.slots;
+export const postkitShareActionsSlots = postkitBuiltInSlots.ShareActions;
 
 export type PostkitShareActionsSlot = (typeof postkitShareActionsSlots)[number];
 

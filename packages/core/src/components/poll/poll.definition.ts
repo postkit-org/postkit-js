@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const pollDefinition = definePostkitComponent({
   name: 'Poll',
@@ -20,17 +21,7 @@ export const pollDefinition = definePostkitComponent({
     totalVotes: prop.number('An optional total vote count.'),
     selectedId: prop.string('An optional initially selected option.'),
   },
-  slots: [
-    'root',
-    'question',
-    'description',
-    'options',
-    'option',
-    'optionLabel',
-    'result',
-    'bar',
-    'status',
-  ],
+  slots: postkitBuiltInSlots.Poll,
   example: {
     props: {
       question: 'What do you think?',

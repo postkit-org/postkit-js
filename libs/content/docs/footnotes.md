@@ -113,21 +113,16 @@ Set the defaults for every document in the Remark options, so the settings
 are written into each document's references and list:
 
 ```ts
-// lib/postkit.ts
-import { chakra } from '@postkit/chakra';
-import { createPostkit } from '@postkit/react';
-import { article } from '@postkit/react/kits';
+// lib/mdx.ts (build time)
+import { postkitRemarkPlugins } from '@postkit/react/remark';
+import { postkit } from './postkit';
 
-export const postkit = createPostkit({
-  renderer: chakra,
-  kits: [article],
-  remark: {
-    postkit: {
-      footnotes: {
-        defaults: {
-          placement: { base: 'inline', md: 'end', xl: 'side' },
-          variant: 'plain',
-        },
+export const remarkPlugins = postkitRemarkPlugins(postkit, {
+  postkit: {
+    footnotes: {
+      defaults: {
+        placement: { base: 'inline', md: 'end', xl: 'side' },
+        variant: 'plain',
       },
     },
   },

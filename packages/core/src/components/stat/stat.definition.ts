@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const statDefinition = definePostkitComponent({
   name: 'Stat',
@@ -15,7 +16,7 @@ export const statDefinition = definePostkitComponent({
     trend: prop.string('The metric trend.'),
     description: prop.string('Supporting metric context.'),
   },
-  slots: ['root', 'value', 'label', 'trend', 'description'],
+  slots: postkitBuiltInSlots.Stat,
   example: {
     props: { value: '42%', label: 'Example' },
   },

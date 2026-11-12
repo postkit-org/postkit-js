@@ -62,6 +62,11 @@ Unknown nodes are unwrapped by default, retaining readable children. Use the
 
 ## Reconstruct rendered output
 
+`DocumentRenderer`'s component views load the first time a document renders
+them, so a page downloads only the views its document uses. A server render
+that waits for Suspense (as Next.js does) has them in its HTML; for a
+synchronous render, pass `components={postkitChakraViews}`.
+
 HTML serialization and `DocumentRenderer` emit versioned `data-postkit-*`
 annotations by default. They identify semantic nodes, rich component names,
 and JSON-compatible component props without requiring an extra layout wrapper.

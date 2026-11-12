@@ -5,6 +5,7 @@ import {
   postkitFootnoteNumberings,
   type PostkitFootnotePlacementValue,
 } from './footnote.model.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 /**
  * The props `Footnote` and `Footnotes` share. A reference without its own
@@ -55,7 +56,7 @@ export const footnoteDefinition = definePostkitComponent({
     ),
     ...postkitFootnoteSharedProps,
   },
-  slots: ['root', 'marker'],
+  slots: postkitBuiltInSlots.Footnote,
   keywords: ['footnote', 'note', 'reference', 'citation', 'sidenote'],
   example: {
     props: { index: 1 },

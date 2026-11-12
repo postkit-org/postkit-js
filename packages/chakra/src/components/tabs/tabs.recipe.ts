@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { tabsDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Tabs anatomy, from its definition. */
-export const postkitTabsSlots = tabsDefinition.slots;
+export const postkitTabsSlots = postkitBuiltInSlots.Tabs;
 
 export type PostkitTabsSlot = (typeof postkitTabsSlots)[number];
 

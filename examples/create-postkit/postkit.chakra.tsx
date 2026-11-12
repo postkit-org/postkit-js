@@ -1,5 +1,5 @@
 import { createSystem, defaultConfig } from '@chakra-ui/react';
-import { chakra, postkitDefaultTheme } from '@postkit/chakra';
+import { chakraLazy, postkitDefaultTheme } from '@postkit/chakra';
 import { createPostkit } from '@postkit/next';
 import { article, media, technical } from '@postkit/react/kits';
 
@@ -10,11 +10,12 @@ const siteSystem = createSystem(defaultConfig);
 
 /**
  * The same set on the Chakra renderer, through the Next.js preset (which sets
- * `link` to next/link). Theme-variant defaults (`variant`, `frame`) go into
+ * `link` to next/link). `chakraLazy` loads each view the first time a page
+ * renders it; Next.js's server render waits for them, so the HTML is whole. Theme-variant defaults (`variant`, `frame`) go into
  * the recipes' `defaultVariants`; `title` becomes a view default.
  */
 export const postkit = createPostkit({
-  renderer: chakra,
+  renderer: chakraLazy,
   kits: [article, technical, media],
   exclude: ['Poll'],
   components: [{ definition: showcaseDefinition, view: ChakraShowcase }],

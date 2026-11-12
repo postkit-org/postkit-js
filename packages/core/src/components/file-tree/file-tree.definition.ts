@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const fileTreeDefinition = definePostkitComponent({
   name: 'FileTree',
@@ -16,7 +17,7 @@ export const fileTreeDefinition = definePostkitComponent({
     }),
     title: prop.string('The tree heading.'),
   },
-  slots: ['root', 'title', 'list', 'item', 'icon', 'path', 'meta'],
+  slots: postkitBuiltInSlots.FileTree,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

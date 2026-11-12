@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const disclosureDefinition = definePostkitComponent({
   name: 'Disclosure',
@@ -19,7 +20,7 @@ export const disclosureDefinition = definePostkitComponent({
       default: false,
     }),
   },
-  slots: ['root', 'summary', 'indicator', 'content'],
+  slots: postkitBuiltInSlots.Disclosure,
   example: {
     props: { summary: 'Example' },
     children: 'Example content.',

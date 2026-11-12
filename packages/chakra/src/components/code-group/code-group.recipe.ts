@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { codeGroupDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The CodeGroup anatomy, from its definition. */
-export const postkitCodeGroupSlots = codeGroupDefinition.slots;
+export const postkitCodeGroupSlots = postkitBuiltInSlots.CodeGroup;
 export type PostkitCodeGroupSlot = (typeof postkitCodeGroupSlots)[number];
 
 // Shared by the host-native and standalone recipes, which differ only in subtle.

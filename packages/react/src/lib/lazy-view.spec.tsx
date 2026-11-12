@@ -8,6 +8,8 @@ import { prerenderToNodeStream } from 'react-dom/static';
 import { Callout } from '../components/callout/callout.js';
 import { article } from '../kits/index.js';
 import { createPostkit } from './create-postkit.js';
+import { postkitHeadlessLazyViews } from './headless-renderer.js';
+import { postkitHeadlessViewLoaders } from './headless-view-loaders.js';
 import { postkitHeadlessViewNames } from './headless-view-names.js';
 import { postkitHeadlessViews } from './headless-views.js';
 import {
@@ -150,12 +152,14 @@ describe('postkitLazyView', () => {
     const loadCallout = vi.fn(async () => Callout);
     const views = postkitLazyViews(
       { Counter: loadCounter, Callout: loadCallout },
-      { Callout: calloutDefinition },
+      { definitions: { Callout: calloutDefinition } },
     );
 
     expect(Object.keys(views)).toEqual(['Counter', 'Callout']);
     expect(views.Callout.definition).toBe(calloutDefinition);
+    expect(views.Callout.postkitView).toBe(true);
     expect(views.Counter.definition).toBeUndefined();
+    expect(views.Counter.postkitView).toBe(false);
 
     await preloadPostkitViews(views, ['Callout', 'Missing', 'toString']);
     expect(loadCallout).toHaveBeenCalledTimes(1);
@@ -185,10 +189,46 @@ describe('postkitLazyView', () => {
     expect(html).toContain('data-tone="warning"');
     expect(html).toContain('site-callout');
   });
+
+  it('takes part overrides without carrying the definition', async () => {
+    const { Callout: LazyCallout } = postkitLazyViews(
+      { Callout: async () => Callout },
+      { postkitViews: true },
+    );
+    expect(LazyCallout.definition).toBeUndefined();
+    const postkit = createPostkit({
+      kits: [article],
+      defaults: { Callout: { tone: 'warning' } },
+      overrides: {
+        Callout: { view: LazyCallout, classNames: { root: 'site-callout' } },
+      },
+    });
+
+    const View = postkit.mdxComponents['Callout'] as typeof Callout;
+    const html = await renderToHtml(
+      <postkit.Provider>
+        <View title="Heads up">Body</View>
+      </postkit.Provider>,
+    );
+    expect(html).toContain('data-tone="warning"');
+    expect(html).toContain('site-callout');
+  });
 });
 
 describe('postkitHeadlessViewNames', () => {
   it('lists the headless views, in order, without importing them', () => {
     expect(postkitHeadlessViewNames).toEqual(Object.keys(postkitHeadlessViews));
+    expect(Object.keys(postkitHeadlessViewLoaders)).toEqual(
+      postkitHeadlessViewNames,
+    );
+  });
+
+  it('loads each lazy headless view from its own module', async () => {
+    for (const name of postkitHeadlessViewNames) {
+      await expect(postkitHeadlessViewLoaders[name]()).resolves.toBe(
+        postkitHeadlessViews[name],
+      );
+      expect(postkitHeadlessLazyViews[name].postkitView).toBe(true);
+    }
   });
 });

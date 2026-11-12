@@ -1,8 +1,9 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { audienceBoundaryDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The AudienceBoundary anatomy, from its definition. */
-export const postkitAudienceBoundarySlots = audienceBoundaryDefinition.slots;
+export const postkitAudienceBoundarySlots =
+  postkitBuiltInSlots.AudienceBoundary;
 export type PostkitAudienceBoundarySlot =
   (typeof postkitAudienceBoundarySlots)[number];
 export const postkitAudienceBoundaryRecipe = defineSlotRecipe({

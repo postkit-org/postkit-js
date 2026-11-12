@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const asideDefinition = definePostkitComponent({
   name: 'Aside',
@@ -19,7 +20,7 @@ export const asideDefinition = definePostkitComponent({
     }),
   },
   // The Callout anatomy without `icon`: Aside has no tone mark (D14).
-  slots: ['root', 'content', 'title', 'body'],
+  slots: postkitBuiltInSlots.Aside,
   example: {
     children: 'Example content.',
   },

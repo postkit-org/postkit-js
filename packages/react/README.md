@@ -289,7 +289,11 @@ for other renderers.
 
 `createPostkit` configures a site from the set it uses: kits, its own
 components, defaults and overrides. Omit `renderer` for these headless views,
-or pass `chakra` from `@postkit/chakra`.
+or pass `chakra` or `chakraLazy` from `@postkit/chakra`. Without `renderer`,
+each headless view loads the first time a page renders it
+(`postkitHeadlessRenderer`), so a page ships only the views its content uses;
+`postkitHeadlessEagerRenderer` imports them all, for a synchronous render
+such as `renderToStaticMarkup`.
 
 ```tsx
 import { createPostkit, type PostkitSlotProps } from '@postkit/react';
@@ -312,7 +316,8 @@ export const postkit = createPostkit({
   },
 });
 
-// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
 ```
 
 - Kits are renderer-neutral lists of definitions: `@postkit/react/kits`, or
@@ -323,15 +328,20 @@ export const postkit = createPostkit({
   ("Fig. 1", "Fig. 2") in reading order. A Carousel or Gallery is one figure
   whose items read "Fig. 3", "Fig. 3b", "Fig. 3c". `figureLabel` changes
   "Fig.". `@postkit/chakra`'s `PostkitProvider` takes the same props.
-- `remarkPlugins` validates directives against the enabled set. A
-  `chakra-only` component on the headless renderer fails the build, and
-  throws if rendered, with an error naming it.
-- The Markdown tooling is also available on its own from
-  `@postkit/react/remark`.
+- `postkitRemarkPlugins(postkit, options?)` from `@postkit/react/remark`
+  gives the set its Remark plugins, which validate directives against the
+  enabled set. A `chakra-only` component on the headless renderer fails the
+  build, and throws if rendered, with an error naming it. It's build-time
+  code, kept out of `createPostkit` so the Markdown tooling never reaches the
+  browser.
+- Each kit imports only its own definitions, so a site bundles just the kits
+  it enables.
 - A view can load on first render: `postkitLazyView(() => import('./showcase.js').then((m) => m.Showcase), { definition })`
   returns a view whose code downloads when a page renders it, inside its own
   Suspense boundary (pass the definition so it reads defaults and part
-  overrides like the view itself). `postkitLazyViews(loaders, definitions)`
+  overrides like the view itself, or `postkitView: true` to do so without
+  shipping the definition). `postkitLazyViews(loaders, { postkitViews: true })`
   builds a map of them and `preloadPostkitViews(views, names)` starts the
-  downloads early. `postkitHeadlessViewNames` lists the headless views without
-  importing them.
+  downloads early. `postkitHeadlessViewLoaders` has a loader per headless view
+  and `postkitHeadlessLazyViews` the lazy views built on them;
+  `postkitHeadlessViewNames` lists the headless views without importing them.

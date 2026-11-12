@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { stepsDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Steps anatomy, from its definition. */
-export const postkitStepsSlots = stepsDefinition.slots;
+export const postkitStepsSlots = postkitBuiltInSlots.Steps;
 
 export type PostkitStepsSlot = (typeof postkitStepsSlots)[number];
 

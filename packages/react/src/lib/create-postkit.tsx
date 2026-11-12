@@ -1,15 +1,14 @@
 import {
   createPostkitComponentManifest,
-  postkitBuiltInDefinitions,
   type AnyPostkitComponentDefinition,
   type PostkitAuthoredPropsOf,
   type PostkitBuiltInComponentName,
   type PostkitComponentManifest,
   type PostkitComponentManifestInput,
   type PostkitSlotOf,
+  type postkitBuiltInDefinitions,
 } from '@postkit/core/components';
 import { createElement, type ComponentType, type ReactNode } from 'react';
-import type { PluggableList } from 'unified';
 
 import { validatePostkitProps } from './anatomy.js';
 import { chakraOnly } from './chakra-only.js';
@@ -23,29 +22,24 @@ import {
   PostkitFiguresProvider,
   type PostkitFiguresProviderProps,
 } from './figures.js';
+import { postkitHeadlessRenderer } from './headless-renderer.js';
 import { postkitHeadlessViewNames } from './headless-view-names.js';
-import { postkitHeadlessViews } from './headless-views.js';
 import {
   createPostkitLink,
   type CreatePostkitLinkOptions,
   type PostkitLinkComponent,
 } from './link.js';
-import {
-  createPostkitRemarkPlugins,
-  type PostkitRemarkPresetOptions,
-} from './markdown-preset.js';
-import type {
-  PostkitUnavailableComponent,
-  RemarkPostkitOptions,
-} from './remark-postkit.js';
+import type { PostkitUnavailableComponent } from './remark-postkit.js';
 import type { PostkitKit } from '../kits/kit.js';
 
 // The rest of the `createPostkit` surface, re-exported from the package root
-// through this module.
+// through this module. The eager views (`headless-views.js`) are exported
+// from the root directly, so `createPostkit` doesn't import them.
 export * from './config.js';
 export * from './figures.js';
+export * from './headless-renderer.js';
+export * from './headless-view-loaders.js';
 export * from './headless-view-names.js';
-export * from './headless-views.js';
 export * from './link.js';
 export * from './slot-overrides.js';
 
@@ -61,8 +55,8 @@ export interface PostkitRendererConfig {
 
 /**
  * A renderer: the views one renderer package exports for the definitions,
- * plus its prose components and provider. `@postkit/chakra` exports `chakra`;
- * omitting `renderer` uses {@link postkitHeadlessRenderer}.
+ * plus its prose components and provider. `@postkit/chakra` exports `chakra`
+ * and `chakraLazy`; omitting `renderer` uses `postkitHeadlessRenderer`.
  */
 export interface PostkitRenderer<ProviderProps extends object = object> {
   /** The renderer id the manifest's `support` uses: `headless`, `chakra`. */
@@ -86,14 +80,6 @@ export interface PostkitRenderer<ProviderProps extends object = object> {
     }
   >;
 }
-
-/** The headless renderer: `@postkit/react`'s views and native prose. */
-export const postkitHeadlessRenderer: PostkitRenderer = Object.freeze({
-  id: 'headless',
-  package: '@postkit/react',
-  views: postkitHeadlessViews,
-  prose: (link: PostkitLinkComponent) => ({ a: link }),
-});
 
 /** A site's or a third-party package's component: a definition and a view. */
 export interface PostkitComponentEntry<
@@ -149,15 +135,6 @@ export type PostkitOverrides = {
   >;
 } & Readonly<Record<string, PostkitOverride>>;
 
-/** Remark options for `createPostkit`; the enabled set is filled in. */
-export type CreatePostkitRemarkOptions = Omit<
-  PostkitRemarkPresetOptions,
-  'postkit'
-> & {
-  readonly postkit?:
-    false | Omit<RemarkPostkitOptions, 'definitions' | 'unavailable'>;
-};
-
 /** Options for {@link createPostkit} (03 §3.1). */
 export interface CreatePostkitOptions<ProviderProps extends object = object> {
   /** The renderer's views. Omit for the headless views of `@postkit/react`. */
@@ -178,8 +155,6 @@ export interface CreatePostkitOptions<ProviderProps extends object = object> {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly link?: PostkitLinkComponent | CreatePostkitLinkOptions<any>;
-  /** Remark preset options; directives validate against the enabled set. */
-  readonly remark?: CreatePostkitRemarkOptions;
 }
 
 /**
@@ -201,10 +176,14 @@ export interface Postkit<ProviderProps extends object = object> {
   readonly Provider: ComponentType<PostkitProviderPropsOf<ProviderProps>>;
   /** Only the enabled components, plus prose (`a` uses the site link). */
   readonly mdxComponents: Readonly<Record<string, PostkitAnyComponent>>;
-  /** The Remark preset; directives validate against the enabled set. */
-  readonly remarkPlugins: PluggableList;
   /** The enabled definitions that render, in order. */
   readonly definitions: readonly AnyPostkitComponentDefinition[];
+  /**
+   * The enabled components the renderer has no view for, with the reason.
+   * `postkitRemarkPlugins` (from `@postkit/react/remark`) fails the Markdown
+   * build on one, naming it.
+   */
+  readonly unavailable: readonly PostkitUnavailableComponent[];
   /** The renderer in use. */
   readonly renderer: PostkitRenderer<ProviderProps>;
   /** A v2 manifest (`postkit.component-catalog`) of exactly this set. */
@@ -218,9 +197,6 @@ interface Entry {
   readonly view?: PostkitAnyComponent;
 }
 
-const builtIns = new Set<AnyPostkitComponentDefinition>(
-  Object.values(postkitBuiltInDefinitions),
-);
 const chakraOnlyNames = new Set<string>(chakraOnly);
 
 function fail(message: string): never {
@@ -394,7 +370,10 @@ function validateOverrides(
  */
 function isPostkitViewComponent(view: PostkitAnyComponent): boolean {
   try {
-    return 'definition' in view;
+    return (
+      'definition' in view ||
+      (view as { readonly postkitView?: unknown }).postkitView === true
+    );
   } catch {
     return true;
   }
@@ -428,8 +407,10 @@ function unavailableView(name: string, reason: string): PostkitAnyComponent {
 /**
  * Configures Postkit for a site from the set it uses (03 §3.1): a renderer,
  * kits, the site's own components, defaults and overrides. It returns the
- * provider, the MDX component map, the Remark plugins and the manifest for
- * exactly that set.
+ * provider, the MDX component map, the definitions and the manifest for
+ * exactly that set. The Remark plugins for the set come from
+ * `postkitRemarkPlugins(postkit)` in `@postkit/react/remark`, so the Markdown
+ * tooling stays out of the browser bundle.
  *
  * ```ts
  * import { createPostkit } from '@postkit/react';
@@ -445,6 +426,9 @@ function unavailableView(name: string, reason: string): PostkitAnyComponent {
  *   overrides: { Callout: { slots: { icon: InkMark } } },
  * });
  * ```
+ *
+ * Without `renderer`, the views are `@postkit/react`'s headless views, each
+ * loaded the first time it renders (`postkitHeadlessRenderer`).
  *
  * A component the renderer has no view for (a `chakra-only` component on the
  * headless renderer) stays out of the manifest; using it fails the Markdown
@@ -521,15 +505,6 @@ export function createPostkit<ProviderProps extends object = object>(
 
   const mdxComponents = Object.freeze({ ...prose, ...views });
 
-  const remark = options.remark ?? {};
-  const remarkPlugins = createPostkitRemarkPlugins({
-    ...remark,
-    postkit:
-      remark.postkit === false
-        ? false
-        : { ...remark.postkit, definitions, unavailable },
-  });
-
   const componentConfig: Record<string, PostkitComponentConfig> = {};
   for (const name of enabled.keys()) {
     const override = overrides[name];
@@ -591,17 +566,15 @@ export function createPostkit<ProviderProps extends object = object>(
   return Object.freeze({
     Provider: PostkitProvider,
     mdxComponents,
-    remarkPlugins,
     definitions,
+    unavailable: Object.freeze(unavailable),
     renderer,
     manifest() {
       manifest ??= createPostkitComponentManifest(
         available.map((entry): PostkitComponentManifestInput => ({
           definition: entry.definition,
           kit: entry.kit,
-          package:
-            entry.package ??
-            (builtIns.has(entry.definition) ? '@postkit/core' : null),
+          package: entry.package,
         })),
         {
           renderers:

@@ -1,5 +1,11 @@
-import { PostkitProvider, type PostkitLinkProps } from '@postkit/chakra';
+import {
+  PostkitProvider,
+  postkitChakraViews,
+  type PostkitLinkProps,
+} from '@postkit/chakra';
+import type { ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { prerenderToNodeStream } from 'react-dom/static';
 import { createPostkitTanStackRouterComponents } from './create-postkit-tanstack-router-components.js';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -96,5 +102,37 @@ describe('Postkit TanStack Router components', () => {
     });
 
     expect(components.a).toBe(SiteLink);
+  });
+
+  it('loads each component view on first render, with complete server HTML', async () => {
+    const components = createPostkitTanStackRouterComponents();
+    const Callout = components['Callout'] as ComponentType<
+      Record<string, unknown>
+    > & { readonly preload?: () => Promise<unknown> };
+
+    // Lazy: the map doesn't import the views.
+    expect(typeof Callout.preload).toBe('function');
+    expect(Callout).not.toBe(postkitChakraViews['Callout']);
+
+    // A streaming server render waits for the view.
+    const { prelude } = await prerenderToNodeStream(
+      <PostkitProvider>
+        <Callout tone="tip" title="Keep the content">
+          Change the renderer.
+        </Callout>
+      </PostkitProvider>,
+    );
+    let html = '';
+    for await (const chunk of prelude) html += String(chunk);
+
+    expect(html).toContain('data-postkit-component="Callout"');
+    expect(html).toContain('Keep the content');
+  });
+
+  it('takes the eager views for a synchronous render', () => {
+    const components = createPostkitTanStackRouterComponents({
+      components: postkitChakraViews,
+    });
+    expect(components['Callout']).toBe(postkitChakraViews['Callout']);
   });
 });

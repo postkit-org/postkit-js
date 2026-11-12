@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const diffDefinition = definePostkitComponent({
   name: 'Diff',
@@ -14,7 +15,7 @@ export const diffDefinition = definePostkitComponent({
     diff: prop.string('Unified diff text.', { required: true }),
     title: prop.string('The displayed diff filename.'),
   },
-  slots: ['root', 'header', 'title', 'code', 'line', 'marker', 'content'],
+  slots: postkitBuiltInSlots.Diff,
   example: {
     props: { diff: '- before\n+ after' },
   },

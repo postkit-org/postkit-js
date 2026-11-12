@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const tabsDefinition = definePostkitComponent({
   name: 'Tabs',
@@ -21,7 +22,7 @@ export const tabsDefinition = definePostkitComponent({
       default: 0,
     }),
   },
-  slots: ['root', 'list', 'tab', 'panels', 'panel'],
+  slots: postkitBuiltInSlots.Tabs,
   example: {
     props: { items: [{ title: 'Example item' }] },
   },

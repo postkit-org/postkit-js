@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { productCardDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The ProductCard anatomy, from its definition. */
-export const postkitProductCardSlots = productCardDefinition.slots;
+export const postkitProductCardSlots = postkitBuiltInSlots.ProductCard;
 export type PostkitProductCardSlot = (typeof postkitProductCardSlots)[number];
 export const postkitProductCardRecipe = defineSlotRecipe({
   className: 'postkit-product-card',

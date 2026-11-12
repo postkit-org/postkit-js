@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { videoDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Video anatomy, from its definition. */
-export const postkitVideoSlots = videoDefinition.slots;
+export const postkitVideoSlots = postkitBuiltInSlots.Video;
 
 export type PostkitVideoSlot = (typeof postkitVideoSlots)[number];
 

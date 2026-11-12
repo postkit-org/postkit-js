@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { carouselDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Carousel anatomy, from its definition. */
-export const postkitCarouselSlots = carouselDefinition.slots;
+export const postkitCarouselSlots = postkitBuiltInSlots.Carousel;
 
 export type PostkitCarouselSlot = (typeof postkitCarouselSlots)[number];
 

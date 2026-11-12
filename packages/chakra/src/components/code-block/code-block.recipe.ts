@@ -1,12 +1,12 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { codeBlockDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /**
  * The CodeBlock anatomy, from its definition. `filename`, `actions`,
  * `button`, `scroller` and `lineContent` are compatibility aliases for
  * `title`, `control`, `copyTrigger`, `content` and `codeText`.
  */
-export const postkitCodeBlockSlots = codeBlockDefinition.slots;
+export const postkitCodeBlockSlots = postkitBuiltInSlots.CodeBlock;
 export type PostkitCodeBlockSlot = (typeof postkitCodeBlockSlots)[number];
 
 // Shared by the host-native and standalone recipes, which differ only in subtle.

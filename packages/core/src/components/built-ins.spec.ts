@@ -5,7 +5,9 @@ import { expectTypeOf } from 'vitest';
 import {
   calloutDefinition,
   postkitBuiltInDefinitions,
+  postkitBuiltInSlots,
   presentation,
+  sidenoteDefinition,
   type PostkitBuiltInComponentName,
 } from './index.js';
 
@@ -27,6 +29,19 @@ function sourceFiles(directory: string): string[] {
 
 describe('Postkit built-in definitions', () => {
   const definitions = Object.entries(postkitBuiltInDefinitions);
+
+  it('reads every anatomy from postkitBuiltInSlots', () => {
+    const all = { ...postkitBuiltInDefinitions, Sidenote: sidenoteDefinition };
+    expect(Object.keys(postkitBuiltInSlots).sort()).toEqual(
+      Object.keys(all).sort(),
+    );
+    for (const [name, definition] of Object.entries(all)) {
+      expect(definition.slots).toBe(
+        postkitBuiltInSlots[name as keyof typeof postkitBuiltInSlots],
+      );
+    }
+    expect(Object.isFrozen(postkitBuiltInSlots.Callout)).toBe(true);
+  });
 
   it('defines all 38 built-in components, keyed by name', () => {
     expect(definitions).toHaveLength(38);

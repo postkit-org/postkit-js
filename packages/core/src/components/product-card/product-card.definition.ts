@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const productCardDefinition = definePostkitComponent({
   name: 'ProductCard',
@@ -26,18 +27,7 @@ export const productCardDefinition = definePostkitComponent({
       default: 'sponsored',
     }),
   },
-  slots: [
-    'root',
-    'image',
-    'content',
-    'badge',
-    'title',
-    'description',
-    'rating',
-    'footer',
-    'price',
-    'action',
-  ],
+  slots: postkitBuiltInSlots.ProductCard,
   example: {
     props: {
       title: 'product card example',

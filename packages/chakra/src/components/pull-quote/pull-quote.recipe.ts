@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { pullQuoteDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The PullQuote anatomy, from its definition. */
-export const postkitPullQuoteSlots = pullQuoteDefinition.slots;
+export const postkitPullQuoteSlots = postkitBuiltInSlots.PullQuote;
 export type PostkitPullQuoteSlot = (typeof postkitPullQuoteSlots)[number];
 export const postkitPullQuoteRecipe = defineSlotRecipe({
   className: 'postkit-pull-quote',

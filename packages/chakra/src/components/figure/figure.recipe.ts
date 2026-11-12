@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { figureDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Figure anatomy, from its definition. */
-export const postkitFigureSlots = figureDefinition.slots;
+export const postkitFigureSlots = postkitBuiltInSlots.Figure;
 
 export type PostkitFigureSlot = (typeof postkitFigureSlots)[number];
 

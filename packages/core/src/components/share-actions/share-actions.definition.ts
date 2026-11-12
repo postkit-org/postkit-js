@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const shareActionsDefinition = definePostkitComponent({
   name: 'ShareActions',
@@ -25,7 +26,7 @@ export const shareActionsDefinition = definePostkitComponent({
       themeVariant: true,
     }),
   },
-  slots: ['root', 'label', 'actions', 'action', 'icon', 'status'],
+  slots: postkitBuiltInSlots.ShareActions,
   example: {
     props: { url: 'https://example.com/article' },
   },

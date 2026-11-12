@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { comparisonDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Comparison anatomy, from its definition. */
-export const postkitComparisonSlots = comparisonDefinition.slots;
+export const postkitComparisonSlots = postkitBuiltInSlots.Comparison;
 export type PostkitComparisonSlot = (typeof postkitComparisonSlots)[number];
 export const postkitComparisonRecipe = defineSlotRecipe({
   className: 'postkit-comparison',

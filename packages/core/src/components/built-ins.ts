@@ -37,53 +37,12 @@ import { deviceDefinition } from './device/device.definition.js';
 import { footnoteDefinition } from './footnote/footnote.definition.js';
 import { footnotesDefinition } from './footnotes/footnotes.definition.js';
 
-export {
-  appearsOnDefinition,
-  asideDefinition,
-  audienceBoundaryDefinition,
-  audioDefinition,
-  authorCardDefinition,
-  callToActionDefinition,
-  calloutDefinition,
-  cardGridDefinition,
-  carouselDefinition,
-  chartDefinition,
-  codeBlockDefinition,
-  codeGroupDefinition,
-  comparisonDefinition,
-  diffDefinition,
-  disclosureDefinition,
-  figureDefinition,
-  fileCardDefinition,
-  fileTreeDefinition,
-  galleryDefinition,
-  keyTakeawayDefinition,
-  linkPreviewDefinition,
-  newsletterSignupDefinition,
-  pollDefinition,
-  productCardDefinition,
-  pullQuoteDefinition,
-  relatedContentDefinition,
-  seriesNavigationDefinition,
-  shareActionsDefinition,
-  socialPostDefinition,
-  sponsorBlockDefinition,
-  statDefinition,
-  stepsDefinition,
-  tabsDefinition,
-  terminalDefinition,
-  videoDefinition,
-  deviceDefinition,
-  footnoteDefinition,
-  footnotesDefinition,
-};
-
 /**
  * Postkit's built-in component definitions, keyed by name. The key order is
  * the 0.2 catalog order, which the v1 manifest keeps; components added since
  * (Device, 0.3) follow it.
  */
-export const postkitBuiltInDefinitions = Object.freeze({
+export const postkitBuiltInDefinitions = /* @__PURE__ */ Object.freeze({
   Aside: asideDefinition,
   Callout: calloutDefinition,
   CardGrid: cardGridDefinition,

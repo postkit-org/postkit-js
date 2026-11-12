@@ -3,8 +3,8 @@
 Configure the components, renderer, defaults and overrides a site uses, in one call.
 
 `createPostkit` configures everything a host needs from the set of components
-it actually uses: the provider, the MDX map, the directive plugins and the
-manifest.
+it actually uses: the provider, the MDX map and the manifest, plus the
+directive plugins through `postkitRemarkPlugins`.
 
 ```ts
 // lib/postkit.ts
@@ -31,16 +31,15 @@ export const postkit = createPostkit({
 
 ## Options
 
-| Option       | Description                                                                                                                                                                                               |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `renderer`   | The renderer that supplies the views. Pass `chakra` from `@postkit/chakra` for the Chakra views. Omit it for the headless views.                                                                          |
-| `kits`       | The [kits](/docs/kits) to enable, such as `[article, technical]` from `@postkit/react/kits`.                                                                                                              |
-| `exclude`    | Component names to leave out of the enabled kits, such as `['Poll']`.                                                                                                                                     |
-| `components` | Your own components and third-party ones, as `{ definition, view }` pairs. See [New components](/docs/new-components).                                                                                    |
-| `defaults`   | Site-wide prop defaults, keyed by component name. See [Defaults and slots](/docs/defaults-and-slots).                                                                                                     |
-| `overrides`  | Per-component slot and view overrides, keyed by component name.                                                                                                                                           |
-| `link`       | The link component for internal links, such as Next.js `Link`. The framework adapters set it for you.                                                                                                     |
-| `remark`     | Options for the Remark preset, such as `{ postkit: { strict: false } }` or `{ postkit: { footnotes: { defaults } } }` ([Footnotes](/docs/footnotes)). Directives always validate against the enabled set. |
+| Option       | Description                                                                                                                                                                                              |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `renderer`   | The renderer that supplies the views. Pass `chakra` or `chakraLazy` from `@postkit/chakra` for the Chakra views. Omit it for the headless views, which load on first render ([Lazy views](#lazy-views)). |
+| `kits`       | The [kits](/docs/kits) to enable, such as `[article, technical]` from `@postkit/react/kits`.                                                                                                             |
+| `exclude`    | Component names to leave out of the enabled kits, such as `['Poll']`.                                                                                                                                    |
+| `components` | Your own components and third-party ones, as `{ definition, view }` pairs. See [New components](/docs/new-components).                                                                                   |
+| `defaults`   | Site-wide prop defaults, keyed by component name. See [Defaults and slots](/docs/defaults-and-slots).                                                                                                    |
+| `overrides`  | Per-component slot and view overrides, keyed by component name.                                                                                                                                          |
+| `link`       | The link component for internal links, such as Next.js `Link`. The framework adapters set it for you.                                                                                                    |
 
 ### `defaults`
 
@@ -96,9 +95,9 @@ component's view, use `overrides.Name.view`.
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `postkit.Provider`      | The renderer's provider (Chakra's `PostkitProvider` with `renderer: chakra`) with your defaults and overrides. Wrap your app in it once. |
 | `postkit.mdxComponents` | Only the enabled components, plus prose. Pass it to your MDX runtime.                                                                    |
-| `postkit.remarkPlugins` | The Remark plugins for MDX and Markdown. Directives validate against this set.                                                           |
 | `postkit.manifest()`    | The `postkit.component-catalog` v2 [manifest](/docs/manifest) for this set.                                                              |
 | `postkit.definitions`   | The enabled definitions that render with this renderer. Pass them to `renderEmail` ([Email](/docs/email)).                               |
+| `postkit.unavailable`   | Enabled components the renderer has no view for, with the reason. `postkitRemarkPlugins` fails the build on one.                         |
 | `postkit.renderer`      | The renderer in use.                                                                                                                     |
 
 With `renderer: chakra`, `postkit.Provider` takes `PostkitProvider`'s props,
@@ -113,6 +112,43 @@ counts as one figure whose items read "Fig. 3", "Fig. 3b", "Fig. 3c".
   {children}
 </postkit.Provider>
 ```
+
+## Remark plugins
+
+The Remark plugins come from `postkitRemarkPlugins` in
+`@postkit/react/remark`, not from `postkit` itself, so the Markdown tooling
+(GFM, directives, Postkit's plugin) stays out of the browser bundle. Call it
+where Markdown compiles: an MDX loader, `getStaticProps`, a build script.
+Directives and component names validate against exactly the enabled set:
+
+```ts
+import { postkitRemarkPlugins } from '@postkit/react/remark';
+import { postkit } from './lib/postkit';
+
+export const remarkPlugins = postkitRemarkPlugins(postkit, {
+  postkit: { strict: false },
+});
+```
+
+The second argument takes the preset's options, such as
+`{ postkit: { footnotes: { defaults } } }` ([Footnotes](/docs/footnotes)) or
+`{ gfm: false }`.
+
+## Lazy views
+
+Without `renderer`, `createPostkit` uses `postkitHeadlessRenderer`: each
+headless view, with its behaviour (a Zag machine for Carousel and Tabs, say),
+downloads the first time a page renders it, so a page ships only the views
+its content uses. `chakraLazy` does the same for the Chakra views. A server
+render that waits for Suspense (Next.js, React Router, TanStack Start, Astro)
+has the whole view in its HTML, and the browser keeps that HTML until the
+view arrives, so nothing shifts.
+
+A synchronous render (`renderToStaticMarkup`) renders a view that hasn't
+loaded as nothing. Either load the views first with
+`preloadPostkitViews(postkit.mdxComponents, names)`, or use the eager
+renderers, which import every view up front: `postkitHeadlessEagerRenderer`
+from `@postkit/react`, or `chakra` from `@postkit/chakra`.
 
 ```tsx
 // pages/_app.tsx
@@ -138,10 +174,10 @@ your own component) as `link`. Image optimisation stays the host's job.
 ```ts
 import { createPostkit } from '@postkit/next';
 import { article, technical, media } from '@postkit/react/kits';
-import { chakra } from '@postkit/chakra';
+import { chakraLazy } from '@postkit/chakra';
 
 export const postkit = createPostkit({
-  renderer: chakra,
+  renderer: chakraLazy,
   kits: [article, technical, media],
   link: { linkProps: { prefetch: false } },
 });
@@ -150,4 +186,6 @@ export const postkit = createPostkit({
 The low-level exports stay available: `createPostkitNextComponents()`,
 `createPostkitReactRouterComponents()` and
 `createPostkitTanStackRouterComponents()`, plus each adapter's link
-(`createPostkitNextLink()` and so on).
+(`createPostkitNextLink()` and so on). Their component maps load each view
+on first render too; pass `components: postkitChakraViews` for a synchronous
+render.

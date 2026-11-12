@@ -16,6 +16,14 @@ export interface PostkitLazyViewOptions {
    * view itself: it reads site defaults and part overrides from the provider.
    */
   readonly definition?: AnyPostkitComponentDefinition;
+  /**
+   * Whether the loaded view is built with `postkitView` or
+   * `postkitChakraView`, without attaching its definition (which would ship
+   * the definition with the lazy view). `createPostkit` then gives it site
+   * defaults and part overrides through the provider. A `definition` implies
+   * it.
+   */
+  readonly postkitView?: boolean;
 }
 
 /** A view that downloads its implementation the first time it renders. */
@@ -26,6 +34,11 @@ export interface PostkitLazyView<
   preload(): Promise<PostkitAnyComponent>;
   /** The view's definition, when one was given. */
   readonly definition?: AnyPostkitComponentDefinition;
+  /**
+   * `true` when the loaded view is built with `postkitView` or
+   * `postkitChakraView` (see {@link PostkitLazyViewOptions.postkitView}).
+   */
+  readonly postkitView: boolean;
 }
 
 /**
@@ -94,6 +107,7 @@ export function postkitLazyView(
   }
   PostkitLazy.displayName = `PostkitLazy(${label})`;
   PostkitLazy.preload = preload;
+  PostkitLazy.postkitView = Boolean(options.definition ?? options.postkitView);
   if (options.definition) {
     Object.defineProperty(PostkitLazy, 'definition', {
       value: options.definition,
@@ -103,16 +117,31 @@ export function postkitLazyView(
   return PostkitLazy as PostkitLazyView;
 }
 
+/** Options for {@link postkitLazyViews}. */
+export interface PostkitLazyViewsOptions {
+  /**
+   * Each view's definition, keyed by name, to attach to its lazy view (see
+   * {@link PostkitLazyViewOptions.definition}).
+   */
+  readonly definitions?: Readonly<
+    Partial<Record<string, AnyPostkitComponentDefinition>>
+  >;
+  /**
+   * Whether every loaded view is built with `postkitView` or
+   * `postkitChakraView` (see {@link PostkitLazyViewOptions.postkitView}).
+   */
+  readonly postkitViews?: boolean;
+}
+
 /**
- * Lazy views for a map of loaders, keyed by component name. Pass
- * `definitions` to attach each view's definition (see
- * {@link PostkitLazyViewOptions.definition}).
+ * Lazy views for a map of loaders, keyed by component name. When the loaders
+ * load `postkitView` or `postkitChakraView` views, pass
+ * `{ postkitViews: true }` so `createPostkit` gives them site defaults and
+ * part overrides.
  */
 export function postkitLazyViews<Name extends string>(
   loaders: Readonly<Record<Name, PostkitViewLoader>>,
-  definitions?: Readonly<
-    Partial<Record<string, AnyPostkitComponentDefinition>>
-  >,
+  options: PostkitLazyViewsOptions = {},
 ): Readonly<Record<Name, PostkitLazyView>> {
   return Object.freeze(
     Object.fromEntries(
@@ -120,7 +149,8 @@ export function postkitLazyViews<Name extends string>(
         name,
         postkitLazyView(loaders[name], {
           name,
-          definition: definitions?.[name],
+          definition: options.definitions?.[name],
+          postkitView: options.postkitViews,
         }),
       ]),
     ) as Record<Name, PostkitLazyView>,

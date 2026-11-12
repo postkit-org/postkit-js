@@ -1,5 +1,6 @@
 import { definePostkitComponent } from '../definition.js';
 import { presentation, prop } from '../props.js';
+import { postkitBuiltInSlots } from '../slots.js';
 
 export const pullQuoteDefinition = definePostkitComponent({
   name: 'PullQuote',
@@ -14,7 +15,7 @@ export const pullQuoteDefinition = definePostkitComponent({
     attribution: prop.string('The quoted speaker or source.'),
     cite: prop.string('The cited work.'),
   },
-  slots: ['root', 'mark', 'quote', 'attribution', 'cite'],
+  slots: postkitBuiltInSlots.PullQuote,
   example: {
     props: { quote: 'Portable content keeps its meaning.' },
   },

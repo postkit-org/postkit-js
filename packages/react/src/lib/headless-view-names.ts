@@ -4,7 +4,7 @@
  * so a catalog or manifest doesn't ship every view. Keep it in step with
  * `postkitHeadlessViews` (a test checks).
  */
-export const postkitHeadlessViewNames: readonly string[] = Object.freeze([
+export const postkitHeadlessViewNames = Object.freeze([
   'Aside',
   'Callout',
   'CardGrid',
@@ -43,4 +43,7 @@ export const postkitHeadlessViewNames: readonly string[] = Object.freeze([
   'Device',
   'Footnote',
   'Footnotes',
-]);
+] as const);
+
+/** The name of a component `@postkit/react` has a headless view for. */
+export type PostkitHeadlessViewName = (typeof postkitHeadlessViewNames)[number];

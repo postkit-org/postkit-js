@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { audioDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Audio anatomy, from its definition. */
-export const postkitAudioSlots = audioDefinition.slots;
+export const postkitAudioSlots = postkitBuiltInSlots.Audio;
 
 export type PostkitAudioSlot = (typeof postkitAudioSlots)[number];
 

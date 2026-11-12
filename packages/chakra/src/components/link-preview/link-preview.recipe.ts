@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { linkPreviewDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The LinkPreview anatomy, from its definition. */
-export const postkitLinkPreviewSlots = linkPreviewDefinition.slots;
+export const postkitLinkPreviewSlots = postkitBuiltInSlots.LinkPreview;
 
 export type PostkitLinkPreviewSlot = (typeof postkitLinkPreviewSlots)[number];
 

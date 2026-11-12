@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { pollDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Poll anatomy, from its definition. */
-export const postkitPollSlots = pollDefinition.slots;
+export const postkitPollSlots = postkitBuiltInSlots.Poll;
 export type PostkitPollSlot = (typeof postkitPollSlots)[number];
 export const postkitPollRecipe = defineSlotRecipe({
   className: 'postkit-poll',

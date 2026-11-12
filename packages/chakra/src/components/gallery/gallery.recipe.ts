@@ -1,8 +1,8 @@
 import { defineSlotRecipe } from '@chakra-ui/react';
-import { galleryDefinition } from '@postkit/core/components';
+import { postkitBuiltInSlots } from '@postkit/core/components';
 
 /** The Gallery anatomy, from its definition. */
-export const postkitGallerySlots = galleryDefinition.slots;
+export const postkitGallerySlots = postkitBuiltInSlots.Gallery;
 
 export type PostkitGallerySlot = (typeof postkitGallerySlots)[number];
 
