@@ -21,6 +21,13 @@ import { createPostkitTanStackRouterComponents } from '@postkit/tanstack-router'
 export const mdxComponents = createPostkitTanStackRouterComponents();
 ```
 
+Each Postkit component in the map loads the first time a page renders it, so
+a page only downloads the components its content uses. A streaming server
+render waits for them, so the HTML is complete, and the browser keeps that
+HTML in place until the component has loaded, so nothing shifts. For a
+synchronous render such as `renderToStaticMarkup`, pass the eager views:
+`createPostkitTanStackRouterComponents({ components: postkitChakraViews })`.
+
 Render the article beneath the application's TanStack Router provider and
 `PostkitProvider`. The application owns its generated route tree, data loading,
 and page layout. `PostkitProvider` is host-native by default; pass

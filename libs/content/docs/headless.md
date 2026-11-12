@@ -55,6 +55,13 @@ export const postkit = createPostkit({
 Wrap your app in `postkit.Provider` and pass `postkit.mdxComponents` to MDX,
 as in the [Quick start](/docs/quick-start).
 
+Each headless view, with its behaviour, loads the first time a page renders
+it, so a page ships only the views its content uses, and each kit brings only
+its own definitions. A server render that waits for Suspense has the whole
+view in its HTML. For a synchronous render (`renderToStaticMarkup`), pass
+`renderer: postkitHeadlessEagerRenderer` (see
+[Lazy views](/docs/create-postkit#lazy-views)).
+
 ## Every part has a name
 
 Every headless view stamps the component name on its root and a part name on

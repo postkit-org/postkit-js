@@ -89,15 +89,16 @@ The `createPostkit` preset configures a site from its kits, components,
 defaults and overrides, with internal links routed through Next.js:
 
 ```ts
-import { chakra } from '@postkit/chakra';
+import { chakraLazy } from '@postkit/chakra';
 import { createPostkit } from '@postkit/next';
 import { article, media, technical } from '@postkit/react/kits';
 
 export const postkit = createPostkit({
-  renderer: chakra,
+  renderer: chakraLazy,
   kits: [article, technical, media],
 });
-// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
 ```
 
 It needs `@postkit/react` installed alongside `@postkit/chakra`.

@@ -88,7 +88,8 @@ export const postkit = createPostkit({
   renderer: chakra,
   kits: [article, technical, media],
 });
-// postkit.Provider, postkit.mdxComponents, postkit.remarkPlugins, postkit.manifest()
+// postkit.Provider, postkit.mdxComponents, postkit.manifest(); at build time,
+// postkitRemarkPlugins(postkit) from '@postkit/react/remark'
 ```
 
 It needs `@postkit/react` installed alongside `@postkit/chakra`.
@@ -99,7 +100,11 @@ It needs `@postkit/react` installed alongside `@postkit/chakra`.
   set to the TanStack Router link (pass link options or a component as `link`)
 - `CreatePostkitTanStackRouterOptions`
 - `createPostkitTanStackRouterLink(options?)`
-- `createPostkitTanStackRouterComponents(options?)`
+- `createPostkitTanStackRouterComponents(options?)`: prose and component views, with each view
+  loading the first time a page renders it (`createPostkitLazyMdxComponents`
+  from `@postkit/chakra`). A streaming server render waits for the views, so
+  the HTML is complete. For a synchronous render such as
+  `renderToStaticMarkup`, pass `components: postkitChakraViews`.
 - `PostkitTanStackRouterComponentsOptions`
 - `PostkitTanStackRouterLinkOptions`
 - `PostkitTanStackLinkProps`

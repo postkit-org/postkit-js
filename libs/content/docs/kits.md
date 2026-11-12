@@ -74,7 +74,7 @@ export const postkit = createPostkit({
 The set you enable is the set everything else uses:
 
 - `postkit.mdxComponents` contains only the enabled components, plus prose.
-- `postkit.remarkPlugins` validates directives against the enabled set, so a
+- `postkitRemarkPlugins(postkit)` validates directives against the enabled set, so a
   post that uses a component you didn't turn on fails the build the same way a
   misspelled one does (see [Validation](/docs/validation)).
 - `postkit.manifest()` describes exactly the enabled set, so editors like

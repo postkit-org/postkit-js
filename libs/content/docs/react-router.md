@@ -24,6 +24,13 @@ import { createPostkitReactRouterComponents } from '@postkit/react-router';
 export const mdxComponents = createPostkitReactRouterComponents();
 ```
 
+Each Postkit component in the map loads the first time a page renders it, so
+a page only downloads the components its content uses. A streaming server
+render waits for them, so the HTML is complete, and the browser keeps that
+HTML in place until the component has loaded, so nothing shifts. For a
+synchronous render such as `renderToStaticMarkup`, pass the eager views:
+`createPostkitReactRouterComponents({ components: postkitChakraViews })`.
+
 Render the article beneath both the application router and `PostkitProvider`:
 
 ```tsx

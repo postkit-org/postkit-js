@@ -66,12 +66,14 @@ the layering.
 ## Add Markdown or MDX
 
 Pass the component map and the Remark plugins to the application's Markdown or
-MDX runtime:
+MDX runtime. The plugins are build-time code, so they come from
+`@postkit/react/remark` and stay out of the browser bundle:
 
 ```ts
+import { postkitRemarkPlugins } from '@postkit/react/remark';
 import { postkit } from './lib/postkit';
 
-export const mdxOptions = { remarkPlugins: postkit.remarkPlugins };
+export const mdxOptions = { remarkPlugins: postkitRemarkPlugins(postkit) };
 export const mdxComponents = postkit.mdxComponents;
 ```
 

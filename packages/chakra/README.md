@@ -75,7 +75,10 @@ const postkit = createPostkit({
 all of them. To download only the views a page's content uses, use the lazy
 forms: `renderer: chakraLazy` for `createPostkit`, or
 `createPostkitLazyMdxComponents` (same options as `createPostkitMdxComponents`)
-for an MDX map. `@postkit/next`'s `createPostkitNextComponents` uses it.
+for an MDX map. `@postkit/next`, `@postkit/react-router` and
+`@postkit/tanstack-router` use it for their component maps, and
+`DocumentRenderer`'s default map uses the same lazy views (pass
+`components={postkitChakraViews}` to render a document synchronously).
 
 Each view loads the first time it renders, inside its own Suspense boundary. A
 server render that waits for Suspense (`renderToReadableStream` or
