@@ -35,7 +35,11 @@ const stackedTable = {
     '& tr[data-group]': { paddingTop: '28px', paddingBottom: '4px' },
     '& th, & td': { padding: '0 !important' },
     // Long string defaults wrap here instead of widening the page (no overflow at 320).
-    '& td': { marginTop: '6px', whiteSpace: 'normal', overflowWrap: 'anywhere' },
+    '& td': {
+      marginTop: '6px',
+      whiteSpace: 'normal',
+      overflowWrap: 'anywhere',
+    },
     '& td[data-label]::before': {
       content: 'attr(data-label)',
       display: 'inline-block',

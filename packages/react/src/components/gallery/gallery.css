@@ -60,7 +60,9 @@
     grid-auto-flow: column;
     grid-template-columns: none;
   }
-  :where(:scope[data-presentation='row'] [data-postkit-part='grid']:focus-visible) {
+  :where(
+    :scope[data-presentation='row'] [data-postkit-part='grid']:focus-visible
+  ) {
     outline: var(--postkit-focus-width) solid var(--postkit-color-focus-ring);
     outline-offset: var(--postkit-focus-offset);
   }

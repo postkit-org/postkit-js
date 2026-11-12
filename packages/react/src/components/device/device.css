@@ -89,8 +89,7 @@
     height: 0.875rem;
     max-width: 100%;
     width: calc(
-      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) *
-        1.16
+      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) * 1.16
     );
   }
   :where([data-postkit-part='figcaption']) {
@@ -98,8 +97,7 @@
     font-size: var(--postkit-text-sm);
     margin-block-start: var(--postkit-space-3);
     max-width: calc(
-      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) *
-        1.16
+      var(--postkit-device-width) * var(--postkit-device-width-scale, 1) * 1.16
     );
     text-align: center;
   }

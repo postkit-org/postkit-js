@@ -1,87 +1,30 @@
 {
- "$note": "Search synonyms: what readers type \u2192 the Postkit name. Every value must be a real component (manifest) or docs page title. Add 'footnote' \u2192 Footnotes when that component ships (03 \u00a77.1).",
- "accordion": [
-  "Disclosure"
- ],
- "collapsible": [
-  "Disclosure"
- ],
- "details": [
-  "Disclosure"
- ],
- "admonition": [
-  "Callout"
- ],
- "alert": [
-  "Callout"
- ],
- "note": [
-  "Callout"
- ],
- "tip": [
-  "Callout"
- ],
- "warning": [
-  "Callout"
- ],
- "sidenote": [
-  "Aside"
- ],
- "margin note": [
-  "Aside"
- ],
- "tldr": [
-  "KeyTakeaway"
- ],
- "summary": [
-  "KeyTakeaway"
- ],
- "code": [
-  "CodeBlock"
- ],
- "syntax highlighting": [
-  "CodeBlock"
- ],
- "shell": [
-  "Terminal"
- ],
- "image": [
-  "Figure"
- ],
- "caption": [
-  "Figure"
- ],
- "slider": [
-  "Carousel"
- ],
- "slideshow": [
-  "Carousel"
- ],
- "embed": [
-  "SocialPost",
-  "LinkPreview"
- ],
- "tweet": [
-  "SocialPost"
- ],
- "unfurl": [
-  "LinkPreview",
-  "Link previews and unfurling"
- ],
- "newsletter": [
-  "Email"
- ],
- "dark mode": [
-  "Tokens"
- ],
- "theme": [
-  "Tokens",
-  "Part styles"
- ],
- "tailwind": [
-  "Part styles"
- ],
- "shadcn": [
-  "Eject"
- ]
+  "$note": "Search synonyms: what readers type \u2192 the Postkit name. Every value must be a real component (manifest) or docs page title. Add 'footnote' \u2192 Footnotes when that component ships (03 \u00a77.1).",
+  "accordion": ["Disclosure"],
+  "collapsible": ["Disclosure"],
+  "details": ["Disclosure"],
+  "admonition": ["Callout"],
+  "alert": ["Callout"],
+  "note": ["Callout"],
+  "tip": ["Callout"],
+  "warning": ["Callout"],
+  "sidenote": ["Aside"],
+  "margin note": ["Aside"],
+  "tldr": ["KeyTakeaway"],
+  "summary": ["KeyTakeaway"],
+  "code": ["CodeBlock"],
+  "syntax highlighting": ["CodeBlock"],
+  "shell": ["Terminal"],
+  "image": ["Figure"],
+  "caption": ["Figure"],
+  "slider": ["Carousel"],
+  "slideshow": ["Carousel"],
+  "embed": ["SocialPost", "LinkPreview"],
+  "tweet": ["SocialPost"],
+  "unfurl": ["LinkPreview", "Link previews and unfurling"],
+  "newsletter": ["Email"],
+  "dark mode": ["Tokens"],
+  "theme": ["Tokens", "Part styles"],
+  "tailwind": ["Part styles"],
+  "shadcn": ["Eject"]
 }

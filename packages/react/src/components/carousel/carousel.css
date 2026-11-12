@@ -45,7 +45,10 @@
     justify-content: space-between;
     padding: var(--postkit-space-3);
   }
-  :where([data-postkit-part='previousTrigger'], [data-postkit-part='nextTrigger']) {
+  :where(
+    [data-postkit-part='previousTrigger'],
+    [data-postkit-part='nextTrigger']
+  ) {
     align-items: center;
     appearance: none;
     background: var(--postkit-color-bg);
@@ -67,11 +70,10 @@
     border-color: var(--postkit-color-border-strong);
   }
   :where(
-    :is([data-postkit-part='previousTrigger'], [data-postkit-part='nextTrigger']):is(
-        :disabled,
-        [aria-disabled='true'],
-        [data-disabled]
-      )
+    :is(
+      [data-postkit-part='previousTrigger'],
+      [data-postkit-part='nextTrigger']
+    ):is(:disabled, [aria-disabled='true'], [data-disabled])
   ) {
     cursor: not-allowed;
     opacity: 0.55;
@@ -131,7 +133,10 @@
     min-height: 0;
     transition: opacity 200ms ease;
   }
-  :where(:scope[data-presentation='peek'] [data-postkit-part='slide'][aria-hidden='true']) {
+  :where(
+    :scope[data-presentation='peek']
+      [data-postkit-part='slide'][aria-hidden='true']
+  ) {
     opacity: 0.35;
   }
   :where(:scope[data-presentation='peek'] [data-postkit-part='media']) {
@@ -156,7 +161,10 @@
   }
   :where(
     :scope[data-presentation='peek']
-      :is([data-postkit-part='previousTrigger'], [data-postkit-part='nextTrigger'])
+      :is(
+        [data-postkit-part='previousTrigger'],
+        [data-postkit-part='nextTrigger']
+      )
   ) {
     background: transparent;
     font-size: var(--postkit-text-md);

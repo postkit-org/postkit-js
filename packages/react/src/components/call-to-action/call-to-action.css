@@ -73,7 +73,9 @@
     background: var(--postkit-color-surface);
     border-radius: var(--postkit-radius-xl);
   }
-  :where(:scope[data-variant='subtle'] [data-postkit-part='secondaryAction']:hover) {
+  :where(
+    :scope[data-variant='subtle'] [data-postkit-part='secondaryAction']:hover
+  ) {
     background: var(--postkit-color-surface-emphasized);
   }
   :where(:scope[data-variant='outline']) {

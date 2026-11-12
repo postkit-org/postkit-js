@@ -56,10 +56,7 @@ export interface OutgoingEmail {
 
 /** Which provider call failed. */
 export type ProviderOperation =
-  | 'get-contact'
-  | 'create-contact'
-  | 'update-contact'
-  | 'send-email';
+  'get-contact' | 'create-contact' | 'update-contact' | 'send-email';
 
 /**
  * A provider call failed. It carries only the operation, the provider's error name and the
@@ -75,7 +72,9 @@ export class NewsletterProviderError extends Error {
     code: string,
     status: number | null,
   ) {
-    super(`Newsletter provider ${operation} failed: ${code} (${status ?? 'no status'})`);
+    super(
+      `Newsletter provider ${operation} failed: ${code} (${status ?? 'no status'})`,
+    );
     this.name = 'NewsletterProviderError';
     this.operation = operation;
     this.code = code;

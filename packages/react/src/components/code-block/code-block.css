@@ -10,7 +10,9 @@
     overflow: hidden;
   }
   /* Inside a CodeGroup panel the group draws the surface. */
-  :where([data-postkit-component='CodeGroup'] [data-postkit-part='panel'] > :scope) {
+  :where(
+    [data-postkit-component='CodeGroup'] [data-postkit-part='panel'] > :scope
+  ) {
     border: 0;
     border-radius: 0;
     margin: 0;
@@ -105,7 +107,10 @@
     font: inherit;
     padding: var(--postkit-space-3) var(--postkit-space-4);
   }
-  :where([data-postkit-part='line'], [data-postkit-part='codeText'] [data-line]) {
+  :where(
+    [data-postkit-part='line'],
+    [data-postkit-part='codeText'] [data-line]
+  ) {
     min-height: 1.5em;
   }
   :where(

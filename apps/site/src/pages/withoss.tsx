@@ -103,7 +103,9 @@ function OssRow({ item }: { item: OssItem }) {
         textDecoration="none"
         overflowWrap="anywhere"
         textUnderlineOffset="3px"
-        css={{ '@media (hover: hover)': { _hover: { textDecoration: 'underline' } } }}
+        css={{
+          '@media (hover: hover)': { _hover: { textDecoration: 'underline' } },
+        }}
       >
         {displayUrl(item.url)}
       </chakra.a>
@@ -166,8 +168,7 @@ export default function MadeWithOssPage({
             letterSpacing="tight"
             color="fg"
           >
-            Postkit is open source, and so is almost everything it stands
-            on.{' '}
+            Postkit is open source, and so is almost everything it stands on.{' '}
             {/* The grey half is large text (3:1) from `md`; at 21px on phones it needs 4.5:1. */}
             <chakra.span color={{ base: 'fg.muted', md: 'fg.quiet' }}>
               Thank you to the maintainers and contributors behind the library
@@ -199,10 +200,20 @@ export default function MadeWithOssPage({
               >
                 {section.title}
               </chakra.h2>
-              <chakra.p margin="0" marginTop="14px" fontSize="md" color="fg.muted">
+              <chakra.p
+                margin="0"
+                marginTop="14px"
+                fontSize="md"
+                color="fg.muted"
+              >
                 {section.description}
               </chakra.p>
-              <chakra.ul margin="0" marginTop="8px" padding="0" listStyleType="none">
+              <chakra.ul
+                margin="0"
+                marginTop="8px"
+                padding="0"
+                listStyleType="none"
+              >
                 {section.items.map((item) => (
                   <OssRow key={item.name} item={item} />
                 ))}
@@ -211,7 +222,12 @@ export default function MadeWithOssPage({
           ))}
         </chakra.div>
 
-        <chakra.p margin="0" marginTop="72px" fontSize="body" color="fg.secondary">
+        <chakra.p
+          margin="0"
+          marginTop="72px"
+          fontSize="body"
+          color="fg.secondary"
+        >
           Missing a project?{' '}
           <TextLink href={`${externalLinks.github}/issues/new`}>
             Open an issue on GitHub

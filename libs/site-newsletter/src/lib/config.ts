@@ -24,7 +24,9 @@ export interface NewsletterConfig {
  * bytes). Without it the routes answer `unavailable` and nothing is sent; the site still
  * builds and every other page works.
  */
-export function readNewsletterConfig(env: NewsletterEnv): NewsletterConfig | null {
+export function readNewsletterConfig(
+  env: NewsletterEnv,
+): NewsletterConfig | null {
   const apiKey = env.RESEND_API_KEY?.trim();
   const audienceId = env.RESEND_AUDIENCE_ID?.trim();
   const key = parseSubscribeSecret(env.SUBSCRIBE_SECRET);
@@ -33,9 +35,8 @@ export function readNewsletterConfig(env: NewsletterEnv): NewsletterConfig | nul
     apiKey,
     audienceId,
     key,
-    siteUrl: (env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://postkit.org').replace(
-      /\/+$/,
-      '',
-    ),
+    siteUrl: (
+      env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://postkit.org'
+    ).replace(/\/+$/, ''),
   };
 }

@@ -37,8 +37,16 @@ export const getStaticProps: GetStaticProps<LicensingPageProps> = async () => {
 /** The board's "Built on" table: the direct dependencies a Postkit user ships. */
 const builtOn = [
   { project: 'Chakra UI', licence: 'MIT', usedFor: 'The Chakra views' },
-  { project: 'Zag', licence: 'MIT', usedFor: 'Behaviour for interactive components' },
-  { project: 'unified · remark', licence: 'MIT', usedFor: 'Markdown and MDX parsing' },
+  {
+    project: 'Zag',
+    licence: 'MIT',
+    usedFor: 'Behaviour for interactive components',
+  },
+  {
+    project: 'unified · remark',
+    licence: 'MIT',
+    usedFor: 'Markdown and MDX parsing',
+  },
   { project: 'Shiki', licence: 'MIT', usedFor: 'Code highlighting' },
 ] as const;
 
@@ -128,7 +136,12 @@ export default function LicensingPage({
                     borderTopWidth="1px"
                     borderColor="border"
                   >
-                    <chakra.th scope="row" {...cell} fontWeight="regular" color="fg">
+                    <chakra.th
+                      scope="row"
+                      {...cell}
+                      fontWeight="regular"
+                      color="fg"
+                    >
                       {row.project}
                     </chakra.th>
                     <chakra.td {...cell} color="fg.secondary">

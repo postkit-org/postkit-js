@@ -39,13 +39,18 @@ describe('createResendProvider', () => {
   it('reads a contact from the audience, and treats 404 as none', async () => {
     const captured = stubFetch(
       [200, { object: 'contact', id: 'c1', unsubscribed: false }],
-      [404, { name: 'not_found', statusCode: 404, message: 'Contact not found' }],
+      [
+        404,
+        { name: 'not_found', statusCode: 404, message: 'Contact not found' },
+      ],
     );
     expect(await provider().getContact('reader@example.com')).toEqual({
       unsubscribed: false,
     });
     expect(await provider().getContact('reader@example.com')).toBeNull();
-    expect(captured[0].url).toMatch(/\/audiences\/aud_123\/contacts\/reader@example\.com$/);
+    expect(captured[0].url).toMatch(
+      /\/audiences\/aud_123\/contacts\/reader@example\.com$/,
+    );
   });
 
   it('creates a contact with the unsubscribe_token property', async () => {
@@ -70,12 +75,16 @@ describe('createResendProvider', () => {
       [404, { name: 'not_found', statusCode: 404, message: 'nope' }],
     );
     expect(
-      await provider().updateContact('reader@example.com', { unsubscribed: true }),
+      await provider().updateContact('reader@example.com', {
+        unsubscribed: true,
+      }),
     ).toBe('updated');
     expect(captured[0].method).toBe('PATCH');
     expect(captured[0].body).toMatchObject({ unsubscribed: true });
     expect(
-      await provider().updateContact('reader@example.com', { unsubscribed: true }),
+      await provider().updateContact('reader@example.com', {
+        unsubscribed: true,
+      }),
     ).toBe('not-found');
   });
 
@@ -94,7 +103,9 @@ describe('createResendProvider', () => {
     );
     expect(result).toBe('sent');
     expect(captured[0].url).toMatch(/\/emails$/);
-    expect(captured[0].headers.get('Idempotency-Key')).toBe('newsletter-confirm-abc');
+    expect(captured[0].headers.get('Idempotency-Key')).toBe(
+      'newsletter-confirm-abc',
+    );
     expect(captured[0].body).toMatchObject({
       to: 'reader@example.com',
       text: 'Hi',
@@ -112,7 +123,13 @@ describe('createResendProvider', () => {
       },
     ]);
     const result = await provider().sendEmail(
-      { from: 'a', to: 'reader@example.com', subject: 's', html: 'h', text: 't' },
+      {
+        from: 'a',
+        to: 'reader@example.com',
+        subject: 's',
+        html: 'h',
+        text: 't',
+      },
       { idempotencyKey: 'k' },
     );
     expect(result).toBe('duplicate');
@@ -129,7 +146,13 @@ describe('createResendProvider', () => {
     ]);
     const error = await provider()
       .sendEmail(
-        { from: 'a', to: 'reader@example.com', subject: 's', html: 'h', text: 't' },
+        {
+          from: 'a',
+          to: 'reader@example.com',
+          subject: 's',
+          html: 'h',
+          text: 't',
+        },
         { idempotencyKey: 'k' },
       )
       .catch((caught: unknown) => caught);

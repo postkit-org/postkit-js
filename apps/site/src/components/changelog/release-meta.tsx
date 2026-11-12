@@ -37,7 +37,10 @@ export function ReleaseMeta({ entry, latest, packages }: ReleaseMetaProps) {
       borderBlockWidth="1px"
       borderColor="border"
       display="grid"
-      gridTemplateColumns={{ base: '80px minmax(0, 1fr)', md: '96px minmax(0, 1fr)' }}
+      gridTemplateColumns={{
+        base: '80px minmax(0, 1fr)',
+        md: '96px minmax(0, 1fr)',
+      }}
       gap="12px 16px"
       fontSize="md"
     >

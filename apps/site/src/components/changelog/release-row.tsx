@@ -94,7 +94,11 @@ export function ReleaseRow({ entry, latest }: ReleaseRowProps) {
         >
           <NextLink
             href={href}
-            style={{ color: 'inherit', textDecoration: 'none', outline: 'none' }}
+            style={{
+              color: 'inherit',
+              textDecoration: 'none',
+              outline: 'none',
+            }}
           >
             {/* Stretches over the row so the whole row is clickable. */}
             <chakra.span

@@ -76,9 +76,7 @@ describe('renderAlreadySubscribedEmail', () => {
       siteUrl: SITE_URL,
     });
     expect(email.html).toMatchSnapshot();
-    expect(email.subject).toBe(
-      'You’re already getting Postkit release emails',
-    );
+    expect(email.subject).toBe('You’re already getting Postkit release emails');
     expect(email.html).toContain('You’re already on the list.');
     expect(email.html).toContain(
       'Nothing to do. The next email comes with the next release.',

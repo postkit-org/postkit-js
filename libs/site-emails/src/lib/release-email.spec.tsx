@@ -101,8 +101,12 @@ describe('release:email (PK-053, 04 §4)', () => {
     expect(html).not.toContain('var(');
 
     expect(text).toContain('Postkit 0.2.0. Portable documents');
-    expect(text).toContain('Added\n\n- @postkit/core, with a versioned document model');
-    expect(text).toContain('Read the full release notes: https://postkit.org/changelog/0-2-0');
+    expect(text).toContain(
+      'Added\n\n- @postkit/core, with a versioned document model',
+    );
+    expect(text).toContain(
+      'Read the full release notes: https://postkit.org/changelog/0-2-0',
+    );
     expect(text).toContain(
       'Unsubscribe: https://postkit.org/newsletter/unsubscribe?token={{{contact.unsubscribe_token}}}',
     );

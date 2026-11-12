@@ -26,7 +26,10 @@ export function TagFilter({ tags, value, onValueChange }: TagFilterProps) {
       marginBlock="-7px"
       paddingBlock="7px"
       overflowX="auto"
-      css={{ scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
+      css={{
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': { display: 'none' },
+      }}
     >
       <SegmentedControl
         aria-label="Filter by topic"

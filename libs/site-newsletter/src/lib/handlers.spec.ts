@@ -52,7 +52,9 @@ const subscribeRequest = (body: unknown, ip = '203.0.113.7') =>
 
 /** The token in an email's confirm link or `List-Unsubscribe` header. */
 function tokenFrom(text: string, path: string): string {
-  const match = new RegExp(`${path.replace(/\//g, '\\/')}\\?token=([A-Za-z0-9_-]+)`).exec(text);
+  const match = new RegExp(
+    `${path.replace(/\//g, '\\/')}\\?token=([A-Za-z0-9_-]+)`,
+  ).exec(text);
   if (!match) throw new Error(`No ${path} link`);
   return match[1];
 }
@@ -91,7 +93,9 @@ describe('POST /api/newsletter/subscribe', () => {
       subscribeRequest({ email: 'new@example.com' }),
     );
     provider.seed(EMAIL);
-    const existing = await handlers.subscribe(subscribeRequest({ email: EMAIL }));
+    const existing = await handlers.subscribe(
+      subscribeRequest({ email: EMAIL }),
+    );
 
     expect(existing.status).toBe(fresh.status);
     expect(existing.body).toEqual(fresh.body);
@@ -99,7 +103,9 @@ describe('POST /api/newsletter/subscribe', () => {
     expect(provider.sent).toHaveLength(2);
 
     const { message } = provider.sent[1];
-    expect(message.subject).toBe('You’re already getting Postkit release emails');
+    expect(message.subject).toBe(
+      'You’re already getting Postkit release emails',
+    );
     expect(message.html).not.toContain('/api/newsletter/confirm');
     expect(message.headers).toMatchObject({
       'List-Unsubscribe': expect.stringMatching(
@@ -196,13 +202,17 @@ describe('POST /api/newsletter/subscribe', () => {
     // Resend would answer the second send as a duplicate; the reader already has an email.
     expect(again.status).toBe(202);
     expect(provider.sent).toHaveLength(1);
-    expect(provider.calls.filter((call) => call === 'send-email')).toHaveLength(2);
+    expect(provider.calls.filter((call) => call === 'send-email')).toHaveLength(
+      2,
+    );
   });
 
   it('Resend failing → 503 with a reportable error that holds no address', async () => {
     const { provider, handlers } = setup();
     provider.failWith = providerOutage();
-    const response = await handlers.subscribe(subscribeRequest({ email: EMAIL }));
+    const response = await handlers.subscribe(
+      subscribeRequest({ email: EMAIL }),
+    );
     expect(response.status).toBe(503);
     expect(response.body).toEqual({ error: 'unavailable' });
     expect(response.failure?.message).not.toContain('reader');
@@ -210,7 +220,9 @@ describe('POST /api/newsletter/subscribe', () => {
 
   it('not configured → 503 unavailable', async () => {
     const handlers = createNewsletterHandlers({ config: null, provider: null });
-    const response = await handlers.subscribe(subscribeRequest({ email: EMAIL }));
+    const response = await handlers.subscribe(
+      subscribeRequest({ email: EMAIL }),
+    );
     expect(response.status).toBe(503);
     expect(response.body).toEqual({ error: 'unavailable' });
   });
@@ -230,7 +242,10 @@ describe('GET /api/newsletter/confirm', () => {
   it('valid token → 303 to Confirmed with the masked address in the fragment', async () => {
     const { provider, handlers } = setup();
     await handlers.subscribe(subscribeRequest({ email: EMAIL }));
-    const token = tokenFrom(provider.sent[0].message.text, '/api/newsletter/confirm');
+    const token = tokenFrom(
+      provider.sent[0].message.text,
+      '/api/newsletter/confirm',
+    );
 
     const response = await handlers.confirm(confirmRequest(token));
     expect(response.status).toBe(303);
@@ -243,23 +258,27 @@ describe('GET /api/newsletter/confirm', () => {
 
     const contact = provider.contacts.get(EMAIL);
     expect(contact?.unsubscribed).toBe(false);
-    expect(contact?.properties['unsubscribe_token']).toMatch(/^[A-Za-z0-9_-]+$/);
+    expect(contact?.properties['unsubscribe_token']).toMatch(
+      /^[A-Za-z0-9_-]+$/,
+    );
   });
 
   it('confirming twice leaves one contact', async () => {
     const { config, provider, handlers } = setup();
     const token = sealConfirmToken(config.key, EMAIL, START);
     expect((await handlers.confirm(confirmRequest(token))).status).toBe(303);
-    expect((await handlers.confirm(confirmRequest(token))).headers['Location']).toContain(
-      'status=confirmed',
-    );
+    expect(
+      (await handlers.confirm(confirmRequest(token))).headers['Location'],
+    ).toContain('status=confirmed');
     expect(provider.contacts.size).toBe(1);
   });
 
   it('re-subscribes a contact that had unsubscribed', async () => {
     const { config, provider, handlers } = setup();
     provider.seed(EMAIL, true);
-    await handlers.confirm(confirmRequest(sealConfirmToken(config.key, EMAIL, START)));
+    await handlers.confirm(
+      confirmRequest(sealConfirmToken(config.key, EMAIL, START)),
+    );
     expect(provider.contacts.get(EMAIL)?.unsubscribed).toBe(false);
   });
 
@@ -269,7 +288,9 @@ describe('GET /api/newsletter/confirm', () => {
     const tampered = `${token.slice(0, -2)}${token.endsWith('AA') ? 'BB' : 'AA'}`;
     const response = await handlers.confirm(confirmRequest(tampered));
     expect(response.status).toBe(303);
-    expect(response.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+    expect(response.headers['Location']).toBe(
+      '/newsletter/subscribe?status=expired',
+    );
     expect(provider.calls).toEqual([]);
   });
 
@@ -278,7 +299,9 @@ describe('GET /api/newsletter/confirm', () => {
     const token = sealConfirmToken(config.key, EMAIL, START);
     clock.now = START + CONFIRM_TOKEN_TTL_MS + 1000;
     const response = await handlers.confirm(confirmRequest(token));
-    expect(response.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+    expect(response.headers['Location']).toBe(
+      '/newsletter/subscribe?status=expired',
+    );
     expect(provider.contacts.size).toBe(0);
   });
 
@@ -286,7 +309,9 @@ describe('GET /api/newsletter/confirm', () => {
     const { handlers } = setup();
     for (const token of [undefined, '', 'garbage', '%%%']) {
       const response = await handlers.confirm(confirmRequest(token));
-      expect(response.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+      expect(response.headers['Location']).toBe(
+        '/newsletter/subscribe?status=expired',
+      );
     }
   });
 
@@ -295,7 +320,9 @@ describe('GET /api/newsletter/confirm', () => {
     const response = await handlers.confirm(
       confirmRequest(sealUnsubscribeToken(config.key, EMAIL)),
     );
-    expect(response.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+    expect(response.headers['Location']).toBe(
+      '/newsletter/subscribe?status=expired',
+    );
     expect(provider.contacts.size).toBe(0);
   });
 
@@ -303,12 +330,16 @@ describe('GET /api/newsletter/confirm', () => {
     const handlers = createNewsletterHandlers({ config: null, provider: null });
     const response = await handlers.confirm(confirmRequest('anything'));
     expect(response.status).toBe(303);
-    expect(response.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+    expect(response.headers['Location']).toBe(
+      '/newsletter/subscribe?status=expired',
+    );
   });
 
   it('other methods → 405', async () => {
     const { handlers } = setup();
-    expect((await handlers.confirm(request({ method: 'POST' }))).status).toBe(405);
+    expect((await handlers.confirm(request({ method: 'POST' }))).status).toBe(
+      405,
+    );
   });
 });
 
@@ -322,9 +353,7 @@ describe('POST /api/newsletter/unsubscribe', () => {
 
   it('unsubscribe token → 200 and the contact unsubscribed; again → 200, no change', async () => {
     const { provider, handlers, token } = await subscribed();
-    const first = await handlers.unsubscribe(
-      request({ body: { token } }),
-    );
+    const first = await handlers.unsubscribe(request({ body: { token } }));
     expect(first.status).toBe(200);
     expect(first.body).toEqual({ state: 'unsubscribed' });
     expect(provider.contacts.get(EMAIL)?.unsubscribed).toBe(true);
@@ -339,7 +368,9 @@ describe('POST /api/newsletter/unsubscribe', () => {
   it('a contact that no longer exists still answers 200', async () => {
     const { config, handlers } = setup();
     const response = await handlers.unsubscribe(
-      request({ query: { token: sealUnsubscribeToken(config.key, 'gone@example.com') } }),
+      request({
+        query: { token: sealUnsubscribeToken(config.key, 'gone@example.com') },
+      }),
     );
     expect(response.status).toBe(200);
   });
@@ -356,9 +387,17 @@ describe('POST /api/newsletter/unsubscribe', () => {
 
   it('a tampered or missing token → 400', async () => {
     const { handlers, token } = await subscribed();
-    const tampered = `A${token.slice(1)}` === token ? `B${token.slice(1)}` : `A${token.slice(1)}`;
-    expect((await handlers.unsubscribe(request({ body: { token: tampered } }))).status).toBe(400);
-    expect((await handlers.unsubscribe(request({ body: {} }))).status).toBe(400);
+    const tampered =
+      `A${token.slice(1)}` === token
+        ? `B${token.slice(1)}`
+        : `A${token.slice(1)}`;
+    expect(
+      (await handlers.unsubscribe(request({ body: { token: tampered } })))
+        .status,
+    ).toBe(400);
+    expect((await handlers.unsubscribe(request({ body: {} }))).status).toBe(
+      400,
+    );
   });
 
   it('RFC 8058 one-click POST → 200', async () => {
@@ -388,8 +427,13 @@ describe('POST /api/newsletter/unsubscribe', () => {
 
   it('an HTML form post → 303 to the page’s Done or Invalid state', async () => {
     const { provider, handlers, token } = await subscribed();
-    const form = { 'content-type': 'application/x-www-form-urlencoded', accept: 'text/html' };
-    const done = await handlers.unsubscribe(request({ headers: form, body: { token } }));
+    const form = {
+      'content-type': 'application/x-www-form-urlencoded',
+      accept: 'text/html',
+    };
+    const done = await handlers.unsubscribe(
+      request({ headers: form, body: { token } }),
+    );
     expect(done.status).toBe(303);
     expect(done.headers['Location']).toBe('/newsletter/unsubscribe#done');
     expect(provider.contacts.get(EMAIL)?.unsubscribed).toBe(true);
@@ -448,7 +492,10 @@ describe('the whole loop', () => {
     const { provider, handlers, clock } = setup();
 
     await handlers.subscribe(subscribeRequest({ email: EMAIL }));
-    const confirmToken = tokenFrom(provider.sent[0].message.html, '/api/newsletter/confirm');
+    const confirmToken = tokenFrom(
+      provider.sent[0].message.html,
+      '/api/newsletter/confirm',
+    );
     const confirmed = await handlers.confirm(
       request({ method: 'GET', query: { token: confirmToken } }),
     );
@@ -457,7 +504,9 @@ describe('the whole loop', () => {
     clock.now += 11 * 60 * 1000;
     await handlers.subscribe(subscribeRequest({ email: EMAIL }));
     const already = provider.sent[1].message;
-    expect(already.subject).toBe('You’re already getting Postkit release emails');
+    expect(already.subject).toBe(
+      'You’re already getting Postkit release emails',
+    );
 
     // The mail client's one-click button, from the header.
     const headerToken = tokenFrom(
@@ -476,7 +525,8 @@ describe('the whole loop', () => {
 
     // The footer link's page, posting the token on load; and the token stored for Broadcasts.
     const footerToken = tokenFrom(already.html, '/newsletter/unsubscribe');
-    const storedToken = provider.contacts.get(EMAIL)?.properties['unsubscribe_token'] ?? '';
+    const storedToken =
+      provider.contacts.get(EMAIL)?.properties['unsubscribe_token'] ?? '';
     for (const token of [footerToken, storedToken]) {
       const response = await handlers.unsubscribe(request({ body: { token } }));
       expect(response.status).toBe(200);

@@ -198,7 +198,9 @@ export function createNewsletterHandlers({
     }
 
     const email =
-      typeof fields['email'] === 'string' ? normalizeEmail(fields['email']) : '';
+      typeof fields['email'] === 'string'
+        ? normalizeEmail(fields['email'])
+        : '';
     if (!isValidEmail(email)) return json(400, { error: 'invalid-email' });
 
     if (!addressLimiter.hit(email, at)) {
@@ -342,7 +344,9 @@ export function createNewsletterHandlers({
 
     try {
       // A contact that's gone (deleted on request) counts as unsubscribed: same answer.
-      await provider.updateContact(opened.payload.email, { unsubscribed: true });
+      await provider.updateContact(opened.payload.email, {
+        unsubscribed: true,
+      });
     } catch (error) {
       return unavailable(asProviderError('update-contact', error));
     }

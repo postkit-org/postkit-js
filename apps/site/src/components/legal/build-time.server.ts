@@ -14,7 +14,9 @@ export function repoRoot(): string {
     if (existsSync(path.join(dir, 'nx.json'))) return dir;
     const parent = path.dirname(dir);
     if (parent === dir) {
-      throw new Error(`No nx.json above ${process.cwd()}: can't find the repo root.`);
+      throw new Error(
+        `No nx.json above ${process.cwd()}: can't find the repo root.`,
+      );
     }
     dir = parent;
   }
@@ -36,7 +38,11 @@ export function lastUpdated(files: readonly string[]): string {
     const out = execFileSync(
       'git',
       ['log', '-1', '--format=%cs', '--', ...files],
-      { cwd: repoRoot(), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+      {
+        cwd: repoRoot(),
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      },
     ).trim();
     return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : buildDate();
   } catch {

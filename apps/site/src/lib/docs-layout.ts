@@ -29,7 +29,9 @@ export const SOON_BADGE = 'Soon';
  *   and prev/next skips them;
  * - `draft` (production) and `missing` items are left out.
  */
-export function toDocsNavTree(navigation: ResolvedDocsNavigation): DocsNavItem[] {
+export function toDocsNavTree(
+  navigation: ResolvedDocsNavigation,
+): DocsNavItem[] {
   return navigation.groups
     .map((group) => ({
       id: `group:${group.group}`,

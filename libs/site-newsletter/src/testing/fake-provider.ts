@@ -55,7 +55,10 @@ export class FakeProvider implements NewsletterProvider {
     return 'created' as const;
   }
 
-  async updateContact(email: string, { unsubscribed, properties }: ContactPatch) {
+  async updateContact(
+    email: string,
+    { unsubscribed, properties }: ContactPatch,
+  ) {
     this.check('update-contact');
     const contact = this.contacts.get(email);
     if (!contact) return 'not-found' as const;

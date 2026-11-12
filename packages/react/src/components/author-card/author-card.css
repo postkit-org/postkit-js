@@ -93,10 +93,8 @@
     align-items: center;
   }
   :where(
-    :scope[data-presentation='inline'] :is(
-        [data-postkit-part='bio'],
-        [data-postkit-part='links']
-      )
+    :scope[data-presentation='inline']
+      :is([data-postkit-part='bio'], [data-postkit-part='links'])
   ) {
     display: none;
   }

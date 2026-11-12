@@ -75,8 +75,10 @@ describe('createNewsletterHandlersFromEnv', () => {
 
 describe('createNextNewsletterRoute', () => {
   it('writes the status, headers and JSON body, and logs nothing', async () => {
-    const consoleSpies = (['log', 'info', 'warn', 'error', 'debug'] as const).map(
-      (method) => vi.spyOn(console, method).mockImplementation(() => undefined),
+    const consoleSpies = (
+      ['log', 'info', 'warn', 'error', 'debug'] as const
+    ).map((method) =>
+      vi.spyOn(console, method).mockImplementation(() => undefined),
     );
     const route = createNextNewsletterRoute(
       createNewsletterHandlersFromEnv({}).subscribe,
@@ -88,7 +90,9 @@ describe('createNextNewsletterRoute', () => {
     );
 
     expect(state.status).toBe(503);
-    expect(state.headers['Content-Type']).toBe('application/json; charset=utf-8');
+    expect(state.headers['Content-Type']).toBe(
+      'application/json; charset=utf-8',
+    );
     expect(state.headers['Cache-Control']).toBe('no-store');
     expect(JSON.parse(state.body ?? '')).toEqual({ error: 'unavailable' });
     for (const spy of consoleSpies) {
@@ -107,7 +111,9 @@ describe('createNextNewsletterRoute', () => {
       response,
     );
     expect(state.status).toBe(303);
-    expect(state.headers['Location']).toBe('/newsletter/subscribe?status=expired');
+    expect(state.headers['Location']).toBe(
+      '/newsletter/subscribe?status=expired',
+    );
     expect(state.body).toBeUndefined();
     expect(state.ended).toBe(true);
   });

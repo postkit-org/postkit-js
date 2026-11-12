@@ -51,7 +51,9 @@ if (!core.isPostkitComponentManifestV2(manifest)) {
 if (
   !isDeepStrictEqual(
     JSON.parse(
-      JSON.stringify(core.createPostkitComponentManifest(inputs, { renderers })),
+      JSON.stringify(
+        core.createPostkitComponentManifest(inputs, { renderers }),
+      ),
     ),
     JSON.parse(JSON.stringify(chakra.postkitComponentCatalog)),
   )

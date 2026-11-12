@@ -39,9 +39,7 @@ const BASE64URL = /^[A-Za-z0-9_-]+$/;
  * too). Returns `null` for anything else, so a short or malformed key turns the feature off
  * instead of weakening it.
  */
-export function parseSubscribeSecret(
-  value: string | undefined,
-): Buffer | null {
+export function parseSubscribeSecret(value: string | undefined): Buffer | null {
   const trimmed = value?.trim();
   if (!trimmed || !/^[A-Za-z0-9+/_-]+={0,2}$/.test(trimmed)) return null;
   const key = Buffer.from(trimmed, 'base64');

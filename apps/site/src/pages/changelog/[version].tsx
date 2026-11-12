@@ -77,8 +77,8 @@ export const getStaticProps: GetStaticProps<
   const entries = getChangelogEntries();
   const index = entries.findIndex((candidate) => candidate.slug === slug);
   const markdown =
-    allChangelogEntries.find((candidate) => candidate.slug === slug)
-      ?.content ?? '';
+    allChangelogEntries.find((candidate) => candidate.slug === slug)?.content ??
+    '';
 
   return {
     props: {

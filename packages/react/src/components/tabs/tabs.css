@@ -33,17 +33,21 @@
   }
   :where(
     [data-postkit-part='tab']:is(
-        [aria-selected='true'],
-        [data-selected],
-        [data-state='active']
-      )
+      [aria-selected='true'],
+      [data-selected],
+      [data-state='active']
+    )
   ) {
     background: var(--postkit-color-surface-emphasized);
     box-shadow: inset 0 -2px 0 var(--postkit-color-fg);
     color: var(--postkit-color-fg);
   }
   :where(
-    [data-postkit-part='tab']:is(:disabled, [aria-disabled='true'], [data-disabled])
+    [data-postkit-part='tab']:is(
+      :disabled,
+      [aria-disabled='true'],
+      [data-disabled]
+    )
   ) {
     cursor: not-allowed;
     opacity: 0.55;
