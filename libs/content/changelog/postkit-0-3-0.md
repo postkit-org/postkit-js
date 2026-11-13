@@ -54,9 +54,9 @@ deliberate break before 1.0.
 
 ## Changed
 
-- `@postkit/react` renders headless views for every static component.
-  Interactive components whose behaviour isn't shared yet stay Chakra-only
-  until 0.3.x, and the component manifest marks them.
+- `@postkit/react` renders headless views for all 38 built-in components,
+  including interactive components. Headless and Chakra views share the same
+  component anatomy and behaviour contracts.
 - Chakra recipes follow the host's colour mode, with dark values for every
   colour in `postkitDefaultTheme`.
 - Every component now defaults to the subtle variant (D12). Pass
