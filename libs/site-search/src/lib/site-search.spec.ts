@@ -1,5 +1,7 @@
 // The search acceptance rows in 07 §2, against the real site content (libs/content, the
 // component manifest and apps/site/src/content/search-*.json).
+import { getLatestChangelogRelease } from '@postkit/content';
+
 import {
   loadSiteContent,
   loadSiteSearchConfig,
@@ -32,6 +34,25 @@ const draftRoutes = new Set([
     .map((note) => `/notes/${note.slug}`),
 ]);
 const pageRoute = (route: string) => route.split('#')[0];
+
+/** The newest released entry, whatever the real changelog holds today. */
+const latestRelease = getLatestChangelogRelease(content.changelog);
+
+/** The real content plus a stand-in upcoming release newer than anything released. */
+const withUpcoming = {
+  ...content,
+  changelog: [
+    ...content.changelog,
+    {
+      ...content.changelog[0],
+      title: 'Postkit 9.9.9',
+      version: '9.9.9',
+      slug: '9-9-9',
+      status: 'upcoming' as const,
+      date: '2099-01-01',
+    },
+  ],
+};
 
 describe('records', () => {
   it('build deterministically, whatever order the content arrives in', () => {
@@ -81,13 +102,12 @@ describe('records', () => {
     for (const record of production.records) {
       expect(draftRoutes.has(pageRoute(record.route))).toBe(false);
     }
-    const upcoming = content.changelog.find(
-      (entry) => entry.status === 'upcoming',
-    );
-    expect(upcoming).toBeDefined();
+    const withUpcomingIndex = buildSearchIndex(toSearchContent(withUpcoming), {
+      includeDrafts: false,
+    });
     expect(
-      production.records.some(
-        (record) => record.route === `/changelog/${upcoming?.slug}`,
+      withUpcomingIndex.records.some(
+        (record) => record.route === '/changelog/9-9-9',
       ),
     ).toBe(true);
 
@@ -215,7 +235,9 @@ describe('featured (empty query)', () => {
     ]);
     expect(response.results.map((result) => result.route)).toEqual([
       ...config.featured.jumpTo.map((entry) =>
-        entry.href === 'latest-release' ? '/changelog/0-2-0' : entry.href,
+        entry.href === 'latest-release'
+          ? `/changelog/${latestRelease?.slug}`
+          : entry.href,
       ),
       ...config.featured.popularComponents.map(
         (name) => production.pages.find((page) => page.title === name)?.route,
@@ -228,11 +250,25 @@ describe('featured (empty query)', () => {
   });
 
   it('resolves latest-release to the newest released entry, never an upcoming one', () => {
+    expect(latestRelease).toBeDefined();
     const latest = search.featured.find(
       (result) => result.title === 'Latest release',
     );
-    expect(latest?.route).toBe('/changelog/0-2-0');
-    expect(latest?.description).toBe('0.2.0, September 3, 2026.');
+    expect(latest?.route).toBe(`/changelog/${latestRelease?.slug}`);
+    expect(latest?.description).toMatch(
+      new RegExp(`^${latestRelease?.version.replace(/\./g, '\\.')}, `),
+    );
+
+    // A newer upcoming entry never takes "Latest release".
+    const withUpcomingSearch = createSiteSearch(
+      buildSearchIndex(toSearchContent(withUpcoming), { includeDrafts: false }),
+      config,
+    );
+    expect(
+      withUpcomingSearch.featured.find(
+        (result) => result.title === 'Latest release',
+      )?.route,
+    ).toBe(`/changelog/${latestRelease?.slug}`);
   });
 
   it('shows only docs entries when scoped to docs', () => {

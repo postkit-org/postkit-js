@@ -170,7 +170,7 @@ describe('validators', () => {
 });
 
 describe('the site feeds, from libs/content', () => {
-  it('leave out drafts and upcoming releases in production', () => {
+  it('leave out drafts in production, and carry every release', () => {
     const [notes, changelog] = buildSiteFeeds({
       contentDirectory,
       siteUrl,
@@ -183,22 +183,72 @@ describe('the site feeds, from libs/content', () => {
     expectValid(notes.artifacts);
 
     expect(changelog.items.map((entry) => entry.url)).toEqual([
+      'https://postkit.org/changelog/0-3-0',
       'https://postkit.org/changelog/0-2-0',
       'https://postkit.org/changelog/0-1-0',
     ]);
     // Callout titles are prop text: they read as text, not only as annotations.
     expect(changelog.items[0].contentHtml).toContain(
-      '<p data-postkit-part="title"><strong>Review before upgrading</strong></p>',
+      '<p data-postkit-part="title"><strong>One deliberate break</strong></p>',
     );
     expect(changelog.items[1].contentHtml).toContain(
+      '<p data-postkit-part="title"><strong>Review before upgrading</strong></p>',
+    );
+    expect(changelog.items[2].contentHtml).toContain(
       '<strong>Release status</strong>',
     );
     expectValid(changelog.artifacts);
     for (const source of Object.values(changelog.artifacts)) {
+      expect(source).toContain('0-3-0');
       expect(source).toContain('0-2-0');
       expect(source).toContain('0-1-0');
-      expect(source).not.toContain('0-3-0');
-      expect(source).not.toContain('0.3.0');
+    }
+  });
+
+  it('leave out upcoming releases', () => {
+    // A stand-in changelog, so this doesn't depend on what's upcoming in the real one.
+    const fixture = mkdtempSync(join(tmpdir(), 'postkit-feeds-upcoming-'));
+    try {
+      mkdirSync(join(fixture, 'notes'));
+      mkdirSync(join(fixture, 'changelog'));
+      const entry = (version: string, status: string, date: string) =>
+        [
+          '---',
+          `title: Postkit ${version}`,
+          `subtitle: Release ${version}.`,
+          `version: ${version}`,
+          `status: ${status}`,
+          `date: ${date}`,
+          `summary: Postkit ${version}.`,
+          '---',
+          '',
+          `Postkit ${version}.`,
+          '',
+        ].join('\n');
+      writeFileSync(
+        join(fixture, 'changelog', 'postkit-1-0-0.md'),
+        entry('1.0.0', 'released', '2026-01-01'),
+      );
+      writeFileSync(
+        join(fixture, 'changelog', 'postkit-9-9-9.md'),
+        entry('9.9.9', 'upcoming', '2099-01-01'),
+      );
+
+      const [, changelog] = buildSiteFeeds({
+        contentDirectory: fixture,
+        siteUrl,
+        nodeEnv: 'production',
+      });
+
+      expect(changelog.items.map((item) => item.url)).toEqual([
+        'https://postkit.org/changelog/1-0-0',
+      ]);
+      for (const source of Object.values(changelog.artifacts)) {
+        expect(source).not.toContain('9-9-9');
+        expect(source).not.toContain('9.9.9');
+      }
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
     }
   });
 

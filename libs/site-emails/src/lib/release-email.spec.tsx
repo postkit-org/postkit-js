@@ -1,4 +1,10 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -113,14 +119,34 @@ describe('release:email (PK-053, 04 §4)', () => {
   });
 
   it('refuses an upcoming entry', async () => {
+    // A stand-in entry, so the test doesn't depend on what's upcoming in the real changelog.
+    const upcomingContent = outDirectory();
+    mkdirSync(join(upcomingContent, 'changelog'));
+    writeFileSync(
+      join(upcomingContent, 'changelog', 'postkit-9-9-9.md'),
+      [
+        '---',
+        'title: Postkit 9.9.9',
+        'subtitle: Not out yet.',
+        'version: 9.9.9',
+        'status: upcoming',
+        'date: 2099-01-01',
+        'summary: Not out yet.',
+        '---',
+        '',
+        '# Postkit 9.9.9',
+        '',
+      ].join('\n'),
+    );
+
     await expect(
       runReleaseEmail({
-        version: '0.3.0',
+        version: '9.9.9',
         create: false,
-        contentDirectory,
+        contentDirectory: upcomingContent,
         outDirectory: outDirectory(),
       }),
-    ).rejects.toThrow('0.3.0 is upcoming');
+    ).rejects.toThrow('9.9.9 is upcoming');
   });
 
   it('refuses a version with no entry', async () => {
