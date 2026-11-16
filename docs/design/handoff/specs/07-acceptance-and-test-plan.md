@@ -52,5 +52,5 @@ Every ticket, before it's marked done:
 - [ ] Fathom site live; goals created; Sentry receiving events with no PII
 - [ ] OG images checked with a share debugger (Bluesky, X, LinkedIn, Slack)
 - [ ] `www` → apex permanent redirect; old docs and changelog URLs redirect; `robots.txt` and `sitemap.xml` present
-- [ ] 0.3.0 is on npm (03 §8 step 12), and every `since: 0.3.0` doc is published
+- [x] 0.3.0 is on npm (03 §8 step 12), and every `since: 0.3.0` doc is published (all 12 packages published Nov 12, 2026; GitHub release v0.3.0)
 - [ ] Every direct dependency named on Made with OSS is still used (Zag is listed as "Via Chakra"), and nothing notable added since is missing
